@@ -128,7 +128,7 @@ function bdb_delete_option( $key = '' ) {
  * @return array Novelist settings
  */
 function bdb_get_settings() {
-	$settings = get_option( 'bdb_settings' );
+	$settings = get_option( 'bdb_settings', array() );
 
 	return apply_filters( 'book-database/get-settings', $settings );
 }
@@ -257,6 +257,10 @@ function bdb_settings_sanitize( $input = array() ) {
 
 	global $bdb_options;
 
+	if ( ! is_array( $bdb_options ) ) {
+		$bdb_options = array();
+	}
+
 	if ( empty( $_POST['_wp_http_referer'] ) ) {
 		return $input;
 	}
@@ -287,7 +291,7 @@ function bdb_settings_sanitize( $input = array() ) {
 	$section_settings = ! empty( $settings[ $tab ][ $section ] ) ? $settings[ $tab ][ $section ] : array();
 	$found_settings   = array_merge( $main_settings, $section_settings );
 
-	if ( ! empty( $found_settings ) ) {
+	if ( ! empty( $found_settings ) && is_array( $bdb_options ) ) {
 		foreach ( $found_settings as $key => $value ) {
 			if ( empty( $input[ $key ] ) || ! array_key_exists( $key, $input ) ) {
 				unset( $bdb_options[ $key ] );
@@ -303,6 +307,34 @@ function bdb_settings_sanitize( $input = array() ) {
 	return $output;
 
 }
+
+/**
+ * Sanitize Text Field
+ *
+ * @param string $input
+ *
+ * @since 1.0.0
+ * @return string
+ */
+function bdb_settings_sanitize_text_field( $input ) {
+	return wp_kses_post( $input );
+}
+
+add_filter( 'book-database/settings/sanitize/text', 'bdb_settings_sanitize_text_field' );
+
+/**
+ * Sanitize Number Field
+ *
+ * @param int $input
+ *
+ * @since 1.0.0
+ * @return int
+ */
+function bdb_settings_sanitize_number_field( $input ) {
+	return intval( $input );
+}
+
+add_filter( 'book-database/settings/sanitize/number', 'bdb_settings_sanitize_number_field' );
 
 /**
  * Sanitize: Terms
@@ -339,121 +371,6 @@ function bdb_settings_sanitize_terms( $input ) {
 }
 
 add_filter( 'book-database/settings/sanitize/terms', 'bdb_settings_sanitize_terms' );
-
-/**
- * Display "Default settings restored" message.
- * This gets displayed after the default settings have been restored and
- * the page has been redirected.
- *
- * @since 1.0.0
- * @return void
- */
-function bdb_defaults_restored_message() {
-	if ( ! isset( $_GET['page'] ) || $_GET['page'] !== 'ultimatebb' ) {
-		return;
-	}
-
-	if ( ! isset( $_GET['defaults-restored'] ) || $_GET['defaults-restored'] !== 'true' ) {
-		return;
-	}
-
-	add_settings_error( 'ubb-notices', '', __( 'Default settings restored.', 'book-database' ), 'updated' );
-}
-
-add_action( 'admin_init', 'bdb_defaults_restored_message' );
-
-/**
- * Restore Defaults
- *
- * Ajax callback that restores the default settings for a specific tab.
- *
- * @since 1.0.0
- * @return void
- */
-function bdb_restore_default_settings() {
-	// Permission check.
-	if ( ! current_user_can( 'activate_plugins' ) ) {
-		wp_die( __( 'Bugger off! You don\'t have permission to do this.', 'book-database' ) );
-	}
-
-	global $bdb_options;
-	$tab              = strip_tags( $_POST['tab'] );
-	$section          = strip_tags( $_POST['section'] );
-	$default_settings = bdb_get_registered_settings();
-
-	// Tab is missing.
-	if ( ! array_key_exists( $tab, $default_settings ) ) {
-		wp_send_json_error( __( 'Error: Tab missing.', 'book-database' ) );
-	}
-
-	// Loop through each section.
-	foreach ( $default_settings[ $tab ] as $section_id => $settings ) {
-		if ( ! is_array( $settings ) ) {
-			continue;
-		}
-
-		foreach ( $settings as $key => $options ) {
-			// Special circumstances for the 'book_layout' field.
-			if ( $key == 'book_layout' ) {
-				$bdb_options[ $key ] = bdb_get_default_book_field_values();
-
-				continue;
-			}
-
-			if ( ! array_key_exists( 'std', $options ) ) {
-				continue;
-			}
-
-			$bdb_options[ $key ] = apply_filters( 'book-database/settings/restore-defaults/' . $key, $options['std'], $options );
-		}
-	}
-
-	// Update options.
-	update_option( 'bdb_settings', apply_filters( 'book-database/settings/restore-defaults', $bdb_options ) );
-
-	// Build our URL
-	$url    = admin_url( 'edit.php' ); // @todo fix this
-	$params = array(
-		'post_type'         => 'book',
-		'page'              => 'ubb-settings',
-		'tab'               => urlencode( $tab ),
-		'section'           => urlencode( $section ),
-		'defaults-restored' => 'true'
-	);
-	$url    = add_query_arg( $params, $url );
-
-	wp_send_json_success( $url );
-}
-
-add_action( 'wp_ajax_bdb_restore_default_settings', 'bdb_restore_default_settings' );
-
-/**
- * Sanitize Text Field
- *
- * @param string $input
- *
- * @since 1.0.0
- * @return string
- */
-function bdb_settings_sanitize_text_field( $input ) {
-	return wp_kses_post( $input );
-}
-
-add_filter( 'book-database/settings/sanitize/text', 'bdb_settings_sanitize_text_field' );
-
-/**
- * Sanitize Number Field
- *
- * @param int $input
- *
- * @since 1.0.0
- * @return int
- */
-function bdb_settings_sanitize_number_field( $input ) {
-	return intval( $input );
-}
-
-add_filter( 'book-database/settings/sanitize/number', 'bdb_settings_sanitize_number_field' );
 
 /**
  * @todo Add more santizations.
@@ -526,7 +443,7 @@ function bdb_get_registered_settings_sections() {
 }
 
 /**
- * Sanitizes a string key for Ultimate Book Blogger Settings
+ * Sanitizes a string key for Book Database Settings
  *
  * Keys are used as internal identifiers. Alphanumeric characters, dashes, underscores, stops, colons and slashes are
  * allowed

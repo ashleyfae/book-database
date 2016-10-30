@@ -15,7 +15,10 @@ if ( ! defined( 'ABSPATH' ) ) {
 }
 
 /**
- * Creates admin submenu pages under 'Books'.
+ * Admin Pages
+ *
+ * Top Level: Book Library
+ * Submenus: Book Reviews, Settings
  *
  * @since 1.0.0
  * @return void

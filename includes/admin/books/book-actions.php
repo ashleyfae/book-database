@@ -245,6 +245,9 @@ function bdb_save_book() {
 
 	// @todo terms and meta
 
+	// Authors - this works, but it should be formatted differently.
+	// bdb_set_book_terms( $book_id, array( 'Sierra Simone' ), 'author' );
+
 	$new_book_id = bdb_insert_book( $book_data );
 
 	if ( ! $new_book_id || is_wp_error( $new_book_id ) ) {
@@ -252,8 +255,7 @@ function bdb_save_book() {
 	}
 
 	$edit_url = add_query_arg( array(
-		'update-success',
-		'true'
+		'update-success' => 'true'
 	), bdb_get_admin_page_edit_book( absint( $new_book_id ) ) );
 
 	wp_safe_redirect( $edit_url );

@@ -252,8 +252,6 @@ function bdb_get_book_terms( $book_id, $type = false, $args = array() ) {
  */
 function bdb_set_book_terms( $book_id, $terms, $type, $append = false ) {
 
-	global $wpdb;
-
 	if ( ! is_numeric( $book_id ) || ! $book_id > 0 ) {
 		return new WP_Error( 'invalid_book_id', __( 'Invalid book ID.', 'book-database' ) );
 	}
@@ -270,7 +268,6 @@ function bdb_set_book_terms( $book_id, $terms, $type, $append = false ) {
 	}
 
 	$all_term_ids = array();
-	$new_term_ids = array();
 
 	foreach ( (array) $terms as $term ) {
 
@@ -298,12 +295,20 @@ function bdb_set_book_terms( $book_id, $terms, $type, $append = false ) {
 
 		} else {
 
-			// We have a term name. Let's create the term.
+			// We have a term name.
 
-			$term_id = book_database()->book_terms->add( array(
-				'name' => sanitize_text_field( $term ),
-				'type' => sanitize_text_field( $type )
-			) );
+			// Check to see if it already exists.
+			$existing_term = book_database()->book_terms->get_term_by( 'name', $term );
+
+			if ( $existing_term ) {
+				$term_id = $existing_term->term_id;
+			} else {
+				// Create new term.
+				$term_id = book_database()->book_terms->add( array(
+					'name' => sanitize_text_field( $term ),
+					'type' => sanitize_text_field( $type )
+				) );
+			}
 
 			// Error adding it.
 			if ( ! $term_id ) {
@@ -344,6 +349,8 @@ function bdb_set_book_terms( $book_id, $terms, $type, $append = false ) {
 		}
 
 	}
+
+	return $all_term_ids;
 
 }
 

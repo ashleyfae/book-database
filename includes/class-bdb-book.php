@@ -1,0 +1,535 @@
+<?php
+
+/**
+ * Book Class
+ *
+ * @package   book-database
+ * @copyright Copyright (c) 2016, Ashley GIbson
+ * @license   GPL2+
+ */
+
+// Exit if accessed directly
+if ( ! defined( 'ABSPATH' ) ) {
+	exit;
+}
+
+/**
+ * Class BDB_Book
+ *
+ * @since 1.0.0
+ */
+class BDB_Book {
+
+	/**
+	 * ID of the book.
+	 *
+	 * @var int
+	 * @access public
+	 * @since  1.0.0
+	 */
+	public $ID;
+
+	/**
+	 * Cover image URL or attachment ID.
+	 *
+	 * @var int|string
+	 * @access private
+	 * @since  1.0.0
+	 */
+	private $cover;
+
+	/**
+	 * Title of the book.
+	 *
+	 * @var string
+	 * @access private
+	 * @since  1.0.0
+	 */
+	private $title;
+
+	/**
+	 * Author of the book
+	 *
+	 * Array with keys as term IDs and values as author names.
+	 *
+	 * @var array
+	 * @access private
+	 * @since  1.0.0
+	 */
+	private $author;
+
+	/**
+	 * Series ID
+	 *
+	 * @var int|null
+	 * @access private
+	 * @since  1.0.0
+	 */
+	private $series_id;
+
+	/**
+	 * Position in the series
+	 *
+	 * @var string|null
+	 * @access private
+	 * @since  1.0.0
+	 */
+	private $series_position;
+
+	/**
+	 * Publication date
+	 *
+	 * @var string
+	 * @access private
+	 * @since  1.0.0
+	 */
+	private $pub_date;
+
+	/**
+	 * Synopsis
+	 *
+	 * @var string
+	 * @access private
+	 * @since  1.0.0
+	 */
+	private $synopsis;
+
+	/**
+	 * BDB_Book constructor.
+	 *
+	 * @param int $book_id
+	 *
+	 * @access public
+	 * @since  1.0.0
+	 * @return bool
+	 */
+	public function __construct( $book_id ) {
+
+		if ( ! is_numeric( $book_id ) ) {
+			return false;
+		}
+
+		$book = book_database()->books->get_book( $book_id );
+
+		if ( empty( $book ) || ! is_object( $book ) ) {
+			return false;
+		}
+
+		return $this->setup_book( $book );
+
+	}
+
+	/**
+	 * Setup Book
+	 *
+	 * Given the book data, let's set up the variables.
+	 *
+	 * @param object|false $book Book object from the database.
+	 *
+	 * @access private
+	 * @since  1.0.0
+	 * @return bool Whether or not the set up was successful.
+	 */
+	private function setup_book( $book ) {
+
+		if ( ! is_object( $book ) ) {
+			return false;
+		}
+
+		foreach ( $book as $key => $value ) {
+
+			$this->$key = $value;
+
+		}
+
+		// We absolutely need an ID. Otherwise nothing works.
+		if ( ! empty( $this->ID ) && ! empty( $this->book_id ) ) {
+			return true;
+		}
+
+		return false;
+
+	}
+
+	/**
+	 * Magic __get function to dispatch a call to retrieve a private property.
+	 *
+	 * @param string $key Property to retrieve.
+	 *
+	 * @access public
+	 * @since  1.0.0
+	 * @return mixed
+	 */
+	public function __get( $key ) {
+
+		// Not a valid book - always false.
+		if ( ! $this->ID ) {
+			return false;
+		}
+
+		if ( method_exists( $this, 'get_' . $key ) ) {
+			return call_user_func( array( $this, 'get_' . $key ) );
+		} else {
+			return new WP_Error( 'ubb-book-invalid-property', sprintf( __( 'Can\'t get property %s', 'book-database' ), $key ) );
+		}
+
+	}
+
+	/**
+	 * Create a Book
+	 *
+	 * @param array $data
+	 *
+	 * @access public
+	 * @since  1.0.0
+	 * @return int|false Book ID if success, or false if failure.
+	 */
+	public function create( $data = array() ) {
+
+		if ( $this->ID != 0 || empty( $data ) ) {
+			return false;
+		}
+
+		$args = $data;
+		$args = $this->sanitize_columns( $args );
+
+		if ( empty( $args['title'] ) ) {
+			return false;
+		}
+
+		/**
+		 * Fires before a book is created.
+		 *
+		 * @param array $args Contains book information.
+		 */
+		do_action( 'book-database/book/pre-create', $args );
+
+		$created = false;
+
+		// The DB class 'add' implies an update if the customer asked to be created already exists.
+		$book_id = book_database()->books->add( $data );
+
+		if ( $book_id ) {
+
+			// We've successfully added/updated the customer, reset the class vars with the new data.
+			$book = book_database()->books->get_book( $book_id );
+
+			$this->setup_book( $book );
+
+			$created = $this->ID;
+
+		}
+
+		/**
+		 * Fires after a book is created.
+		 *
+		 * @param int   $created If created successfully, the book ID. Defaults to false.
+		 * @param array $args    Contains book information.
+		 */
+		do_action( 'book-database/book/post-create', $created, $args );
+
+		return $created;
+
+	}
+
+	/**
+	 * Update a Book
+	 *
+	 * @param array $data Array of data attributes for a book (checked via whitelist).
+	 *
+	 * @access public
+	 * @since  1.0.0
+	 * @return bool Whether or not the update was successful.
+	 */
+	public function update( $data = array() ) {
+
+		if ( empty( $data ) ) {
+			return false;
+		}
+
+		$data = $this->sanitize_columns( $data );
+
+		/**
+		 * Firest before a book is updated.
+		 *
+		 * @param int   $this ->id ID of the book being updated.
+		 * @param array $data Contains new book information.
+		 */
+		do_action( 'book-database/book/pre-update', $this->ID, $data );
+
+		$updated = false;
+
+		if ( book_database()->books->update( $this->ID, $data ) ) {
+
+			$book = book_database()->books->get_book( $this->ID );
+			$this->setup_book( $book );
+
+			$updated = true;
+
+		}
+
+		/**
+		 * Firest after a book is updated.
+		 *
+		 * @param bool  $updated Whether or not the update was successful.
+		 * @param int   $ID      ID of the book being updated.
+		 * @param array $data    Contains new book information.
+		 */
+		do_action( 'book-database/book/post-update', $updated, $this->ID, $data );
+
+		return $updated;
+
+	}
+
+	/**
+	 * Get Meta
+	 *
+	 * Retrieve book meta field for a book.
+	 *
+	 * @param string $meta_key The meta key to retrieve.
+	 * @param bool   $single   Whether or not to return a single value.
+	 *
+	 * @access public
+	 * @since  1.0.0
+	 * @return mixed Will be an array if $single is false. Will be value of meta data field if $single is true.
+	 */
+	public function get_meta( $meta_key = '', $single = true ) {
+		return book_database()->book_meta->get_meta( $this->ID, $meta_key, $single );
+	}
+
+	/**
+	 * Add Meta
+	 *
+	 * Add meta data field to a book.
+	 *
+	 * @param string $meta_key   Key to add.
+	 * @param mixed  $meta_value Value to add.
+	 * @param bool   $unique     Whether the same key should not be added.
+	 *
+	 * @access public
+	 * @since  1.0.0
+	 * @return bool False for failure, true for success.
+	 */
+	public function add_meta( $meta_key = '', $meta_value, $unique = false ) {
+		return book_database()->book_meta->add_meta( $this->ID, $meta_key, $meta_value, $unique );
+	}
+
+	/**
+	 * Update Meta
+	 *
+	 * Update book meta field based on book ID.
+	 *
+	 * @param string $meta_key   Key to update.
+	 * @param mixed  $meta_value New value.
+	 * @param string $prev_value Optional. Previous value to check before updating.
+	 *
+	 * @access public
+	 * @since  1.0.0
+	 * @return bool
+	 */
+	public function update_meta( $meta_key = '', $meta_value, $prev_value = '' ) {
+		return book_database()->book_meta->update_meta( $this->ID, $meta_key, $meta_value, $prev_value );
+	}
+
+	/**
+	 * Delete Meta
+	 *
+	 * Remove metadata matching criteria from a book.
+	 *
+	 * @param string $meta_key   Meta name.
+	 * @param mixed  $meta_value Meta value.
+	 *
+	 * @access public
+	 * @since  1.0.0
+	 * @return bool False for failure, true for success.
+	 */
+	public function delete_meta( $meta_key = '', $meta_value = '' ) {
+		return book_database()->book_meta->delete_meta( $this->ID, $meta_key, $meta_value );
+	}
+
+	/**
+	 * Sanitize Columns
+	 *
+	 * Sanitize the given data for update/create.
+	 *
+	 * @param array $data The data to sanitize.
+	 *
+	 * @access private
+	 * @since  1.0.0
+	 * @return array The sanitized data, based off column defaults.
+	 */
+	private function sanitize_columns( $data ) {
+
+		$columns        = book_database()->books->get_columns();
+		$default_values = book_database()->books->get_column_defaults();
+
+		foreach ( $columns as $key => $type ) {
+
+			// Only sanitize data that we were provided
+			if ( ! array_key_exists( $key, $data ) ) {
+				continue;
+			}
+
+			switch ( $type ) {
+
+				case '%s' :
+					$data[ $key ] = sanitize_text_field( $data[ $key ] );
+					break;
+
+				case '%d' :
+					if ( ! is_numeric( $data[ $key ] ) || (int) $data[ $key ] !== absint( $data[ $key ] ) ) {
+						$data[ $key ] = $default_values[ $key ];
+					} else {
+						$data[ $key ] = absint( $data[ $key ] );
+					}
+					break;
+
+				case '%f' :
+					// Convert what was given to a float
+					$value = floatval( $data[ $key ] );
+
+					if ( ! is_float( $value ) ) {
+						$data[ $key ] = $default_values[ $key ];
+					} else {
+						$data[ $key ] = $value;
+					}
+					break;
+
+				default :
+					$data[ $key ] = sanitize_text_field( $data[ $key ] );
+					break;
+
+			}
+
+		}
+
+		return $data;
+
+	}
+
+	/*
+	 * Below: Callback functions.
+	 */
+
+	/**
+	 * Get Cover
+	 *
+	 * Return the cover image URL.
+	 *
+	 * @todo   Account for attachment ID.
+	 *
+	 * @access public
+	 * @since  1.0.0
+	 * @return string
+	 */
+	public function get_cover() {
+		return apply_filters( 'book-database/book/get/cover', $this->cover, $this->ID, $this );
+	}
+
+	/**
+	 * Get Title
+	 *
+	 * @access public
+	 * @since  1.0.0
+	 * @return string
+	 */
+	public function get_title() {
+		return apply_filters( 'book-database/book/get/title', $this->title, $this->ID, $this );
+	}
+
+	/**
+	 * Get Author
+	 *
+	 * @access public
+	 * @since  1.0.0
+	 * @return array|bool Array of author IDs and names or false if none.
+	 */
+	public function get_author() {
+
+		if ( ! isset( $this->author ) ) {
+			$this->author = bdb_get_book_author( $this->ID );
+		}
+
+		return apply_filters( 'book-database/book/get/author', $this->author, $this->ID, $this );
+	}
+
+	/**
+	 * Get Author Names
+	 *
+	 * @param bool $implode Whether or not to implode the array into a string.
+	 *
+	 * @since 1.0.0
+	 * @return array|string Array of author names or imploded string.
+	 */
+	public function get_author_names( $implode = true ) {
+
+		$authors      = $this->get_author();
+		$author_names = array();
+
+		if ( is_array( $authors ) ) {
+			foreach ( $authors as $author ) {
+				$author_names[] = $author->name;
+			}
+		}
+
+		if ( $implode ) {
+			$author_names = implode( ', ', $author_names );
+		}
+
+		return apply_filters( 'book-database/book/get/author_names', $author_names, $authors, $this->ID, $this );
+
+	}
+
+	/**
+	 * Get Series ID
+	 *
+	 * @access public
+	 * @since  1.0.0
+	 * @return string
+	 */
+	public function get_series_id() {
+		return apply_filters( 'book-database/book/get/series_id', $this->series_id, $this->ID, $this );
+	}
+
+	/**
+	 * Get Series Position
+	 *
+	 * @access public
+	 * @since  1.0.0
+	 * @return string
+	 */
+	public function get_series_position() {
+		return apply_filters( 'book-database/book/get/series_position', $this->series_position, $this->ID, $this );
+	}
+
+	public function get_series_name() {
+
+	}
+
+	public function get_formatted_series() {
+
+	}
+
+	/**
+	 * Get Publication Date
+	 *
+	 * @access public
+	 * @since  1.0.0
+	 * @return string
+	 */
+	public function get_pub_date() {
+		return apply_filters( 'book-database/book/get/pub_date', $this->pub_date, $this->ID, $this );
+	}
+
+	/**
+	 * Get Synopsis
+	 *
+	 * @access public
+	 * @since  1.0.0
+	 * @return string
+	 */
+	public function get_synopsis() {
+		return apply_filters( 'book-database/book/get/synopsis', $this->synopsis, $this->ID, $this );
+	}
+
+}

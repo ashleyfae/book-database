@@ -1,0 +1,15 @@
+#ubb-book-page-wrapper {
+    margin-top: 1.5em;
+
+    .postbox {
+        > h2 {
+            border-bottom: 1px solid #eee;
+            font: {
+                size: 14px;
+            }
+            line-height: 1.4;
+            margin: 0;
+            padding: 8px 12px;
+        }
+    }
+}

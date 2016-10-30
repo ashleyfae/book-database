@@ -47,7 +47,7 @@ class BDB_HTML {
 			'id'      => null,
 			'name'    => null,
 			'current' => null,
-			'class'   => 'ubb-checkbox',
+			'class'   => 'bookdb-checkbox',
 			'options' => array(
 				'disabled' => false,
 				'readonly' => false
@@ -119,7 +119,7 @@ class BDB_HTML {
 		$output .= '<input type="' . esc_attr( $args['type'] ) . '" name="' . esc_attr( $args['name'] ) . '" id="' . esc_attr( $args['id'] ) . '" autocomplete="' . esc_attr( $args['autocomplete'] ) . '" value="' . esc_attr( $args['value'] ) . '" placeholder="' . esc_attr( $args['placeholder'] ) . '" class="' . $class . '" ' . $data . '' . $disabled . '>';
 
 		if ( ! empty( $args['desc'] ) ) {
-			$output .= '<span class="ubb-description">' . esc_html( $args['desc'] ) . '</span>';
+			$output .= '<span class="bookdb-description">' . esc_html( $args['desc'] ) . '</span>';
 		}
 
 		return $output;
@@ -146,9 +146,9 @@ class BDB_HTML {
 
 		$args = wp_parse_args( $meta_args, $defaults );
 		?>
-		<div class="ubb-box-row">
+		<div class="bookdb-box-row">
 			<label for="<?php echo array_key_exists( 'id', $field_args ) ? esc_attr( $field_args['id'] ) : ''; ?>"><?php echo esc_html( $args['label'] ); ?></label>
-			<div class="ubb-input-wrapper">
+			<div class="bookdb-input-wrapper">
 				<?php
 				if ( method_exists( $this, $type ) ) {
 					echo $this->$type( $field_args );

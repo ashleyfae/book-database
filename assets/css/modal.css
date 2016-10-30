@@ -321,19 +321,19 @@
     top: 74px; } }
 .bookdb-book-form {
   max-width: 600px; }
-  .bookdb-book-form .bookdb-book-form-row {
+  .bookdb-book-form .bookdb-box-row {
     margin-bottom: 15px;
     vertical-align: top; }
   .bookdb-book-form label {
     display: block;
-    font-weight: bold;
+    font-weight: 600;
     margin-bottom: 5px; }
   .bookdb-book-form input {
-    margin: 0;
-    width: 100%;
-    max-width: 120px;
+    display: block;
+    line-height: 34px;
     height: 34px;
-    line-height: 34px; }
+    margin: 0;
+    width: 100%; }
     .bookdb-book-form input[type="number"] {
       max-width: 50px; }
   .bookdb-book-form select {
@@ -341,5 +341,21 @@
   .bookdb-book-form textarea {
     width: 100%;
     resize: vertical; }
+  .bookdb-book-form .bookdb-description {
+    color: #666;
+    display: block;
+    font-style: italic;
+    margin-top: 3px; }
+
+@media (min-width: 768px) {
+  .bookdb-book-form #bookdb-book-series-wrap .bookdb-input-wrapper {
+    clear: both;
+    overflow: hidden; }
+  .bookdb-book-form #bookdb-book-series-name-wrap {
+    float: left;
+    width: 60%; }
+  .bookdb-book-form #bookdb-book-series-position-wrap {
+    float: right;
+    width: 30%; } }
 
 /*# sourceMappingURL=modal.css.map */

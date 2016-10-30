@@ -12,11 +12,9 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
+$book = new BDB_Book( 0 );
 ?>
 
 <div class="bookdb-book-form bookdb-book-details-form">
-	<h1>Hi</h1>
-	<div class="bookdb-book-form-row">
-
-	</div>
+	<?php do_action( 'book-database/book/information-fields', $book ); ?>
 </div>

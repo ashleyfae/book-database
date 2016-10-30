@@ -329,6 +329,10 @@ function bdb_insert_book( $data = array() ) {
 		return new WP_Error( 'error-inserting-book', __( 'Error inserting book information into database.', 'book-database' ) );
 	}
 
+	// @todo Insert terms.
+
+	return $book_id;
+
 }
 
 /**

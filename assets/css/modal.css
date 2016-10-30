@@ -339,6 +339,7 @@
   .bookdb-book-form select {
     width: 100%; }
   .bookdb-book-form textarea {
+    min-height: 200px;
     width: 100%;
     resize: vertical; }
   .bookdb-book-form .bookdb-description {

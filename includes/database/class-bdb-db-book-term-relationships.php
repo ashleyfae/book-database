@@ -200,7 +200,8 @@ class BDB_DB_Book_Term_Relationships extends BDB_DB {
 			'term_id' => false,
 			'book_id' => false,
 			'orderby' => 'ID',
-			'order'   => 'DESC'
+			'order'   => 'DESC',
+			'count'   => false
 		);
 
 		$args = wp_parse_args( $args, $defaults );
@@ -252,14 +253,31 @@ class BDB_DB_Book_Term_Relationships extends BDB_DB {
 		$args['orderby'] = esc_sql( $args['orderby'] );
 		$args['order']   = esc_sql( $args['order'] );
 
+		$select_this = $args['count'] ? "COUNT($this->primary_key)" : '*';
+
 		if ( $relationships === false ) {
-			$query         = $wpdb->prepare( "SELECT * FROM  $this->table_name $join $where GROUP BY $this->primary_key ORDER BY {$args['orderby']} {$args['order']} LIMIT %d,%d;", absint( $args['offset'] ), absint( $args['number'] ) );
+			$query         = $wpdb->prepare( "SELECT $select_this FROM  $this->table_name $join $where GROUP BY $this->primary_key ORDER BY {$args['orderby']} {$args['order']} LIMIT %d,%d;", absint( $args['offset'] ), absint( $args['number'] ) );
 			$relationships = $wpdb->get_results( $query );
 			wp_cache_set( $cache_key, $relationships, 'book_term_relationships', 3600 );
 		}
 
 		return $relationships;
 
+	}
+
+	/**
+	 * Relationship Count
+	 *
+	 * @param array $args
+	 *
+	 * @access public
+	 * @since  1.0.0
+	 * @return array
+	 */
+	public function count( $args = array() ) {
+		$args['count'] = true;
+
+		return $this->get_relationships( $args );
 	}
 
 	/**

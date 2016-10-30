@@ -35,7 +35,7 @@ function bdb_get_review_post_types() {
  * @return string
  */
 function bdb_get_admin_page_books() {
-	$url = admin_url( 'admin.php?page=ubb-books' );
+	$url = admin_url( 'admin.php?page=bdb-books' );
 
 	return apply_filters( 'book-database/admin-page-url/books', $url );
 }

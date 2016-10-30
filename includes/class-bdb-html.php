@@ -113,10 +113,75 @@ class BDB_HTML {
 		$output = '';
 
 		if ( ! empty( $args['label'] ) ) {
-			$output .= '<label class="edd-label" for="' . bdb_sanitize_key( $args['id'] ) . '">' . esc_html( $args['label'] ) . '</label>';
+			$output .= '<label class="bookdb-label" for="' . bdb_sanitize_key( $args['id'] ) . '">' . esc_html( $args['label'] ) . '</label>';
 		}
 
 		$output .= '<input type="' . esc_attr( $args['type'] ) . '" name="' . esc_attr( $args['name'] ) . '" id="' . esc_attr( $args['id'] ) . '" autocomplete="' . esc_attr( $args['autocomplete'] ) . '" value="' . esc_attr( $args['value'] ) . '" placeholder="' . esc_attr( $args['placeholder'] ) . '" class="' . $class . '" ' . $data . '' . $disabled . '>';
+
+		if ( ! empty( $args['desc'] ) ) {
+			$output .= '<span class="bookdb-description">' . esc_html( $args['desc'] ) . '</span>';
+		}
+
+		return $output;
+
+	}
+
+	/**
+	 * Textarea Field
+	 *
+	 * @param array $args Arguments to override the defaults.
+	 *
+	 * @since 1.0.0
+	 * @return string
+	 */
+	public function textarea( $args = array() ) {
+
+		$defaults = array(
+			'id'           => '',
+			'name'         => null,
+			'value'        => null,
+			'label'        => null,
+			'desc'         => null,
+			'placeholder'  => '',
+			'class'        => 'large-textarea',
+			'disabled'     => false,
+			'autocomplete' => '',
+			'data'         => false,
+			'rows'         => false,
+			'columns'      => false
+		);
+
+		$args = wp_parse_args( $args, $defaults );
+
+		$class    = implode( ' ', array_map( 'sanitize_html_class', explode( ' ', $args['class'] ) ) );
+		$disabled = '';
+		if ( $args['disabled'] ) {
+			$disabled = ' disabled="disabled"';
+		}
+
+		$data = '';
+		if ( ! empty( $args['data'] ) ) {
+			foreach ( $args['data'] as $key => $value ) {
+				$data .= 'data-' . bdb_sanitize_key( $key ) . '="' . esc_attr( $value ) . '" ';
+			}
+		}
+
+		$rows = $cols = '';
+
+		if ( $args['rows'] ) {
+			$rows = ' rows="' . absint( $args['rows'] ) . '"';
+		}
+		if ( $args['columns'] ) {
+			$cols = ' columns="' . absint( $args['columns'] ) . '"';
+		}
+
+		$output = '';
+
+		if ( ! empty( $args['label'] ) ) {
+			$output .= '<label class="bookdb-label" for="' . bdb_sanitize_key( $args['id'] ) . '">' . esc_html( $args['label'] ) . '</label>';
+		}
+
+		$output .= '<textarea name="' . esc_attr( $args['name'] ) . '" id="' . esc_attr( $args['id'] ) . '" autocomplete="' . esc_attr( $args['autocomplete'] ) . '" placeholder="' . esc_attr( $args['placeholder'] ) . '" class="' . $class . '" ' . $rows . $cols . ' ' . $data . '' . $disabled . '>' . esc_textarea( $args['value'] ) . '</textarea>';
 
 		if ( ! empty( $args['desc'] ) ) {
 			$output .= '<span class="bookdb-description">' . esc_html( $args['desc'] ) . '</span>';

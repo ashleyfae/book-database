@@ -96,6 +96,28 @@ function bdb_book_series_field( $book ) {
 
 add_action( 'book-database/book/information-fields', 'bdb_book_series_field' );
 
+// @todo pub field
+
+/**
+ * Field: Book Title
+ *
+ * @param BDB_Book $book
+ *
+ * @since 1.0.0
+ * @return void
+ */
+function bdb_book_synopsis_field( $book ) {
+	book_database()->html->meta_row( 'textarea', array(
+		'label' => __( 'Synopsis', 'book-database' )
+	), array(
+		'id'    => 'book_synopsis',
+		'name'  => 'synopsis',
+		'value' => $book->get_synopsis()
+	) );
+}
+
+add_action( 'book-database/book/information-fields', 'bdb_book_synopsis_field' );
+
 /*
  * Below: Saving Functions
  */

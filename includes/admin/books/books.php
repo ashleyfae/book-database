@@ -120,11 +120,13 @@ function bdb_render_book_view( $view, $callbacks ) {
 		<?php endif; ?>
 
 		<div id="ubb-book-page-wrapper">
-			<?php
-			if ( $render ) {
-				$callbacks[ $view ]( $book );
-			}
-			?>
+			<form method="POST">
+				<?php
+				if ( $render ) {
+					$callbacks[ $view ]( $book );
+				}
+				?>
+			</form>
 		</div>
 	</div>
 	<?php
@@ -140,7 +142,11 @@ function bdb_render_book_view( $view, $callbacks ) {
  * @return void
  */
 function bdb_books_edit_view( $book ) {
+	wp_nonce_field( 'bdb_save_book', 'bdb_save_book_nonce' );
 	?>
+	<input type="hidden" name="book_id" value="<?php echo esc_attr( $book->ID ); ?>">
+	<input type="hidden" name="bdb-action" value="book/save">
+
 	<div id="poststuff">
 		<div id="post-body" class="metabox-holder columns-2">
 			<div id="post-body-content">
@@ -159,16 +165,22 @@ function bdb_books_edit_view( $book ) {
 								</div>
 							</div>
 						</div>
+
+						<?php do_action( 'book-database/book-edit/after-save-box', $book ); ?>
 					</div>
 				</div>
 
 				<div id="postbox-container-2" class="postbox-container">
+					<?php do_action( 'book-database/book-edit/before-information-fields', $book ); ?>
+
 					<div class="postbox">
 						<h2><?php printf( __( '%s Information', 'book-database' ), bdb_get_label_singular() ); ?></h2>
 						<div class="inside">
-							<?php do_action( 'book-database/book/information-fields', $book ); ?>
+							<?php do_action( 'book-database/book-edit/information-fields', $book ); ?>
 						</div>
 					</div>
+
+					<?php do_action( 'book-database/book-edit/after-information-fields', $book ); ?>
 				</div>
 			</div>
 		</div>

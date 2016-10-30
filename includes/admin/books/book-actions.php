@@ -34,7 +34,7 @@ function bdb_book_title_field( $book ) {
 	) );
 }
 
-add_action( 'book-database/book/information-fields', 'bdb_book_title_field' );
+add_action( 'book-database/book-edit/information-fields', 'bdb_book_title_field' );
 
 /**
  * Field: Author
@@ -54,7 +54,7 @@ function bdb_book_author_field( $book ) {
 	book_database()->html->meta_row( 'raw', array( 'label' => __( 'Author', 'book-database' ), 'field' => $field ) );
 }
 
-add_action( 'book-database/book/information-fields', 'bdb_book_author_field' );
+add_action( 'book-database/book-edit/information-fields', 'bdb_book_author_field' );
 
 /**
  * Field: Book Series
@@ -95,7 +95,7 @@ function bdb_book_series_field( $book ) {
 	<?php
 }
 
-add_action( 'book-database/book/information-fields', 'bdb_book_series_field' );
+add_action( 'book-database/book-edit/information-fields', 'bdb_book_series_field' );
 
 // @todo pub field
 
@@ -117,7 +117,7 @@ function bdb_book_synopsis_field( $book ) {
 	) );
 }
 
-add_action( 'book-database/book/information-fields', 'bdb_book_synopsis_field' );
+add_action( 'book-database/book-edit/information-fields', 'bdb_book_synopsis_field' );
 
 /*
  * Below: Saving Functions

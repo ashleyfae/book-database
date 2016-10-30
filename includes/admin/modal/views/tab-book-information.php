@@ -16,5 +16,5 @@ $book = new BDB_Book( 0 );
 ?>
 
 <div class="bookdb-book-form bookdb-book-details-form">
-	<?php do_action( 'book-database/book/information-fields', $book ); ?>
+	<?php do_action( 'book-database/book-edit/information-fields', $book ); ?>
 </div>

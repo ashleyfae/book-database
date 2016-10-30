@@ -32,3 +32,21 @@ function bdb_register_default_book_views( $views ) {
 }
 
 add_filter( 'book-database/books/views', 'bdb_register_default_book_views' );
+
+function bdb_save_book() {
+
+	$nonce = isset( $_POST['bdb_save_book_nonce'] ) ? $_POST['bdb_save_book_nonce'] : false;
+
+	if ( ! $nonce ) {
+		return;
+	}
+
+	if ( ! wp_verify_nonce( $nonce, 'bdb_save_book' ) ) {
+		wp_die( __( 'Failed security check.', 'book-database' ) );
+	}
+
+	$book_id = $_POST['book_id'];
+
+}
+
+add_action( 'book-database/book/save', 'bdb_save_book' );

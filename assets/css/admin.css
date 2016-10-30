@@ -64,5 +64,14 @@
     float: left;
     max-width: 150px;
     width: 30%; } }
+/* Save Box */
+#ubb-book-page-wrapper #major-publishing-actions {
+  clear: both;
+  overflow: hidden; }
+#ubb-book-page-wrapper #delete-action a {
+  color: #a00;
+  text-decoration: none; }
+  #ubb-book-page-wrapper #delete-action a:hover {
+    color: red; }
 
 /*# sourceMappingURL=admin.css.map */

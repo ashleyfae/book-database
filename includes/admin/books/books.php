@@ -141,10 +141,36 @@ function bdb_render_book_view( $view, $callbacks ) {
  */
 function bdb_books_edit_view( $book ) {
 	?>
-	<div class="postbox">
-		<h2><?php printf( __( '%s Information', 'book-database' ), bdb_get_label_singular() ); ?></h2>
-		<div class="inside">
-			<?php do_action( 'book-database/book/information-fields', $book ); ?>
+	<div id="poststuff">
+		<div id="post-body" class="metabox-holder columns-2">
+			<div id="post-body-content">
+				<div id="postbox-container-1" class="postbox-container">
+					<div id="side-sortables" class="meta-box-sortables ui-sortables">
+						<div id="submitdiv" class="postbox">
+							<h2 class="hndle ui-sortable handle"><?php _e( 'Save', 'book-database' ); ?></h2>
+							<div class="inside">
+								<div id="major-publishing-actions">
+									<div id="delete-action">
+										<a href=""><?php printf( __( 'Delete %s', 'book-database' ), bdb_get_label_singular() ); ?></a>
+									</div>
+									<div id="publishing-action">
+										<input type="submit" id="bdb-save-book" name="save_book" class="button button-primary button-large" value="<?php esc_attr_e( 'Save', 'book-database' ); ?>">
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+
+				<div id="postbox-container-2" class="postbox-container">
+					<div class="postbox">
+						<h2><?php printf( __( '%s Information', 'book-database' ), bdb_get_label_singular() ); ?></h2>
+						<div class="inside">
+							<?php do_action( 'book-database/book/information-fields', $book ); ?>
+						</div>
+					</div>
+				</div>
+			</div>
 		</div>
 	</div>
 	<?php

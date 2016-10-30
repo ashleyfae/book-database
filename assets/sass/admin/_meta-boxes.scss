@@ -84,3 +84,22 @@
         width: 30%;
     }
 }
+
+/* Save Box */
+#ubb-book-page-wrapper {
+    #major-publishing-actions {
+        clear: both;
+        overflow: hidden;
+    }
+
+    #delete-action {
+        a {
+            color: #a00;
+            text-decoration: none;
+
+            &:hover {
+                color: red;
+            }
+        }
+    }
+}

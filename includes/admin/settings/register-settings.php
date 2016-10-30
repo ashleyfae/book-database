@@ -7,7 +7,7 @@
  * @package   book-database
  * @copyright Copyright (c) 2016, Ashley GIbson
  * @license   GPL2+
- * @since     1.0.0 (Was a class since 3.0.0, then converted to functions.)
+ * @since     1.0.0
  */
 
 // Exit if accessed directly
@@ -197,14 +197,12 @@ add_action( 'admin_init', 'bdb_register_settings' );
 /**
  * Registered Settings
  *
- * @todo  Add old filters to deprecated.php.
- *
  * Sets and returns the array of all plugin settings.
  * Developers can use the following filters to add their own settings or
  * modify existing ones:
  *
- *  + ubb/settings/{key} - Where {key} is a specific tab. Used to modify a single tab/section.
- *  + ubb/settings/registered-settings - Includes the entire array of all settings.
+ *  + book-database/settings/{key} - Where {key} is a specific tab. Used to modify a single tab/section.
+ *  + book-database/settings/registered-settings - Includes the entire array of all settings.
  *
  * @since 1.0.0
  * @return array
@@ -212,41 +210,35 @@ add_action( 'admin_init', 'bdb_register_settings' );
 function bdb_get_registered_settings() {
 
 	$bdb_settings = array(
-		/* General Settings */
-		'general' => apply_filters( 'book-database/settings/general', array(
+		/* Book Settings */
+		'books'   => apply_filters( 'book-database/settings/books', array(
 			'main' => array(
-				// @todo maybe remove review_cat
-				'review_cat'    => array(
-					'name' => esc_html__( 'Review Category', 'book-database' ),
-					'desc' => __( 'Select the category that you place all of your book reviews in.	This value will be used in review indexes and widgets.	If it\'s not filled out correctly, some features may not work.', 'book-database' ),
-					'id'   => 'review_cat',
-					'type' => 'categories',
-					'std'  => ''
-				),
-				'giveaway_cat'  => array(
-					'name' => esc_html__( 'Giveaway Category', 'book-database' ),
-					'desc' => __( 'Select the category that you place all of your giveaways in.	This value will be used in widgets and the giveaway page shortcode.	If it\'s not filled out correctly, some features may not work.', 'book-database' ),
-					'id'   => 'giveaway_cat',
-					'type' => 'categories',
-					'std'  => ''
-				),
-				'google_api'    => array(
-					'name' => esc_html__( 'Google API Key', 'book-database' ),
-					'desc' => sprintf( __( 'You need to sign up for a Google API Key in order to retrieve book info from Google Books. For instructions on how to do this, please read <a href="%s" target="_blank">the documentation</a>.', 'book-database' ), esc_url( 'http://docs.ultimatebookblogger.com/article/36-google-api-key' ) ),
-					'id'   => 'google_api',
-					'type' => 'text',
-					'std'  => ''
-				),
-				'goodreads_api' => array(
-					'name' => esc_html__( 'Goodreads API Key', 'book-database' ),
-					'desc' => sprintf( __( 'You need to sign up for a Goodreads API Key in order to retrieve book info from Goodreads. For instructions on how to do this, please read <a href="%s" target="_blank">the documentation</a>.', 'book-database' ), esc_url( 'http://docs.ultimatebookblogger.com/article/37-goodreads-api-key' ) ),
-					'id'   => 'goodreads_api',
-					'type' => 'text',
-					'std'  => ''
-				),
+				'terms' => array(
+					'name' => sprintf( esc_html__( '%s Terms', 'book-database' ), bdb_get_label_singular() ),
+					'desc' => '', // @todo
+					'id'   => 'terms',
+					'type' => 'terms',
+					'std'  => array(
+						array(
+							'id'      => 'author',
+							'name'    => esc_html__( 'Author', 'book-database' ),
+							'display' => 'text' // text, checkbox
+						),
+						array(
+							'id'      => 'publisher',
+							'name'    => esc_html__( 'Publisher', 'book-database' ),
+							'display' => 'checkbox'
+						),
+						array(
+							'id'      => 'genre',
+							'name'    => esc_html__( 'Genre', 'book-database' ),
+							'display' => 'checkbox'
+						)
+					)
+				)
 			)
 		) ),
-		'license' => array()
+		'reviews' => array()
 	);
 
 	return apply_filters( 'book-database/settings/registered-settings', $bdb_settings );
@@ -276,7 +268,7 @@ function bdb_settings_sanitize( $input = array() ) {
 	parse_str( $_POST['_wp_http_referer'], $referrer );
 
 	$settings = bdb_get_registered_settings();
-	$tab      = ( isset( $referrer['tab'] ) && $referrer['tab'] != 'import_export' ) ? $referrer['tab'] : 'book';
+	$tab      = ( isset( $referrer['tab'] ) && $referrer['tab'] != 'import_export' ) ? $referrer['tab'] : 'books';
 	$section  = isset( $referrer['section'] ) ? $referrer['section'] : 'main';
 
 	$input = $input ? $input : array();
@@ -436,33 +428,23 @@ add_filter( 'book-database/settings/sanitize/number', 'bdb_settings_sanitize_num
  */
 
 /**
- * Retrieve settings tabs
+ * Settings Tabs
  *
  * @since 1.0.0
  * @return array $tabs
  */
 function bdb_get_settings_tabs() {
-	$settings = bdb_get_registered_settings();
-
 	$tabs            = array();
-	$tabs['general'] = esc_html__( 'General', 'book-database' );
+	$tabs['books']   = esc_html__( 'Books', 'book-database' );
 	$tabs['reviews'] = esc_html__( 'Reviews', 'book-database' );
 	$tabs['misc']    = esc_html__( 'Misc', 'book-database' );
-
-	if ( ! empty( $settings['addons'] ) ) {
-		$tabs['addons'] = esc_html__( 'Add-Ons', 'book-database' );
-	}
-
-	if ( ! empty( $settings['license'] ) ) {
-		$tabs['license'] = esc_html__( 'Licenses', 'book-database' );
-	}
 
 	return apply_filters( 'book-database/settings/tabs', $tabs );
 }
 
 
 /**
- * Retrieve settings tabs
+ * Setting Tab Sections
  *
  * @since 1.0.0
  * @return array $section
@@ -485,7 +467,7 @@ function bdb_get_settings_tab_sections( $tab = false ) {
  * Uses a static to avoid running the filters on every request to this function
  *
  * @since  1.0.0
- * @return array Array of tabs and sections
+ * @return array|false Array of tabs and sections
  */
 function bdb_get_registered_settings_sections() {
 	static $sections = false;
@@ -495,14 +477,15 @@ function bdb_get_registered_settings_sections() {
 	}
 
 	$sections = array(
-		'general'     => apply_filters( 'book-database/settings/sections/general', array(
-			'main'           => esc_html__( 'General Settings', 'book-database' )
+		'books'   => apply_filters( 'book-database/settings/sections/books', array(
+			'main' => esc_html__( 'Book Settings', 'book-database' )
 		) ),
-		'misc'     => apply_filters( 'book-database/settings/sections/misc', array(
+		'reviews' => apply_filters( 'book-database/settings/sections/reviews', array(
+			'main' => esc_html__( 'Review Settings', 'book-database' )
+		) ),
+		'misc'    => apply_filters( 'book-database/settings/sections/misc', array(
 			'main' => __( 'Misc', 'book-database' ),
-		) ),
-		'addons'   => apply_filters( 'book-database/settings/sections/addons', array() ),
-		'license' => apply_filters( 'book-database/settings/sections/license', array() )
+		) )
 	);
 
 	$sections = apply_filters( 'book-database/settings/sections', $sections );
@@ -547,4 +530,8 @@ function bdb_missing_callback( $args ) {
 		__( 'The callback function used for the %s setting is missing.', 'book-database' ),
 		'<strong>' . $args['id'] . '</strong>'
 	);
+}
+
+function bdb_terms_callback( $args ) {
+	
 }

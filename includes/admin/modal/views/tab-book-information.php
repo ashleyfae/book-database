@@ -14,7 +14,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 
 ?>
 
-<div class="bookdb-recipe-form bookdb-recipe-details-form">
+<div class="bookdb-book-form bookdb-book-details-form">
 	<h1>Hi</h1>
 	<div class="bookdb-book-form-row">
 

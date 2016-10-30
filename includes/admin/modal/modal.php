@@ -47,6 +47,13 @@ function bdb_get_modal_menu() {
 					'order'    => 100,
 					'label'    => esc_html__( 'Book Information', 'book-database' ),
 					'template' => BDB_DIR . 'includes/admin/modal/views/tab-book-information.php',
+					'callback' => 'insert_update_book',
+					'init'     => 'setBook'
+				),
+				'book-display'     => array(
+					'order'    => 200,
+					'label'    => esc_html__( 'Display Settings', 'book-database' ),
+					'template' => BDB_DIR . 'includes/admin/modal/views/tab-book-information.php',
 					'callback' => 'insert_update_book'
 				)
 			),
@@ -99,6 +106,7 @@ function bdb_enqueue_modal_scripts() {
 	$suffix = ( defined( 'SCRIPT_DEBUG' ) && SCRIPT_DEBUG ) ? '' : '.min';
 
 	// CSS
+	wp_enqueue_style( 'bookdb-modal', BDB_URL . 'assets/css/modal' . $suffix . '.css', array(), BDB_VERSION, 'all' );
 
 	// JavaScript
 	wp_enqueue_script( 'bookdb-modal', BDB_URL . 'assets/js/admin/modal' . $suffix . '.js', array( 'jquery' ), BDB_VERSION, true );
@@ -107,7 +115,7 @@ function bdb_enqueue_modal_scripts() {
 		'bookdb-modal'
 	), BDB_VERSION, true );
 
-	wp_localize_script( 'bookdb-modal', 'bdb_modal', array(
+	wp_localize_script( 'bookdb-modal', 'bookdb_modal', array(
 		'ajax_url' => admin_url( 'admin-ajax.php' ),
 		'nonce'    => wp_create_nonce( 'book-database' ),
 		'l10n'     => array(
@@ -121,22 +129,3 @@ function bdb_enqueue_modal_scripts() {
 }
 
 add_action( 'admin_enqueue_scripts', 'bdb_enqueue_modal_scripts' );
-
-/**
- * Ajax CB: Get Thumbnail URL from ID
- *
- * @since 1.0.0
- * @return void
- */
-function bdb_ajax_get_thumbnail() {
-	check_ajax_referer( 'book-database', 'nonce' );
-
-	$image_id = isset( $_POST['image_id'] ) ? intval( $_POST['image_id'] ) : 0;
-	$thumb    = wp_get_attachment_image_url( $image_id, 'medium' );
-
-	wp_send_json_success( $thumb );
-
-	exit;
-}
-
-add_action( 'wp_ajax_bdb_get_thumbnail', 'bdb_ajax_get_thumbnail' );

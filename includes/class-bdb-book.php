@@ -30,9 +30,9 @@ class BDB_Book {
 	public $ID;
 
 	/**
-	 * Cover image URL or attachment ID.
+	 * Cover image attachment ID.
 	 *
-	 * @var int|string
+	 * @var int
 	 * @access private
 	 * @since  1.0.0
 	 */
@@ -412,11 +412,9 @@ class BDB_Book {
 	 */
 
 	/**
-	 * Get Cover
+	 * Get Cover ID
 	 *
-	 * Return the cover image URL.
-	 *
-	 * @todo   Account for attachment ID.
+	 * Return the cover image attachment ID.
 	 *
 	 * @access public
 	 * @since  1.0.0
@@ -424,6 +422,26 @@ class BDB_Book {
 	 */
 	public function get_cover() {
 		return apply_filters( 'book-database/book/get/cover', $this->cover, $this->ID, $this );
+	}
+
+	/**
+	 * Get Cover URL
+	 *
+	 * Return the URL for the cover image.
+	 *
+	 * @access public
+	 * @since  1.0.0
+	 * @return string
+	 */
+	public function get_cover_url( $size = 'full' ) {
+		$cover_id  = $this->get_cover();
+		$cover_url = false;
+
+		if ( $cover_id ) {
+			$cover_url = wp_get_attachment_image_url( absint( $cover_id ), apply_filters( 'book-database/book/get-cover-url-size', $size ) );
+		}
+
+		return apply_filters( 'book-database/book/get/cover_url', $cover_url, $cover_id, $this->ID, $this );
 	}
 
 	/**
@@ -502,12 +520,35 @@ class BDB_Book {
 		return apply_filters( 'book-database/book/get/series_position', $this->series_position, $this->ID, $this );
 	}
 
+	/**
+	 * Get Series Name
+	 *
+	 * @todo   Cache? Or join with bdb_get_book_series_name() or idk..
+	 *
+	 * @access public
+	 * @since  1.0.0
+	 * @return string
+	 */
 	public function get_series_name() {
+		$series      = book_database()->series->get_series_by( 'ID', $this->get_series_id() );
+		$series_name = ( $series && is_object( $series ) ) ? $series->name : false;
 
+		return apply_filters( 'book-database/book/get/series_name', $series_name, $this->ID, $this );
 	}
 
+	/**
+	 * Get Formatted Series
+	 *
+	 * Combines the series name and position.
+	 *
+	 * @uses   bdb_get_formatted_series_name()
+	 *
+	 * @access public
+	 * @since  1.0.0
+	 * @return string
+	 */
 	public function get_formatted_series() {
-
+		return bdb_get_formatted_series_name( $this->ID );
 	}
 
 	/**
@@ -530,6 +571,31 @@ class BDB_Book {
 	 */
 	public function get_synopsis() {
 		return apply_filters( 'book-database/book/get/synopsis', $this->synopsis, $this->ID, $this );
+	}
+
+	/**
+	 * Get Data
+	 *
+	 * Returns *all* data associated with a book.
+	 *
+	 * @access public
+	 * @since  1.0.0
+	 * @return array
+	 */
+	public function get_data() {
+
+		$book = array(
+			'ID'          => $this->ID,
+			'title'       => $this->get_title(),
+			'author'      => $this->get_author(),
+			'series_id'   => $this->get_series_id(),
+			'series_name' => $this->get_series_name(),
+			'pub_date'    => $this->get_pub_date(),
+			'synopsis'    => $this->get_synopsis()
+		);
+
+		return apply_filters( 'book-database/book/get/data', $book, $this->ID, $this );
+
 	}
 
 }

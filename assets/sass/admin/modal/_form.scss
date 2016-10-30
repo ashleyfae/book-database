@@ -1,0 +1,41 @@
+.bookdb-book-form {
+    max-width: 600px;
+
+    .bookdb-book-form-row {
+        margin-bottom: 15px;
+        vertical-align: top;
+    }
+
+    label {
+        display: block;
+        font-weight: bold;
+        margin-bottom: 5px;
+    }
+
+    input {
+        margin: 0;
+        width: 100%;
+        max-width: 120px;
+        height: 34px;
+        line-height: 34px;
+
+        &[type="number"] {
+            max-width: 50px;
+        }
+    }
+
+    select {
+        width: 100%;
+    }
+
+    textarea {
+        width: 100%;
+        resize: vertical;
+    }
+}
+
+@media only screen and (max-width: 480px) {
+    .bookdb-book-form {
+        // @todo columns
+    }
+}

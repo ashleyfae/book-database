@@ -43,7 +43,7 @@ class BDB_DB_Books extends BDB_DB {
 	public function get_columns() {
 		return array(
 			'ID'              => '%d',
-			'cover'           => '%s',
+			'cover'           => '%d',
 			'title'           => '%s',
 			'series_id'       => '%d',
 			'series_position' => '%d',
@@ -61,7 +61,7 @@ class BDB_DB_Books extends BDB_DB {
 	 */
 	public function get_column_defaults() {
 		return array(
-			'cover'           => '',
+			'cover'           => null,
 			'title'           => '',
 			'series_id'       => null,
 			'series_position' => null,
@@ -276,7 +276,7 @@ class BDB_DB_Books extends BDB_DB {
 		// Filter by specific author.
 		if ( $args['author_id'] ) {
 			$term_relationship_table = book_database()->book_term_relationships->table_name;
-			$term_table = book_database()->book_terms->table_name;
+			$term_table              = book_database()->book_terms->table_name;
 
 			$join .= " RIGHT JOIN $term_relationship_table as r on books.ID = r.book_id INNER JOIN $term_table as t on r.term_id = t.term_id";
 			$where .= $wpdb->prepare( " AND t.type = %s AND t.term_id = %d", 'author', absint( $args['author_id'] ) );
@@ -483,7 +483,7 @@ class BDB_DB_Books extends BDB_DB {
 
 		$sql = "CREATE TABLE " . $this->table_name . " (
 		ID bigint(20) NOT NULL AUTO_INCREMENT,
-		cover longtext NOT NULL,
+		cover bigint(20),
 		title text NOT NULL,
 		series_id bigint(20),
 		series_position mediumtext,

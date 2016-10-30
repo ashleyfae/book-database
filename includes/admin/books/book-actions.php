@@ -75,7 +75,6 @@ function bdb_book_series_field( $book ) {
 	$series_position_args = array(
 		'id'    => 'book_series_position',
 		'name'  => 'series_position',
-		'type'  => 'number',
 		'value' => $book->get_series_position(),
 		'desc'  => esc_html__( 'Position in the series', 'book-database' )
 	);
@@ -85,6 +84,9 @@ function bdb_book_series_field( $book ) {
 		<div class="bookdb-input-wrapper">
 			<div id="bookdb-book-series-name-wrap">
 				<?php echo book_database()->html->text( $series_args ); ?>
+				<?php if ( $book->get_series_id() ) : ?>
+					<input type="hidden" name="series_id" value="<?php echo esc_attr( $book->get_series_id() ); ?>">
+				<?php endif; ?>
 			</div>
 
 			<div id="bookdb-book-series-position-wrap">

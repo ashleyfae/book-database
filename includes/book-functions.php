@@ -296,8 +296,8 @@ function bdb_insert_book( $data = array() ) {
 	/* Series Table */
 
 	// If series name is given, let's add a new series.
-	if ( array_key_exists( 'series_name', $data['series'] ) ) {
-		$series_id = bdb_insert_series( $data['series'] );
+	if ( array_key_exists( 'series_name', $data ) && ! array_key_exists( 'series_id', $data ) ) {
+		$series_id = bdb_insert_series( $data['series_name'] );
 
 		if ( $series_id ) {
 			$data['series_id'] = absint( $series_id );
@@ -319,7 +319,7 @@ function bdb_insert_book( $data = array() ) {
 	$book_db_data['pub_date']        = $pub_date;
 	$book_db_data['synopsis']        = array_key_exists( 'synopsis', $data ) ? wp_kses_post( $data['synopsis'] ) : '';
 
-	if ( array_key_exists( 'ID', $data ) ) {
+	if ( array_key_exists( 'ID', $data ) && $data['ID'] > 0 ) {
 		$book_db_data['ID'] = absint( $data['ID'] );
 	}
 

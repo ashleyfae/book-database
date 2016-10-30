@@ -76,4 +76,12 @@
   #ubb-book-page-wrapper #delete-action a:hover {
     color: red; }
 
+.bookdb-table {
+  -webkit-box-sizing: border-box;
+  -moz-box-sizing: border-box;
+  box-sizing: border-box;
+  margin-bottom: .5em; }
+  .bookdb-table th {
+    padding: 15px 10px; }
+
 /*# sourceMappingURL=admin.css.map */

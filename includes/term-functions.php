@@ -22,8 +22,8 @@ if ( ! defined( 'ABSPATH' ) ) {
  */
 function bdb_get_term_display_types() {
 	$types = array(
-		'text',
-		'checkbox'
+		'text'     => esc_html__( 'Text', 'book-database' ),
+		'checkbox' => esc_html__( 'Checkbox', 'book-database' )
 	);
 
 	return apply_filters( 'book-database/term-display-types', $types );

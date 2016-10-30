@@ -219,15 +219,11 @@ function bdb_get_registered_settings() {
 					'id'   => 'terms',
 					'type' => 'terms',
 					'std'  => array(
-						array(
-							'id'      => 'author',
-							'name'    => esc_html__( 'Author', 'book-database' ),
-							'display' => 'text' // text, checkbox
-						),
+						// no author option because it's always enabled
 						array(
 							'id'      => 'publisher',
 							'name'    => esc_html__( 'Publisher', 'book-database' ),
-							'display' => 'checkbox'
+							'display' => 'checkbox' // text, checkbox
 						),
 						array(
 							'id'      => 'genre',
@@ -557,12 +553,13 @@ function bdb_terms_callback( $args ) {
 
 	$i = 0;
 	?>
-	<table id="bookdb-terms" class="wp-list-table widefat fixxed posts">
+	<table id="bookdb-terms" class="bookdb-table wp-list-table widefat fixed posts">
 		<thead>
 		<tr>
 			<th id="bookdb-term-id"><?php esc_html_e( 'ID', 'book-database' ); ?></th>
 			<th id="bookdb-term-name"><?php esc_html_e( 'Name', 'book-database' ); ?></th>
 			<th id="bookdb-term-display"><?php esc_html_e( 'Format', 'book-database' ); ?></th>
+			<th id="bookdb-term-remove"><?php esc_html_e( 'Remove', 'book-database' ); ?></th>
 		</tr>
 		</thead>
 		<tbody>
@@ -583,12 +580,24 @@ function bdb_terms_callback( $args ) {
 				<td>
 					<label for="bdb_settings[<?php echo esc_attr( $args['id'] ); ?>]_display_<?php echo $i; ?>" class="screen-reader-text"><?php _e( 'Term display type', 'novelist' ); ?></label>
 					<select id="bdb_settings[<?php echo esc_attr( $args['id'] ); ?>]_display_<?php echo $i; ?>" name="bdb_settings[<?php echo esc_attr( $args['id'] ); ?>][<?php echo $i; ?>][display]">
-
+						<?php foreach ( bdb_get_term_display_types() as $key => $name ) : ?>
+							<option value="<?php echo esc_attr( $key ); ?>" <?php selected( $display, $key ); ?>><?php echo $name; ?></option>
+						<?php endforeach; ?>
 					</select>
 				</td>
+				<td>
+					<button class="button-secondary bookdb-remove-term" onclick="<?php echo ( $i > 0 ) ? 'jQuery(this).parent().parent().remove(); return false' : 'return false'; ?>"><?php esc_html_e( 'Remove', 'book-database' ); ?></button>
+				</td>
 			</tr>
-		<?php endforeach; ?>
+			<?php
+			$i ++;
+		endforeach;
+		?>
 		</tbody>
 	</table>
+
+	<div id="bookdb-clone-buttons">
+		<button id="bookdb-add-term" class="button button-secondary" rel=".bookdb-cloned"><?php esc_html_e( 'Add Term', 'book-database' ); ?></button>
+	</div>
 	<?php
 }

@@ -520,7 +520,7 @@ function bdb_sanitize_key( $key ) {
  *
  * If a function is missing for settings callbacks alert the user.
  *
- * @param array $args Arguments passed by the setting
+ * @param array $args Arguments passed by the setting.
  *
  * @since 1.0.0
  * @return void
@@ -532,6 +532,63 @@ function bdb_missing_callback( $args ) {
 	);
 }
 
+/**
+ * Callback: Terms
+ *
+ * @param array  $args Arguments passed by the setting.
+ *
+ * @global array $bdb_options
+ *
+ * @since 1.0.0
+ * @return void
+ */
 function bdb_terms_callback( $args ) {
-	
+	global $bdb_options;
+
+	if ( isset( $bdb_options[ $args['id'] ] ) ) {
+		$value = $bdb_options[ $args['id'] ];
+	} else {
+		$value = isset( $args['std'] ) ? $args['std'] : array();
+	}
+
+	if ( ! is_array( $value ) ) {
+		return;
+	}
+
+	$i = 0;
+	?>
+	<table id="bookdb-terms" class="wp-list-table widefat fixxed posts">
+		<thead>
+		<tr>
+			<th id="bookdb-term-id"><?php esc_html_e( 'ID', 'book-database' ); ?></th>
+			<th id="bookdb-term-name"><?php esc_html_e( 'Name', 'book-database' ); ?></th>
+			<th id="bookdb-term-display"><?php esc_html_e( 'Format', 'book-database' ); ?></th>
+		</tr>
+		</thead>
+		<tbody>
+		<?php foreach ( $value as $term ) :
+			$name = array_key_exists( 'name', $term ) ? $term['name'] : '';
+			$id = array_key_exists( 'id', $term ) ? $term['id'] : sanitize_title( $name );
+			$display = array_key_exists( 'display', $term ) ? $term['display'] : 'text';
+			?>
+			<tr class="bookdb-cloned">
+				<td>
+					<label for="bdb_settings[<?php echo esc_attr( $args['id'] ); ?>]_id_<?php echo $i; ?>" class="screen-reader-text"><?php _e( 'ID for the term', 'novelist' ); ?></label>
+					<input type="text" class="regular-text" id="bdb_settings[<?php echo esc_attr( $args['id'] ); ?>]_id_<?php echo $i; ?>" name="bdb_settings[<?php echo esc_attr( $args['id'] ); ?>][<?php echo $i; ?>][id]" value="<?php echo esc_attr( stripslashes( $id ) ); ?>">
+				</td>
+				<td>
+					<label for="bdb_settings[<?php echo esc_attr( $args['id'] ); ?>]_name_<?php echo $i; ?>" class="screen-reader-text"><?php _e( 'Name for the term', 'novelist' ); ?></label>
+					<input type="text" class="regular-text" id="bdb_settings[<?php echo esc_attr( $args['id'] ); ?>]_name_<?php echo $i; ?>" name="bdb_settings[<?php echo esc_attr( $args['id'] ); ?>][<?php echo $i; ?>][name]" value="<?php echo esc_attr( stripslashes( $name ) ); ?>">
+				</td>
+				<td>
+					<label for="bdb_settings[<?php echo esc_attr( $args['id'] ); ?>]_display_<?php echo $i; ?>" class="screen-reader-text"><?php _e( 'Term display type', 'novelist' ); ?></label>
+					<select id="bdb_settings[<?php echo esc_attr( $args['id'] ); ?>]_display_<?php echo $i; ?>" name="bdb_settings[<?php echo esc_attr( $args['id'] ); ?>][<?php echo $i; ?>][display]">
+
+					</select>
+				</td>
+			</tr>
+		<?php endforeach; ?>
+		</tbody>
+	</table>
+	<?php
 }

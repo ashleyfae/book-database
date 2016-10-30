@@ -225,6 +225,7 @@ if ( ! class_exists( 'Book_Database' ) ) :
 			require_once BDB_DIR . 'includes/error-tracking.php';
 			require_once BDB_DIR . 'includes/misc-functions.php';
 			require_once BDB_DIR . 'includes/review-functions.php';
+			require_once BDB_DIR . 'includes/term-functions.php';
 
 			if ( is_admin() ) {
 				require_once BDB_DIR . 'includes/admin/admin-actions.php';

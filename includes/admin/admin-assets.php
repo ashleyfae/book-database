@@ -29,15 +29,14 @@ function bdb_load_admin_scripts( $hook ) {
 	}
 
 	$js_dir  = BDB_URL . 'assets/js/';
-	$css_dir = BDB_URL . 'assets/sass/'; // @todo change to css
+	$css_dir = BDB_URL . 'assets/css/'; // @todo change to css
 
 	// Use minified libraries if SCRIPT_DEBUG is turned off
 	$suffix = ( defined( 'SCRIPT_DEBUG' ) && SCRIPT_DEBUG ) ? '' : '.min';
-	$suffix = ''; // @todo remove
 
 	// @todo
 
-	wp_enqueue_style( 'ubb-admin', $css_dir . 'admin' . $suffix . '.css', array(), BDB_VERSION );
+	wp_enqueue_style( 'bookdb-admin', $css_dir . 'admin' . $suffix . '.css', array(), BDB_VERSION );
 }
 
 add_action( 'admin_enqueue_scripts', 'bdb_load_admin_scripts' );
@@ -60,16 +59,15 @@ function bdb_load_admin_post_assets( $hook ) {
 	}
 
 	$js_dir  = BDB_URL . 'assets/js/';
-	$css_dir = BDB_URL . 'assets/sass/'; // @todo change to css
+	$css_dir = BDB_URL . 'assets/css/'; // @todo change to css
 
 	// Use minified libraries if SCRIPT_DEBUG is turned off
 	$suffix = ( defined( 'SCRIPT_DEBUG' ) && SCRIPT_DEBUG ) ? '' : '.min';
-	$suffix = ''; // @todo remove
 
 	wp_enqueue_script( 'thickbox' );
 	wp_enqueue_style( 'thickbox' );
 
-	wp_enqueue_style( 'ubb-post-screen', $css_dir . 'post-screen' . $suffix . '.css', array(), BDB_VERSION );
+	wp_enqueue_style( 'bookdb-post-screen', $css_dir . 'post-screen' . $suffix . '.css', array(), BDB_VERSION );
 }
 
 add_action( 'admin_enqueue_scripts', 'bdb_load_admin_post_assets' );

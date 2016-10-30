@@ -75,6 +75,7 @@ function bdb_book_series_field( $book ) {
 	$series_position_args = array(
 		'id'    => 'book_series_position',
 		'name'  => 'series_position',
+		'type'  => 'number',
 		'value' => $book->get_series_position(),
 		'desc'  => esc_html__( 'Position in the series', 'book-database' )
 	);

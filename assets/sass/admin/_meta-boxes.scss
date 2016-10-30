@@ -33,7 +33,11 @@
         width: auto;
     }
 
-    .desc {
+    textarea {
+        min-height: 250px;
+    }
+
+    .bookdb-description {
         color: #666;
         display: block;
         font: {
@@ -51,20 +55,6 @@
     }
 }
 
-.bookdb-series-number-wrap {
-    label {
-        display: block;
-        font: {
-            weight: bold;
-        }
-        margin-bottom: 3px;
-    }
-
-    input[type="text"] {
-        max-width: 65px;
-    }
-}
-
 @media (min-width: 768px) {
     .bookdb-half {
         float: left;
@@ -74,85 +64,23 @@
             float: right;
         }
     }
-}
 
-/* Repeater Sections */
-.bookdb-repeater-section {
-    border: 1px solid #e9e9e9;
-    margin-bottom: 1.5em;
-    padding: 15px 15px 0;
-
-    h3 {
-        font: {
-            size: 14px;
-        }
-        margin: 0;
-    }
-
-    .bookdb-box-row {
-        display: none;
-    }
-
-    &.bookdb-repeater-section-expanded {
-        .bookdb-repeater-toggle {
-            &:before {
-                content: "\f142";
-            }
-        }
-
-        .bookdb-box-row {
-            display: block;
-        }
-    }
-}
-
-.bookdb-repeater-heading {
-    background: #e9e9e9;
-    margin: -15px -15px 0;
-    padding: 15px;
-
-    .dashicons {
-        color: #aaa;
-        cursor: pointer;
-        float: right;
-
-        &:hover {
-            color: #888;
+    #bookdb-book-series-wrap {
+        .bookdb-input-wrapper {
+            clear: both;
+            overflow: hidden;
         }
     }
 
-    .dashicons-trash {
-        &:hover {
-            color: #888;
-        }
+    #bookdb-book-series-name-wrap {
+        float: left;
+        max-width: 400px;
+        width: 60%;
     }
-}
 
-.bookdb-repeater-toggle {
-    &:before {
-        content: "\f140";
+    #bookdb-book-series-position-wrap {
+        float: left;
+        max-width: 150px;
+        width: 30%;
     }
-}
-
-.bookdb-repeater-actions {
-    margin-bottom: 0;
-    padding-bottom: 15px;
-    width: 99%;
-}
-
-.bookdb-repeater-remove {
-    float: right;
-}
-
-.bookdb-repeater-shift-rows {
-    margin-right: .5em !important;
-
-    span {
-        position: relative;
-        top: 3px;
-    }
-}
-
-.bookdb-add-repeater-section {
-    margin-bottom: 2px;
 }

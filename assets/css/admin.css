@@ -31,7 +31,9 @@
   .bookdb-box-row input[type="number"] {
     display: inline-block;
     width: auto; }
-  .bookdb-box-row .desc {
+  .bookdb-box-row textarea {
+    min-height: 250px; }
+  .bookdb-box-row .bookdb-description {
     color: #666;
     display: block;
     font-size: 14px;
@@ -42,65 +44,25 @@
       float: right;
       width: 80%; } }
 
-.bookdb-series-number-wrap label {
-  display: block;
-  font-weight: bold;
-  margin-bottom: 3px; }
-.bookdb-series-number-wrap input[type="text"] {
-  max-width: 65px; }
-
 @media (min-width: 768px) {
   .bookdb-half {
     float: left;
     width: 48%; }
     .bookdb-half.last {
-      float: right; } }
-/* Repeater Sections */
-.bookdb-repeater-section {
-  border: 1px solid #e9e9e9;
-  margin-bottom: 1.5em;
-  padding: 15px 15px 0; }
-  .bookdb-repeater-section h3 {
-    font-size: 14px;
-    margin: 0; }
-  .bookdb-repeater-section .bookdb-box-row {
-    display: none; }
-  .bookdb-repeater-section.bookdb-repeater-section-expanded .bookdb-repeater-toggle:before {
-    content: "\f142"; }
-  .bookdb-repeater-section.bookdb-repeater-section-expanded .bookdb-box-row {
-    display: block; }
+      float: right; }
 
-.bookdb-repeater-heading {
-  background: #e9e9e9;
-  margin: -15px -15px 0;
-  padding: 15px; }
-  .bookdb-repeater-heading .dashicons {
-    color: #aaa;
-    cursor: pointer;
-    float: right; }
-    .bookdb-repeater-heading .dashicons:hover {
-      color: #888; }
-  .bookdb-repeater-heading .dashicons-trash:hover {
-    color: #888; }
+  #bookdb-book-series-wrap .bookdb-input-wrapper {
+    clear: both;
+    overflow: hidden; }
 
-.bookdb-repeater-toggle:before {
-  content: "\f140"; }
+  #bookdb-book-series-name-wrap {
+    float: left;
+    max-width: 400px;
+    width: 60%; }
 
-.bookdb-repeater-actions {
-  margin-bottom: 0;
-  padding-bottom: 15px;
-  width: 99%; }
-
-.bookdb-repeater-remove {
-  float: right; }
-
-.bookdb-repeater-shift-rows {
-  margin-right: .5em !important; }
-  .bookdb-repeater-shift-rows span {
-    position: relative;
-    top: 3px; }
-
-.bookdb-add-repeater-section {
-  margin-bottom: 2px; }
+  #bookdb-book-series-position-wrap {
+    float: left;
+    max-width: 150px;
+    width: 30%; } }
 
 /*# sourceMappingURL=admin.css.map */

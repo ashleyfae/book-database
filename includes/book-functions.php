@@ -267,3 +267,90 @@ function bdb_set_book_terms( $book_id, $terms, $type, $append = false ) {
 	}
 
 }
+
+/**
+ * Insert New Book
+ *
+ * If the `ID` key is passed into the `$data` array then an existing book
+ * is updated instead.
+ *
+ * @param array $data   Book data. Arguments include:
+ *                      `ID` - To update an existing book.
+ *                      `cover` - Book cover attachment ID.
+ *                      `title` - Title of the book.
+ *                      `series_id` - ID of the series.
+ *                      `series_position` - Position in the series.
+ *                      `series_name` - Use instead of `series_id` to create a new series.
+ *                      `pub_date` - Publication date.
+ *                      `synopsis` - Book synopsis.
+ *                      `terms` - Array of associated terms.
+ *                      |----> `term_type` - Array of terms names of this type.
+ *
+ * @since 1.0.0
+ * @return int|WP_Error ID of the book inserted or updated, or WP_Error on failure.
+ */
+function bdb_insert_book( $data = array() ) {
+
+	$book_db_data = array();
+
+	/* Series Table */
+
+	// If series name is given, let's add a new series.
+	if ( array_key_exists( 'series_name', $data['series'] ) ) {
+		$series_id = bdb_insert_series( $data['series'] );
+
+		if ( $series_id ) {
+			$data['series_id'] = absint( $series_id );
+		}
+	}
+
+	/* Book Table */
+
+	$pub_date = null;
+
+	if ( array_key_exists( 'pub_date', $data ) ) {
+		$pub_date = date( 'Y-m-d H:i:s', strtotime( $data['pub_date'] ) );
+	}
+
+	$book_db_data['cover']           = ( array_key_exists( 'cover', $data ) && is_numeric( $data['cover'] ) ) ? absint( $data['cover'] ) : 0;
+	$book_db_data['title']           = array_key_exists( 'title', $data ) ? sanitize_text_field( wp_strip_all_tags( $data['title'] ) ) : '';
+	$book_db_data['series_id']       = array_key_exists( 'series_id', $data ) ? absint( $data['series_id'] ) : null;
+	$book_db_data['series_position'] = array_key_exists( 'series_position', $data ) ? sanitize_text_field( wp_strip_all_tags( $data['series_position'] ) ) : null;
+	$book_db_data['pub_date']        = $pub_date;
+	$book_db_data['synopsis']        = array_key_exists( 'synopsis', $data ) ? wp_kses_post( $data['synopsis'] ) : '';
+
+	if ( array_key_exists( 'ID', $data ) ) {
+		$book_db_data['ID'] = absint( $data['ID'] );
+	}
+
+	$book_id = book_database()->books->add( $book_db_data );
+
+	if ( ! $book_id ) {
+		return new WP_Error( 'error-inserting-book', __( 'Error inserting book information into database.', 'book-database' ) );
+	}
+
+}
+
+/**
+ * Insert Series
+ *
+ * @param string $series_name Name of the series.
+ * @param string $description Series description.
+ *
+ * @since 1.0.0
+ * @return int ID of the series.
+ */
+function bdb_insert_series( $series_name, $description = '' ) {
+	$series_exists = book_database()->series->get_series_by( 'name', $series_name );
+
+	if ( $series_exists && is_object( $series_exists ) ) {
+		return $series_exists->ID;
+	}
+
+	$new_series_id = book_database()->series->add( array(
+		'name'        => sanitize_text_field( wp_strip_all_tags( $series_name ) ),
+		'description' => wp_kses_post( $description )
+	) );
+
+	return $new_series_id;
+}

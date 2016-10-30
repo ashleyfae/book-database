@@ -46,7 +46,7 @@ class BDB_DB_Book_Terms extends BDB_DB {
 			'type'        => '%s',
 			'name'        => '%s',
 			'description' => '%s',
-			'image'       => '%s',
+			'image'       => '%d',
 			'links'       => '%s',
 			'count'       => '%d',
 		);
@@ -64,7 +64,7 @@ class BDB_DB_Book_Terms extends BDB_DB {
 			'type'        => '',
 			'name'        => '',
 			'description' => '',
-			'image'       => '',
+			'image'       => 0,
 			'links'       => '',
 			'count'       => 0
 		);
@@ -400,7 +400,7 @@ class BDB_DB_Book_Terms extends BDB_DB {
 		type varchar(32) NOT NULL,
 		name varchar(200) NOT NULL,
 		description longtext NOT NULL,
-		image longtext NOT NULL,
+		image bigint(20),
 		links longtext NOT NULL,
 		count bigint(20) NOT NULL,
 		PRIMARY KEY  (term_id),

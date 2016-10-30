@@ -38,6 +38,37 @@ function bdb_ajax_get_book() {
 add_action( 'wp_ajax_bdb_get_book', 'bdb_ajax_get_book' );
 
 /**
+ * Ajax CB: Update or Create Book
+ *
+ * @since 1.0.0
+ * @return void
+ */
+function bdb_ajax_save_book() {
+	check_ajax_referer( 'book-database', 'nonce' );
+
+	$book_id   = isset( $_POST['book_id'] ) ? absint( $_POST['book_id'] ) : 0;
+	$book_data = isset( $_POST['book'] ) ? $_POST['book'] : array();
+
+	if ( ! current_user_can( 'edit_posts' ) ) {
+		wp_send_json_error( __( 'Error: You do not have permission to add books.', 'book-database' ) );
+	}
+
+	if ( $book_id && book_database()->books->exists( $book_id ) ) {
+
+		// Update an existing book.
+
+	} else {
+
+		// Insert a new book.
+
+	}
+
+	wp_send_json_success($book_id);
+}
+
+add_action( 'wp_ajax_bdb_save_book', 'bdb_ajax_save_book' );
+
+/**
  * Ajax CB: Get Thumbnail URL from ID
  *
  * @since 1.0.0

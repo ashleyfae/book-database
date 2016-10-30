@@ -212,6 +212,60 @@ var BookDB_Modal_Admin = {
      */
     setBookFields: function (book) {
 
+    },
+
+    insert_update_book: function (button) {
+
+        var book = {};
+        // @todo gather data
+
+        var data = {
+            action: 'bdb_save_book',
+            nonce: bookdb_modal.nonce,
+            book_id: this.editingBook,
+            book: book
+        };
+
+        this.startLoader(button);
+
+        $.ajax({
+            type: 'POST',
+            url: ajaxurl,
+            data: data,
+            dataType: "json",
+            success: function (response) {
+
+                BookDB_Modal_Admin.stopLoader(button);
+
+                if (response.success) {
+
+                    if (0 === BookDB_Modal_Admin.editingBook) {
+                        BookDB_Modal_Admin.addToEditor('[book id="' + response.data.ID + '"]');
+                    } else {
+                        // Refresh content in editor.
+                        if (typeof tinyMCE !== 'undefined' && tinyMCE.get(BookDB_Modal_Admin.activeEditorID) && !tinyMCE.get(BookDB_Modal_Admin.activeEditorID).isHidden()) {
+                            tinyMCE.get(BookDB_Modal_Admin.activeEditorID).focus(true);
+                            tinyMCE.activeEditor.setContent(tinyMCE.activeEditor.getContent());
+                        }
+                    }
+
+                    BookDB_Modal_Admin.closeModal();
+
+                } else {
+
+                    if (window.console && window.console.log) {
+                        console.log(response);
+                    }
+
+                }
+
+            }
+        }).fail(function (response) {
+            if (window.console && window.console.log) {
+                console.log(response);
+            }
+        });
+
     }
 
 };

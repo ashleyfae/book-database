@@ -46,7 +46,7 @@ class BDB_DB_Books extends BDB_DB {
 			'cover'           => '%d',
 			'title'           => '%s',
 			'series_id'       => '%d',
-			'series_position' => '%d',
+			'series_position' => '%s',
 			'pub_date'        => '%s',
 			'synopsis'        => '%s',
 		);

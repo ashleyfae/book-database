@@ -27,6 +27,8 @@
   .bookdb-box-row input[type="url"] {
     display: block;
     width: 99%; }
+  .bookdb-box-row .regular-text {
+    max-width: 550px; }
   .bookdb-box-row .text-small,
   .bookdb-box-row input[type="number"] {
     display: inline-block;
@@ -36,7 +38,7 @@
   .bookdb-box-row .bookdb-description {
     color: #666;
     display: block;
-    font-size: 14px;
+    font-size: 13px;
     font-style: italic;
     margin: 2px 0 5px; }
   @media (min-width: 900px) {

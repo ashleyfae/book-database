@@ -99,7 +99,26 @@ function bdb_book_series_field( $book ) {
 
 add_action( 'book-database/book-edit/information-fields', 'bdb_book_series_field' );
 
-// @todo pub field
+/**
+ * Field: Publication Date
+ *
+ * @param BDB_Book $book
+ *
+ * @since 1.0.0
+ * @return void
+ */
+function bdb_book_pub_date_field( $book ) {
+	book_database()->html->meta_row( 'text', array(
+		'label' => __( 'Publication Date', 'book-database' )
+	), array(
+		'id'    => 'book_pub_date',
+		'name'  => 'pub_date',
+		'value' => $book->get_formatted_pub_date(),
+		'desc'  => esc_html__( 'Format: September 1st 2016', 'book-database' )
+	) );
+}
+
+add_action( 'book-database/book-edit/information-fields', 'bdb_book_pub_date_field' );
 
 /**
  * Field: Synopsis

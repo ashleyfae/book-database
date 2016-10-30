@@ -554,12 +554,32 @@ class BDB_Book {
 	/**
 	 * Get Publication Date
 	 *
+	 * Returned in MySQL date format.
+	 *
 	 * @access public
 	 * @since  1.0.0
 	 * @return string
 	 */
 	public function get_pub_date() {
 		return apply_filters( 'book-database/book/get/pub_date', $this->pub_date, $this->ID, $this );
+	}
+
+	/**
+	 * Get Formatted Publication Date
+	 *
+	 * @access public
+	 * @since  1.0.0
+	 * @return string
+	 */
+	public function get_formatted_pub_date( $format = false ) {
+		if ( ! $format ) {
+			$format = get_option( 'date_format' );
+		}
+
+		$raw_date = $this->get_pub_date();
+		$date     = $raw_date ? mysql2date( $format, $raw_date ) : false;
+
+		return apply_filters( 'book-database/book/get/formatted_pub_date', $date, $format, $raw_date, $this->ID, $this );
 	}
 
 	/**

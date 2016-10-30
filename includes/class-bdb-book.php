@@ -36,7 +36,7 @@ class BDB_Book {
 	 * @access private
 	 * @since  1.0.0
 	 */
-	private $cover;
+	private $cover_id;
 
 	/**
 	 * Title of the book.
@@ -420,8 +420,8 @@ class BDB_Book {
 	 * @since  1.0.0
 	 * @return string
 	 */
-	public function get_cover() {
-		return apply_filters( 'book-database/book/get/cover', $this->cover, $this->ID, $this );
+	public function get_cover_id() {
+		return apply_filters( 'book-database/book/get/cover_id', $this->cover_id, $this->ID, $this );
 	}
 
 	/**
@@ -434,7 +434,7 @@ class BDB_Book {
 	 * @return string
 	 */
 	public function get_cover_url( $size = 'full' ) {
-		$cover_id  = $this->get_cover();
+		$cover_id  = $this->get_cover_id();
 		$cover_url = false;
 
 		if ( $cover_id ) {

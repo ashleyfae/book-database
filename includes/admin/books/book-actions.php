@@ -17,6 +17,43 @@ if ( ! defined( 'ABSPATH' ) ) {
  */
 
 /**
+ * Field: Book Cover
+ *
+ * @param BDB_Book $book
+ *
+ * @since 1.0.0
+ * @return void
+ */
+function bdb_book_cover_field( $book ) {
+	$cover_id = $book->get_cover_id();
+	$url      = $book->get_cover_url( 'medium' );
+
+	ob_start();
+
+	$style = $url ? '' : 'display: none;';
+
+	echo '<img src="' . esc_url( $url ) . '" alt="' . esc_attr( sprintf( __( 'Book cover for %s', 'book-database' ), $book->get_title() ) ) . '" id="bookdb-cover-image" style="' . esc_attr( $style ) . '">';
+
+	?>
+	<div class="bookdb-cover-image-fields">
+		<button class="button bookdb-upload-image"><?php esc_html_e( 'Upload Image', 'book-database' ); ?></button>
+		<button class="button bookdb-remove-image" style="<?php echo ! $cover_id ? 'display: none;' : ''; ?>"><?php esc_html_e( 'Upload Image', 'book-database' ); ?></button>
+	</div>
+
+	<input type="hidden" id="book_cover_id" name="cover_id" value="<?php echo esc_attr( absint( $cover_id ) ); ?>">
+	<?php
+
+	$field = ob_get_clean();
+
+	book_database()->html->meta_row( 'raw', array(
+		'label' => __( 'Cover Image', 'book-database' ),
+		'field' => $field
+	) );
+}
+
+add_action( 'book-database/book-edit/information-fields', 'bdb_book_cover_field' );
+
+/**
  * Field: Book Title
  *
  * @param BDB_Book $book

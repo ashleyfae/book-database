@@ -305,6 +305,42 @@ function bdb_settings_sanitize( $input = array() ) {
 }
 
 /**
+ * Sanitize: Terms
+ *
+ * @param array $input
+ *
+ * @since 1.0.0
+ * @return array
+ */
+function bdb_settings_sanitize_terms( $input ) {
+	$new_input = array();
+
+	if ( ! is_array( $input ) ) {
+		return $new_input;
+	}
+
+	foreach ( $input as $settings ) {
+		if ( ! is_array( $settings ) || ! array_key_exists( 'name', $settings ) ) {
+			continue;
+		}
+
+		$id = ( array_key_exists( 'id', $settings ) && $settings['id'] ) ? $settings['id'] : $settings['name'];
+
+		$new_settings = apply_filters( 'book-database/settings/sanitize/terms/new-settings', array(
+			'name'    => trim( sanitize_text_field( $settings['name'] ) ),
+			'id'      => trim( sanitize_title( $id ) ),
+			'display' => array_key_exists( 'display', $settings ) ? $settings['display'] : 'text'
+		), $settings );
+
+		$new_input[] = $new_settings;
+	}
+
+	return $new_input;
+}
+
+add_filter( 'book-database/settings/sanitize/terms', 'bdb_settings_sanitize_terms' );
+
+/**
  * Display "Default settings restored" message.
  * This gets displayed after the default settings have been restored and
  * the page has been redirected.

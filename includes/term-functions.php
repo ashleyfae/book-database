@@ -12,8 +12,21 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
+/**
+ * Term Display Types
+ *
+ * How terms can be displayed in the admin area.
+ *
+ * @since 1.0.0
+ * @return array
+ */
 function bdb_get_term_display_types() {
+	$types = array(
+		'text',
+		'checkbox'
+	);
 
+	return apply_filters( 'book-database/term-display-types', $types );
 }
 
 /**

@@ -214,7 +214,7 @@ function bdb_get_registered_settings() {
 		'books'   => apply_filters( 'book-database/settings/books', array(
 			'main' => array(
 				'terms' => array(
-					'name' => sprintf( esc_html__( '%s Terms', 'book-database' ), bdb_get_label_singular() ),
+					'name' => sprintf( esc_html__( '%s Taxonomies', 'book-database' ), bdb_get_label_singular() ),
 					'desc' => '', // @todo
 					'id'   => 'terms',
 					'type' => 'terms',

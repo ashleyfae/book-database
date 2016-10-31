@@ -486,7 +486,7 @@ class BDB_DB_Books extends BDB_DB {
 		cover bigint(20),
 		title text NOT NULL,
 		series_id bigint(20),
-		series_position mediumtext,
+		series_position float,
 		pub_date datetime,
 		synopsis longtext NOT NULL,
 		PRIMARY KEY  (ID),

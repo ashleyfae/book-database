@@ -213,8 +213,8 @@ function bdb_insert_book( $data = array() ) {
 
 	$book_db_data['cover']           = ( array_key_exists( 'cover', $data ) && is_numeric( $data['cover'] ) ) ? absint( $data['cover'] ) : 0;
 	$book_db_data['title']           = array_key_exists( 'title', $data ) ? sanitize_text_field( wp_strip_all_tags( $data['title'] ) ) : '';
-	$book_db_data['series_id']       = array_key_exists( 'series_id', $data ) ? absint( $data['series_id'] ) : null;
-	$book_db_data['series_position'] = array_key_exists( 'series_position', $data ) ? sanitize_text_field( wp_strip_all_tags( $data['series_position'] ) ) : null;
+	$book_db_data['series_id']       = ( array_key_exists( 'series_id', $data ) && $data['series_id'] ) ? absint( $data['series_id'] ) : null;
+	$book_db_data['series_position'] = ( array_key_exists( 'series_position', $data ) && $data['series_position'] ) ? sanitize_text_field( wp_strip_all_tags( $data['series_position'] ) ) : null;
 	$book_db_data['pub_date']        = $pub_date;
 	$book_db_data['synopsis']        = array_key_exists( 'synopsis', $data ) ? wp_kses_post( $data['synopsis'] ) : '';
 

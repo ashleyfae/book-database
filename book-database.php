@@ -235,6 +235,7 @@ if ( ! class_exists( 'Book_Database' ) ) :
 				require_once BDB_DIR . 'includes/admin/books/book-functions.php';
 				require_once BDB_DIR . 'includes/admin/books/books.php';
 				require_once BDB_DIR . 'includes/admin/modal/modal.php';
+				require_once BDB_DIR . 'includes/admin/modal/modal-ajax.php';
 				require_once BDB_DIR . 'includes/admin/modal/modal-button.php';
 				require_once BDB_DIR . 'includes/admin/modal/shortcode-preview.php';
 				require_once BDB_DIR . 'includes/admin/posts/meta-box.php';

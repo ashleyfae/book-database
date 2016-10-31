@@ -148,12 +148,14 @@ var BookDB_Modal_Admin = {
 
             this.startLoader(button);
 
-            $.ajax({
+            jQuery.ajax({
                 type: 'POST',
                 url: ajaxurl,
                 data: data,
                 dataType: "json",
                 success: function (response) {
+
+                    console.log(response);
 
                     BookDB_Modal_Admin.stopLoader(button);
 
@@ -214,21 +216,37 @@ var BookDB_Modal_Admin = {
 
     },
 
+    /**
+     * Insert or Update Book
+     *
+     * @param button
+     */
     insert_update_book: function (button) {
 
-        var book = {};
-        // @todo gather data
+        var book = {
+            ID: this.editingBook,
+            title: jQuery('#book_title').val(),
+            series_name: jQuery('#book_series_name').val(),
+            series_position: jQuery('#book_series_position').val(),
+            pub_date: jQuery('#book_pub_date').val(),
+            synopsis: jQuery('#book_synopsis').val()
+        };
+
+        var seriesID = jQuery('#series_id');
+
+        if (seriesID.length) {
+            book.series_id = seriesID.val();
+        }
 
         var data = {
             action: 'bdb_save_book',
             nonce: bookdb_modal.nonce,
-            book_id: this.editingBook,
             book: book
         };
 
         this.startLoader(button);
 
-        $.ajax({
+        jQuery.ajax({
             type: 'POST',
             url: ajaxurl,
             data: data,
@@ -240,7 +258,7 @@ var BookDB_Modal_Admin = {
                 if (response.success) {
 
                     if (0 === BookDB_Modal_Admin.editingBook) {
-                        BookDB_Modal_Admin.addToEditor('[book id="' + response.data.ID + '"]');
+                        BookDB_Modal_Admin.addToEditor('[book id="' + response.data + '"]');
                     } else {
                         // Refresh content in editor.
                         if (typeof tinyMCE !== 'undefined' && tinyMCE.get(BookDB_Modal_Admin.activeEditorID) && !tinyMCE.get(BookDB_Modal_Admin.activeEditorID).isHidden()) {

@@ -110,10 +110,6 @@ function bdb_enqueue_modal_scripts() {
 
 	// JavaScript
 	wp_enqueue_script( 'bookdb-modal', BDB_URL . 'assets/js/admin/modal' . $suffix . '.js', array( 'jquery' ), BDB_VERSION, true );
-	wp_enqueue_script( 'bookdb-modal-book-form', BDB_URL . 'assets/js/admin/modal-book-form' . $suffix . '.js', array(
-		'jquery',
-		'bookdb-modal'
-	), BDB_VERSION, true );
 
 	wp_localize_script( 'bookdb-modal', 'bookdb_modal', array(
 		'ajax_url' => admin_url( 'admin-ajax.php' ),

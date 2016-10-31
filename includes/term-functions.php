@@ -144,7 +144,7 @@ function bdb_set_book_terms( $book_id, $terms, $type, $append = false ) {
 			continue;
 		}
 
-		if ( is_numeric( $term ) ) {
+		if ( is_int( $term ) ) {
 
 			// We have a term ID.
 

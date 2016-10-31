@@ -207,7 +207,7 @@ function bdb_insert_book( $data = array() ) {
 
 	$pub_date = null;
 
-	if ( array_key_exists( 'pub_date', $data ) ) {
+	if ( array_key_exists( 'pub_date', $data ) && $data['pub_date'] ) {
 		$pub_date = date( 'Y-m-d H:i:s', strtotime( $data['pub_date'] ) );
 	}
 

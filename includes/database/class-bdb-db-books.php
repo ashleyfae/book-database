@@ -65,7 +65,7 @@ class BDB_DB_Books extends BDB_DB {
 			'title'           => '',
 			'series_id'       => null,
 			'series_position' => null,
-			'pub_date'        => '',
+			'pub_date'        => null,
 			'synopsis'        => ''
 		);
 	}

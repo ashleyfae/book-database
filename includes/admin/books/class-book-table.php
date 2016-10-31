@@ -168,7 +168,7 @@ class BDB_Books_Table extends WP_List_Table {
 				break;
 
 			case 'pub_date' :
-				$value = date_i18n( get_option( 'date_format' ), strtotime( $item['pub_date'] ) );
+				$value = $item['pub_date'] ? date_i18n( get_option( 'date_format' ), strtotime( $item['pub_date'] ) ) : false;
 				break;
 
 			default :

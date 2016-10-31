@@ -307,6 +307,7 @@ class BDB_Books_Table extends WP_List_Table {
 		// Filter by series.
 		if ( isset( $_GET['series_id'] ) ) {
 			$args['series_id'] = absint( $_GET['series_id'] );
+			$args['orderby']   = 'series_position';
 		}
 
 		if ( is_numeric( $search ) ) {

@@ -38,7 +38,13 @@ function bdb_tinymce_shortcode_preview() {
 
 	$replace = array( $title, $author );
 
-	wp_send_json_success( str_replace( $find, $replace, $template ) );
+	ob_start();
+	?>
+	<span contentEditable="false" data-bookdb-book-remove="<?php echo esc_attr( $book_id ); ?>" style="color: red; cursor: pointer; float: right;">Remove</span>
+	<?php
+	$preview = ob_get_clean() . str_replace( $find, $replace, $template );
+
+	wp_send_json_success( $preview );
 }
 
 add_action( 'wp_ajax_bdb_shortcode_preview', 'bdb_tinymce_shortcode_preview' );

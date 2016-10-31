@@ -46,8 +46,8 @@
                 editor.setContent(content);
             });
 
-            return '<span class="bookdb-placeholder" contentEditable="false">&nbsp;</span><div class="bookdb-shortcode" style="display: block; cursor: pointer; margin: 5px; padding: 10px; border: 1px solid #999;" contentEditable="false" ' +
-                'data-bookdb-book="' + id[1] + '" data-bookdb-shortcode="' + data + '" data-mce-resize="false" data-mce-placeholder="1">Loading Book #' + id[1] + '</div><span class="bookdb-placeholder" contentEditable="false">&nbsp;</span>';
+            return '<div class="bookdb-shortcode" style="display: block; cursor: pointer; margin: 5px; padding: 10px; border: 1px solid #999;" contentEditable="false" ' +
+                'data-bookdb-book="' + id[1] + '" data-bookdb-shortcode="' + data + '" data-mce-resize="false" data-mce-placeholder="1">Loading Book #' + id[1] + '</div>';
         }
 
         /**

@@ -161,7 +161,7 @@ var BookDB_Modal_Admin = {
 
                     if (response.success) {
 
-                        BookDB_Modal_Admin.setBookFields(response.data.book);
+                        BookDB_Modal_Admin.setBookFields(response.data);
 
                     } else {
 
@@ -191,7 +191,7 @@ var BookDB_Modal_Admin = {
 
         var wrap = jQuery('.bookdb-frame-content');
 
-        wrap.find('input').each(function () {
+        wrap.find('input, textarea').each(function () {
             var self = jQuery(this);
 
             // Bail if this is a submit button.
@@ -213,6 +213,43 @@ var BookDB_Modal_Admin = {
      * @param book
      */
     setBookFields: function (book) {
+
+        /*
+         * `book` contains:
+         *
+         * `ID`
+         * `cover_id`
+         * `cover_url`
+         * `title`
+         * `author` - array
+         * `series_id`
+         * `series_name`
+         * `series_position`
+         * `pub_date`
+         * `synopsis`
+         */
+
+        console.log(book);
+
+        if (book.title) {
+            jQuery('#book_title').val(book.title);
+        }
+
+        if (book.series_name) {
+            jQuery('#book_series_name').val(book.series_name);
+        }
+
+        if (book.series_position) {
+            jQuery('#book_series_position').val(book.series_position);
+        }
+
+        if (book.pub_date) {
+            jQuery('#book_pub_date').val(book.pub_date);
+        }
+
+        if (book.synopsis) {
+            jQuery('#book_synopsis').val(book.synopsis);
+        }
 
     },
 

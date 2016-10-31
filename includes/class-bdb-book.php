@@ -605,13 +605,16 @@ class BDB_Book {
 	public function get_data() {
 
 		$book = array(
-			'ID'          => $this->ID,
-			'title'       => $this->get_title(),
-			'author'      => $this->get_author(),
-			'series_id'   => $this->get_series_id(),
-			'series_name' => $this->get_series_name(),
-			'pub_date'    => $this->get_pub_date(),
-			'synopsis'    => $this->get_synopsis()
+			'ID'              => $this->ID,
+			'cover_id'        => $this->get_cover_id(),
+			'cover_url'       => $this->get_cover_url( 'medium' ),
+			'title'           => $this->get_title(),
+			'author'          => $this->get_author(),
+			'series_id'       => $this->get_series_id(),
+			'series_name'     => $this->get_series_name(),
+			'series_position' => $this->get_series_position(),
+			'pub_date'        => $this->get_formatted_pub_date(),
+			'synopsis'        => $this->get_synopsis()
 		);
 
 		return apply_filters( 'book-database/book/get/data', $book, $this->ID, $this );

@@ -216,7 +216,10 @@ function bdb_save_book() {
 		$book_data['title'] = $_POST['title'];
 	}
 
-	// @todo cover
+	// Cover
+	if ( isset( $_POST['cover_id'] ) ) {
+		$book_data['cover'] = absint( $_POST['cover_id'] );
+	}
 
 	// Series Name
 	if ( isset( $_POST['series_name'] ) ) {

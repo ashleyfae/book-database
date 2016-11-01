@@ -203,6 +203,10 @@ var BookDB_Modal_Admin = {
             self.val('');
         });
 
+        // Hide cover image
+        jQuery('#bookdb-cover-image').attr('src', '').hide();
+        jQuery('.bookdb-remove-image').hide();
+
     },
 
     /**
@@ -230,6 +234,15 @@ var BookDB_Modal_Admin = {
          */
 
         console.log(book);
+
+        if (book.cover_id && 0 != book.cover_id) {
+            jQuery('#book_cover_id').val(book.cover_id);
+            jQuery('.bookdb-remove-image').show();
+        }
+
+        if (book.cover_url) {
+            jQuery('#bookdb-cover-image').attr('src', book.cover_url).show();
+        }
 
         if (book.title) {
             jQuery('#book_title').val(book.title);

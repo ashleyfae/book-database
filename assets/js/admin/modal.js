@@ -275,6 +275,7 @@ var BookDB_Modal_Admin = {
 
         var book = {
             ID: this.editingBook,
+            cover: jQuery('#book_cover_id').val(),
             title: jQuery('#book_title').val(),
             series_name: jQuery('#book_series_name').val(),
             series_position: jQuery('#book_series_position').val(),

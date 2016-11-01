@@ -63,8 +63,8 @@
                 return name ? window.decodeURIComponent(name[1]) : '';
             }
 
-            content = content.replace(/<p><span class="bookdb-(?=(.*?span>))\1\s*<\/p>/g, '');
-            content = content.replace(/<span class="bookdb-.*?span>/g, '');
+            //content = content.replace(/<p><span class="bookdb-(?=(.*?span>))\1\s*<\/p>/g, '');
+            //content = content.replace(/<span class="bookdb-.*?span>/g, '');
 
             return content.replace(/(?:<p(?: [^>]+)?>)*(<div [^>]+>.*?<\/div>)(?:<\/p>)*/g, function (match, div) {
                 var data = getAttr(div, 'data-bookdb-shortcode');
@@ -97,8 +97,9 @@
         });
 
         editor.on('BeforeSetContent', function(event) {
-            event.content = event.content.replace(/(<p>)?\s*<span class="bookdb-placeholder" data-mce-contenteditable="false">&nbsp;<\/span>\s*(<\/p>)?/gi,'');
-            event.content = event.content.replace(/^(\s*<p>)(\s*\[book)/, '$1<span class="bookdb-placeholder" contentEditable="false">&nbsp;</span>$2');
+            //console.log(event.content);
+            //event.content = event.content.replace(/(<p>)?\s*<span class="bookdb-placeholder" data-mce-contenteditable="false">&nbsp;<\/span>\s*(<\/p>)?/gi,'');
+            //event.content = event.content.replace(/^(\s*<p>)(\s*\[book)/, '$1 $2');
             event.content = replaceShortcodes(event.content);
         });
 

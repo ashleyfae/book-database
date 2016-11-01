@@ -40,7 +40,7 @@ function bdb_tinymce_shortcode_preview() {
 
 	ob_start();
 	?>
-	<span contentEditable="false" data-bookdb-book-remove="<?php echo esc_attr( $book_id ); ?>" style="color: red; cursor: pointer; float: right;">Remove</span>
+	<span data-bookdb-book-remove="<?php echo esc_attr( $book_id ); ?>" style="color: red; cursor: pointer; float: right;">Remove</span>
 	<?php
 	$preview = ob_get_clean() . str_replace( $find, $replace, $template );
 

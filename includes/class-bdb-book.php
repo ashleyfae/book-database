@@ -621,4 +621,26 @@ class BDB_Book {
 
 	}
 
+	/**
+	 * Get Placeholders
+	 *
+	 * These placeholders are replaced with the actual book values.
+	 *
+	 * @access public
+	 * @since  1.0.0
+	 * @return array
+	 */
+	public function get_placeholders() {
+		$placeholders = array(
+			'cover'    => '[cover]',
+			'title'    => '[title]',
+			'author'   => '[author]',
+			'series'   => '[series]',
+			'pub_date' => '[pub_date]',
+			'synopsis' => '[synopsis]'
+		);
+
+		return apply_filters( 'book-database/book/get/placeholders', $placeholders, $this->ID, $this );
+	}
+
 }

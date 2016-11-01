@@ -40,7 +40,7 @@ function bdb_load_admin_scripts( $hook ) {
 	// JS
 	$deps = array( 'jquery', 'jquery-ui-sortable' );
 	wp_enqueue_media();
-	wp_enqueue_script( 'book-database', $js_dir . 'admin' . $suffix . '.js', $deps, BDB_VERSION, true );
+	wp_enqueue_script( 'book-database', $js_dir . 'admin/admin' . $suffix . '.js', $deps, BDB_VERSION, true );
 }
 
 add_action( 'admin_enqueue_scripts', 'bdb_load_admin_scripts' );

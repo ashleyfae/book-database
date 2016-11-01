@@ -35,9 +35,9 @@ function bdb_book_cover_field( $book ) {
 	echo '<img src="' . esc_url( $url ) . '" alt="' . esc_attr( sprintf( __( 'Book cover for %s', 'book-database' ), $book->get_title() ) ) . '" id="bookdb-cover-image" style="' . esc_attr( $style ) . '">';
 
 	?>
-	<div class="bookdb-cover-image-fields">
+	<div class="bookdb-cover-image-fields" data-image="#bookdb-cover-image" data-image-id="#book_cover_id">
 		<button class="button bookdb-upload-image"><?php esc_html_e( 'Upload Image', 'book-database' ); ?></button>
-		<button class="button bookdb-remove-image" style="<?php echo ! $cover_id ? 'display: none;' : ''; ?>"><?php esc_html_e( 'Upload Image', 'book-database' ); ?></button>
+		<button class="button bookdb-remove-image" style="<?php echo ! $cover_id ? 'display: none;' : ''; ?>"><?php esc_html_e( 'Remove Image', 'book-database' ); ?></button>
 	</div>
 
 	<input type="hidden" id="book_cover_id" name="cover_id" value="<?php echo esc_attr( absint( $cover_id ) ); ?>">

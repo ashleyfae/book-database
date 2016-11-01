@@ -29,45 +29,18 @@ function bdb_load_admin_scripts( $hook ) {
 	}
 
 	$js_dir  = BDB_URL . 'assets/js/';
-	$css_dir = BDB_URL . 'assets/css/'; // @todo change to css
+	$css_dir = BDB_URL . 'assets/css/';
 
 	// Use minified libraries if SCRIPT_DEBUG is turned off
 	$suffix = ( defined( 'SCRIPT_DEBUG' ) && SCRIPT_DEBUG ) ? '' : '.min';
 
-	// @todo
+	// CSS
+	wp_enqueue_style( 'book-database', $css_dir . 'admin' . $suffix . '.css', array(), BDB_VERSION );
 
-	wp_enqueue_style( 'bookdb-admin', $css_dir . 'admin' . $suffix . '.css', array(), BDB_VERSION );
+	// JS
+	$deps = array( 'jquery', 'jquery-ui-sortable' );
+	wp_enqueue_media();
+	wp_enqueue_script( 'book-database', $js_dir . 'admin' . $suffix . '.js', $deps, BDB_VERSION, true );
 }
 
 add_action( 'admin_enqueue_scripts', 'bdb_load_admin_scripts' );
-
-/**
- * Load Admin Post Assets
- *
- * These assets only get loaded on the Add/Edit Post screen.
- *
- * @param string $hook
- *
- * @since 1.0.0
- * @return void
- */
-function bdb_load_admin_post_assets( $hook ) {
-	// @todo page check
-
-	if ( $hook != 'post.php' && $hook != 'edit.php' ) {
-		return;
-	}
-
-	$js_dir  = BDB_URL . 'assets/js/';
-	$css_dir = BDB_URL . 'assets/css/'; // @todo change to css
-
-	// Use minified libraries if SCRIPT_DEBUG is turned off
-	$suffix = ( defined( 'SCRIPT_DEBUG' ) && SCRIPT_DEBUG ) ? '' : '.min';
-
-	wp_enqueue_script( 'thickbox' );
-	wp_enqueue_style( 'thickbox' );
-
-	wp_enqueue_style( 'bookdb-post-screen', $css_dir . 'post-screen' . $suffix . '.css', array(), BDB_VERSION );
-}
-
-add_action( 'admin_enqueue_scripts', 'bdb_load_admin_post_assets' );

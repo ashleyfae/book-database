@@ -77,3 +77,43 @@ function bdb_ajax_get_thumbnail() {
 }
 
 add_action( 'wp_ajax_bdb_get_thumbnail', 'bdb_ajax_get_thumbnail' );
+
+function bdb_ajax_search_book() {
+	check_ajax_referer( 'book-database', 'nonce' );
+
+	$search = isset( $_POST['search'] ) ? wp_strip_all_tags( $_POST['search'] ) : false;
+	$field  = ( isset( $_POST['field'] ) && $_POST['field'] == 'author' ) ? 'author' : 'title';
+
+	if ( ! $search ) {
+		wp_send_json_error( __( 'Error: A search term is resquired.', 'book-database' ) );
+	}
+
+	$list_items = '';
+
+	if ( 'author' == $field ) {
+		$args = array(
+			'author_name' => $search
+		);
+	} else {
+		$args = array(
+			'title' => $search
+		);
+	}
+
+	$books = bdb_get_books( apply_filters( 'book-database/admin/books/search-book-args', $args, $search, $field ) );
+
+	if ( ! is_array( $books ) ) {
+		wp_send_json_error( __( 'No results found.', 'book-database' ) );
+	}
+
+	foreach ( $books as $book ) {
+		$author_name = isset( $book->author_name ) ? $book->author_name : bdb_get_book_author_name( $book->ID );
+		$list_items .= '<li><a href="#" data-id="' . esc_attr( $book->ID ) . '">' . sprintf( __( '%s by %s', 'book-database' ), $book->title, $author_name ) . '</a></li>';
+	}
+
+	wp_send_json_success( '<ul>' . $list_items . '</ul>' );
+
+	exit;
+}
+
+add_action( 'wp_ajax_bdb_search_book', 'bdb_ajax_search_book' );

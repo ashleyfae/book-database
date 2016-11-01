@@ -358,7 +358,10 @@
 
 #bookdb-existing-book-results {
   border-bottom: 1px solid #ddd;
-  margin-bottom: 2em; }
+  margin-bottom: 2em;
+  padding-bottom: 2em; }
+  #bookdb-existing-book-results .spinner {
+    float: none; }
 
 #bookdb-search-field {
   margin: 0 5px; }

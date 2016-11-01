@@ -83,6 +83,20 @@ function bdb_get_book( $book_id ) {
 }
 
 /**
+ * Get Books
+ *
+ * @param array $args Query arguments to override the defaults.
+ *
+ * @since 1.0.0
+ * @return array Array of book objects.
+ */
+function bdb_get_books( $args = array() ) {
+	$books = book_database()->books->get_books( $args );
+
+	return apply_filters( 'book-database/get-books', $books, $args );
+}
+
+/**
  * Get Book Author
  *
  * @param int   $book_id ID of the book to get the author for.
@@ -95,6 +109,34 @@ function bdb_get_book( $book_id ) {
  */
 function bdb_get_book_author( $book_id, $args = array() ) {
 	return bdb_get_book_terms( $book_id, 'author', $args );
+}
+
+/**
+ * Get Book Author Name(s)
+ *
+ * @uses  bdb_get_book_author()
+ *
+ * @param int   $book_id ID of the book to get the author for.
+ * @param array $args    Query arguments to override the defaults.
+ *
+ * @since 1.0.0
+ * @return string|false Comma-separated list of author names or false on failure.
+ */
+function bdb_get_book_author_name( $book_id, $args = array() ) {
+	$terms = bdb_get_book_author( $book_id, $args );
+	$names = false;
+
+	if ( is_array( $terms ) ) {
+		$names_temp = array();
+
+		foreach ( $terms as $term ) {
+			$names_temp[] = $term->name;
+		}
+
+		$names = implode( ', ', $names_temp );
+	}
+
+	return apply_filters( 'book-database/get-book-author-name', $names, $terms, $book_id, $args );
 }
 
 /**

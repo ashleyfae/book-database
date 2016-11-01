@@ -60,6 +60,11 @@
 #bookdb-existing-book-results {
     border-bottom: 1px solid #ddd;
     margin-bottom: 2em;
+    padding-bottom: 2em;
+
+    .spinner {
+        float: none;
+    }
 }
 
 #bookdb-search-field {

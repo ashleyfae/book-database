@@ -12,6 +12,8 @@ var BookDB_Modal_Admin = {
 
     activeEditorID: false,
 
+    newButExistingBook: false,
+
     shortcodeEscapeMap: {
         '"': "'"
     },
@@ -189,6 +191,15 @@ var BookDB_Modal_Admin = {
      */
     clearBookFields: function () {
 
+        // New but existing book back to false.
+        this.newButExistingBook = false;
+
+        // Clear search results.
+        jQuery('#bookdb-existing-book-results').empty();
+
+        // Set heading back to normal.
+        jQuery('.bookdb-book-details-form > h3').text(bookdb_modal.l10n.insert_new_book);
+
         var wrap = jQuery('.bookdb-frame-content');
 
         wrap.find('input, textarea').each(function () {
@@ -233,7 +244,7 @@ var BookDB_Modal_Admin = {
          * `synopsis`
          */
 
-        console.log(book);
+        jQuery('.bookdb-book-details-form > h3').text(bookdb_modal.l10n.editing + '"' + book.title + '"');
 
         if (book.cover_id && 0 != book.cover_id) {
             jQuery('#book_cover_id').val(book.cover_id);
@@ -308,7 +319,9 @@ var BookDB_Modal_Admin = {
 
                 if (response.success) {
 
-                    if (0 === BookDB_Modal_Admin.editingBook) {
+                    console.log(BookDB_Modal_Admin.editingBook);
+
+                    if (0 === BookDB_Modal_Admin.editingBook || true == BookDB_Modal_Admin.newButExistingBook) {
                         BookDB_Modal_Admin.addToEditor('[book id="' + response.data + '"]');
                     } else {
                         // Refresh content in editor.
@@ -354,6 +367,7 @@ jQuery(document).ready(function ($) {
             $('.bookdb-menu').on('click', '.bookdb-menu-item', this.menu);
             $('.bookdb-router').on('click', '.bookdb-menu-item', this.modalTabs);
             $('.bookdb-button-action').on('click', this.buttonCallback);
+            $('#bookdb-search-existing-book').on('click', this.searchExistingBook);
         },
 
         /**
@@ -445,6 +459,60 @@ jQuery(document).ready(function ($) {
             if (typeof BookDB_Modal_Admin[callback] == 'function') {
                 BookDB_Modal_Admin[callback]($(this));
             }
+        },
+
+        /**
+         * Search for an Existing Book
+         *
+         * @param e
+         */
+        searchExistingBook: function (e) {
+            e.preventDefault();
+
+            var button = $(this),
+                resultsWrap = $('#bookdb-existing-book-results');
+
+            button.attr('disabled', true);
+            resultsWrap.empty().append('<span class="spinner is-active"></span>');
+
+            var data = {
+                action: 'bdb_search_book',
+                nonce: bookdb_modal.nonce,
+                search: $('#bookdb-search-existing').val(),
+                field: $('#bookdb-search-field').val()
+            };
+
+            jQuery.ajax({
+                type: 'POST',
+                url: ajaxurl,
+                data: data,
+                dataType: "json",
+                success: function (response) {
+
+                    button.attr('disabled', false);
+                    resultsWrap.empty().append(response.data);
+
+                    if (response.success) {
+
+                        resultsWrap.on('click', 'a', function () {
+                            BookDB_Modal_Admin.setBook({bookID: $(this).data('id')});
+                            BookDB_Modal_Admin.newButExistingBook = true;
+                        });
+
+                    } else {
+
+                        if (window.console && window.console.log) {
+                            console.log(response);
+                        }
+
+                    }
+
+                }
+            }).fail(function (response) {
+                if (window.console && window.console.log) {
+                    console.log(response);
+                }
+            });
         }
 
     };

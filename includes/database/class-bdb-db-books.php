@@ -251,6 +251,7 @@ class BDB_DB_Books extends BDB_DB {
 			'offset'          => 0,
 			'title'           => false,
 			'author_id'       => false,
+			'author_name'     => false,
 			'series_id'       => false,
 			'series_position' => false,
 			'pub_date'        => false,
@@ -273,13 +274,24 @@ class BDB_DB_Books extends BDB_DB {
 		// Join on series table to return the series name.
 		$join .= " LEFT JOIN $series_table as series on books.series_id = series.ID";
 
-		// Filter by specific author.
+		// Filter by specific author ID.
 		if ( $args['author_id'] ) {
 			$term_relationship_table = book_database()->book_term_relationships->table_name;
 			$term_table              = book_database()->book_terms->table_name;
 
 			$join .= " RIGHT JOIN $term_relationship_table as r on books.ID = r.book_id INNER JOIN $term_table as t on r.term_id = t.term_id";
+
 			$where .= $wpdb->prepare( " AND t.type = %s AND t.term_id = %d", 'author', absint( $args['author_id'] ) );
+		}
+
+		// Filter by specific author name.
+		if ( $args['author_name'] ) {
+			$term_relationship_table = book_database()->book_term_relationships->table_name;
+			$term_table              = book_database()->book_terms->table_name;
+
+			$join .= " RIGHT JOIN $term_relationship_table as r on books.ID = r.book_id INNER JOIN $term_table as t on r.term_id = t.term_id";
+
+			$where .= $wpdb->prepare( " AND t.type = %s AND t.name LIKE '%%%%" . '%s' . "%%%%'", 'author', wp_strip_all_tags( $args['author_name'] ) );
 		}
 
 		// Specific books.
@@ -357,7 +369,7 @@ class BDB_DB_Books extends BDB_DB {
 		$args['order'] = esc_sql( $args['order'] );
 
 		$select_this = 'books.*, series.name as series_name';
-		if ( $args['author_id'] ) {
+		if ( $args['author_id'] || $args['author_name'] ) {
 			$select_this .= ', t.term_id as author_id, t.name as author_name';
 		}
 

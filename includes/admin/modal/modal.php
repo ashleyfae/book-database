@@ -117,9 +117,11 @@ function bdb_enqueue_modal_scripts() {
 		'l10n'     => array(
 			'action_button_default' => esc_html__( 'Insert', 'book-database' ),
 			'action_button_update'  => __( 'Update', 'book-database' ),
+			'editing'               => __( 'Editing', 'book-database' ),
+			'insert_new_book'       => __( 'Insert New Book', 'book-database' ),
 			'media_title'           => __( 'Select or Upload Image', 'book-database' ),
 			'media_button'          => __( 'Use Image', 'book-database' ),
-			'shortcode_remove'      => __( 'Are you sure you want to remove this book?', 'book-database' ),
+			'shortcode_remove'      => __( 'Are you sure you want to remove this book?', 'book-database' )
 		)
 	) );
 }

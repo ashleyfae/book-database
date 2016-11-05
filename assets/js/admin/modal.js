@@ -206,7 +206,7 @@ var BookDB_Modal_Admin = {
             var self = jQuery(this);
 
             // Bail if this is a submit button.
-            if ('submit' == self.attr('type')) {
+            if ('submit' == self.attr('type') || 'button' == self.attr('type')) {
                 return true;
             }
 

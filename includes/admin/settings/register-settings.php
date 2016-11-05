@@ -511,7 +511,7 @@ function bdb_book_layout_callback( $args ) {
 	<div id="book-layout-builder">
 
 		<div id="enabled-book-settings">
-			<h3 class="bookdb-no-sort"><?php _e( 'Your Layout', 'book-database' ); ?></h3>
+			<h3 class="bookdb-no-sort"><?php _e( 'Enabled Fields', 'book-database' ); ?></h3>
 			<div id="enabled-book-settings-inner" class="bookdb-sortable bookdb-sorter-enabled-column">
 				<?php foreach ( $enabled_fields as $key => $options ) : ?>
 					<?php bdb_format_book_layout_option( $key, $options, $all_fields, $enabled_fields, 'false' ); ?>

@@ -213,7 +213,13 @@ function bdb_get_registered_settings() {
 		/* Book Settings */
 		'books'   => apply_filters( 'book-database/settings/books', array(
 			'main' => array(
-				'terms' => array(
+				'book_layout' => array(
+					'id'   => 'book_layout',
+					'name' => sprintf( esc_html__( '%s Layout', 'book-database' ), bdb_get_label_singular() ),
+					'type' => 'book_layout',
+					'std'  => bdb_get_default_book_layout_keys()
+				),
+				'terms'       => array(
 					'name' => sprintf( esc_html__( '%s Taxonomies', 'book-database' ), bdb_get_label_singular() ),
 					'desc' => '', // @todo
 					'id'   => 'terms',
@@ -482,6 +488,119 @@ function bdb_missing_callback( $args ) {
 }
 
 /**
+ * Callback: Book Layout
+ *
+ * @param array $args
+ *
+ * @since 1.0.0
+ * @return void
+ */
+function bdb_book_layout_callback( $args ) {
+	$all_fields     = bdb_get_book_fields();
+	$enabled_fields = bdb_get_option( $args['id'], false );
+
+	// If we don't have fields already saved, let's use the default values.
+	if ( ! is_array( $enabled_fields ) && array_key_exists( 'std', $args ) && is_array( $args['std'] ) ) {
+
+		$enabled_fields = bdb_get_default_book_field_values( $all_fields );
+
+	} elseif ( ! is_array( $enabled_fields ) ) {
+		$enabled_fields = array();
+	}
+	?>
+	<div id="book-layout-builder">
+
+		<div id="enabled-book-settings">
+			<h3 class="bookdb-no-sort"><?php _e( 'Your Layout', 'book-database' ); ?></h3>
+			<div id="enabled-book-settings-inner" class="bookdb-sortable bookdb-sorter-enabled-column">
+				<?php foreach ( $enabled_fields as $key => $options ) : ?>
+					<?php bdb_format_book_layout_option( $key, $options, $all_fields, $enabled_fields, 'false' ); ?>
+				<?php endforeach; ?>
+			</div>
+		</div>
+
+		<div id="available-book-settings">
+			<h3 class="bookdb-no-sort"><?php _e( 'Disabled', 'book-database' ); ?></h3>
+			<div id="available-book-settings-inner" class="bookdb-sortable">
+				<?php foreach ( $all_fields as $key => $options ) : ?>
+					<?php
+					if ( ! array_key_exists( $key, $enabled_fields ) ) {
+						bdb_format_book_layout_option( $key, $options, $all_fields, $enabled_fields, 'true' );
+					}
+					?>
+				<?php endforeach; ?>
+			</div>
+		</div>
+
+	</div>
+	<?php
+}
+
+/**
+ * Format Book Layout
+ *
+ * Formats the layout of each book information option used in the book layout.
+ *
+ * @see   bdb_book_layout_callback()
+ *
+ * @param string $key
+ * @param array  $options
+ * @param array  $all_fields
+ * @param array  $enabled_fields
+ * @param string $disabled
+ *
+ * @since 1.0.0
+ * @return void
+ */
+function bdb_format_book_layout_option( $key = '', $options = array(), $all_fields = array(), $enabled_fields = array(), $disabled = 'false' ) {
+	if ( ! array_key_exists( $key, $all_fields ) ) {
+		return;
+	}
+
+	$classes = 'bookdb-book-option';
+	if ( $key == 'cover' && array_key_exists( 'alignment', $options ) ) {
+		$classes .= ' bookdb-book-cover-align-' . $options['alignment'];
+	}
+
+	$label          = ( array_key_exists( $key, $enabled_fields ) && array_key_exists( 'label', $enabled_fields[ $key ] ) ) ? $enabled_fields[ $key ]['label'] : $all_fields[ $key ]['label'];
+	$displayed_text = ( $disabled == 'true' || empty( $label ) ) ? esc_html( $all_fields[ $key ]['name'] ) : $label;
+	$newline        = ( array_key_exists( $key, $enabled_fields ) && array_key_exists( 'linebreak', $enabled_fields[ $key ] ) ) ? $enabled_fields[ $key ]['linebreak'] : false;
+	$disable_edit   = ( array_key_exists( 'disable-edit', $all_fields[ $key ] ) && $all_fields[ $key ]['disable-edit'] ) ? true : false;
+	?>
+	<div id="bookdb-book-option-<?php echo esc_attr( $key ); ?>" class="<?php echo esc_attr( $classes ); ?>">
+		<span class="bookdb-book-option-title"><?php echo strip_tags( $displayed_text, '<a><img><strong><b><em><i>' ); ?></span>
+		<span class="bookdb-book-option-name"><?php echo esc_html( $all_fields[ $key ]['name'] ); ?></span>
+		<?php if ( $disable_edit === false ) : ?>
+			<button type="button" class="bookdb-book-option-toggle"><?php _e( 'Edit', 'book-database' ); ?></button>
+		<?php endif; ?>
+
+		<div class="bookdb-book-option-fields">
+			<label for="bdb_settings[book_layout][<?php echo esc_attr( $key ); ?>][label]"><?php printf( __( 'Use <mark>%1$s</mark> as a placeholder for the %2$s', 'book-database' ), $all_fields[ $key ]['placeholder'], strtolower( $all_fields[ $key ]['name'] ) ); ?></label>
+			<textarea class="bookdb-book-option-label" id="bdb_settings[book_layout][<?php echo esc_attr( $key ); ?>][label]" name="bdb_settings[book_layout][<?php echo esc_attr( $key ); ?>][label]"><?php echo esc_textarea( $label ); ?></textarea>
+			<input type="hidden" class="bookdb-book-option-disabled" name="bdb_settings[book_layout][<?php echo esc_attr( $key ); ?>][disabled]" value="<?php echo esc_attr( $disabled ); ?>">
+
+			<?php if ( $key != 'cover' ) : ?>
+				<div class="bookdb-new-line-option">
+					<input type="checkbox" id="bdb_settings[book_layout][<?php echo esc_attr( $key ); ?>][linebreak]" name="bdb_settings[book_layout][<?php echo esc_attr( $key ); ?>][linebreak]" value="on" <?php checked( $newline, 'on' ); ?>>
+					<label for="bdb_settings[book_layout][<?php echo esc_attr( $key ); ?>][linebreak]"><?php _e( 'Add new line after this field', 'book-database' ); ?></label>
+				</div>
+			<?php endif; ?>
+
+			<?php if ( $key == 'cover' ) : ?>
+				<?php $alignment = ( array_key_exists( $key, $enabled_fields ) && array_key_exists( 'alignment', $enabled_fields[ $key ] ) ) ? $enabled_fields[ $key ]['alignment'] : $all_fields[ $key ]['alignment']; ?>
+				<label for="bookdb-book-layout-cover-changer"><?php _e( 'Cover Alignment', 'book-database' ); ?></label>
+				<select id="bookdb-book-layout-cover-changer" name="bdb_settings[book_layout][cover][alignment]">
+					<?php foreach ( bdb_book_alignment_options() as $key => $value ) : ?>
+						<option value="<?php echo esc_attr( $key ); ?>" <?php selected( $alignment, $key ); ?>><?php echo esc_html( $value ); ?></option>
+					<?php endforeach; ?>
+				</select>
+			<?php endif; ?>
+		</div>
+	</div>
+	<?php
+}
+
+/**
  * Callback: Terms
  *
  * @param array  $args Arguments passed by the setting.
@@ -523,15 +642,15 @@ function bdb_terms_callback( $args ) {
 			?>
 			<tr class="bookdb-cloned">
 				<td>
-					<label for="bdb_settings[<?php echo esc_attr( $args['id'] ); ?>]_id_<?php echo $i; ?>" class="screen-reader-text"><?php _e( 'ID for the term', 'novelist' ); ?></label>
+					<label for="bdb_settings[<?php echo esc_attr( $args['id'] ); ?>]_id_<?php echo $i; ?>" class="screen-reader-text"><?php _e( 'ID for the term', 'book-database' ); ?></label>
 					<input type="text" class="regular-text" id="bdb_settings[<?php echo esc_attr( $args['id'] ); ?>]_id_<?php echo $i; ?>" name="bdb_settings[<?php echo esc_attr( $args['id'] ); ?>][<?php echo $i; ?>][id]" value="<?php echo esc_attr( stripslashes( $id ) ); ?>">
 				</td>
 				<td>
-					<label for="bdb_settings[<?php echo esc_attr( $args['id'] ); ?>]_name_<?php echo $i; ?>" class="screen-reader-text"><?php _e( 'Name for the term', 'novelist' ); ?></label>
+					<label for="bdb_settings[<?php echo esc_attr( $args['id'] ); ?>]_name_<?php echo $i; ?>" class="screen-reader-text"><?php _e( 'Name for the term', 'book-database' ); ?></label>
 					<input type="text" class="regular-text" id="bdb_settings[<?php echo esc_attr( $args['id'] ); ?>]_name_<?php echo $i; ?>" name="bdb_settings[<?php echo esc_attr( $args['id'] ); ?>][<?php echo $i; ?>][name]" value="<?php echo esc_attr( stripslashes( $name ) ); ?>">
 				</td>
 				<td>
-					<label for="bdb_settings[<?php echo esc_attr( $args['id'] ); ?>]_display_<?php echo $i; ?>" class="screen-reader-text"><?php _e( 'Term display type', 'novelist' ); ?></label>
+					<label for="bdb_settings[<?php echo esc_attr( $args['id'] ); ?>]_display_<?php echo $i; ?>" class="screen-reader-text"><?php _e( 'Term display type', 'book-database' ); ?></label>
 					<select id="bdb_settings[<?php echo esc_attr( $args['id'] ); ?>]_display_<?php echo $i; ?>" name="bdb_settings[<?php echo esc_attr( $args['id'] ); ?>][<?php echo $i; ?>][display]">
 						<?php foreach ( bdb_get_term_display_types() as $key => $name ) : ?>
 							<option value="<?php echo esc_attr( $key ); ?>" <?php selected( $display, $key ); ?>><?php echo $name; ?></option>

@@ -72,6 +72,53 @@ class BDB_HTML {
 	}
 
 	/**
+	 * Multicheck
+	 *
+	 * @param array $args Arguments to override the defaults.
+	 *
+	 * @access public
+	 * @since  1.0.0
+	 * @return string
+	 */
+	public function multicheck( $args = array() ) {
+
+		$defaults = array(
+			'choices' => array(), // value => name pairs
+			'id'      => null,
+			'name'    => null,
+			'current' => array(),
+			'class'   => 'bookdb-checkbox',
+			'options' => array(
+				'disabled' => false,
+				'readonly' => false
+			)
+		);
+
+		$args = wp_parse_args( $args, $defaults );
+
+		$class   = implode( ' ', array_map( 'sanitize_html_class', explode( ' ', $args['class'] ) ) );
+		$options = '';
+		$output  = '';
+
+		if ( ! empty( $args['options']['disabled'] ) ) {
+			$options .= ' disabled="disabled"';
+		} elseif ( ! empty( $args['options']['readonly'] ) ) {
+			$options .= ' readonly';
+		}
+
+		foreach ( $args['choices'] as $value => $name ) {
+			$checked = in_array( $value, $args['current'] ) ? ' checked="checked"' : '';
+
+			$output .= '<label for="' . esc_attr( $args['id'] . '-' . sanitize_html_class( $value ) ) . '">';
+			$output .= '<input type="checkbox"' . $options . ' name="' . esc_attr( $args['name'] ) . '" id="' . esc_attr( $args['id'] . '-' . sanitize_html_class( $value ) ) . '" class="' . $class . ' ' . esc_attr( $args['name'] ) . '" value="' . esc_attr( $value ) . '" ' . $checked . '>';
+			$output .= esc_html( $name ) . '</label>';
+		}
+
+		return $output;
+
+	}
+
+	/**
 	 * Text Field
 	 *
 	 * @param array $args Arguments to override the defaults.

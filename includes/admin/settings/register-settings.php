@@ -219,11 +219,11 @@ function bdb_get_registered_settings() {
 					'type' => 'book_layout',
 					'std'  => bdb_get_default_book_layout_keys()
 				),
-				'terms'       => array(
+				'taxonomies'       => array(
 					'name' => sprintf( esc_html__( '%s Taxonomies', 'book-database' ), bdb_get_label_singular() ),
 					'desc' => '', // @todo
-					'id'   => 'terms',
-					'type' => 'terms',
+					'id'   => 'taxonomies',
+					'type' => 'taxonomies',
 					'std'  => array(
 						// no author option because it's always enabled
 						array(
@@ -378,7 +378,7 @@ add_filter( 'book-database/settings/sanitize/book_layout', 'bdb_settings_sanitiz
  * @since 1.0.0
  * @return array
  */
-function bdb_settings_sanitize_terms( $input ) {
+function bdb_settings_sanitize_taxonomies( $input ) {
 	$new_input = array();
 
 	if ( ! is_array( $input ) ) {
@@ -392,7 +392,7 @@ function bdb_settings_sanitize_terms( $input ) {
 
 		$id = ( array_key_exists( 'id', $settings ) && $settings['id'] ) ? $settings['id'] : $settings['name'];
 
-		$new_settings = apply_filters( 'book-database/settings/sanitize/terms/new-settings', array(
+		$new_settings = apply_filters( 'book-database/settings/sanitize/taxonomies/new-settings', array(
 			'name'    => trim( sanitize_text_field( $settings['name'] ) ),
 			'id'      => trim( sanitize_title( $id ) ),
 			'display' => array_key_exists( 'display', $settings ) ? $settings['display'] : 'text'
@@ -404,7 +404,7 @@ function bdb_settings_sanitize_terms( $input ) {
 	return $new_input;
 }
 
-add_filter( 'book-database/settings/sanitize/terms', 'bdb_settings_sanitize_terms' );
+add_filter( 'book-database/settings/sanitize/taxonomies', 'bdb_settings_sanitize_taxonomies' );
 
 /**
  * @todo Add more santizations.
@@ -638,7 +638,7 @@ function bdb_format_book_layout_option( $key = '', $options = array(), $all_fiel
  * @since 1.0.0
  * @return void
  */
-function bdb_terms_callback( $args ) {
+function bdb_taxonomies_callback( $args ) {
 	global $bdb_options;
 
 	if ( isset( $bdb_options[ $args['id'] ] ) ) {
@@ -653,7 +653,7 @@ function bdb_terms_callback( $args ) {
 
 	$i = 0;
 	?>
-	<table id="bookdb-terms" class="bookdb-table wp-list-table widefat fixed posts">
+	<table id="bookdb-taxonomies" class="bookdb-table wp-list-table widefat fixed posts">
 		<thead>
 		<tr>
 			<th id="bookdb-term-id"><?php esc_html_e( 'ID', 'book-database' ); ?></th>

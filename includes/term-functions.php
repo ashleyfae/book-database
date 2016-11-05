@@ -30,6 +30,20 @@ function bdb_get_term_display_types() {
 }
 
 /**
+ * Get Terms
+ *
+ * @param array $args Arguments to override the defaults.
+ *
+ * @since 1.0.0
+ * @return array
+ */
+function bdb_get_terms( $args = array() ) {
+	$terms = book_database()->book_terms->get_terms( $args );
+
+	return $terms;
+}
+
+/**
  * Get Book Terms
  *
  * @see   wp_get_object_terms()

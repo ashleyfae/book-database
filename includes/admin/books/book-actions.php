@@ -176,6 +176,85 @@ function bdb_book_pub_date_field( $book ) {
 add_action( 'book-database/book-edit/information-fields', 'bdb_book_pub_date_field' );
 
 /**
+ * Field: Taxonomies
+ *
+ * @param BDB_Book $book
+ *
+ * @since 1.0.0
+ * @return void
+ */
+function bdb_book_taxonomy_fields( $book ) {
+	$taxonomies = bdb_get_option( 'taxonomies' );
+
+	if ( ! $taxonomies || ! is_array( $taxonomies ) ) {
+		return;
+	}
+
+	foreach ( $taxonomies as $taxonomy_options ) {
+
+		$book_terms = bdb_get_book_terms( $book->ID, $taxonomy_options['id'], array( 'fields' => 'names' ) ); // Terms assigned to this book.
+		$all_terms  = bdb_get_terms( array( 'type' => $taxonomy_options['id'], 'fields' => 'names' ) );
+
+		if ( ! is_array( $all_terms ) ) {
+			$all_terms = array();
+		}
+
+		ob_start();
+
+		if ( 'checkbox' == $taxonomy_options['display'] ) {
+
+			$checks = book_database()->html->multicheck( array(
+				'id'      => $taxonomy_options['id'],
+				'name'    => $taxonomy_options['id'] . '[]',
+				'current' => array(), // @todo
+				'choices' => $all_terms
+			) );
+
+			?>
+			<div id="dbd-checkboxes-<?php echo esc_attr( $taxonomy_options['id'] ); ?>" class="bookdb-taxonomy-checkboxes">
+				<div class="bookdb-checkbox-wrap">
+					<?php echo $checks; ?>
+				</div>
+				<div class="bookdb-new-checkbox-term">
+
+				</div>
+			</div>
+			<?php
+
+		} else {
+
+			ob_start();
+			?>
+			<div id="bookdb-tags-<?php echo esc_attr( $taxonomy_options['id'] ); ?>" class="bookdb-tags-wrap" data-type="<?php echo esc_attr( $taxonomy_options['id'] ); ?>">
+				<div class="jaxtag">
+					<div class="nojs-tags hide-if-js">
+						<label for="bookdb-input-tag"><?php echo apply_filters( 'book-database/book-edit/authors/tags-desc', __( 'Enter the name of the author', 'easy-content-upgrades' ) ); ?></label>
+						<textarea name="book_terms[<?php echo esc_attr( $taxonomy_options['id'] ); ?>]" rows="3" cols="20" id="bookdb-input-tag"><?php echo esc_textarea( '' ); ?></textarea>
+					</div>
+					<div class="bookdb-ajaxtag hide-if-no-js">
+						<p>
+							<input type="text" name="bookdb-new-term" class="form-input-tip regular-text bookdb-new-tag" size="16" autocomplete="off" value="">
+							<input type="button" class="button" value="<?php esc_attr_e( 'Add' ); ?>" tabindex="3">
+						</p>
+					</div>
+				</div>
+				<div class="bookdb-tags-checklist"></div>
+			</div>
+			<?php
+
+		}
+
+		book_database()->html->meta_row( 'raw', array(
+			'label' => esc_html( $taxonomy_options['name'] ),
+			'field' => ob_get_clean()
+		) );
+
+	}
+}
+
+add_action( 'book-database/book-edit/information-fields', 'bdb_book_taxonomy_fields' );
+
+/**
  * Field: Synopsis
  *
  * @param BDB_Book $book
@@ -319,11 +398,11 @@ function bdb_suggest_tags() {
 		'name'   => $search,
 		'fields' => 'names'
 	);
-	$terms  = book_database()->book_terms->get_terms( $args );
+	$terms  = bdb_get_terms( $args );
 
 	if ( $terms ) {
 		foreach ( $terms as $term ) {
-			echo $term->name . "\n";
+			echo $term . "\n";
 		}
 	}
 

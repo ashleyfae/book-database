@@ -80,10 +80,11 @@
         init: function () {
             var self = this,
                 ajaxtag = $('.bookdb-ajaxtag'),
-                type = ajaxtag.parents('.bookdb-tags-wrap').data('type');
+                wrapper = ajaxtag.parents('.bookdb-tags-wrap'),
+                type = wrapper.data('type');
 
             $('.bookdb-tags-wrap').each(function () {
-                BookDB_Tags.quickClicks(this);
+                BookDB_Tags.quickClicks(wrapper);
             });
 
             $('.button', ajaxtag).click(function () {
@@ -103,7 +104,7 @@
             }).suggest(ajaxurl + '?action=bdb_suggest_tags&type=' + type);
 
             // Save tags on save/publish.
-            $('#post').submit(function (e) {
+            $('#post, #ubb-book-page-wrapper > form').submit(function (e) {
                 //e.preventDefault();
                 $('.bookdb-tags-wrap').each(function () {
                     BookDB_Tags.flushTags(this, false, 1);

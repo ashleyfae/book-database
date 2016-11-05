@@ -87,11 +87,11 @@ function bdb_book_author_field( $book ) {
 	ob_start();
 
 	?>
-	<div class="bookdb-tags-wrap" data-type="author">
+	<div id="bookdb-tags-author" class="bookdb-tags-wrap" data-type="author">
 		<div class="jaxtag">
 			<div class="nojs-tags hide-if-js">
 				<label for="bookdb-input-tag"><?php echo apply_filters( 'book-database/book-edit/authors/tags-desc', __( 'Enter the name of the author', 'easy-content-upgrades' ) ); ?></label>
-				<textarea name="authors" rows="3" cols="20" id="bookdb-input-tag"><?php echo esc_textarea( $authors ); ?></textarea>
+				<textarea name="book_terms[author]" rows="3" cols="20" id="bookdb-input-tag"><?php echo esc_textarea( $authors ); ?></textarea>
 			</div>
 			<div class="bookdb-ajaxtag hide-if-no-js">
 				<p>
@@ -264,7 +264,19 @@ function bdb_save_book() {
 		$book_data['synopsis'] = $_POST['synopsis'];
 	}
 
-	// @todo terms and meta
+	$terms = array();
+
+	if ( isset( $_POST['book_terms'] ) && is_array( $_POST['book_terms'] ) ) {
+		foreach ( $_POST['book_terms'] as $type => $term_string ) {
+			$type           = bdb_sanitize_key( $type );
+			$term_array     = $term_string ? explode( ',', $term_string ) : array();
+			$terms[ $type ] = array_map( 'trim', $term_array );
+		}
+	}
+
+	$book_data['terms'] = $terms;
+
+	// @todo meta
 
 	// Authors - this works, but it should be formatted differently.
 	// bdb_set_book_terms( $book_id, array( 'Sierra Simone' ), 'author' );

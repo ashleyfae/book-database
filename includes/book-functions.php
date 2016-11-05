@@ -259,6 +259,7 @@ function bdb_insert_book( $data = array() ) {
 	$book_db_data['series_position'] = ( array_key_exists( 'series_position', $data ) && $data['series_position'] != '' ) ? sanitize_text_field( wp_strip_all_tags( $data['series_position'] ) ) : null;
 	$book_db_data['pub_date']        = $pub_date;
 	$book_db_data['synopsis']        = array_key_exists( 'synopsis', $data ) ? wp_kses_post( $data['synopsis'] ) : '';
+	$book_db_data['terms']           = array_key_exists( 'terms', $data ) ? $data['terms'] : false;
 
 	if ( array_key_exists( 'ID', $data ) && $data['ID'] > 0 ) {
 		$book_db_data['ID'] = absint( $data['ID'] );
@@ -270,7 +271,11 @@ function bdb_insert_book( $data = array() ) {
 		return new WP_Error( 'error-inserting-book', __( 'Error inserting book information into database.', 'book-database' ) );
 	}
 
-	// @todo Insert terms.
+	if ( is_array( $book_db_data['terms'] ) ) {
+		foreach ( $book_db_data['terms'] as $type => $terms ) {
+			bdb_set_book_terms( $book_id, $terms, $type, false );
+		}
+	}
 
 	return $book_id;
 

@@ -328,14 +328,16 @@
     display: block;
     font-weight: 600;
     margin-bottom: 5px; }
-  .bookdb-book-form input,
+  .bookdb-book-form input[type="number"],
+  .bookdb-book-form input[type="text"],
   .bookdb-book-form select {
     display: block;
     line-height: 34px;
     height: 34px;
     margin: 0;
     width: 100%; }
-    .bookdb-book-form input[type="number"],
+    .bookdb-book-form input[type="number"][type="number"],
+    .bookdb-book-form input[type="text"][type="number"],
     .bookdb-book-form select[type="number"] {
       max-width: 50px; }
   .bookdb-book-form select {

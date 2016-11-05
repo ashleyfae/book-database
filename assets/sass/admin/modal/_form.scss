@@ -12,7 +12,8 @@
         margin-bottom: 5px;
     }
 
-    input,
+    input[type="number"],
+    input[type="text"],
     select {
         display: block;
         line-height: 34px;

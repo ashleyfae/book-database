@@ -234,7 +234,8 @@ class BDB_DB_Book_Terms extends BDB_DB {
 			'type'    => false,
 			'count'   => false,
 			'orderby' => 'ID',
-			'order'   => 'DESC'
+			'order'   => 'DESC',
+			'fields'  => 'all'
 		);
 
 		$args = wp_parse_args( $args, $defaults );
@@ -291,8 +292,15 @@ class BDB_DB_Book_Terms extends BDB_DB {
 		$args['orderby'] = esc_sql( $args['orderby'] );
 		$args['order']   = esc_sql( $args['order'] );
 
+		$select_this = '*';
+		if ( 'names' == $args['fields'] ) {
+			$select_this = 'terms.name';
+		} elseif ( 'ids' == $args['fields'] ) {
+			$select_this = 'terms.term_id';
+		}
+
 		if ( $terms === false ) {
-			$query = $wpdb->prepare( "SELECT * FROM  $this->table_name $join $where GROUP BY $this->primary_key ORDER BY {$args['orderby']} {$args['order']} LIMIT %d,%d;", absint( $args['offset'] ), absint( $args['number'] ) );
+			$query = $wpdb->prepare( "SELECT $select_this FROM  $this->table_name as terms $join $where GROUP BY $this->primary_key ORDER BY {$args['orderby']} {$args['order']} LIMIT %d,%d;", absint( $args['offset'] ), absint( $args['number'] ) );
 			$terms = $wpdb->get_results( $query );
 			wp_cache_set( $cache_key, $terms, 'book_terms', 3600 );
 		}

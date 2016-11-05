@@ -38,7 +38,7 @@ function bdb_load_admin_scripts( $hook ) {
 	wp_enqueue_style( 'book-database', $css_dir . 'admin' . $suffix . '.css', array(), BDB_VERSION );
 
 	// JS
-	$deps = array( 'jquery', 'jquery-ui-sortable' );
+	$deps = array( 'jquery', 'jquery-ui-sortable', 'suggest' );
 	wp_enqueue_script( 'book-database', $js_dir . 'admin/admin' . $suffix . '.js', $deps, BDB_VERSION, true );
 }
 

@@ -18,14 +18,12 @@
 
             $('.bookdb-book-option-toggle').click(this.toggleBookTextarea);
             $('#bookdb-book-layout-cover-changer').change(this.changeCoverAlignment);
-
-            console.log('ini');
         },
 
         /**
          * Sort
          */
-        sort: function() {
+        sort: function () {
             $('.bookdb-sortable').sortable({
                 cancel: '.bookdb-no-sort, textarea, input, select',
                 connectWith: '.bookdb-sortable',
@@ -68,5 +66,193 @@
     };
 
     Book_Database.init();
+
+    /**
+     * Autocomplete for Tags
+     *
+     * @type {{init: BookDB_Tags.init, clean: BookDB_Tags.clean, parseTags: BookDB_Tags.parseTags, quickClicks: BookDB_Tags.quickClicks, flushTags: BookDB_Tags.flushTags}}
+     */
+    var BookDB_Tags = {
+
+        /**
+         * Initialize
+         */
+        init: function () {
+            var self = this,
+                ajaxtag = $('.bookdb-ajaxtag'),
+                type = ajaxtag.parents('.bookdb-tags-wrap').data('type');
+
+            $('.bookdb-tags-wrap').each(function () {
+                BookDB_Tags.quickClicks(this);
+            });
+
+            $('.button', ajaxtag).click(function () {
+                self.flushTags($(this).closest('.bookdb-tags-wrap'));
+            });
+
+            $('.bookdb-new-tag', ajaxtag).keyup(function (e) {
+                if (e.which == 13) {
+                    BookDB_Tags.flushTags($(this).closest('.bookdb-tags-wrap'));
+                    return false;
+                }
+            }).keypress(function (e) {
+                if (13 == e.which) {
+                    e.preventDefault();
+                    return false;
+                }
+            }).suggest(ajaxurl + '?action=bdb_suggest_tags&type=' + type);
+
+            // Save tags on save/publish.
+            $('#post').submit(function (e) {
+                //e.preventDefault();
+                $('.bookdb-tags-wrap').each(function () {
+                    BookDB_Tags.flushTags(this, false, 1);
+                });
+            });
+        },
+
+        /**
+         * Clean Tags
+         */
+        clean: function (tags) {
+            return tags.replace(/\s*,\s*/g, ',').replace(/,+/g, ',').replace(/[,\s]+$/, '').replace(/^[,\s]+/, '');
+        },
+
+        /**
+         * Parse Tags
+         */
+        parseTags: function (el) {
+            var id = el.id,
+                num = id.split('-check-num-')[1],
+                tagbox = $(el).closest('.bookdb-tags-wrap'),
+                thetags = tagbox.find('textarea'),
+                current_tags = thetags.val().split(','),
+                new_tags = [];
+
+            delete current_tags[num];
+
+            $.each(current_tags, function (key, val) {
+                val = $.trim(val);
+                if (val) {
+                    new_tags.push(val);
+                }
+            });
+
+            thetags.val(this.clean(new_tags.join(',')));
+
+            this.quickClicks(tagbox);
+
+            return false;
+        },
+
+        /**
+         * Quick Links
+         *
+         * Handles adding tags.
+         *
+         * @param el
+         */
+        quickClicks: function (el) {
+            var thetags = $('textarea', el),
+                tagchecklist = $('.bookdb-tags-checklist', el),
+                id = $(el).attr('id'),
+                current_tags,
+                disabled;
+
+            if (!thetags.length)
+                return;
+
+            disabled = thetags.prop('disabled');
+
+            current_tags = thetags.val().split(',');
+            tagchecklist.empty();
+
+            $.each(current_tags, function (key, val) {
+                var span, xbutton;
+
+                val = $.trim(val);
+
+                if (!val)
+                    return;
+
+                // Create a new span, and ensure the text is properly escaped.
+                span = $('<span />').text(val);
+
+                // If tags editing isn't disabled, create the X button.
+                if (!disabled) {
+                    xbutton = $('<a id="' + id + '-check-num-' + key + '" class="ntdelbutton">X</a>');
+                    xbutton.click(function () {
+                        BookDB_Tags.parseTags(this);
+                    });
+                    span.prepend('&nbsp;').prepend(xbutton);
+                }
+
+                // Append the span to the tag list.
+                tagchecklist.append(span);
+            });
+        },
+
+        /**
+         * Flush Tags
+         *
+         * Called on add tag and save.
+         *
+         * @param el
+         * @param a
+         * @param f
+         */
+        flushTags: function (el, a, f) {
+            a = a || false;
+
+            var text,
+                tags = $('textarea', el),
+                newtag = $('.bookdb-new-tag', el),
+                tagsval,
+                newtags;
+
+            text = a ? $(a).text() : newtag.val();
+
+            tagsval = tags.val();
+            newtags = tagsval ? tagsval + ',' + text : text;
+
+            newtags = this.clean(newtags);
+            newtags = BookDB_Tags.uniqueArray(newtags.split(',')).join(',');
+
+            tags.val(newtags);
+            this.quickClicks(el);
+
+            if (!a)
+                newtag.val('');
+            if ('undefined' == typeof(f))
+                newtag.focus();
+
+            return false;
+        },
+
+        /**
+         * Unique Array, No Empty
+         *
+         * @param array
+         * @returns {Array}
+         */
+        uniqueArray: function (array) {
+            var out = [];
+
+            $.each(array, function (key, val) {
+                val = $.trim(val);
+
+                if (val && $.inArray(val, out) === -1) {
+                    out.push(val);
+                }
+            });
+
+            return out;
+        }
+
+    };
+
+    $(document).ready(function () {
+        BookDB_Tags.init();
+    });
 
 })(jQuery);

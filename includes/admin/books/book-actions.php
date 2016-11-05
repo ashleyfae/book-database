@@ -82,13 +82,31 @@ add_action( 'book-database/book-edit/information-fields', 'bdb_book_title_field'
  * @return void
  */
 function bdb_book_author_field( $book ) {
-	$authors = $book->get_author();
+	$authors = $book->get_author_names( true );
 
 	ob_start();
 
+	?>
+	<div class="bookdb-tags-wrap" data-type="author">
+		<div class="jaxtag">
+			<div class="nojs-tags hide-if-js">
+				<label for="bookdb-input-tag"><?php echo apply_filters( 'book-database/book-edit/authors/tags-desc', __( 'Enter the name of the author', 'easy-content-upgrades' ) ); ?></label>
+				<textarea name="authors" rows="3" cols="20" id="bookdb-input-tag"><?php echo esc_textarea( $authors ); ?></textarea>
+			</div>
+			<div class="bookdb-ajaxtag hide-if-no-js">
+				<p>
+					<input type="text" name="bookdb-new-authors" class="form-input-tip regular-text bookdb-new-tag" size="16" autocomplete="off" value="">
+					<input type="button" class="button" value="<?php esc_attr_e( 'Add' ); ?>" tabindex="3">
+				</p>
+			</div>
+		</div>
+		<div class="bookdb-tags-checklist"></div>
+	</div>
+	<?php
+
 	$field = ob_get_clean();
 
-	book_database()->html->meta_row( 'raw', array( 'label' => __( 'Author', 'book-database' ), 'field' => $field ) );
+	book_database()->html->meta_row( 'raw', array( 'label' => __( 'Author(s)', 'book-database' ), 'field' => $field ) );
 }
 
 add_action( 'book-database/book-edit/information-fields', 'bdb_book_author_field' );
@@ -268,3 +286,36 @@ function bdb_save_book() {
 }
 
 add_action( 'book-database/book/save', 'bdb_save_book' );
+
+/**
+ * Suggest Tags
+ *
+ * Used in tag autocomplete.
+ *
+ * @since 1.0.0
+ * @return void
+ */
+function bdb_suggest_tags() {
+	$type = isset( $_REQUEST['type'] ) ? wp_strip_all_tags( $_REQUEST['type'] ) : false;
+
+	if ( ! $type ) {
+		exit;
+	}
+
+	$search = strtolower( wp_strip_all_tags( $_REQUEST['q'] ) );
+	$args   = array(
+		'name'   => $search,
+		'fields' => 'names'
+	);
+	$terms  = book_database()->book_terms->get_terms( $args );
+
+	if ( $terms ) {
+		foreach ( $terms as $term ) {
+			echo $term->name . "\n";
+		}
+	}
+
+	exit;
+}
+
+add_action( 'wp_ajax_bdb_suggest_tags', 'bdb_suggest_tags' );

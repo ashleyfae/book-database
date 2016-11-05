@@ -107,3 +107,77 @@
         }
     }
 }
+
+/* Tags */
+.bookdb-tags-wrap {
+    input[type="text"] {
+        float: left;
+        height: 28px;
+        margin: 0 4px 0 0;
+        max-width: 504px;
+        position: relative;
+    }
+
+    input[type="button"] {
+
+    }
+}
+
+.bookdb-tags-checklist {
+    clear: both;
+    font: {
+        size: 12px;
+    }
+    margin-left: 14px;
+    overflow: auto;
+
+    &:before, &:after {
+        clear: both;
+        content: ' ';
+        display: table;
+    }
+
+    span {
+        cursor: default;
+        display: block;
+        float: left;
+        font: {
+            size: 13px;
+        }
+        line-height: 1.8em;
+        margin-right: 25px;
+        max-width: 100%;
+        overflow: hidden;
+        text-overflow: ellipsis;
+
+        a {
+            cursor: pointer;
+            display: block;
+            float: left;
+            margin: 1px 0 0 -17px;
+            width: 20px;
+            height: 20px;
+            overflow: hidden;
+            position: absolute;
+            text-indent: 0;
+
+            &:before {
+                background: none;
+                color: #b4b9be;
+                content: "\f153";
+                display: block;
+                font: normal 16px/20px dashicons;
+                margin: 1px 0;
+                height: 20px;
+                width: 20px;
+                speak: none;
+                text-align: center;
+                -webkit-font-smoothing: antialiased;
+            }
+
+            &:hover:before {
+                color: #c00;
+            }
+        }
+    }
+}

@@ -26,23 +26,8 @@ function bdb_tinymce_shortcode_preview() {
 	$book_id = isset( $_POST['book_id'] ) ? absint( $_POST['book_id'] ) : 0;
 	$book    = new BDB_Book( $book_id );
 
-	$template = '[title] [author]';
-
-	$title  = $book->get_title() ? '<strong>' . $book->get_title() . '</strong>' : '';
-	$author = $book->get_author_names() ? sprintf( __( ' by %s', 'book-database' ), $book->get_author_names() ) : '';
-
-	$find = array(
-		'[title]',
-		'[author]'
-	);
-
-	$replace = array( $title, $author );
-
-	ob_start();
-	?>
-	<span data-bookdb-book-remove="<?php echo esc_attr( $book_id ); ?>" style="color: red; cursor: pointer; float: right;">Remove</span>
-	<?php
-	$preview = ob_get_clean() . str_replace( $find, $replace, $template );
+	$remove  = '<span data-bookdb-book-remove="' . esc_attr( $book_id ) . '" style="color: red; cursor: pointer; float: right;">' . esc_html__( 'Remove', 'book-database' ) . '</span>';
+	$preview = $remove . $book->get_formatted_info();
 
 	wp_send_json_success( $preview );
 }

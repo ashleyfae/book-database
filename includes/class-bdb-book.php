@@ -622,25 +622,53 @@ class BDB_Book {
 	}
 
 	/**
-	 * Get Placeholders
+	 * Get Formatted Book Information
 	 *
-	 * These placeholders are replaced with the actual book values.
+	 * Replaces placeholders with values.
 	 *
 	 * @access public
 	 * @since  1.0.0
-	 * @return array
+	 * @return string
 	 */
-	public function get_placeholders() {
-		$placeholders = array(
-			'cover'    => '[cover]',
-			'title'    => '[title]',
-			'author'   => '[author]',
-			'series'   => '[series]',
-			'pub_date' => '[pub_date]',
-			'synopsis' => '[synopsis]'
-		);
+	public function get_formatted_info() {
+		$all_fields     = bdb_get_book_fields();
+		$enabled_fields = bdb_get_option( 'book_layout', bdb_get_default_book_field_values() );
+		$final_output   = '';
 
-		return apply_filters( 'book-database/book/get/placeholders', $placeholders, $this->ID, $this );
+		foreach ( $enabled_fields as $key => $value ) {
+
+			// Make sure the array key exists.
+			if ( ! array_key_exists( $key, $all_fields ) ) {
+				continue;
+			}
+
+			$template = $enabled_fields[ $key ]['label']; // Value entered by the user as a template.
+			$find     = $all_fields[ $key ]['placeholder']; // Thing we need to look for and replace with a value.
+			$value    = apply_filters( 'book-database/book/formatted-info/value/' . $key, false, $enabled_fields, $this->ID, $this );
+
+			if ( ! $value ) {
+				continue;
+			}
+
+			// Add line break if desired.
+			if ( array_key_exists( 'linebreak', $enabled_fields[ $key ] ) && $enabled_fields[ $key ]['linebreak'] == 'on' ) {
+				$template .= apply_filters( 'book-database/book/formatted-info/line-break', '<br>' );
+			}
+
+			// Replace the placeholder with the value.
+			$final_value = str_replace( $find, $value, $template );
+
+			// Add to output.
+			$final_output .= apply_filters( 'book-database/book/formatted-info/final-value', $final_value, $key, $this );
+
+		}
+
+		// Maybe allow shortcodes.
+		if ( apply_filters( 'book-database/book/formatted-info/allow-shortcodes', false ) ) {
+			$final_value = do_shortcode( $final_output );
+		}
+
+		return apply_filters( 'book-database/book/formatted-info/output', $final_output, $this );
 	}
 
 }

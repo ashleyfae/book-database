@@ -343,6 +343,34 @@ function bdb_settings_sanitize_number_field( $input ) {
 add_filter( 'book-database/settings/sanitize/number', 'bdb_settings_sanitize_number_field' );
 
 /**
+ * Sanitize: Book Layout
+ *
+ * @param array $input
+ *
+ * @since 1.0.0
+ * @return array
+ */
+function bdb_settings_sanitize_book_layout( $input ) {
+	$new_input = array();
+
+	foreach ( $input as $key => $value ) {
+		if ( array_key_exists( 'disabled', $value ) && $value['disabled'] == 'true' ) {
+			continue;
+		}
+
+		if ( array_key_exists( 'disabled', $value ) ) {
+			unset( $value['disabled'] );
+		}
+
+		$new_input[ $key ] = $value;
+	}
+
+	return $new_input;
+}
+
+add_filter( 'book-database/settings/sanitize/book_layout', 'bdb_settings_sanitize_book_layout' );
+
+/**
  * Sanitize: Terms
  *
  * @param array $input

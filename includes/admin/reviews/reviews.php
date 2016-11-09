@@ -143,7 +143,7 @@ function bdb_render_review_view( $view, $callbacks ) {
  * @return void
  */
 function bdb_reviews_edit_view( $review ) {
-	wp_nonce_field( 'bdb_save_review', 'bdb_save_review-nonce' );
+	wp_nonce_field( 'bdb_save_review', 'bdb_save_review_nonce' );
 	?>
 	<input type="hidden" name="review_id" value="<?php echo esc_attr( $review->ID ); ?>">
 	<input type="hidden" name="bdb-action" value="review/save">

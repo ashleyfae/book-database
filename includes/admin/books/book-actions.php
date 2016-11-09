@@ -224,7 +224,7 @@ function bdb_book_taxonomy_fields( $book ) {
 				</div>
 				<div class="bookdb-new-checkbox-term">
 					<label for="bookdb-new-checkbox-term-<?php echo esc_attr( $taxonomy_options['id'] ); ?>" class="screen-reader-text"><?php printf( esc_html__( 'Enter the name of a new %s', 'book-database' ), $taxonomy_options['name'] ); ?></label>
-					<input type="text" id="bookdb-new-checkbox-term-<?php echo esc_attr( $taxonomy_options['id'] ); ?>" name="bookdb-new-term" class="regular-text">
+					<input type="text" id="bookdb-new-checkbox-term-<?php echo esc_attr( $taxonomy_options['id'] ); ?>" name="bookdb-new-term" class="regular-text bookdb-new-checkbox-term-value">
 					<input type="button" class="button" value="<?php esc_attr_e( 'Add', 'book-database' ); ?>">
 				</div>
 			</div>

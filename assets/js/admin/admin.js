@@ -18,6 +18,8 @@
 
             $('.bookdb-book-option-toggle').click(this.toggleBookTextarea);
             $('#bookdb-book-layout-cover-changer').change(this.changeCoverAlignment);
+            $('.bookdb-new-checkbox-term').on('click', '.button', this.addCheckboxTerm);
+            $('.bookdb-new-checkbox-term .bookdb-new-checkbox-term-value').keypress(this.addCheckboxTerm);
         },
 
         /**
@@ -61,6 +63,32 @@
                 return (css.match(/(^|\s)bookdb-book-cover-align-\S+/g) || []).join(' ');
             });
             parentDiv.addClass('bookdb-book-cover-align-' + $(this).val());
+        },
+
+        /**
+         * Add Checkbox Term
+         *
+         * @param e
+         * @returns {boolean}
+         */
+        addCheckboxTerm: function (e) {
+            if ('click' == e.type) {
+                e.preventDefault();
+            }
+
+            if ('keypress' == e.type && 13 != e.which) {
+                return true;
+            } else {
+                e.preventDefault();
+            }
+
+            var wrap = $(this).parents('.bookdb-taxonomy-checkboxes'),
+                checkboxName = wrap.data('name'),
+                checkboxWrap = wrap.find('.bookdb-checkbox-wrap'),
+                newTerm = wrap.find('.bookdb-new-checkbox-term-value');
+
+            checkboxWrap.append('<label><input type="checkbox" name="' + checkboxName + '" class="bookdb-checkbox" value="' + newTerm.val() + '" checked="checked"> ' + newTerm.val() + '</label>');
+            newTerm.val('');
         }
 
     };

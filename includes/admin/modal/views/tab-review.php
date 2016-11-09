@@ -26,9 +26,9 @@ if ( ! defined( 'ABSPATH' ) ) {
 		</label>
 	</div>
 
-	<?php book_database()->html->meta_row( 'select', array( 'label' => __( 'Rating', 'book-database' ) ), array(
-		'id'   => 'book_rating',
-		'name' => 'book_rating',
-
+	<?php book_database()->html->meta_row( 'rating_dropdown', array( 'label' => __( 'Rating', 'book-database' ) ), array(
+		'id'       => 'book_rating',
+		'name'     => 'book_rating',
+		'selected' => false
 	) ); ?>
 </div>

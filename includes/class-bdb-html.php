@@ -31,9 +31,11 @@ class BDB_HTML {
 	public function rating_dropdown( $args = array() ) {
 
 		$defaults = array(
-			'id'              => 'book_rating',
-			'name'            => 'book_rating',
-			'show_option_all' => false,
+			'options'          => bdb_get_available_ratings(),
+			'id'               => 'book_rating',
+			'name'             => 'book_rating',
+			'show_option_all'  => false,
+			'show_option_none' => false
 		);
 
 		$args = wp_parse_args( $args, $defaults );

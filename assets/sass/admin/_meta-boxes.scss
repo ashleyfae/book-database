@@ -198,8 +198,14 @@
 }
 
 .bookdb-checkbox-wrap {
+    background: #fdfdfd;
+    border: 1px solid #ddd;
+    -webkit-box-sizing: border-box;
+    -moz-box-sizing: border-box;
+    box-sizing: border-box;
     margin-bottom: 1em;
     max-height: 150px;
     max-width: 550px;
     overflow-y: scroll;
+    padding: .9em;
 }

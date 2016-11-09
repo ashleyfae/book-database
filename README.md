@@ -18,3 +18,4 @@ I'm not sure if I'll ever officially release this. I'm mostly building this for 
 * Integrate reviews with modal.
 * Maybe book column for formatted book title.
 * Review archives.
+* Statistics.

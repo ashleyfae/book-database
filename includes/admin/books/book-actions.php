@@ -192,16 +192,23 @@ function bdb_book_taxonomy_fields( $book ) {
 
 	foreach ( $taxonomies as $taxonomy_options ) {
 
-		$book_terms = bdb_get_book_terms( $book->ID, $taxonomy_options['id'], array( 'fields' => 'names' ) ); // Terms assigned to this book.
-		$all_terms  = bdb_get_terms( array( 'type' => $taxonomy_options['id'], 'fields' => 'names' ) );
+		$book_terms     = bdb_get_book_terms( $book->ID, $taxonomy_options['id'], array( 'fields' => 'names' ) ); // Terms assigned to this book.
+		$temp_all_terms = bdb_get_terms( array( 'type' => $taxonomy_options['id'], 'fields' => 'names' ) );
+		$all_terms      = array();
 
-		if ( ! is_array( $all_terms ) ) {
-			$all_terms = array();
+		if ( ! is_array( $temp_all_terms ) ) {
+			$temp_all_terms = array();
+		}
+
+		foreach ( $temp_all_terms as $term_name ) {
+			$all_terms[ $term_name ] = $term_name;
 		}
 
 		ob_start();
 
 		if ( 'checkbox' == $taxonomy_options['display'] ) {
+
+			// "Categories"
 
 			$checks = book_database()->html->multicheck( array(
 				'id'      => $taxonomy_options['id'],
@@ -211,7 +218,7 @@ function bdb_book_taxonomy_fields( $book ) {
 			) );
 
 			?>
-			<div id="dbd-checkboxes-<?php echo esc_attr( $taxonomy_options['id'] ); ?>" class="bookdb-taxonomy-checkboxes">
+			<div id="dbd-checkboxes-<?php echo esc_attr( $taxonomy_options['id'] ); ?>" class="bookdb-taxonomy-checkboxes" data-type="<?php echo esc_attr( $taxonomy_options['id'] ); ?>" data-name="<?php echo esc_attr( $taxonomy_options['id'] . '[]' ); ?>">
 				<div class="bookdb-checkbox-wrap">
 					<?php echo $checks; ?>
 				</div>
@@ -225,6 +232,7 @@ function bdb_book_taxonomy_fields( $book ) {
 
 		} else {
 
+			// "Tags"
 			ob_start();
 			?>
 			<div id="bookdb-tags-<?php echo esc_attr( $taxonomy_options['id'] ); ?>" class="bookdb-tags-wrap" data-type="<?php echo esc_attr( $taxonomy_options['id'] ); ?>">

@@ -110,7 +110,8 @@
 }
 
 /* Tags */
-.bookdb-tags-wrap {
+.bookdb-tags-wrap,
+.bookdb-new-checkbox-term {
     input[type="text"] {
         float: left;
         height: 28px;
@@ -181,4 +182,22 @@
             }
         }
     }
+}
+
+/* "Categories" */
+
+.bookdb-taxonomy-checkboxes {
+    label {
+        float: none;
+        font: {
+            weight: normal;
+        }
+        width: auto;
+    }
+}
+
+.bookdb-checkbox-wrap {
+    margin-bottom: 1em;
+    max-height: 150px;
+    overflow-y: scroll;
 }

@@ -80,7 +80,8 @@
     color: red; }
 
 /* Tags */
-.bookdb-tags-wrap input[type="text"] {
+.bookdb-tags-wrap input[type="text"],
+.bookdb-new-checkbox-term input[type="text"] {
   float: left;
   height: 28px;
   margin: 0 4px 0 0;
@@ -130,6 +131,17 @@
         -webkit-font-smoothing: antialiased; }
       .bookdb-tags-checklist span a:hover:before {
         color: #c00; }
+
+/* "Categories" */
+.bookdb-taxonomy-checkboxes label {
+  float: none;
+  font-weight: normal;
+  width: auto; }
+
+.bookdb-checkbox-wrap {
+  margin-bottom: 1em;
+  max-height: 150px;
+  overflow-y: scroll; }
 
 #book-layout-builder {
   clear: both;

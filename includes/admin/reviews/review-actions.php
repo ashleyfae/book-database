@@ -16,6 +16,12 @@ if ( ! defined( 'ABSPATH' ) ) {
  * Below: Review Fields
  */
 
+function bdb_review_book_id_field( $review ) {
+
+}
+
+add_action( 'book-database/review-edit/fields', 'bdb_review_book_id_field' );
+
 /*
  * Below: Saving Functions
  */

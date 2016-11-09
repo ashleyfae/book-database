@@ -405,4 +405,144 @@ class BDB_Review {
 
 	}
 
+	/**
+	 * Get ID
+	 *
+	 * @access public
+	 * @since  1.0.0
+	 * @return int
+	 */
+	public function get_ID() {
+		return apply_filters( 'book-database/review/get/ID', $this->ID, $this->ID, $this );
+	}
+
+	/**
+	 * Get Book ID
+	 *
+	 * @access public
+	 * @since  1.0.0
+	 * @return int|BDB_Book|false Book ID, object, or false if none.
+	 */
+	public function get_book_id( $format = 'ID' ) {
+		if ( 'ID' == $format ) {
+			$book = $this->ID ? $this->ID : false;
+		} else {
+			$book = $this->ID ? new BDB_Book( $this->ID ) : false;
+		}
+
+		return apply_filters( 'book-database/review/get/book_id', $book, $this->ID, $this );
+	}
+
+	/**
+	 * Get Post ID
+	 *
+	 * @access public
+	 * @since  1.0.0
+	 * @return int|false Post ID, or false if none.
+	 */
+	public function get_post_id() {
+		$post_id = $this->post_id ? $this->post_id : false;
+
+		return apply_filters( 'book-database/review/get/post_id', $post_id, $this->ID, $this );
+	}
+
+	/**
+	 * Get User ID
+	 *
+	 * @access public
+	 * @since  1.0.0
+	 * @return int|false User ID, or false if none.
+	 */
+	public function get_user_id() {
+		$user_id = $this->user_id ? $this->user_id : false;
+
+		return apply_filters( 'book-database/review/get/user_id', $user_id, $this->ID, $this );
+	}
+
+	/**
+	 * Get URL
+	 *
+	 * Returns the URL to the external review if provided, otherwise the URL to
+	 * the post where the review is located (if provided). Return false if all
+	 * else fails.
+	 *
+	 * @access public
+	 * @since  1.0.0
+	 * @return string|false URL to review or false if none.
+	 */
+	public function get_url() {
+
+		$url = false;
+
+		if ( $this->url ) {
+			$url = $this->url;
+		} elseif ( $this->post_id ) {
+			$url = get_permalink( absint( $this->post_id ) );
+		}
+
+		return apply_filters( 'book-database/review/get/url', $url, $this->ID, $this );
+
+	}
+
+	/**
+	 * Is External
+	 *
+	 * If a `url` field is provided then the review is considered external.
+	 *
+	 * @access public
+	 * @since  1.0.0
+	 * @return bool
+	 */
+	public function is_external() {
+		$external = (bool) $this->url;
+
+		return apply_filters( 'book-database/review/is-external', $external, $this->ID, $this );
+	}
+
+	/**
+	 * Get Rating
+	 *
+	 * @access public
+	 * @since  1.0.0
+	 * @return string
+	 */
+	public function get_rating() {
+		return apply_filters( 'book-database/review/get/rating', $this->rating, $this->ID, $this );
+	}
+
+	/**
+	 * Get Date Added
+	 *
+	 * Returned in MySQL date format.
+	 *
+	 * @access public
+	 * @since  1.0.0
+	 * @return string
+	 */
+	public function get_date() {
+		return apply_filters( 'book-database/review/get/date', $this->date_added, $this->ID, $this );
+	}
+
+	/**
+	 * Get Formatted Date Added
+	 *
+	 * @param string|bool $format Format to use for the date. Leave as false to use format specified in settings.
+	 *
+	 * @access public
+	 * @since  1.0.0
+	 * @return string
+	 */
+	public function get_formatted_date( $format = false ) {
+
+		if ( ! $format ) {
+			$format = get_option( 'date_format' );
+		}
+
+		$raw_date = $this->get_date();
+		$date     = $raw_date ? mysql2date( $format, $raw_date ) : false;
+
+		return apply_filters( 'book-database/review/get/formatted_date', $date, $format, $raw_date, $this->ID, $this );
+
+	}
+
 }

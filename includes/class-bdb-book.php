@@ -567,6 +567,8 @@ class BDB_Book {
 	/**
 	 * Get Formatted Publication Date
 	 *
+	 * @param string|bool $format Format to use for the date. Leave as false to use format specified in settings.
+	 *
 	 * @access public
 	 * @since  1.0.0
 	 * @return string

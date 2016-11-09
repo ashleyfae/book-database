@@ -165,8 +165,9 @@ class BDB_Reviews_Table extends WP_List_Table {
 			case 'rating' :
 				$value = $rating = $item['rating'];
 				if ( $rating ) {
-					$url   = add_query_arg( array( 'rating' => urlencode( $item['rating'] ) ), bdb_get_admin_page_reviews() );
-					$value = '<a href="' . esc_url( $url ) . '">' . esc_html( $rating ) . '</a>';
+					$rating_obj = new BDB_Rating( $rating );
+					$url        = add_query_arg( array( 'rating' => urlencode( $item['rating'] ) ), bdb_get_admin_page_reviews() );
+					$value      = '<a href="' . esc_url( $url ) . '">' . $rating_obj->format( 'html_stars' ) . '</a>';
 				}
 				break;
 

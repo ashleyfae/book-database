@@ -34,6 +34,15 @@ class BDB_Rating {
 	protected $rating;
 
 	/**
+	 * Maximum Rating Value
+	 *
+	 * @var int
+	 * @access public
+	 * @since  1.0.0
+	 */
+	public $max;
+
+	/**
 	 * BDB_Rating constructor.
 	 *
 	 * @param bool|string|int|float $rating Rating value.
@@ -43,6 +52,8 @@ class BDB_Rating {
 	 * @return void
 	 */
 	public function __construct( $rating = false ) {
+
+		$this->max = bdb_get_max_rating();
 
 		if ( $rating ) {
 			$this->set_rating( $rating );
@@ -73,6 +84,17 @@ class BDB_Rating {
 
 	}
 
+	/**
+	 * Format Rating
+	 *
+	 * @param string $type Formatting type to use. Allowed:
+	 *                     font_awesome - Font Awesome star icons.
+	 *                     html_stars - HTML entities.
+	 *
+	 * @access public
+	 * @since  1.0.0
+	 * @return string|bool Formatted star rating or false on failure.
+	 */
 	public function format( $type = '' ) {
 
 		$rating = false;
@@ -91,20 +113,44 @@ class BDB_Rating {
 
 	}
 
+	/**
+	 * Format With HTML Stars
+	 *
+	 * @access public
+	 * @since  1.0.0
+	 * @return string
+	 */
 	public function format_html_stars() {
 
 		if ( ! is_numeric( $this->rating ) ) {
-			return false;
+			return $this->rating;
 		}
+
+		return $this->repeat( '&starf;', '&half;', '' );
+
+	}
+
+	/**
+	 * Repeat Text/HTML for Number of Stars
+	 *
+	 * @param string $full_star  Text/HTML to repeat for number of full stars.
+	 * @param string $half_star  Text/HTML to repeat for number of half stars.
+	 * @param string $empty_star Text/HTML to repeat for number of empty stars.
+	 *
+	 * @access public
+	 * @since  1.0.0
+	 * @return string
+	 */
+	public function repeat( $full_star = '', $half_star = '', $empty_star = '' ) {
 
 		$rating      = $this->rating;
 		$full_stars  = floor( $rating );
 		$half_stars  = ceil( $rating - $full_stars );
-		$empty_stars = 5 - $full_stars - $half_stars;
+		$empty_stars = $this->max - $full_stars - $half_stars;
 
-		$output = str_repeat( '&starf;', $full_stars );
-		$output .= str_repeat( '&half;', $half_stars );
-		$output .= str_repeat( '&star;', $empty_stars );
+		$output = str_repeat( $full_star, $full_stars );
+		$output .= str_repeat( $half_star, $half_stars );
+		$output .= str_repeat( $empty_star, $empty_stars );
 
 		return $output;
 

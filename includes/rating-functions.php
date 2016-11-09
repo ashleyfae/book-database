@@ -36,3 +36,13 @@ function bdb_get_available_ratings() {
 
 	return apply_filters( 'book-database/ratings/available-ratings', $ratings );
 }
+
+/**
+ * Get Maximum Rating
+ *
+ * @since 1.0.0
+ * @return int
+ */
+function bdb_get_max_rating() {
+	return apply_filters( 'book-database/ratings/max-rating', 5 );
+}

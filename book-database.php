@@ -242,6 +242,8 @@ if ( ! class_exists( 'Book_Database' ) ) :
 				require_once BDB_DIR . 'includes/admin/modal/shortcode-preview.php';
 				require_once BDB_DIR . 'includes/admin/posts/meta-box.php';
 				require_once BDB_DIR . 'includes/admin/reviews/add-review.php';
+				require_once BDB_DIR . 'includes/admin/reviews/review-actions.php';
+				require_once BDB_DIR . 'includes/admin/reviews/review-functions.php';
 				require_once BDB_DIR . 'includes/admin/reviews/reviews.php';
 				require_once BDB_DIR . 'includes/admin/settings/display-settings.php';
 			}

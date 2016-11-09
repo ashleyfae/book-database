@@ -69,7 +69,7 @@ function bdb_books_list() {
 			$book_table->display();
 			?>
 			<input type="hidden" name="post_type" value="bdb_book">
-			<input type="hidden" name="page" value="ubb-books">
+			<input type="hidden" name="page" value="bdb-books">
 			<input type="hidden" name="view" value="books">
 		</form>
 		<?php do_action( 'book-database/books/table/bottom' ); ?>

@@ -58,15 +58,62 @@ function bdb_get_admin_page_add_book() {
 /**
  * Get Admin Page: Edit Book
  *
+ * @param int $book_id
+ *
  * @since 1.0.0
  * @return string
  */
 function bdb_get_admin_page_edit_book( $book_id ) {
-	$book_page     = bdb_get_admin_page_books();
+	$book_page      = bdb_get_admin_page_books();
 	$edit_book_page = add_query_arg( array(
 		'view' => 'edit',
 		'ID'   => absint( $book_id )
 	), $book_page );
 
 	return apply_filters( 'book-database/admin-page-url/edit-book', $edit_book_page );
+}
+
+/**
+ * Get Admin Page: Reviews Table
+ *
+ * @since 1.0.0
+ * @return string
+ */
+function bdb_get_admin_page_reviews() {
+	$url = admin_url( 'admin.php?page=bdb-reviews' );
+
+	return apply_filters( 'book-database/admin-page-url/reviews', $url );
+}
+
+/**
+ * Get Admin Page: Add Review
+ *
+ * @since 1.0.0
+ * @return string
+ */
+function bdb_get_admin_page_add_review() {
+	$review        = bdb_get_admin_page_reviews();
+	$add_review_page = add_query_arg( array(
+		'view' => 'add'
+	), $review );
+
+	return apply_filters( 'book-database/admin-page-url/add-review', $add_review_page );
+}
+
+/**
+ * Get Admin Page: Edit Review
+ *
+ * @param int $review_id
+ *
+ * @since 1.0.0
+ * @return string
+ */
+function bdb_get_admin_page_edit_review( $review_id ) {
+	$review_page      = bdb_get_admin_page_reviews();
+	$edit_review_page = add_query_arg( array(
+		'view' => 'edit',
+		'ID'   => absint( $review_id )
+	), $review_page );
+
+	return apply_filters( 'book-database/admin-page-url/edit-review', $edit_review_page );
 }

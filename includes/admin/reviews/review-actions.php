@@ -191,7 +191,7 @@ function bdb_save_review() {
 		$review_data['date_added'] = date( 'Y-m-d H:i:s', $timestamp );
 	}
 
-	$new_review_id = bdb_insert_review( $review_data );
+	$new_review_id = bdb_insert_review( apply_filters( 'book-database/review/save/review-data', $review_data, $review_id, $_POST ) );
 
 	if ( ! $new_review_id || is_wp_error( $new_review_id ) ) {
 		wp_die( __( 'An error occurred while inserting the review.', 'book-database' ) );

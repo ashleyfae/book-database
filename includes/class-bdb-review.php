@@ -106,7 +106,7 @@ class BDB_Review {
 			return false;
 		}
 
-		$review = $this->db->get_review_by( 'id', $id );
+		$review = $this->db->get_review_by( 'ID', $id );
 
 		if ( empty( $review ) || ! is_object( $review ) ) {
 			return false;
@@ -425,9 +425,9 @@ class BDB_Review {
 	 */
 	public function get_book_id( $format = 'ID' ) {
 		if ( 'ID' == $format ) {
-			$book = $this->ID ? $this->ID : false;
+			$book = $this->book_id ? $this->book_id : false;
 		} else {
-			$book = $this->ID ? new BDB_Book( $this->ID ) : false;
+			$book = $this->book_id ? new BDB_Book( $this->book_id ) : false;
 		}
 
 		return apply_filters( 'book-database/review/get/book_id', $book, $this->ID, $this );

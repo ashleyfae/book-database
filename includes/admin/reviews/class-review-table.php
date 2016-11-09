@@ -178,11 +178,11 @@ class BDB_Reviews_Table extends WP_List_Table {
 	 * @return string
 	 */
 	public function column_id( $item ) {
-		$name     = '#' . $item['ID'];
-		$view_url = admin_url( 'edit.php?post_type=bdb_book&page=ubb-reviews&view=overview&id=' . $item['ID'] );
-		$actions  = array(
-			'edit'   => '<a href="' . esc_url( $view_url ) . '">' . __( 'Edit', 'book-database' ) . '</a>',
+		$name    = '#' . $item['ID'];
+		$actions = array(
+			'edit'   => '<a href="' . esc_url( bdb_get_admin_page_edit_review( $item['ID'] ) ) . '">' . __( 'Edit', 'book-database' ) . '</a>',
 			'delete' => '<a href="' . admin_url( 'edit.php?post_type=bdb_book&page=ubb-reviews&view=delete&id=' . $item['ID'] ) . '">' . __( 'Delete', 'book-database' ) . '</a>'
+			// @todo
 		);
 
 		return $name . $this->row_actions( $actions );
@@ -305,17 +305,18 @@ class BDB_Reviews_Table extends WP_List_Table {
 
 				$review_obj = new BDB_Review( $review->ID );
 				$user_id    = ! empty( $review->user_id ) ? intval( $review->user_id ) : 0;
+				$book       = $review->book_id ? new BDB_Book( $review->book_id ) : false;
 
 				$data[] = array(
 					'ID'         => $review->ID,
 					'book_id'    => $review->book_id,
 					'post_id'    => $review->post_id,
 					'url'        => $review->url,
-					'book_title' => $review->book_title,
-					'author'     => $review->author,
+					'book_title' => $book ? $book->get_title() : false,
+					'author'     => $book ? $book->get_author_names() : false,
 					'user_id'    => $user_id,
-					'date'       => $review->date,
-					'rating'     => $review_obj->get_meta( 'rating' )
+					'date'       => $review->date_added,
+					'rating'     => $review_obj->get_rating()
 				);
 
 			}

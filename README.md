@@ -19,9 +19,10 @@ I'm not sure if I'll ever officially release this. I'm mostly building this for 
 * Maybe book column for formatted book title.
 * Review archives.
 * Statistics.
-* Taxonomies.
+* Taxonomies in modals.
 * Goodreads URL.
 * Purchase links? Ew.
+* Update book info fields in book submission to only show enabled ones.
 
 For my site:
 

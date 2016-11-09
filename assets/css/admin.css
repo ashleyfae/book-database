@@ -136,6 +136,7 @@
 .bookdb-taxonomy-checkboxes label {
   float: none;
   font-weight: normal;
+  margin-bottom: 3px;
   width: auto; }
 
 .bookdb-checkbox-wrap {

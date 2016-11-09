@@ -212,13 +212,13 @@ function bdb_book_taxonomy_fields( $book ) {
 
 			$checks = book_database()->html->multicheck( array(
 				'id'      => $taxonomy_options['id'],
-				'name'    => $taxonomy_options['id'] . '[]',
-				'current' => array(), // @todo
+				'name'    => 'book_terms[' . $taxonomy_options['id'] . '][]',
+				'current' => $book_terms,
 				'choices' => $all_terms
 			) );
 
 			?>
-			<div id="dbd-checkboxes-<?php echo esc_attr( $taxonomy_options['id'] ); ?>" class="bookdb-taxonomy-checkboxes" data-type="<?php echo esc_attr( $taxonomy_options['id'] ); ?>" data-name="<?php echo esc_attr( $taxonomy_options['id'] . '[]' ); ?>">
+			<div id="dbd-checkboxes-<?php echo esc_attr( $taxonomy_options['id'] ); ?>" class="bookdb-taxonomy-checkboxes" data-type="<?php echo esc_attr( $taxonomy_options['id'] ); ?>" data-name="<?php echo esc_attr( 'book_terms[' . $taxonomy_options['id'] . '][]' ); ?>">
 				<div class="bookdb-checkbox-wrap">
 					<?php echo $checks; ?>
 				</div>
@@ -357,8 +357,12 @@ function bdb_save_book() {
 
 	if ( isset( $_POST['book_terms'] ) && is_array( $_POST['book_terms'] ) ) {
 		foreach ( $_POST['book_terms'] as $type => $term_string ) {
-			$type           = bdb_sanitize_key( $type );
-			$term_array     = $term_string ? explode( ',', $term_string ) : array();
+			$type = bdb_sanitize_key( $type );
+			if ( is_array( $term_string ) ) {
+				$term_array = $term_string;
+			} else {
+				$term_array = $term_string ? explode( ',', $term_string ) : array();
+			}
 			$terms[ $type ] = array_map( 'trim', $term_array );
 		}
 	}

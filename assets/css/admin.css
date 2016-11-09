@@ -1,6 +1,6 @@
-#ubb-book-page-wrapper {
+#bookdb-book-page-wrapper {
   margin-top: 1.5em; }
-  #ubb-book-page-wrapper .postbox > h2 {
+  #bookdb-book-page-wrapper .postbox > h2 {
     border-bottom: 1px solid #eee;
     font-size: 14px;
     line-height: 1.4;
@@ -67,13 +67,16 @@
     max-width: 150px;
     width: 30%; } }
 /* Save Box */
-#ubb-book-page-wrapper #major-publishing-actions {
+#bookdb-review-page-wrapper #major-publishing-actions,
+#bookdb-book-page-wrapper #major-publishing-actions {
   clear: both;
   overflow: hidden; }
-#ubb-book-page-wrapper #delete-action a {
+#bookdb-review-page-wrapper #delete-action a,
+#bookdb-book-page-wrapper #delete-action a {
   color: #a00;
   text-decoration: none; }
-  #ubb-book-page-wrapper #delete-action a:hover {
+  #bookdb-review-page-wrapper #delete-action a:hover,
+  #bookdb-book-page-wrapper #delete-action a:hover {
     color: red; }
 
 /* Tags */

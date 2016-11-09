@@ -119,7 +119,7 @@ function bdb_render_book_view( $view, $callbacks ) {
 			</div>
 		<?php endif; ?>
 
-		<div id="ubb-book-page-wrapper">
+		<div id="bookdb-book-page-wrapper">
 			<form method="POST">
 				<?php
 				if ( $render ) {

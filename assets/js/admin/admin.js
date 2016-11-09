@@ -104,7 +104,7 @@
             }).suggest(ajaxurl + '?action=bdb_suggest_tags&type=' + type);
 
             // Save tags on save/publish.
-            $('#post, #ubb-book-page-wrapper > form').submit(function (e) {
+            $('#post, #bookdb-book-page-wrapper > form').submit(function (e) {
                 //e.preventDefault();
                 $('.bookdb-tags-wrap').each(function () {
                     BookDB_Tags.flushTags(this, false, 1);

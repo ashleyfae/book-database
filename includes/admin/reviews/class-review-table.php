@@ -154,6 +154,22 @@ class BDB_Reviews_Table extends WP_List_Table {
 				}
 				break;
 
+			case 'book_title' :
+				$value = $title = $item['book_title'];
+				if ( $title && $item['book_id'] ) {
+					$url   = add_query_arg( array( 'book_id' => urlencode( $item['book_id'] ) ), bdb_get_admin_page_reviews() );
+					$value = '<a href="' . esc_url( $url ) . '">' . esc_html( $title ) . '</a>';
+				}
+				break;
+
+			case 'rating' :
+				$value = $rating = $item['rating'];
+				if ( $rating ) {
+					$url   = add_query_arg( array( 'rating' => urlencode( $item['rating'] ) ), bdb_get_admin_page_reviews() );
+					$value = '<a href="' . esc_url( $url ) . '">' . esc_html( $rating ) . '</a>';
+				}
+				break;
+
 			case 'date' :
 				$value = date_i18n( get_option( 'date_format' ), strtotime( $item['date'] ) );
 				break;
@@ -218,11 +234,9 @@ class BDB_Reviews_Table extends WP_List_Table {
 	 */
 	public function get_sortable_columns() {
 		return array(
-			'ID'         => array( 'ID', true ),
-			'book_title' => array( 'book_title', true ),
-			'author'     => array( 'author', true ),
-			'rating'     => array( 'rating', true ),
-			'date'       => array( 'date', true )
+			'ID'     => array( 'ID', true ),
+			'rating' => array( 'rating', true ),
+			'date'   => array( 'date', true )
 		);
 	}
 
@@ -284,16 +298,20 @@ class BDB_Reviews_Table extends WP_List_Table {
 			'orderby' => $orderby
 		);
 
+		// Filter by book title.
+		if ( isset( $_GET['book_id'] ) ) {
+			$args['book_id'] = absint( $_GET['book_id'] );
+		}
+
+		// Filter by rating.
+		if ( isset( $_GET['rating'] ) ) {
+			$args['rating'] = sanitize_text_field( $_GET['rating'] );
+		}
+
 		if ( is_numeric( $search ) ) {
 			$args['ID'] = $search;
 		} elseif ( strpos( $search, 'user:' ) !== false ) {
 			$args['user_id'] = trim( str_replace( 'user:', '', $search ) );
-		} elseif ( strpos( $search, 'title:' ) !== false ) {
-			$args['book_title'] = trim( str_replace( 'title:', '', $search ) );
-		} elseif ( strpos( $search, 'author:' ) !== false ) {
-			$args['author'] = trim( str_replace( 'author:', '', $search ) );
-		} else {
-			$args['book_title'] = $search;
 		}
 
 		$this->args = $args;

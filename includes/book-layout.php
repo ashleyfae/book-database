@@ -164,7 +164,7 @@ add_filter( 'book-database/book/formatted-info/value/pub_date', 'bdb_book_layout
  * @return string
  */
 function bdb_book_layout_genre( $value, $enabled_fields, $book_id, $book ) {
-	$genres = bdb_get_book_terms( $book_id, 'publisher' );
+	$genres = bdb_get_book_terms( $book_id, 'genre' );
 
 	if ( $genres && is_array( $genres ) ) {
 		$genre_names = array();

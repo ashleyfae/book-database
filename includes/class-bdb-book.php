@@ -667,7 +667,7 @@ class BDB_Book {
 
 		// Maybe allow shortcodes.
 		if ( apply_filters( 'book-database/book/formatted-info/allow-shortcodes', false ) ) {
-			$final_value = do_shortcode( $final_output );
+			$final_output = do_shortcode( $final_output );
 		}
 
 		return apply_filters( 'book-database/book/formatted-info/output', $final_output, $this );

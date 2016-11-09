@@ -12,3 +12,9 @@ Things I'm focusing on:
 * And finally, I'm focusing more on what I want from this plugin, rather than what other people say they want.
 
 I'm not sure if I'll ever officially release this. I'm mostly building this for myself and for funsies. Then we'll see what happens.
+
+## Todo:
+
+* Integrate reviews with modal.
+* Maybe book column for formatted book title.
+* Review archives.

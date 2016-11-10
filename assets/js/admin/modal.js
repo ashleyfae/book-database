@@ -225,6 +225,12 @@ var BookDB_Modal_Admin = {
                 return true;
             }
 
+            // Bail if this is a term checkbox.
+            if ('checkbox' == self.attr('type')) {
+                self.prop('checked', false); // uncheck
+                return true;
+            }
+
             // Clear all input values.
             self.val('');
         });
@@ -258,6 +264,7 @@ var BookDB_Modal_Admin = {
          * `series_position`
          * `pub_date`
          * `synopsis`
+         * `terms`
          */
 
         console.log(book);
@@ -295,6 +302,35 @@ var BookDB_Modal_Admin = {
 
         if (book.synopsis) {
             jQuery('#book_synopsis').val(book.synopsis);
+        }
+
+        if (book.terms) {
+            jQuery.each(book.terms, function (type, terms) {
+                
+                if (typeof terms === 'string') {
+
+                    // Tags
+                    $('#bookdb-input-tag-' + type).val(terms);
+
+                } else {
+
+                    // Categories
+                    var wrap = jQuery('#dbd-checkboxes-' + type);
+
+                    if (!wrap.length) {
+                        return true;
+                    }
+
+                    wrap.find('input[type="checkbox"]').each(function () {
+                        var thisCheckbox = jQuery(this);
+                        if (jQuery.inArray(thisCheckbox.val(), terms) != -1) {
+                            jQuery(this).prop('checked', true);
+                        }
+                    });
+
+                }
+
+            });
         }
 
         jQuery(document).trigger('bdb_modal_set_book_fields', book);

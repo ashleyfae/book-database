@@ -42,19 +42,17 @@ function bdb_ajax_get_book() {
 					continue;
 				}
 
-				if ( 'checkbox' == $taxonomy_options['display'] ) {
-					$final_terms[ $taxonomy_options['id'] ] = $terms[ $taxonomy_options['id'] ];
-
-					continue;
-				}
-
 				$names = array();
 
 				foreach ( $terms[ $taxonomy_options['id'] ] as $this_term ) {
 					$names[] = $this_term->name;
 				}
 
-				$final_terms[ $taxonomy_options['id'] ] = implode( ', ', $names );
+				if ( 'checkbox' == $taxonomy_options['display'] ) {
+					$final_terms[ $taxonomy_options['id'] ] = $names;
+				} else {
+					$final_terms[ $taxonomy_options['id'] ] = implode( ', ', $names );
+				}
 			}
 
 			$data['terms'] = $final_terms;

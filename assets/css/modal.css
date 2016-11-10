@@ -10,7 +10,7 @@
   left: 0;
   right: 0;
   bottom: 0;
-  z-index: 100000; }
+  z-index: 9000; }
 
 .bookdb-modal {
   position: fixed;
@@ -18,7 +18,7 @@
   left: 30px;
   right: 30px;
   bottom: 30px;
-  z-index: 100050; }
+  z-index: 9500; }
   .bookdb-modal * {
     -webkit-box-sizing: border-box;
     -moz-box-sizing: border-box;

@@ -306,7 +306,7 @@ var BookDB_Modal_Admin = {
 
         if (book.terms) {
             jQuery.each(book.terms, function (type, terms) {
-                
+
                 if (typeof terms === 'string') {
 
                     // Tags

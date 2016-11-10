@@ -84,7 +84,7 @@ function bdb_render_post_book_reviews_meta_box( $post ) {
 						?>
 					</td>
 					<td>
-						<button class="button secondary bdb-remove-book-review"><?php _e( 'Remove', 'book-database' ); ?></button>
+						<button class="button secondary bookdb-remove-book-review"><?php _e( 'Remove', 'book-database' ); ?></button>
 					</td>
 				</tr>
 			<?php endforeach; ?>

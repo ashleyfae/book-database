@@ -40,6 +40,15 @@ function bdb_load_admin_scripts( $hook ) {
 	// JS
 	$deps = array( 'jquery', 'jquery-ui-sortable', 'suggest' );
 	wp_enqueue_script( 'book-database', $js_dir . 'admin/admin' . $suffix . '.js', $deps, BDB_VERSION, true );
+
+	wp_localize_script( 'book-database', 'book_database', array(
+		'ajax_url' => admin_url( 'admin-ajax.php' ),
+		'nonce'    => wp_create_nonce( 'book-database' ),
+		'l10n'     => array(
+			'review_remove'         => __( 'Are you sure you wish to delete this review?', 'book-database' ),
+			'error_removing_review' => __( 'Error: Review ID not found.', 'book-database' )
+		)
+	) );
 }
 
 add_action( 'admin_enqueue_scripts', 'bdb_load_admin_scripts' );

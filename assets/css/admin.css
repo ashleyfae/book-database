@@ -152,8 +152,10 @@
   padding: .9em; }
 
 /* Reviews on Posts */
+#bdb-book-review-list table,
 #bdb_book_reviews table {
   margin-bottom: 1em; }
+  #bdb-book-review-list table th,
   #bdb_book_reviews table th {
     font-weight: 600; }
 

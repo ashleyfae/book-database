@@ -424,3 +424,72 @@ function bdb_suggest_tags() {
 }
 
 add_action( 'wp_ajax_bdb_suggest_tags', 'bdb_suggest_tags' );
+
+/*
+ * Below: Other Meta Boxes
+ */
+
+/**
+ * Display Book Review Meta Table
+ *
+ * @param BDB_Book $book
+ *
+ * @since 1.0.0
+ * @return void
+ */
+function bdb_book_review_meta_table( $book ) {
+	$reviews = bdb_get_book_reviews( $book->ID );
+	?>
+	<div id="bdb-book-review-list" class="postbox">
+		<h2><?php printf( __( '%s Reviews', 'book-database' ), bdb_get_label_singular() ); ?></h2>
+		<div class="inside">
+			<?php if ( $reviews ) : ?>
+				<table class="wp-list-table widefat fixed posts">
+					<thead>
+					<tr>
+						<th><?php _e( 'ID', 'book-database' ); ?></th>
+						<th><?php _e( 'Date', 'book-database' ); ?></th>
+						<th><?php _e( 'Rating', 'book-database' ); ?></th>
+						<th><?php _e( 'Reviewer', 'book-database' ); ?></th>
+					</tr>
+					</thead>
+					<tbody>
+					<?php foreach ( $reviews as $review ) :
+						$obj = new BDB_Review( $review->ID );
+						?>
+						<tr>
+							<td>
+								<?php echo $review->ID; ?>
+								<a href="<?php echo esc_url( bdb_get_admin_page_edit_review( $review->ID ) ); ?>" target="_blank"><?php _e( '(Edit)', 'book-database' ); ?></a>
+							</td>
+							<td>
+								<?php echo $obj->get_formatted_date(); ?>
+							</td>
+							<td>
+								<?php
+								if ( $review->rating ) {
+									$rating = new BDB_Rating( $review->rating );
+									echo $rating->format( 'text' );
+								} else {
+									echo '&ndash';
+								}
+								?>
+							</td>
+							<td>
+								<?php echo $obj->get_reviewer_name(); ?>
+							</td>
+						</tr>
+					<?php endforeach; ?>
+					</tbody>
+				</table>
+
+				<a href="<?php echo esc_url( bdb_get_admin_page_add_review( $book->ID ) ); ?>" class="button"><?php _e( 'Add Review', 'book-database' ); ?></a>
+			<?php else : ?>
+				<p><?php printf( __( 'No reviews for this book. Would you like to <a href="%s">add one</a>?', 'book-database' ), esc_url( bdb_get_admin_page_add_review( $book->ID ) ) ); ?></p>
+			<?php endif; ?>
+		</div>
+	</div>
+	<?php
+}
+
+add_action( 'book-database/book-edit/after-information-fields', 'bdb_book_review_meta_table' );

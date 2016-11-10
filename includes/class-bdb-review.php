@@ -460,6 +460,48 @@ class BDB_Review {
 	}
 
 	/**
+	 * Get Reviewer
+	 *
+	 * Returns the WP_User object for the reviewer.
+	 *
+	 * @access public
+	 * @since  1.0.0
+	 * @return WP_User|false
+	 */
+	public function get_reviewer() {
+
+		$user_id = $this->get_user_id();
+		$user    = false;
+
+		if ( $user_id ) {
+			$user = get_user_by( 'ID', $user_id );
+		}
+
+		return apply_filters( 'book-database/review/get/reviewer', $user, $this->ID, $this );
+
+	}
+
+	/**
+	 * Get Reviewer Name
+	 *
+	 * @access public
+	 * @since  1.0.0
+	 * @return string|false
+	 */
+	public function get_reviewer_name() {
+
+		$user = $this->get_reviewer();
+		$name = false;
+
+		if ( $user ) {
+			$name = $user->display_name;
+		}
+
+		return apply_filters( 'book-database/review/get/reviewer_name', $name, $this->ID, $this );
+
+	}
+
+	/**
 	 * Get URL
 	 *
 	 * Returns the URL to the external review if provided, otherwise the URL to

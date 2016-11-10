@@ -52,6 +52,20 @@ function bdb_get_post_reviews( $post_id = 0 ) {
 }
 
 /**
+ * Get reviews for a given book.
+ *
+ * @param int $post_id
+ *
+ * @since 1.0.0
+ * @return array|false Array of review data.
+ */
+function bdb_get_book_reviews( $book_id ) {
+	$reviews = book_database()->reviews->get_reviews( array( 'book_id' => $book_id ) );
+
+	return $reviews;
+}
+
+/**
  * Get Total Number of Reviews
  *
  * @param array $args Array of arguments for the query.

@@ -91,11 +91,18 @@ function bdb_get_admin_page_reviews() {
  * @since 1.0.0
  * @return string
  */
-function bdb_get_admin_page_add_review() {
-	$review        = bdb_get_admin_page_reviews();
-	$add_review_page = add_query_arg( array(
+function bdb_get_admin_page_add_review( $book_id = 0 ) {
+	$review = bdb_get_admin_page_reviews();
+
+	$query_args = array(
 		'view' => 'add'
-	), $review );
+	);
+
+	if ( $book_id ) {
+		$query_args['book_id'] = absint( $book_id );
+	}
+
+	$add_review_page = add_query_arg( $query_args, $review );
 
 	return apply_filters( 'book-database/admin-page-url/add-review', $add_review_page );
 }

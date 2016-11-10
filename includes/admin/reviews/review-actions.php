@@ -28,7 +28,7 @@ function bdb_review_book_id_field( $review ) {
 	book_database()->html->meta_row( 'text', array( 'label' => __( 'Book ID', 'book-database' ) ), array(
 		'id'    => 'associated_book',
 		'name'  => 'associated_book',
-		'value' => $review->get_book_id(),
+		'value' => isset( $_GET['book_id'] ) ? absint( $_GET['book_id'] ) : $review->get_book_id(),
 		'type'  => 'number',
 		'desc'  => __( 'The book this is a review of. Enter the book ID number.', 'book-database' )
 	) );

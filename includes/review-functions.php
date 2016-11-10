@@ -14,6 +14,24 @@ if ( ! defined( 'ABSPATH' ) ) {
 }
 
 /**
+ * Get Review by ID
+ *
+ * @param int $review_id
+ *
+ * @since 1.0.0
+ * @return BDB_Review|false
+ */
+function bdb_get_review( $review_id ) {
+	$review = new BDB_Review( absint( $review_id ) );
+
+	if ( ! $review->ID ) {
+		return false;
+	}
+
+	return $review;
+}
+
+/**
  * Get reviews for a given post.
  *
  * @param int $post_id

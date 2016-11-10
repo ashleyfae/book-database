@@ -49,12 +49,6 @@ function bdb_get_modal_menu() {
 					'template' => BDB_DIR . 'includes/admin/modal/views/tab-book-information.php',
 					'callback' => 'insert_update_book',
 					'init'     => 'setBook'
-				),
-				'book-display'     => array(
-					'order'    => 200,
-					'label'    => esc_html__( 'Review Settings', 'book-database' ),
-					'template' => BDB_DIR . 'includes/admin/modal/views/tab-review.php',
-					'callback' => 'insert_update_book'
 				)
 			),
 			'default_tab' => 'book-information'

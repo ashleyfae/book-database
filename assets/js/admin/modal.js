@@ -10,10 +10,21 @@
 
 var BookDB_Modal_Admin = {
 
+    /**
+     * Editor ID
+     */
     activeEditorID: false,
 
+    /**
+     * Whether or not this is a new insert but for
+     * an existing book. This means they used the search function
+     * to find an existing book to insert.
+     */
     newButExistingBook: false,
 
+    /**
+     * Shortcode Escape Map
+     */
     shortcodeEscapeMap: {
         '"': "'"
     },
@@ -124,6 +135,9 @@ var BookDB_Modal_Admin = {
 
     /** Book Specific Stuff **/
 
+    /**
+     * ID of the book we're editing. 0 if a new book.
+     */
     editingBook: 0,
 
     /**
@@ -135,9 +149,10 @@ var BookDB_Modal_Admin = {
         this.editingBook = args.bookID ? args.bookID : 0;
         this.clearBookFields();
 
+        // Set book fields for existing book.
         if (0 !== this.editingBook) {
 
-            var button = jQuery('.wpdb-button-action');
+            var button = jQuery('.bookdb-button-action');
 
             button.text(bookdb_modal.l10n.action_button_update);
             this.disableMenu();
@@ -318,8 +333,6 @@ var BookDB_Modal_Admin = {
                 BookDB_Modal_Admin.stopLoader(button);
 
                 if (response.success) {
-
-                    console.log(BookDB_Modal_Admin.editingBook);
 
                     if (0 === BookDB_Modal_Admin.editingBook || true == BookDB_Modal_Admin.newButExistingBook) {
                         BookDB_Modal_Admin.addToEditor('[book id="' + response.data + '"]');

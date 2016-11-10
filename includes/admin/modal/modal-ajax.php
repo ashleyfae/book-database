@@ -60,6 +60,61 @@ function bdb_ajax_save_book() {
 add_action( 'wp_ajax_bdb_save_book', 'bdb_ajax_save_book' );
 
 /**
+ * Ajax CB: Get Review by ID
+ *
+ * @since 1.0.0
+ * @return void
+ */
+function bdb_ajax_get_review() {
+	check_ajax_referer( 'book-database', 'nonce' );
+
+	$review_id = isset( $_POST['review_id'] ) ? absint( $_POST['review_id'] ) : 0;
+
+	if ( ! $review_id ) {
+		wp_send_json_error( __( 'Error: Invalid review ID.', 'book-database' ) );
+	}
+
+	$review = bdb_get_review( $review_id );
+
+	if ( is_object( $review ) ) {
+		$data = array(
+			'ID'     => $review->ID,
+			'rating' => $review->get_rating()
+		);
+	} else {
+		$data = array();
+	}
+
+	wp_send_json_success( $data );
+
+	exit;
+}
+
+add_action( 'wp_ajax_bdb_get_review', 'bdb_ajax_get_review' );
+
+/**
+ * Ajax CB: Update or Create Review
+ *
+ * @since 1.0.0
+ * @return void
+ */
+function bdb_ajax_save_review() {
+	check_ajax_referer( 'book-database', 'nonce' );
+
+	$review_data = isset( $_POST['review'] ) ? $_POST['review'] : array();
+
+	if ( ! current_user_can( 'edit_posts' ) ) {
+		wp_send_json_error( __( 'Error: You do not have permission to add reviews.', 'book-database' ) );
+	}
+
+	$new_review_id = bdb_insert_review( $review_data );
+
+	wp_send_json_success( $new_review_id );
+}
+
+add_action( 'wp_ajax_bdb_save_review', 'bdb_ajax_save_review' );
+
+/**
  * Ajax CB: Get Thumbnail URL from ID
  *
  * @since 1.0.0

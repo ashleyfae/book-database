@@ -319,44 +319,13 @@
 
   .bookdb-frame-content {
     top: 74px; } }
-.bookdb-book-form {
-  max-width: 600px; }
-  .bookdb-book-form .bookdb-box-row {
-    margin-bottom: 15px;
-    vertical-align: top; }
-  .bookdb-book-form label {
-    display: block;
-    font-weight: 600;
-    margin-bottom: 5px; }
-  .bookdb-book-form input[type="number"],
-  .bookdb-book-form input[type="text"],
-  .bookdb-book-form select {
-    display: block;
-    line-height: 34px;
-    height: 34px;
-    margin: 0;
-    width: 100%; }
-    .bookdb-book-form input[type="number"][type="number"],
-    .bookdb-book-form input[type="text"][type="number"],
-    .bookdb-book-form select[type="number"] {
-      max-width: 50px; }
-  .bookdb-book-form select {
-    width: 100%; }
-  .bookdb-book-form textarea {
-    min-height: 200px;
-    width: 100%;
-    resize: vertical; }
-  .bookdb-book-form .bookdb-description {
-    color: #666;
-    display: block;
-    font-style: italic;
-    margin-top: 3px; }
-
 /* Search */
 #bookdb-search-for-existing-book .bookdb-input-wrapper {
-  display: flex; }
-#bookdb-search-for-existing-book button {
-  height: 34px; }
+  display: flex;
+  float: none;
+  max-width: 550px; }
+#bookdb-search-for-existing-book select, #bookdb-search-for-existing-book button {
+  height: auto; }
 
 #bookdb-existing-book-results {
   border-bottom: 1px solid #ddd;
@@ -367,16 +336,5 @@
 
 #bookdb-search-field {
   margin: 0 5px; }
-
-@media (min-width: 768px) {
-  .bookdb-book-form #bookdb-book-series-wrap .bookdb-input-wrapper {
-    clear: both;
-    overflow: hidden; }
-  .bookdb-book-form #bookdb-book-series-name-wrap {
-    float: left;
-    width: 60%; }
-  .bookdb-book-form #bookdb-book-series-position-wrap {
-    float: right;
-    width: 30%; } }
 
 /*# sourceMappingURL=modal.css.map */

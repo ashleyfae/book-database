@@ -1,60 +1,14 @@
-.bookdb-book-form {
-    max-width: 600px;
-
-    .bookdb-box-row {
-        margin-bottom: 15px;
-        vertical-align: top;
-    }
-
-    label {
-        display: block;
-        font-weight: 600;
-        margin-bottom: 5px;
-    }
-
-    input[type="number"],
-    input[type="text"],
-    select {
-        display: block;
-        line-height: 34px;
-        height: 34px;
-        margin: 0;
-        width: 100%;
-
-        &[type="number"] {
-            max-width: 50px;
-        }
-    }
-
-    select {
-        width: 100%;
-    }
-
-    textarea {
-        min-height: 200px;
-        width: 100%;
-        resize: vertical;
-    }
-
-    .bookdb-description {
-        color: #666;
-        display: block;
-        font: {
-            style: italic;
-        }
-        margin-top: 3px;
-    }
-}
-
 /* Search */
 
 #bookdb-search-for-existing-book {
     .bookdb-input-wrapper {
         display: flex;
+        float: none;
+        max-width: 550px;
     }
 
-    button {
-        height: 34px;
+    select, button {
+        height: auto;
     }
 }
 
@@ -75,26 +29,5 @@
 @media only screen and (max-width: 480px) {
     .bookdb-book-form {
         // @todo columns
-    }
-}
-
-@media (min-width: 768px) {
-    .bookdb-book-form {
-        #bookdb-book-series-wrap {
-            .bookdb-input-wrapper {
-                clear: both;
-                overflow: hidden;
-            }
-        }
-
-        #bookdb-book-series-name-wrap {
-            float: left;
-            width: 60%;
-        }
-
-        #bookdb-book-series-position-wrap {
-            float: right;
-            width: 30%;
-        }
     }
 }

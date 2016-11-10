@@ -90,6 +90,7 @@ class BDB_Rating {
 	 * @param string $type Formatting type to use. Allowed:
 	 *                     font_awesome - Font Awesome star icons.
 	 *                     html_stars - HTML entities.
+	 *                     text - Plain text with "Star(s)" appended.
 	 *
 	 * @access public
 	 * @since  1.0.0
@@ -126,7 +127,26 @@ class BDB_Rating {
 			return $this->rating;
 		}
 
-		return $this->repeat( '&starf;', '&half;', '' );
+		return apply_filters( 'book-database/rating/format/html_stars', $this->repeat( '&starf;', '&half;', '' ), $this->rating, $this );
+
+	}
+
+	/**
+	 * Format as Text (with "Star(s)" appended)
+	 *
+	 * @access public
+	 * @since  1.0.0
+	 * @return string
+	 */
+	public function format_text() {
+
+		$text = $this->rating;
+
+		if ( is_numeric( $this->rating ) ) {
+			$text = sprintf( _n( '%s Star', '%s Stars', $this->rating, 'book-database' ), $this->rating );
+		}
+
+		return apply_filters( 'book-database/rating/format/text', $text, $this->rating, $this );
 
 	}
 

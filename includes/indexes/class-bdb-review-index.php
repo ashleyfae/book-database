@@ -118,8 +118,6 @@ class BDB_Review_Index {
 
 		$before_review = apply_filters( 'book-database/index/format_review/before', '<li>' );
 
-		var_dump( $review );
-
 		$find = array(
 			'[link_start]',
 			'[link_end]',

@@ -157,6 +157,17 @@
   #bdb_book_reviews table th {
     font-weight: 600; }
 
+#bookdb-add-review-search-for-book {
+  display: flex; }
+  #bookdb-add-review-search-for-book select {
+    margin-left: 4px;
+    margin-right: 4px; }
+
+#bookdb-add-review-fields-wrap {
+  display: none; }
+  #bookdb-add-review-fields-wrap .spinner {
+    float: none; }
+
 #book-layout-builder {
   clear: both;
   margin: 0 0 1em;

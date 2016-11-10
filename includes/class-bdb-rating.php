@@ -140,10 +140,11 @@ class BDB_Rating {
 	 */
 	public function format_text() {
 
-		$text = $this->rating;
+		$text    = $this->rating;
+		$allowed = bdb_get_available_ratings();
 
-		if ( is_numeric( $this->rating ) ) {
-			$text = sprintf( _n( '%s Star', '%s Stars', $this->rating, 'book-database' ), $this->rating );
+		if ( array_key_exists( $text, $allowed ) ) {
+			$text = $allowed[ $text ];
 		}
 
 		return apply_filters( 'book-database/rating/format/text', $text, $this->rating, $this );

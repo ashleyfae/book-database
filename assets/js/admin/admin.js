@@ -20,6 +20,9 @@
             $('#bookdb-book-layout-cover-changer').change(this.changeCoverAlignment);
             $('.bookdb-new-checkbox-term').on('click', '.button', this.addCheckboxTerm);
             $('.bookdb-new-checkbox-term .bookdb-new-checkbox-term-value').keypress(this.addCheckboxTerm);
+            $('#bookdb-add-review-search-book-input').keypress(this.searchForBookToReview);
+            $('#bookdb-add-review-search-for-book').on('click', 'button', this.searchForBookToReview);
+            $('#bookdb-add-review-fields-wrap').on('click', 'button', this.addReview);
         },
 
         /**
@@ -89,6 +92,156 @@
 
             checkboxWrap.append('<label><input type="checkbox" name="' + checkboxName + '" class="bookdb-checkbox" value="' + newTerm.val() + '" checked="checked"> ' + newTerm.val() + '</label>');
             newTerm.val('');
+        },
+
+        /**
+         * Search for Book to Review
+         *
+         * @param e
+         */
+        searchForBookToReview: function (e) {
+            if ('click' == e.type) {
+                e.preventDefault();
+            }
+
+            if ('keypress' == e.type && 13 != e.which) {
+                return true;
+            } else {
+                e.preventDefault();
+            }
+
+            var button = $(this).parents('#bookdb-add-review-search-for-book').find('button'),
+                searchWrap = button.parents('#bookdb-add-review-search-for-book'),
+                searchFor = $('#bookdb-add-review-search-book-input').val(),
+                searchField = $('#book-db-add-review-search-type').val(),
+                resultsWrap = $('#bookdb-book-search-results'),
+                bookID = $('#bookdb-book-to-add-review');
+
+            button.attr('disabled', true);
+            searchWrap.append('<span class="spinner is-active"></span>');
+            bookID.val(0);
+
+            var data = {
+                action: 'bdb_search_book',
+                nonce: bookdb_modal.nonce,
+                search: searchFor,
+                field: searchField
+            };
+
+            $.ajax({
+                type: 'POST',
+                url: ajaxurl,
+                data: data,
+                dataType: "json",
+                success: function (response) {
+
+                    button.attr('disabled', false);
+                    searchWrap.find('.spinner').remove();
+                    resultsWrap.empty().append(response.data).show();
+
+                    if (response.success) {
+
+                        resultsWrap.on('click', 'a', function (e) {
+                            e.preventDefault();
+
+                            // Clear search.
+                            $('#bookdb-add-review-search-book-input').val('');
+
+                            // Set book ID.
+                            bookID.val($(this).data('id'));
+
+                            // Hide results.
+                            resultsWrap.hide();
+
+                            // Show review fields.
+                            $('#bookdb-add-review-fields-wrap').show();
+                        });
+
+                    } else {
+
+                        if (window.console && window.console.log) {
+                            console.log(response);
+                        }
+
+                    }
+
+                }
+            }).fail(function (response) {
+                if (window.console && window.console.log) {
+                    console.log(response);
+                }
+            });
+        },
+
+        /**
+         * Add Review
+         *
+         * @param e
+         */
+        addReview: function (e) {
+            e.preventDefault();
+
+            var button = $(this),
+                wrap = $('#bookdb-add-review-fields-wrap'),
+                rating = $('#book_rating'),
+                book_id = $('#bookdb-book-to-add-review'),
+                user_id = $('#review_user_id'),
+                table = $('#bdb_book_reviews').find('table');
+
+            button.attr('disabled', true);
+            wrap.append('<span class="spinner is-active"></span>');
+
+            var review = {
+                book_id: book_id.val(),
+                rating: rating.val(),
+                user_id: user_id.val(),
+                post_id: $('#post_id').val()
+            };
+
+            var data = {
+                action: 'bdb_save_review',
+                nonce: bookdb_modal.nonce,
+                review: review
+            };
+
+            $.ajax({
+                type: 'POST',
+                url: ajaxurl,
+                data: data,
+                dataType: "json",
+                success: function (response) {
+
+                    button.attr('disabled', false);
+                    wrap.find('.spinner').remove();
+
+                    if (response.success) {
+
+                        rating.val('');
+                        user_id.val(user_id.data('current'));
+
+                        // Update table.
+                        $('#bookdb-no-book-reviews-message').remove();
+
+                        table.find('tbody').append('<tr><td>' + response.data.ID + '</td><td>' + response.data.book + '</td><td>' + response.data.rating + '</td><td>' + response.data.shortcode + '</td><td>' + response.data.remove + '</td></tr>');
+
+                        // Hide rating fields.
+                        wrap.hide();
+
+                    } else {
+
+                        if (window.console && window.console.log) {
+                            console.log(response);
+                        }
+
+                    }
+
+                }
+            }).fail(function (response) {
+                if (window.console && window.console.log) {
+                    console.log(response);
+                }
+            });
+
         }
 
     };

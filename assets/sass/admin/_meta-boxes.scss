@@ -221,3 +221,20 @@
         }
     }
 }
+
+#bookdb-add-review-search-for-book {
+    display: flex;
+
+    select {
+        margin-left: 4px;
+        margin-right: 4px;
+    }
+}
+
+#bookdb-add-review-fields-wrap {
+    display: none;
+
+    .spinner {
+        float: none;
+    }
+}

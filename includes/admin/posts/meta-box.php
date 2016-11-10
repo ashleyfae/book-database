@@ -103,7 +103,7 @@ function bdb_render_post_book_reviews_meta_box( $post ) {
 		<p><?php _e( 'Search for a book to review.', 'book-database' ); ?></p>
 		<div id="bookdb-add-review-search-for-book">
 			<label for="bookdb-add-review-search-book-input" class="screen-reader-text"><?php _e( 'Search for a book by title or author', 'book-database' ); ?></label>
-			<input type="text" id="bookdb-add-review-search-book-input" placeholder="<?php esc_attr_e( 'Title or author name', 'book-database' ); ?>">
+			<input type="text" id="bookdb-add-review-search-book-input" class="regular-text" placeholder="<?php esc_attr_e( 'Title or author name', 'book-database' ); ?>">
 
 			<label for="book-db-add-review-search-type" class="screen-reader-text"><?php _e( 'Choose a field to search by', 'book-database' ); ?></label>
 			<select id="book-db-add-review-search-type">
@@ -112,6 +112,37 @@ function bdb_render_post_book_reviews_meta_box( $post ) {
 			</select>
 
 			<button type="button" class="button"><?php esc_html_e( 'Search for Book', 'book-database' ); ?></button>
+		</div>
+
+		<div id="bookdb-book-search-results"></div>
+
+		<div id="bookdb-add-review-fields-wrap">
+			<input type="hidden" id="bookdb-book-to-add-review" value="0">
+
+			<?php
+			// Rating
+			book_database()->html->meta_row( 'rating_dropdown', array( 'label' => __( 'Rating', 'book-database' ) ), array(
+				'id'       => 'book_rating',
+				'name'     => 'book_rating',
+				'selected' => false
+			) );
+
+			// User ID
+			$current_user = wp_get_current_user();
+
+			book_database()->html->meta_row( 'text', array( 'label' => __( 'Reviewer User ID', 'book-database' ) ), array(
+				'id'    => 'review_user_id',
+				'name'  => 'review_user_id',
+				'value' => $current_user->ID,
+				'type'  => 'number',
+				'desc'  => __( 'ID of the user reviewing the book. Default is your user ID.', 'book-database' ),
+				'data'  => array(
+					'current' => $current_user->ID
+				)
+			) );
+			?>
+
+			<button type="button" class="button"><?php esc_html_e( 'Add Review', 'book-database' ); ?></button>
 		</div>
 	</div>
 	<?php

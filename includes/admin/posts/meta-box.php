@@ -43,7 +43,7 @@ function bdb_render_post_book_reviews_meta_box( $post ) {
 	?>
 	<p id="ubb-book-reviews-message"><?php _e( 'Below is a list of book reviews connected to this post. Deleting a review will delete it from your review archive and disassociate it with this post.', 'book-database' ); ?></p>
 
-	<table class="wp-list-table widefat fixed posts bookdb-table">
+	<table class="wp-list-table widefat fixed posts">
 		<thead>
 		<tr>
 			<th><?php _e( 'ID', 'book-database' ); ?></th>
@@ -88,7 +88,7 @@ function bdb_render_post_book_reviews_meta_box( $post ) {
 		</tbody>
 	</table>
 	<div id="ubb-add-review-buttons">
-		<button id="ubb-add-review" class="button button-secondary" rel=".ubb-review-entry"><?php esc_html_e( 'Add Review', 'book-database' ); ?></button>
+		<button id="ubb-add-review" class="button button-secondary"><?php esc_html_e( 'Add Review', 'book-database' ); ?></button>
 	</div>
 	<?php
 

@@ -58,6 +58,11 @@ function bdb_is_admin_page() {
 		$is_bdb_page = true;
 	}
 
+	// Show where the reviews are included.
+	if ( in_array( $screen->post_type, bdb_get_review_post_types() ) ) {
+		$is_bdb_page = true;
+	}
+
 	//var_dump($screen);wp_die();
 
 	// @todo

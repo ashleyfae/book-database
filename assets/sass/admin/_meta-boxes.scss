@@ -209,3 +209,15 @@
     overflow-y: scroll;
     padding: .9em;
 }
+
+/* Reviews on Posts */
+
+#bdb_book_reviews {
+    table {
+        margin-bottom: 1em;
+
+        th {
+            font-weight: 600;
+        }
+    }
+}

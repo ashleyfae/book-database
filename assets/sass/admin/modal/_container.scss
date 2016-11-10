@@ -1,3 +1,7 @@
+.ac_results {
+    z-index: 100060;
+}
+
 .bookdb-modal-container {
     display: none;
 }
@@ -11,7 +15,7 @@
     left: 0;
     right: 0;
     bottom: 0;
-    z-index: 9000; // 10000
+    z-index: 100000;
 }
 
 .bookdb-modal {
@@ -20,7 +24,7 @@
     left: 30px;
     right: 30px;
     bottom: 30px;
-    z-index: 9500;
+    z-index: 100050;
 
     * {
         -webkit-box-sizing: border-box;

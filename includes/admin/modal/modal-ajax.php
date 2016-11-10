@@ -110,6 +110,12 @@ function bdb_ajax_get_thumbnail() {
 
 add_action( 'wp_ajax_bdb_get_thumbnail', 'bdb_ajax_get_thumbnail' );
 
+/**
+ * Search for Existing Book
+ *
+ * @since 1.0.0
+ * @return void
+ */
 function bdb_ajax_search_book() {
 	check_ajax_referer( 'book-database', 'nonce' );
 

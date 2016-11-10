@@ -66,8 +66,8 @@ function bdb_get_book_terms( $book_id, $type = false, $args = array() ) {
 
 	$args = wp_parse_args( $args, $default_args );
 
-	$relationship_table = $wpdb->prefix . 'bdb_book_term_relationships';
-	$term_table         = $wpdb->prefix . 'bdb_book_terms';
+	$relationship_table = book_database()->book_term_relationships->table_name;
+	$term_table         = book_database()->book_terms->table_name;
 
 	$where_type = $type ? $wpdb->prepare( " AND t.type = %s", sanitize_text_field( $type ) ) : '';
 

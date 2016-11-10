@@ -28,7 +28,41 @@ function bdb_ajax_get_book() {
 	}
 
 	$book = bdb_get_book( $book_id );
-	$data = $book ? $book->get_data() : array();
+
+	if ( $data = $book->get_data() ) {
+
+		$terms = bdb_get_all_book_terms( $book->ID );
+
+		if ( $terms ) {
+			$final_terms = array();
+			$taxonomies  = bdb_get_option( 'taxonomies' );
+
+			foreach ( $taxonomies as $taxonomy_options ) {
+				if ( ! array_key_exists( $taxonomy_options['id'], $terms ) ) {
+					continue;
+				}
+
+				if ( 'checkbox' == $taxonomy_options['display'] ) {
+					$final_terms[ $taxonomy_options['id'] ] = $terms[ $taxonomy_options['id'] ];
+
+					continue;
+				}
+
+				$names = array();
+
+				foreach ( $terms[ $taxonomy_options['id'] ] as $this_term ) {
+					$names[] = $this_term->name;
+				}
+
+				$final_terms[ $taxonomy_options['id'] ] = implode( ', ', $names );
+			}
+
+			$data['terms'] = $final_terms;
+		}
+
+	} else {
+		$data = array();
+	}
 
 	wp_send_json_success( $data );
 

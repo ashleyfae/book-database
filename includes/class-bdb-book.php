@@ -612,6 +612,7 @@ class BDB_Book {
 			'cover_url'       => $this->get_cover_url( 'medium' ),
 			'title'           => $this->get_title(),
 			'author'          => $this->get_author(),
+			'author_comma'    => $this->get_author_names(),
 			'series_id'       => $this->get_series_id(),
 			'series_name'     => $this->get_series_name(),
 			'series_position' => $this->get_series_position(),

@@ -435,6 +435,10 @@
 
     $(document).ready(function () {
         BookDB_Tags.init();
+
+        $(document).on('bdb_modal_set_book_fields', function () {
+            BookDB_Tags.init();
+        });
     });
 
 })(jQuery);

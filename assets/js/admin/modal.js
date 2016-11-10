@@ -252,12 +252,15 @@ var BookDB_Modal_Admin = {
          * `cover_url`
          * `title`
          * `author` - array
+         * `author_comma` - Comma-separated list of author names
          * `series_id`
          * `series_name`
          * `series_position`
          * `pub_date`
          * `synopsis`
          */
+
+        console.log(book);
 
         jQuery('.bookdb-book-details-form > h3').text(bookdb_modal.l10n.editing + '"' + book.title + '"');
 
@@ -272,6 +275,10 @@ var BookDB_Modal_Admin = {
 
         if (book.title) {
             jQuery('#book_title').val(book.title);
+        }
+
+        if (book.author_comma) {
+            jQuery('#bookdb-input-tag-author').val(book.author_comma);
         }
 
         if (book.series_name) {
@@ -289,6 +296,8 @@ var BookDB_Modal_Admin = {
         if (book.synopsis) {
             jQuery('#book_synopsis').val(book.synopsis);
         }
+
+        jQuery(document).trigger('bdb_modal_set_book_fields', book);
 
     },
 

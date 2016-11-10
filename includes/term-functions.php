@@ -116,6 +116,31 @@ function bdb_get_book_terms( $book_id, $type = false, $args = array() ) {
 }
 
 /**
+ * Get All Book Terms
+ *
+ * Terms are grouped by type.
+ *
+ * @param int $book_id
+ *
+ * @since 1.0.0
+ * @return array|bool
+ */
+function bdb_get_all_book_terms( $book_id, $args = array() ) {
+	$terms       = bdb_get_book_terms( $book_id, false, $args );
+	$final_terms = array();
+
+	if ( ! $terms || ! is_array( $terms ) ) {
+		return false;
+	}
+
+	foreach ( $terms as $term ) {
+		$final_terms[ $term->type ][] = $term;
+	}
+
+	return $final_terms;
+}
+
+/**
  * Create Book and Term Relationships
  *
  * Relates a book to a term and term type. Creates the

@@ -51,8 +51,11 @@ function bdb_review_index_shortcode( $atts, $content = '' ) {
 	$atts = shortcode_atts( array(
 		'type'    => 'title', // title, author, series, publisher, genre
 		'orderby' => 'title', // title, author, date, pub_date
-		'order'   => 'ASC' // ASC, DESC
+		'order'   => 'ASC', // ASC, DESC
+		'letters' => 'yes' // yes, no
 	), $atts, 'book' );
+
+	$output = '';
 
 	switch ( $atts['type'] ) {
 
@@ -61,16 +64,20 @@ function bdb_review_index_shortcode( $atts, $content = '' ) {
 			$output = $index->display();
 			break;
 
-		case 'author' :
-			// @todo
-			break;
-
 		case 'series' :
 			// @todo
 			break;
 
 		default :
-			$output = '';
+			$taxonomies = bdb_get_taxonomies( true );
+
+			if ( ! array_key_exists( $atts['type'], $taxonomies ) ) {
+				break;
+			}
+
+			$index  = new BDB_Reviews_by_Tax( $atts, $content );
+			$output = $index->display();
+			break;
 
 	}
 

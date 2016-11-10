@@ -27,7 +27,7 @@ class BDB_Reviews_by_Title extends BDB_Review_Index {
 	 * @since  1.0.0
 	 * @return array
 	 */
-	public function query() {
+	public function query( $filter = false ) {
 
 		global $wpdb;
 
@@ -53,6 +53,15 @@ class BDB_Reviews_by_Title extends BDB_Review_Index {
 
 	}
 
+	/**
+	 * Display
+	 *
+	 * Creates the overall markup for the index.
+	 *
+	 * @access public
+	 * @since  1.0.0
+	 * @return string|false
+	 */
 	public function display() {
 		$reviews = $this->query();
 
@@ -72,7 +81,9 @@ class BDB_Reviews_by_Title extends BDB_Review_Index {
 
 		foreach ( range( 'a', 'z' ) as $letter ) {
 
-			$output .= '<h2 id="' . esc_attr( $letter ) . '">' . strtoupper( $letter ) . '</h2>';
+			if ( 'yes' == $this->atts['letters'] ) {
+				$output .= '<h2 id="' . esc_attr( $letter ) . '">' . strtoupper( $letter ) . '</h2>';
+			}
 
 			// No reviews to add.
 			if ( ! array_key_exists( $letter, $reviews_by_letter ) ) {

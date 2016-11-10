@@ -30,6 +30,33 @@ function bdb_get_term_display_types() {
 }
 
 /**
+ * Get Taxonomies
+ *
+ * @param bool $include_author Whether or not to include authors.
+ *
+ * @since 1.0.0
+ * @return array
+ */
+function bdb_get_taxonomies( $include_author = false ) {
+	$taxonomies       = bdb_get_option( 'taxonomies' );
+	$taxonomies_final = $include_author ? array(
+		'author' => array(
+			'id'      => 'author',
+			'name'    => esc_html__( 'Author', 'book-database' ),
+			'display' => 'text'
+		)
+	) : array();
+
+	if ( is_array( $taxonomies ) ) {
+		foreach ( $taxonomies as $tax ) {
+			$taxonomies_final[ $tax['id'] ] = $tax;
+		}
+	}
+
+	return $taxonomies_final;
+}
+
+/**
  * Get Terms
  *
  * @param array $args Arguments to override the defaults.

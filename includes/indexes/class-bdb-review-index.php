@@ -68,7 +68,8 @@ class BDB_Review_Index {
 	/**
 	 * BDB_Review_Index constructor.
 	 *
-	 * @param array $atts
+	 * @param array  $atts     Shortcode attributes.
+	 * @param string $template Template for individual reviews.
 	 *
 	 * @access public
 	 * @since  1.0.0
@@ -95,7 +96,7 @@ class BDB_Review_Index {
 		$this->order   = strtoupper( $atts['order'] ) == 'ASC' ? 'ASC' : 'DESC';
 	}
 
-	public function query() {
+	public function query( $filter = false ) {
 	}
 
 	/**

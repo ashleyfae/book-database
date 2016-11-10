@@ -219,6 +219,7 @@ if ( ! class_exists( 'Book_Database' ) ) :
 			require_once BDB_DIR . 'includes/database/class-bdb-db-review-meta.php';
 			require_once BDB_DIR . 'includes/database/class-bdb-db-series.php';
 			require_once BDB_DIR . 'includes/indexes/class-bdb-review-index.php';
+			require_once BDB_DIR . 'includes/indexes/class-bdb-reviews-by-tax.php';
 			require_once BDB_DIR . 'includes/indexes/class-bdb-reviews-by-title.php';
 			require_once BDB_DIR . 'includes/book-functions.php';
 			require_once BDB_DIR . 'includes/book-layout.php';

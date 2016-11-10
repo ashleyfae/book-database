@@ -100,11 +100,7 @@ class BDB_Rating {
 
 		$rating = false;
 
-		if ( ! is_numeric( $this->rating ) ) {
-
-			$rating = $this->rating;
-
-		} elseif ( method_exists( $this, 'format_' . $type ) ) {
+		if ( method_exists( $this, 'format_' . $type ) ) {
 
 			$rating = call_user_func( array( $this, 'format_' . $type ) );
 
@@ -124,7 +120,7 @@ class BDB_Rating {
 	public function format_html_stars() {
 
 		if ( ! is_numeric( $this->rating ) ) {
-			return $this->rating;
+			return $this->format_text();
 		}
 
 		return apply_filters( 'book-database/rating/format/html_stars', $this->repeat( '&starf;', '&half;', '' ), $this->rating, $this );

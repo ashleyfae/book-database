@@ -184,8 +184,6 @@ class BDB_Books_Table extends WP_List_Table {
 	/**
 	 * Render Column Name
 	 *
-	 * @todo   Everything here
-	 *
 	 * @param array $item Contains all the data of the books.
 	 *
 	 * @access public
@@ -197,8 +195,7 @@ class BDB_Books_Table extends WP_List_Table {
 		$name     = '<a href="' . esc_url( $edit_url ) . '" class="row-title" aria-label="' . esc_attr( sprintf( '%s (Edit)', $item['title'] ) ) . '">' . $item['title'] . '</a>';
 		$actions  = array(
 			'edit'   => '<a href="' . esc_url( $edit_url ) . '">' . __( 'Edit', 'book-database' ) . '</a>',
-			'delete' => '<a href="' . admin_url( 'edit.php?post_type=bdb_book&page=ubb-reviews&view=delete&id=' . $item['ID'] ) . '">' . __( 'Delete', 'book-database' ) . '</a>'
-			// @todo
+			'delete' => '<a href="' . esc_url( bdb_get_admin_page_delete_book( $item['ID'] ) ) . '">' . __( 'Delete', 'book-database' ) . '</a>'
 		);
 
 		return $name . $this->row_actions( $actions );

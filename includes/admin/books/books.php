@@ -157,7 +157,9 @@ function bdb_books_edit_view( $book ) {
 							<div class="inside">
 								<div id="major-publishing-actions">
 									<div id="delete-action">
-										<a href=""><?php printf( __( 'Delete %s', 'book-database' ), bdb_get_label_singular() ); ?></a>
+										<?php if ( $book->ID ) : ?>
+											<a href="<?php echo esc_url( bdb_get_admin_page_delete_book( $book->ID ) ); ?>"><?php printf( __( 'Delete %s', 'book-database' ), bdb_get_label_singular() ); ?></a>
+										<?php endif; ?>
 									</div>
 									<div id="publishing-action">
 										<input type="submit" id="bdb-save-book" name="save_book" class="button button-primary button-large" value="<?php esc_attr_e( 'Save', 'book-database' ); ?>">

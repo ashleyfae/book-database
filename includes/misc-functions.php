@@ -74,6 +74,25 @@ function bdb_get_admin_page_edit_book( $book_id ) {
 }
 
 /**
+ * Get Admin Page: Delete Book
+ *
+ * @param int $book_id
+ *
+ * @since 1.0.0
+ * @return string
+ */
+function bdb_get_admin_page_delete_book( $book_id ) {
+	$book_page        = bdb_get_admin_page_books();
+	$delete_book_page = add_query_arg( array(
+		'bdb-action' => urlencode( 'book/delete' ),
+		'ID'         => absint( $book_id ),
+		'nonce'      => wp_create_nonce( 'bdb_delete_book' )
+	), $book_page );
+
+	return apply_filters( 'book-database/admin-page-url/delete-book', $delete_book_page );
+}
+
+/**
  * Get Admin Page: Reviews Table
  *
  * @since 1.0.0

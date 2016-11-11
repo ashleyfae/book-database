@@ -497,3 +497,39 @@ function bdb_book_review_meta_table( $book ) {
 }
 
 add_action( 'book-database/book-edit/after-information-fields', 'bdb_book_review_meta_table' );
+
+/**
+ * Delete Book
+ *
+ * Processes deletions from the delete book URL.
+ * @see   bdb_get_admin_page_delete_book()
+ *
+ * @since 1.0.0
+ * @return void
+ */
+function bdb_delete_book_via_url() {
+	if ( ! isset( $_GET['nonce'] ) ) {
+		return;
+	}
+
+	if ( ! wp_verify_nonce( $_GET['nonce'], 'bdb_delete_book' ) ) {
+		wp_die( __( 'Failed security check.', 'book-database' ) );
+	}
+
+	if ( ! isset( $_GET['ID'] ) ) {
+		wp_die( __( 'Missing book ID.', 'book-database' ) );
+	}
+
+	$result = book_database()->books->delete( absint( $_GET['ID'] ) );
+
+	$message = $result ? 'book-deleted' : 'book-delete-failed';
+	$url     = add_query_arg( array(
+		'bdb-message' => urlencode( $message )
+	), bdb_get_admin_page_books() );
+
+	wp_safe_redirect( $url );
+
+	exit;
+}
+
+add_action( 'book-database/book/delete', 'bdb_delete_book_via_url' );

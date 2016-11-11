@@ -81,7 +81,7 @@ function bdb_review_index_shortcode( $atts, $content = '' ) {
 
 	}
 
-	return $output;
+	return '<div class="review-index review-index-by-' . sanitize_html_class( $atts['type'] ) . '">' . $output . '</div>';
 }
 
 add_shortcode( 'review-index', 'bdb_review_index_shortcode' );

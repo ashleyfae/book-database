@@ -280,7 +280,12 @@ function bdb_book_taxonomy_fields( $book ) {
 	foreach ( $taxonomies as $taxonomy_options ) {
 
 		$book_terms     = bdb_get_book_terms( $book->ID, $taxonomy_options['id'], array( 'fields' => 'names' ) ); // Terms assigned to this book.
-		$temp_all_terms = bdb_get_terms( array( 'type' => $taxonomy_options['id'], 'fields' => 'names' ) );
+		$temp_all_terms = bdb_get_terms( array(
+			'type'    => $taxonomy_options['id'],
+			'fields'  => 'names',
+			'orderby' => 'name',
+			'order'   => 'ASC'
+		) );
 		$all_terms      = array();
 
 		if ( ! is_array( $temp_all_terms ) ) {

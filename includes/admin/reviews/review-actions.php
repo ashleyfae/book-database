@@ -208,3 +208,39 @@ function bdb_save_review() {
 }
 
 add_action( 'book-database/review/save', 'bdb_save_review' );
+
+/**
+ * Delete Review
+ *
+ * Processes deletions from the delete review URL.
+ * @see   bdb_get_admin_page_delete_review()
+ *
+ * @since 1.0.0
+ * @return void
+ */
+function bdb_delete_review_via_url() {
+	if ( ! isset( $_GET['nonce'] ) ) {
+		return;
+	}
+
+	if ( ! wp_verify_nonce( $_GET['nonce'], 'bdb_delete_review' ) ) {
+		wp_die( __( 'Failed security check.', 'book-database' ) );
+	}
+
+	if ( ! isset( $_GET['ID'] ) ) {
+		wp_die( __( 'Missing review ID.', 'book-database' ) );
+	}
+
+	$result = book_database()->reviews->delete( absint( $_GET['ID'] ) );
+
+	$message = $result ? 'review-deleted' : 'review-delete-failed';
+	$url     = add_query_arg( array(
+		'bdb-message' => urlencode( $message )
+	), bdb_get_admin_page_reviews() );
+
+	wp_safe_redirect( $url );
+
+	exit;
+}
+
+add_action( 'book-database/review/delete', 'bdb_delete_review_via_url' );

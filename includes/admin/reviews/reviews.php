@@ -158,7 +158,9 @@ function bdb_reviews_edit_view( $review ) {
 							<div class="inside">
 								<div id="major-publishing-actions">
 									<div id="delete-action">
-										<a href=""><?php _e( 'Delete Review', 'book-database' ); ?></a>
+										<?php if ( $review->ID ) : ?>
+											<a href="<?php echo esc_url( bdb_get_admin_page_delete_review( $review->ID ) ); ?>"><?php _e( 'Delete Review', 'book-database' ); ?></a>
+										<?php endif; ?>
 									</div>
 									<div id="publishing-action">
 										<input type="submit" id="bdb-save-review" name="save_review" class="button button-primary button-large" value="<?php esc_attr_e( 'Save', 'book-database' ); ?>">

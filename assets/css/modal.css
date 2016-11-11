@@ -340,4 +340,13 @@
 #bookdb-search-field {
   margin: 0 5px; }
 
+.bookdb-modal-button span {
+  display: inline-block;
+  margin: 0 2px;
+  width: 18px;
+  height: 18px;
+  vertical-align: text-top; }
+  .bookdb-modal-button span:before {
+    color: #82878c; }
+
 /*# sourceMappingURL=modal.css.map */

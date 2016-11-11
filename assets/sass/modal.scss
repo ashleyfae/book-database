@@ -1,2 +1,17 @@
 @import "admin/modal/container";
 @import "admin/modal/form";
+
+// Button
+.bookdb-modal-button {
+    span {
+        display: inline-block;
+        margin: 0 2px;
+        width: 18px;
+        height: 18px;
+        vertical-align: text-top;
+
+        &:before {
+            color: #82878c;
+        }
+    }
+}

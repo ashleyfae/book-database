@@ -48,7 +48,10 @@ function bdb_media_buttons( $editor_id ) {
 	}
 
 	?>
-	<button type="button" class="button bookdb-modal-button" data-editor="<?php echo esc_attr( $editor_id ); ?>" title="<?php esc_attr_e( 'Insert Book', 'book-database' ); ?>"><?php esc_html_e( 'Insert Book', 'book-database' ); ?></button>
+	<button type="button" class="button bookdb-modal-button" data-editor="<?php echo esc_attr( $editor_id ); ?>" title="<?php esc_attr_e( 'Insert Book', 'book-database' ); ?>">
+		<span class="dashicons dashicons-book"></span>
+		<?php esc_html_e( 'Insert Book', 'book-database' ); ?>
+	</button>
 	<?php
 }
 

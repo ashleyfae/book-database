@@ -15,7 +15,6 @@ I'm not sure if I'll ever officially release this. I'm mostly building this for 
 
 ## Todo:
 
-* Add JavaScript for "custom" index title.
 * Review archives. <-- WIP
 * Statistics.
 * Goodreads URL.

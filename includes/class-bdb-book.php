@@ -113,6 +113,15 @@ class BDB_Book {
 	private $synopsis;
 
 	/**
+	 * Goodreads URL
+	 *
+	 * @var string
+	 * @access private
+	 * @since  1.0.0
+	 */
+	private $goodreads_url;
+
+	/**
 	 * BDB_Book constructor.
 	 *
 	 * @param int $book_id
@@ -659,8 +668,15 @@ class BDB_Book {
 		return apply_filters( 'book-database/book/get/pages', $this->pages, $this->ID, $this );
 	}
 
+	/**
+	 * Get Goodreads URL
+	 *
+	 * @access public
+	 * @since  1.0.0
+	 * @return int|null
+	 */
 	public function get_goodreads_url() {
-
+		return apply_filters( 'book-database/book/get/goodreads_url', $this->goodreads_url, $this->ID, $this );
 	}
 
 	/**
@@ -696,7 +712,9 @@ class BDB_Book {
 			'series_name'     => $this->get_series_name(),
 			'series_position' => $this->get_series_position(),
 			'pub_date'        => $this->get_formatted_pub_date(),
-			'synopsis'        => $this->get_synopsis()
+			'pages'           => $this->get_pages(),
+			'synopsis'        => $this->get_synopsis(),
+			'goodreads_url'   => $this->get_goodreads_url()
 		);
 
 		return apply_filters( 'book-database/book/get/data', $book, $this->ID, $this );

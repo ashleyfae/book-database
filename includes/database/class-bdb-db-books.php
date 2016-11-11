@@ -45,6 +45,7 @@ class BDB_DB_Books extends BDB_DB {
 			'ID'              => '%d',
 			'cover'           => '%d',
 			'title'           => '%s',
+			'index_title'     => '%s',
 			'series_id'       => '%d',
 			'series_position' => '%s',
 			'pub_date'        => '%s',
@@ -63,6 +64,7 @@ class BDB_DB_Books extends BDB_DB {
 		return array(
 			'cover'           => null,
 			'title'           => '',
+			'index_title'     => '',
 			'series_id'       => null,
 			'series_position' => null,
 			'pub_date'        => null,
@@ -522,6 +524,7 @@ class BDB_DB_Books extends BDB_DB {
 		ID bigint(20) NOT NULL AUTO_INCREMENT,
 		cover bigint(20),
 		title text NOT NULL,
+		index_title text NOT NULL,
 		series_id bigint(20),
 		series_position float,
 		pub_date datetime,

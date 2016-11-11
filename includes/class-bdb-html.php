@@ -68,6 +68,7 @@ class BDB_HTML {
 			'data'             => array(),
 			'readonly'         => false,
 			'disabled'         => false,
+			'desc'             => null
 		);
 
 		$args = wp_parse_args( $args, $defaults );
@@ -144,6 +145,10 @@ class BDB_HTML {
 		}
 
 		$output .= '</select>';
+
+		if ( ! empty( $args['desc'] ) ) {
+			$output .= '<span class="bookdb-description">' . esc_html( $args['desc'] ) . '</span>';
+		}
 
 		return $output;
 

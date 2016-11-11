@@ -74,6 +74,30 @@ function bdb_book_title_field( $book ) {
 add_action( 'book-database/book-edit/information-fields', 'bdb_book_title_field' );
 
 /**
+ * Field: Alternative Book Title
+ *
+ * @param BDB_Book $book
+ *
+ * @since 1.0.0
+ * @return void
+ */
+function bdb_book_title_alt_field( $book ) {
+	book_database()->html->meta_row( 'select', array(
+		'label' => __( 'Index Title', 'book-database' )
+	), array(
+		'options'          => $book->get_title_choices( true ),
+		'id'               => 'index_title',
+		'name'             => 'index_title',
+		'show_option_all'  => false,
+		'show_option_none' => false,
+		'selected'         => $book->get_index_title(),
+		'desc'             => __( 'Used when ordering in the review index and determining which letter the book title should fall under.', 'book-database' )
+	) );
+}
+
+add_action( 'book-database/book-edit/information-fields', 'bdb_book_title_alt_field' );
+
+/**
  * Field: Author
  *
  * @param BDB_Book $book

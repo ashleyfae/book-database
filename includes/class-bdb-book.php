@@ -456,6 +456,54 @@ class BDB_Book {
 	}
 
 	/**
+	 * Get Chosen Index Title
+	 *
+	 * Title used for sorting in the indexes.
+	 *
+	 * @todo
+	 *
+	 * @access public
+	 * @since  1.0.0
+	 * @return string
+	 */
+	public function get_index_title() {
+		return $this->get_title();
+	}
+
+	/**
+	 * Get Title Choices
+	 *
+	 * Array contains the current title, the generated alternative title (if applicable), and "other".
+	 *
+	 * @uses   bdb_generate_alternative_book_title()
+	 *
+	 * @param bool $include_custom Whether or not to include the "Custom" option.
+	 *
+	 * @access public
+	 * @since  1.0.0
+	 * @return array
+	 */
+	public function get_title_choices( $include_custom = false ) {
+
+		$alt_title = bdb_generate_alternative_book_title( $this->get_title() );
+
+		$choices = array(
+			$this->get_title() => $this->get_title()
+		);
+
+		if ( $alt_title ) {
+			$choices[ $alt_title ] = $alt_title;
+		}
+
+		if ( $include_custom ) {
+			$choices['custom'] = esc_html__( 'Custom', 'book-database' );
+		}
+
+		return apply_filters( 'book-database/book/get/title-choices', $choices, $alt_title, $this->ID, $this );
+
+	}
+
+	/**
 	 * Get Author
 	 *
 	 * @access public

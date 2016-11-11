@@ -71,3 +71,37 @@ function bdb_rewrite_rules() {
 }
 
 add_action( 'init', 'bdb_rewrite_rules' ); // @todo add to install
+
+/**
+ * Rewrite Review Page Content
+ *
+ * If the tax/term query vars are present then rewrite the page to
+ * show that specific archive.
+ *
+ * @param string $content
+ *
+ * @since 1.0.0
+ * @return string
+ */
+function bdb_rewrite_review_page_content( $content ) {
+	if ( get_the_ID() != bdb_get_option( 'reviews_page' ) ) {
+		return $content;
+	}
+
+	global $wp_query;
+
+	if ( ! array_key_exists( 'book_tax', $wp_query->query_vars ) || ! array_key_exists( 'book_term', $wp_query->query_vars ) ) {
+		return $content;
+	}
+
+	$tax  = $wp_query->query_vars['book_tax'];
+	$term = $wp_query->query_vars['book_term'];
+
+	if ( empty( $tax ) || empty( $term ) ) {
+		return $content;
+	}
+
+	return 'rewritten';
+}
+
+add_filter( 'the_content', 'bdb_rewrite_review_page_content' );

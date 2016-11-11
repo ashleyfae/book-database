@@ -22,7 +22,7 @@ if ( ! defined( 'ABSPATH' ) ) {
  */
 function bdb_show_media_button() {
 	$current_screen     = get_current_screen();
-	$allowed_post_types = apply_filters( 'book-database/modal/show-button-on-cpts', get_post_types( array( 'public' => true ), 'names' ) );
+	$allowed_post_types = bdb_get_review_post_types();
 	$display            = false;
 
 	if ( in_array( $current_screen->post_type, $allowed_post_types ) ) {

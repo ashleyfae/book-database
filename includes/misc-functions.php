@@ -21,8 +21,7 @@ if ( ! defined( 'ABSPATH' ) ) {
  */
 function bdb_get_review_post_types() {
 	$post_types = array(
-		'post',
-		'page'
+		'post'
 	);
 
 	return apply_filters( 'book-database/get-review-post-types', $post_types );

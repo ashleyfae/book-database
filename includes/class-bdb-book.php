@@ -639,6 +639,14 @@ class BDB_Book {
 		return apply_filters( 'book-database/book/get/formatted_pub_date', $date, $format, $raw_date, $this->ID, $this );
 	}
 
+	public function get_pages() {
+
+	}
+
+	public function get_goodreads_url() {
+
+	}
+
 	/**
 	 * Get Synopsis
 	 *

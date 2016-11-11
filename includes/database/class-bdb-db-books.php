@@ -49,6 +49,7 @@ class BDB_DB_Books extends BDB_DB {
 			'series_id'       => '%d',
 			'series_position' => '%s',
 			'pub_date'        => '%s',
+			'pages'           => '%d',
 			'synopsis'        => '%s',
 		);
 	}
@@ -68,6 +69,7 @@ class BDB_DB_Books extends BDB_DB {
 			'series_id'       => null,
 			'series_position' => null,
 			'pub_date'        => null,
+			'pages'           => null,
 			'synopsis'        => ''
 		);
 	}
@@ -528,6 +530,7 @@ class BDB_DB_Books extends BDB_DB {
 		series_id bigint(20),
 		series_position float,
 		pub_date datetime,
+		pages bigint(20),
 		synopsis longtext NOT NULL,
 		PRIMARY KEY  (ID),
 		INDEX series_id (series_id)

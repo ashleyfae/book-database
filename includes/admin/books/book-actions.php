@@ -82,16 +82,36 @@ add_action( 'book-database/book-edit/information-fields', 'bdb_book_title_field'
  * @return void
  */
 function bdb_book_title_alt_field( $book ) {
-	book_database()->html->meta_row( 'select', array(
-		'label' => __( 'Index Title', 'book-database' )
-	), array(
+	$index_title = $book->get_index_title();
+	$choices     = $book->get_title_choices();
+
+	if ( ! $index_title ) {
+		$selected = 'original';
+	} elseif ( array_key_exists( $index_title, $choices ) ) {
+		$selected = $choices[ $index_title ];
+	} else {
+		$selected = 'custom';
+	}
+
+	$select = book_database()->html->select( array(
 		'options'          => $book->get_title_choices( true ),
 		'id'               => 'index_title',
 		'name'             => 'index_title',
 		'show_option_all'  => false,
 		'show_option_none' => false,
-		'selected'         => $book->get_index_title() ? $book->get_index_title() : 'original',
-		'desc'             => __( 'Used when ordering in the review index and determining which letter the book title should fall under.', 'book-database' )
+		'selected'         => $selected
+	) );
+
+	$text = book_database()->html->text( array(
+		'id'    => 'index_title_custom',
+		'name'  => 'index_title_custom',
+		'value' => $book->get_index_title(),
+		'desc'  => __( 'Used when ordering in the review index and determining which letter the book title should fall under.', 'book-database' )
+	) );
+
+	book_database()->html->meta_row( 'raw', array(
+		'label' => __( 'Index Title', 'book-database' ),
+		'field' => $select . $text
 	) );
 }
 

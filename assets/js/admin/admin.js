@@ -24,6 +24,8 @@
             $('#bookdb-add-review-search-for-book').on('click', 'button', this.searchForBookToReview);
             $('#bookdb-add-review-fields-wrap').on('click', 'button', this.addReview);
             $('#bdb_book_reviews').on('click', '.bookdb-remove-book-review', this.removeReview);
+            $('#index_title').on('change', this.toggleCustomIndexTitle);
+            $(document).ready(this.toggleCustomIndexTitle);
         },
 
         /**
@@ -302,6 +304,24 @@
                     console.log(response);
                 }
             });
+
+        },
+
+        /**
+         * Toggle Custom Index Title
+         *
+         * @param e
+         */
+        toggleCustomIndexTitle: function (e) {
+
+            var indexValue = $('#index_title').val();
+            var customField = $('#index_title_custom');
+
+            if ('custom' == indexValue) {
+                customField.slideDown().css('display', 'block');
+            } else {
+                customField.slideUp();
+            }
 
         }
 

@@ -15,8 +15,8 @@ I'm not sure if I'll ever officially release this. I'm mostly building this for 
 
 ## Todo:
 
-* Maybe book column for formatted book title.
-* Review archives.
+* Add JavaScript for "custom" index title.
+* Review archives. <-- WIP
 * Statistics.
 * Goodreads URL.
 * Purchase links? Ew.

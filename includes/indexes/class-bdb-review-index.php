@@ -90,7 +90,8 @@ class BDB_Review_Index {
 			'author'          => 'author.name',
 			'date'            => 'review.date_added',
 			'pub_date'        => 'book.pub_date',
-			'series_position' => 'book.series_position'
+			'series_position' => 'book.series_position',
+			'pages'           => 'book.pages'
 		);
 
 		$this->orderby = array_key_exists( $atts['orderby'], $allowed_orderby ) ? $allowed_orderby[ $atts['orderby'] ] : $allowed_orderby['title'];

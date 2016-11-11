@@ -90,7 +90,7 @@ function bdb_book_title_alt_field( $book ) {
 		'name'             => 'index_title',
 		'show_option_all'  => false,
 		'show_option_none' => false,
-		'selected'         => $book->get_index_title(),
+		'selected'         => $book->get_index_title() ? $book->get_index_title() : 'original',
 		'desc'             => __( 'Used when ordering in the review index and determining which letter the book title should fall under.', 'book-database' )
 	) );
 }

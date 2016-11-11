@@ -48,6 +48,15 @@ class BDB_Book {
 	private $title;
 
 	/**
+	 * Title used for ordering in indexes.
+	 *
+	 * @var string
+	 * @access private
+	 * @since  1.0.0
+	 */
+	private $index_title;
+
+	/**
 	 * Author of the book
 	 *
 	 * Array with keys as term IDs and values as author names.
@@ -460,14 +469,12 @@ class BDB_Book {
 	 *
 	 * Title used for sorting in the indexes.
 	 *
-	 * @todo
-	 *
 	 * @access public
 	 * @since  1.0.0
 	 * @return string
 	 */
 	public function get_index_title() {
-		return $this->get_title();
+		return apply_filters( 'book-database/book/get/index_title', $this->index_title, $this->ID, $this );
 	}
 
 	/**
@@ -488,7 +495,7 @@ class BDB_Book {
 		$alt_title = bdb_generate_alternative_book_title( $this->get_title() );
 
 		$choices = array(
-			$this->get_title() => $this->get_title()
+			'original' => $this->get_title()
 		);
 
 		if ( $alt_title ) {

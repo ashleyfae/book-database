@@ -101,6 +101,9 @@ function bdb_rewrite_review_page_content( $content ) {
 		return $content;
 	}
 
+	$output = '';
+	$books  = false;
+
 	switch ( $tax ) {
 
 		case 'author' :
@@ -111,8 +114,6 @@ function bdb_rewrite_review_page_content( $content ) {
 					'orderby'   => 'pub_date',
 					'order'     => 'ASC'
 				) );
-
-				var_dump( $books );
 			}
 			break;
 
@@ -128,7 +129,29 @@ function bdb_rewrite_review_page_content( $content ) {
 
 	}
 
-	return 'rewritten';
+	if ( is_array( $books ) ) {
+		foreach ( $books as $book ) {
+			$book    = new BDB_Book( $book );
+			$reviews = bdb_get_book_reviews( $book->ID );
+			ob_start();
+			?>
+			<div>
+				<img src="<?php echo esc_url( $book->get_cover_url( 'thumbnail' ) ); ?>" class="alignleft">
+				<p><strong><?php echo $book->get_title(); ?></strong></p>
+
+				<?php
+				if ( $reviews ) {
+					echo _n( 'Review:', 'Review', count( $reviews ), 'book-database' );
+				}
+				?>
+			</div>
+			<?php
+
+			$output .= ob_get_clean();
+		}
+	}
+
+	return $output;
 }
 
 add_filter( 'the_content', 'bdb_rewrite_review_page_content' );

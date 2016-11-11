@@ -132,11 +132,7 @@ class BDB_Book {
 	 */
 	public function __construct( $book_id ) {
 
-		if ( ! is_numeric( $book_id ) ) {
-			return false;
-		}
-
-		$book = book_database()->books->get_book( $book_id );
+		$book = is_object( $book_id ) ? $book_id : book_database()->books->get_book( $book_id );
 
 		if ( empty( $book ) || ! is_object( $book ) ) {
 			return false;

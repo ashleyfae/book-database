@@ -69,7 +69,7 @@ class BDB_Reviews_Table extends WP_List_Table {
 	 *
 	 * @var bool
 	 * @access private
-	 * @sincei 1.0.0
+	 * @since 1.0.0
 	 */
 	private $display_delete_message = false;
 

@@ -64,6 +64,15 @@ class BDB_Books_Table extends WP_List_Table {
 	public $args = array();
 
 	/**
+	 * Display delete message
+	 *
+	 * @var bool
+	 * @access private
+	 * @since  1.0.0
+	 */
+	private $display_delete_message = false;
+
+	/**
 	 * BDB_Books_Table constructor.
 	 *
 	 * @see    WP_List_Table::__construct()
@@ -182,6 +191,30 @@ class BDB_Books_Table extends WP_List_Table {
 	}
 
 	/**
+	 * Render Checkbox Column
+	 *
+	 * @param array $item Contains all the data of the reviews.
+	 *
+	 * @access public
+	 * @since  1.0.0
+	 * @return void
+	 */
+	public function column_cb( $item ) {
+
+		if ( ! current_user_can( 'delete_posts' ) ) {
+			return;
+		}
+
+		?>
+		<label class="screen-reader-text" for="cb-select-<?php echo esc_attr( $item['ID'] ); ?>">
+			<?php _e( 'Select this book', 'book-database' ) ?>
+		</label>
+		<input id="cb-select-<?php echo esc_attr( $item['ID'] ); ?>" type="checkbox" name="books[]" value="<?php echo esc_attr( $item['ID'] ); ?>">
+		<?php
+
+	}
+
+	/**
 	 * Render Column Name
 	 *
 	 * @param array $item Contains all the data of the books.
@@ -212,6 +245,7 @@ class BDB_Books_Table extends WP_List_Table {
 	 */
 	public function get_columns() {
 		$columns = array(
+			'cb'       => '<input type="checkbox">',
 			'title'    => __( 'Title', 'book-database' ),
 			'author'   => __( 'Author', 'book-database' ),
 			'series'   => __( 'Series', 'book-database' ),
@@ -237,16 +271,94 @@ class BDB_Books_Table extends WP_List_Table {
 	}
 
 	/**
-	 * Outputs the reporting views
+	 * Table Navigation
 	 *
-	 * @todo
+	 * Generate the table navigation above or below the table.
+	 *
+	 * @param string $which
+	 *
+	 * @access protected
+	 * @since  1.0.0
+	 * @return void
+	 */
+	protected function display_tablenav( $which ) {
+
+		if ( 'top' === $which ) {
+			wp_nonce_field( 'bulk-' . $this->_args['plural'] );
+		}
+
+		// Display 'delete' success message.
+		if ( 'top' == $which && true === $this->display_delete_message ) {
+			?>
+			<div id="message" class="updated notice notice-success">
+				<p><?php _e( 'books successfully deleted.', 'book-database' ); ?></p>
+			</div>
+			<?php
+		}
+
+		?>
+		<div class="tablenav <?php echo esc_attr( $which ); ?>">
+
+			<?php if ( $this->has_items() ): ?>
+				<div class="alignleft actions bulkactions">
+					<?php $this->bulk_actions( $which ); ?>
+				</div>
+			<?php endif;
+			$this->extra_tablenav( $which );
+			$this->pagination( $which );
+			?>
+
+			<br class="clear"/>
+		</div>
+		<?php
+
+	}
+
+	/**
+	 * Get Bulk Actions
+	 *
+	 * @access public
+	 * @since  1.0.0
+	 * @return array
+	 */
+	public function get_bulk_actions() {
+		$actions = array(
+			'delete' => __( 'Delete Permanently', 'book-database' )
+		);
+
+		return apply_filters( 'book-database/books-table/get-bulk-actions', $actions );
+	}
+
+	/**
+	 * Process Bulk Actions
 	 *
 	 * @access public
 	 * @since  1.0.0
 	 * @return void
 	 */
-	public function bulk_actions( $which = '' ) {
-		// These aren't really bulk actions but this outputs the markup in the right place
+	public function process_bulk_actions() {
+
+		if ( 'delete' == $this->current_action() ) {
+
+			// Check nonce.
+			if ( empty( $_GET['_wpnonce'] ) || ! wp_verify_nonce( $_GET['_wpnonce'], 'bulk-' . $this->_args['plural'] ) ) {
+				wp_die( __( 'Failed security check.', 'book-database' ) );
+			}
+
+			// Checek capability.
+			if ( ! current_user_can( 'delete_posts' ) ) {
+				wp_die( __( 'You don\'t have permission to delete books.', 'book-database' ) );
+			}
+
+			if ( isset( $_GET['books'] ) && is_array( $_GET['books'] ) && count( $_GET['books'] ) ) {
+				book_database()->books->delete_by_ids( $_GET['books'] );
+
+				// Display the delete message.
+				$this->display_delete_message = true;
+			}
+
+		}
+
 	}
 
 	/**
@@ -350,6 +462,9 @@ class BDB_Books_Table extends WP_List_Table {
 	 * @return void
 	 */
 	public function prepare_items() {
+
+		// Process bulk actions.
+		$this->process_bulk_actions();
 
 		$columns  = $this->get_columns();
 		$hidden   = array(); // No hidden columns

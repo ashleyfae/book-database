@@ -124,3 +124,22 @@ function bdb_get_admin_page_edit_review( $review_id ) {
 
 	return apply_filters( 'book-database/admin-page-url/edit-review', $edit_review_page );
 }
+
+/**
+ * Get Admin Page: Delete Review
+ *
+ * @param int $review_id
+ *
+ * @since 1.0.0
+ * @return string
+ */
+function bdb_get_admin_page_delete_review( $review_id ) {
+	$review_page        = bdb_get_admin_page_reviews();
+	$delete_review_page = add_query_arg( array(
+		'action' => 'delete',
+		'ID'     => absint( $review_id ),
+		'nonce'  => wp_create_nonce( 'bdb_delete_review' )
+	), $review_page );
+
+	return apply_filters( 'book-database/admin-page-url/delete-review', $delete_review_page );
+}

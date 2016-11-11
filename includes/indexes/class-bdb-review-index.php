@@ -86,7 +86,7 @@ class BDB_Review_Index {
 		$this->tables['relationships'] = book_database()->book_term_relationships->table_name;
 
 		$allowed_orderby = array(
-			'title'           => 'book.title',
+			'title'           => 'book.index_title, book.title',
 			'author'          => 'author.name',
 			'date'            => 'review.date_added',
 			'pub_date'        => 'book.pub_date',
@@ -146,7 +146,7 @@ class BDB_Review_Index {
 		$replace = array(
 			$url,
 			( ! empty( $url ) ) ? '</a>' : '',
-			$review->title,
+			( ! empty( $review->index_title ) ) ? $review->index_title : $review->title,
 			$review->author_name,
 			$series,
 			$rating->format( 'html_stars' )

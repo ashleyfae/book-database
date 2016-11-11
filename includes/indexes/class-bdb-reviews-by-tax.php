@@ -78,7 +78,7 @@ class BDB_Reviews_by_Tax extends BDB_Review_Index {
 
 		$query = $wpdb->prepare(
 			"SELECT DISTINCT review.ID, review.post_id, review.url, review.rating,
-				        book.title, book.series_position,
+				        book.title, book.index_title, book.series_position,
 				        series.ID as series_id, series.name as series_name,
 				        author.term_id as author_id, author.name as author_name
 				FROM {$this->tables['reviews']} as review

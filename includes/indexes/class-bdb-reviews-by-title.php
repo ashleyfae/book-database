@@ -33,7 +33,7 @@ class BDB_Reviews_by_Title extends BDB_Review_Index {
 
 		$query = $wpdb->prepare(
 			"SELECT DISTINCT review.ID, review.post_id, review.url, review.rating,
-				        book.title, book.series_position,
+				        book.title, book.index_title, book.series_position,
 				        series.ID as series_id, series.name as series_name,
 				        author.term_id as author_id, author.name as author_name
 				FROM {$this->tables['reviews']} as review
@@ -74,7 +74,8 @@ class BDB_Reviews_by_Title extends BDB_Review_Index {
 
 		foreach ( $reviews as $review ) {
 
-			$letter       = substr( $review->title, 0, 1 );
+			$title        = $review->index_title ? $review->index_title : $review->title;
+			$letter       = substr( $title, 0, 1 );
 			$array_letter = is_numeric( $letter ) ? '#' : strtolower( $letter );
 
 			$reviews_by_letter[ $array_letter ][] = $this->format_review( $review );

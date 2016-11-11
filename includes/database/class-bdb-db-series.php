@@ -79,6 +79,11 @@ class BDB_DB_Series extends BDB_DB {
 
 		$args = wp_parse_args( $data, $defaults );
 
+		if ( ! array_key_exists( 'slug', $args ) && array_key_exists( 'name', $args ) ) {
+			$slug         = sanitize_title( $args['name'] );
+			$args['slug'] = bdb_unique_slug( $slug, 'series' );
+		}
+
 		$series = ( array_key_exists( 'ID', $args ) ) ? $this->get_series_by( 'ID', $args['ID'] ) : false;
 
 		if ( $series ) {

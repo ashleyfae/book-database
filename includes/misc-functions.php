@@ -161,3 +161,54 @@ function bdb_get_admin_page_delete_review( $review_id ) {
 
 	return apply_filters( 'book-database/admin-page-url/delete-review', $delete_review_page );
 }
+
+/**
+ * Generate Unique Slug
+ *
+ * Checks to see if the given slug already exists. If so, numbers are appended
+ * until the slug becomes available.
+ *
+ * @see   wp_unique_post_slug() - Based on this.
+ *
+ * @param string $slug Desired slug.
+ * @param string $type Table type. Accepts any term type or `series`.
+ *
+ * @since 1.0.0
+ * @return string Unique slug.
+ */
+function bdb_unique_slug( $slug, $type = 'author' ) {
+	// Check if this slug already exists.
+	if ( 'series' == $type ) {
+		$terms = book_database()->series->get_series_by( 'slug', $slug );
+	} else {
+		$terms = book_database()->book_terms->get_terms( array(
+			'type' => $type,
+			'slug' => $slug
+		) );
+	}
+
+	$new_slug = $slug;
+
+	if ( $terms ) {
+		$suffix = 2;
+
+		do {
+			$alt_slug = _truncate_post_slug( $slug, 200 - ( strlen( $suffix ) + 1 ) ) . "-$suffix";
+
+			if ( 'series' == $type ) {
+				$terms = book_database()->series->get_series_by( 'slug', $alt_slug );
+			} else {
+				$terms = book_database()->book_terms->get_terms( array(
+					'type' => $type,
+					'slug' => $alt_slug
+				) );
+			}
+
+			$suffix ++;
+		} while ( $terms );
+
+		$new_slug = $alt_slug;
+	}
+
+	return apply_filters( 'book-database/unique-slug', $new_slug, $slug );
+}

@@ -45,6 +45,7 @@ class BDB_DB_Book_Terms extends BDB_DB {
 			'term_id'     => '%d',
 			'type'        => '%s',
 			'name'        => '%s',
+			'slug'        => '%s',
 			'description' => '%s',
 			'image'       => '%d',
 			'links'       => '%s',
@@ -63,6 +64,7 @@ class BDB_DB_Book_Terms extends BDB_DB {
 		return array(
 			'type'        => '',
 			'name'        => '',
+			'slug'        => '',
 			'description' => '',
 			'image'       => 0,
 			'links'       => '',
@@ -171,7 +173,7 @@ class BDB_DB_Book_Terms extends BDB_DB {
 			return false;
 		}
 
-		if ( $field == 'ID' ) {
+		if ( 'ID' == $field ) {
 			if ( ! is_numeric( $value ) ) {
 				return false;
 			}
@@ -181,6 +183,8 @@ class BDB_DB_Book_Terms extends BDB_DB {
 			if ( $value < 1 ) {
 				return false;
 			}
+		} elseif ( 'slug' == $field ) {
+			$value = trim( $value );
 		}
 
 		if ( ! $value ) {
@@ -196,6 +200,11 @@ class BDB_DB_Book_Terms extends BDB_DB {
 			case 'name' :
 				$db_field = 'name';
 				$value    = wp_strip_all_tags( $value );
+				break;
+
+			case 'slug' :
+				$value    = sanitize_text_field( $value );
+				$db_field = 'slug';
 				break;
 
 			default :
@@ -411,6 +420,7 @@ class BDB_DB_Book_Terms extends BDB_DB {
 		term_id bigint(20) NOT NULL AUTO_INCREMENT,
 		type varchar(32) NOT NULL,
 		name varchar(200) NOT NULL,
+		slug varchar(200) NOT NULL,
 		description longtext NOT NULL,
 		image bigint(20),
 		links longtext NOT NULL,

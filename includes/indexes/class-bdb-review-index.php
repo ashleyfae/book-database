@@ -86,10 +86,11 @@ class BDB_Review_Index {
 		$this->tables['relationships'] = book_database()->book_term_relationships->table_name;
 
 		$allowed_orderby = array(
-			'title'    => 'book.title',
-			'author'   => 'author.name',
-			'date'     => 'review.date_added',
-			'pub_date' => 'book.pub_date'
+			'title'           => 'book.title',
+			'author'          => 'author.name',
+			'date'            => 'review.date_added',
+			'pub_date'        => 'book.pub_date',
+			'series_position' => 'book.series_position'
 		);
 
 		$this->orderby = array_key_exists( $atts['orderby'], $allowed_orderby ) ? $allowed_orderby[ $atts['orderby'] ] : $allowed_orderby['title'];

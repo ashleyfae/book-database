@@ -50,7 +50,7 @@ add_shortcode( 'book', 'bdb_book_shortcode' );
 function bdb_review_index_shortcode( $atts, $content = '' ) {
 	$atts = shortcode_atts( array(
 		'type'    => 'title', // title, author, series, publisher, genre
-		'orderby' => 'title', // title, author, date, pub_date
+		'orderby' => 'title', // title, author, date, pub_date, series_position
 		'order'   => 'ASC', // ASC, DESC
 		'letters' => 'yes' // yes, no
 	), $atts, 'book' );
@@ -65,7 +65,8 @@ function bdb_review_index_shortcode( $atts, $content = '' ) {
 			break;
 
 		case 'series' :
-			// @todo
+			$index  = new BDB_Reviews_by_Series( $atts, $content );
+			$output = $index->display();
 			break;
 
 		default :

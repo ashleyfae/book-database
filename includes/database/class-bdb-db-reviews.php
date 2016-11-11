@@ -256,7 +256,7 @@ class BDB_DB_Reviews extends BDB_DB {
 
 		}
 
-		return $review;
+		return stripslashes_deep( $review );
 
 	}
 
@@ -382,7 +382,7 @@ class BDB_DB_Reviews extends BDB_DB {
 			wp_cache_set( $cache_key, $reviews, 'reviews', 3600 );
 		}
 
-		return $reviews;
+		return stripslashes_deep( $reviews );
 
 	}
 

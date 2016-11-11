@@ -109,6 +109,8 @@ function bdb_rewrite_review_page_content( $content ) {
 		case 'author' :
 			$author = bdb_get_term( array( 'type' => 'author', 'slug' => $term ) );
 			if ( $author ) {
+				$output .= '<h2>' . esc_html( $author->name ) . '</h2>';
+
 				$books = bdb_get_books( array(
 					'author_id' => $author->term_id,
 					'orderby'   => 'pub_date',
@@ -133,6 +135,14 @@ function bdb_rewrite_review_page_content( $content ) {
 		foreach ( $books as $book ) {
 			$book    = new BDB_Book( $book );
 			$reviews = bdb_get_book_reviews( $book->ID );
+
+			// Remove reviews with no URL at all.
+			foreach ( $reviews as $key => $review ) {
+				if ( empty( $review->post_id ) && empty( $review->url ) ) {
+					unset( $reviews[ $key ] );
+				}
+			}
+
 			ob_start();
 			?>
 			<div>

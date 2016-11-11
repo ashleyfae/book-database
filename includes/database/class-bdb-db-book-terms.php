@@ -223,7 +223,7 @@ class BDB_DB_Book_Terms extends BDB_DB {
 
 		}
 
-		return $term;
+		return stripslashes_deep( $term );
 
 	}
 
@@ -329,7 +329,7 @@ class BDB_DB_Book_Terms extends BDB_DB {
 			wp_cache_set( $cache_key, $terms, 'book_terms', 3600 );
 		}
 
-		return $terms;
+		return stripslashes_deep( $terms );
 
 	}
 

@@ -44,6 +44,7 @@ class BDB_DB_Series extends BDB_DB {
 		return array(
 			'ID'          => '%d',
 			'name'        => '%s',
+			'slug'        => '%s',
 			'description' => '%s'
 		);
 	}
@@ -58,6 +59,7 @@ class BDB_DB_Series extends BDB_DB {
 	public function get_column_defaults() {
 		return array(
 			'name'        => '',
+			'slug'        => '',
 			'description' => ''
 		);
 	}
@@ -76,6 +78,11 @@ class BDB_DB_Series extends BDB_DB {
 		$defaults = array();
 
 		$args = wp_parse_args( $data, $defaults );
+
+		if ( ! array_key_exists( 'slug', $args ) && array_key_exists( 'name', $args ) ) {
+			$slug         = sanitize_title( $args['name'] );
+			$args['slug'] = bdb_unique_slug( $slug, 'series' );
+		}
 
 		$series = ( array_key_exists( 'ID', $args ) ) ? $this->get_series_by( 'ID', $args['ID'] ) : false;
 
@@ -163,7 +170,7 @@ class BDB_DB_Series extends BDB_DB {
 			return false;
 		}
 
-		if ( $field == 'ID' ) {
+		if ( 'ID' == $field ) {
 			if ( ! is_numeric( $value ) ) {
 				return false;
 			}
@@ -173,6 +180,8 @@ class BDB_DB_Series extends BDB_DB {
 			if ( $value < 1 ) {
 				return false;
 			}
+		} elseif ( 'slug' == $field ) {
+			$value = trim( $value );
 		}
 
 		if ( ! $value ) {
@@ -188,6 +197,11 @@ class BDB_DB_Series extends BDB_DB {
 			case 'name' :
 				$db_field = 'name';
 				$value    = wp_strip_all_tags( $value );
+				break;
+
+			case 'slug' :
+				$value    = sanitize_text_field( $value );
+				$db_field = 'slug';
 				break;
 
 			default :
@@ -345,6 +359,7 @@ class BDB_DB_Series extends BDB_DB {
 		$sql = "CREATE TABLE " . $this->table_name . " (
 		ID bigint(20) NOT NULL AUTO_INCREMENT,
 		name varchar(200) NOT NULL,
+		slug varchar(200) NOT NULL,
 		description longtext NOT NULL,
 		PRIMARY KEY  (ID),
 		INDEX name (name)

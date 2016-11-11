@@ -45,6 +45,7 @@ class BDB_DB_Book_Terms extends BDB_DB {
 			'term_id'     => '%d',
 			'type'        => '%s',
 			'name'        => '%s',
+			'slug'        => '%s',
 			'description' => '%s',
 			'image'       => '%d',
 			'links'       => '%s',
@@ -63,6 +64,7 @@ class BDB_DB_Book_Terms extends BDB_DB {
 		return array(
 			'type'        => '',
 			'name'        => '',
+			'slug'        => '',
 			'description' => '',
 			'image'       => 0,
 			'links'       => '',
@@ -84,6 +86,11 @@ class BDB_DB_Book_Terms extends BDB_DB {
 		$defaults = array();
 
 		$args = wp_parse_args( $data, $defaults );
+
+		if ( ! array_key_exists( 'slug', $args ) && array_key_exists( 'name', $args ) ) {
+			$slug         = sanitize_title( $args['name'] );
+			$args['slug'] = bdb_unique_slug( $slug, $args['type'] );
+		}
 
 		$term = ( array_key_exists( 'term_id', $args ) ) ? $this->get_term_by( 'term_id', $args['term_id'] ) : false;
 
@@ -171,7 +178,7 @@ class BDB_DB_Book_Terms extends BDB_DB {
 			return false;
 		}
 
-		if ( $field == 'ID' ) {
+		if ( 'ID' == $field ) {
 			if ( ! is_numeric( $value ) ) {
 				return false;
 			}
@@ -181,6 +188,8 @@ class BDB_DB_Book_Terms extends BDB_DB {
 			if ( $value < 1 ) {
 				return false;
 			}
+		} elseif ( 'slug' == $field ) {
+			$value = trim( $value );
 		}
 
 		if ( ! $value ) {
@@ -198,6 +207,11 @@ class BDB_DB_Book_Terms extends BDB_DB {
 				$value    = wp_strip_all_tags( $value );
 				break;
 
+			case 'slug' :
+				$value    = sanitize_text_field( $value );
+				$db_field = 'slug';
+				break;
+
 			default :
 				return false;
 
@@ -209,7 +223,7 @@ class BDB_DB_Book_Terms extends BDB_DB {
 
 		}
 
-		return $term;
+		return stripslashes_deep( $term );
 
 	}
 
@@ -231,6 +245,7 @@ class BDB_DB_Book_Terms extends BDB_DB {
 			'number'  => 20,
 			'offset'  => 0,
 			'name'    => false,
+			'slug'    => false,
 			'type'    => false,
 			'count'   => false,
 			'orderby' => 'ID',
@@ -261,6 +276,11 @@ class BDB_DB_Book_Terms extends BDB_DB {
 		// Terms with a specific name.
 		if ( ! empty( $args['name'] ) ) {
 			$where .= $wpdb->prepare( " AND `name` LIKE '%%%%" . '%s' . "%%%%' ", wp_strip_all_tags( $args['name'] ) );
+		}
+
+		// Terms with a specific slug.
+		if ( ! empty( $args['slug'] ) ) {
+			$where .= $wpdb->prepare( " AND `slug` LIKE '%%%%" . '%s' . "%%%%' ", wp_strip_all_tags( $args['slug'] ) );
 		}
 
 		// Terms with a specific type.
@@ -309,7 +329,7 @@ class BDB_DB_Book_Terms extends BDB_DB {
 			wp_cache_set( $cache_key, $terms, 'book_terms', 3600 );
 		}
 
-		return $terms;
+		return stripslashes_deep( $terms );
 
 	}
 
@@ -411,6 +431,7 @@ class BDB_DB_Book_Terms extends BDB_DB {
 		term_id bigint(20) NOT NULL AUTO_INCREMENT,
 		type varchar(32) NOT NULL,
 		name varchar(200) NOT NULL,
+		slug varchar(200) NOT NULL,
 		description longtext NOT NULL,
 		image bigint(20),
 		links longtext NOT NULL,

@@ -386,6 +386,10 @@ class BDB_DB_Books extends BDB_DB {
 				$orderby = 'series.name';
 				break;
 
+			case 'pub_date' :
+				$orderby = 'books.pub_date';
+				break;
+
 			default :
 				$orderby = 'books.ID';
 		}
@@ -410,7 +414,7 @@ class BDB_DB_Books extends BDB_DB {
 			wp_cache_set( $cache_key, $books, 'books', 3600 );
 		}
 
-		return $books;
+		return stripslashes_deep( $books );
 
 	}
 

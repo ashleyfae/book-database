@@ -59,8 +59,11 @@ function bdb_get_post_reviews( $post_id = 0 ) {
  * @since 1.0.0
  * @return array|false Array of review data.
  */
-function bdb_get_book_reviews( $book_id ) {
-	$reviews = book_database()->reviews->get_reviews( array( 'book_id' => $book_id ) );
+function bdb_get_book_reviews( $book_id, $args = array() ) {
+	$defaults = array( 'book_id' => absint( $book_id ) );
+	$args     = wp_parse_args( $args, $defaults );
+
+	$reviews = book_database()->reviews->get_reviews( $args );
 
 	return $reviews;
 }

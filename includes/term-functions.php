@@ -70,6 +70,21 @@ function bdb_get_terms( $args = array() ) {
 	return $terms;
 }
 
+function bdb_get_term( $args = array() ) {
+	$default = array( 'number' => 1 );
+	$args    = wp_parse_args( $args, $default );
+
+	$terms = bdb_get_terms( $args );
+
+	if ( $terms && is_array( $terms ) ) {
+		$term = $terms[0];
+	} else {
+		$term = false;
+	}
+
+	return $term;
+}
+
 /**
  * Get Book Terms
  *

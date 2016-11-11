@@ -386,6 +386,10 @@ class BDB_DB_Books extends BDB_DB {
 				$orderby = 'series.name';
 				break;
 
+			case 'pub_date' :
+				$orderby = 'books.pub_date';
+				break;
+
 			default :
 				$orderby = 'books.ID';
 		}

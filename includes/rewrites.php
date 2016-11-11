@@ -104,7 +104,16 @@ function bdb_rewrite_review_page_content( $content ) {
 	switch ( $tax ) {
 
 		case 'author' :
-			// @todo
+			$author = bdb_get_term( array( 'type' => 'author', 'slug' => $term ) );
+			if ( $author ) {
+				$books = bdb_get_books( array(
+					'author_id' => $author->term_id,
+					'orderby'   => 'pub_date',
+					'order'     => 'ASC'
+				) );
+
+				var_dump( $books );
+			}
 			break;
 
 		case 'series' :

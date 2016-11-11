@@ -479,3 +479,30 @@ function bdb_get_default_book_field_values( $all_fields = null ) {
 
 	return $default_values;
 }
+
+/**
+ * Generate Alternative Book Title
+ *
+ * For example:
+ * The Winter King => Winter King, The
+ *
+ * @param string $title
+ *
+ * @since 1.0.0
+ * @return string|false
+ */
+function bdb_generate_alternative_book_title( $title ) {
+
+	$alternate_title = false;
+
+	if ( 'The ' == substr( $title, 0, 4 ) ) {
+		$alternate_title = substr( $title, 4 ) . ', ' . esc_html__( 'The', 'book-database' );
+	} elseif ( 'A ' == substr( $title, 0, 2 ) ) {
+		$alternate_title = substr( $title, 2 ) . ', ' . esc_html__( 'A', 'book-database' );
+	} elseif ( 'An ' == substr( $title, 0, 3 ) ) {
+		$alternate_title = substr( $title, 3 ) . ', ' . esc_html__( 'Am', 'book-database' );
+	}
+
+	return apply_filters( 'book-database/book/generate-alternative-title', $alternate_title, $title );
+
+}

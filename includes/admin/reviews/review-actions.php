@@ -198,7 +198,7 @@ function bdb_save_review() {
 	}
 
 	$edit_url = add_query_arg( array(
-		'update-success' => 'true'
+		'bdb-message' => 'review-updated'
 	), bdb_get_admin_page_edit_review( absint( $new_review_id ) ) );
 
 	wp_safe_redirect( $edit_url );

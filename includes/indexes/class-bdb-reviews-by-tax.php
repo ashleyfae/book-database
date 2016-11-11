@@ -115,6 +115,8 @@ class BDB_Reviews_by_Tax extends BDB_Review_Index {
 		$output            = '';
 		$reviews_by_letter = array();
 
+		$term_name_tag = ( 'yes' == $this->atts['letters'] ) ? 'h3' : 'h2';
+
 		foreach ( $terms as $term ) {
 			$reviews = $this->query( $term->term_id );
 
@@ -150,8 +152,8 @@ class BDB_Reviews_by_Tax extends BDB_Review_Index {
 			$terms = $reviews_by_letter[ $letter ];
 
 			foreach ( $terms as $term ) {
-				// Show the term name.
-				$output .= '<h3 id="' . esc_attr( sanitize_title( $term['name'] ) ) . '">' . esc_html( $term['name'] ) . '</h3>';
+				// Show the term name. This is h2 or h3 depending on if letters are shown.
+				$output .= '<' . $term_name_tag . ' id="' . esc_attr( sanitize_title( $term['name'] ) ) . '">' . esc_html( $term['name'] ) . '</' . $term_name_tag . '>';
 
 				$output .= '<ul>' . implode( "\n", $term['reviews'] ) . '</ul>';
 			}

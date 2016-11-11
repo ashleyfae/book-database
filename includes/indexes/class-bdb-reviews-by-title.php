@@ -74,11 +74,22 @@ class BDB_Reviews_by_Title extends BDB_Review_Index {
 
 		foreach ( $reviews as $review ) {
 
-			$letter                                       = substr( $review->title, 0, 1 );
-			$reviews_by_letter[ strtolower( $letter ) ][] = $this->format_review( $review );
+			$letter       = substr( $review->title, 0, 1 );
+			$array_letter = is_numeric( $letter ) ? '#' : strtolower( $letter );
+
+			$reviews_by_letter[ $array_letter ][] = $this->format_review( $review );
 
 		}
 
+		// Numbers
+		if ( array_key_exists( '#', $reviews_by_letter ) ) {
+			if ( 'yes' == $this->atts['letters'] ) {
+				$output .= '<h2 id="numbers">#</h2>';
+				$output .= '<ul>' . implode( "\n", $reviews_by_letter['#'] ) . '</ul>';
+			}
+		}
+
+		// A-Z letters
 		foreach ( range( 'a', 'z' ) as $letter ) {
 
 			if ( 'yes' == $this->atts['letters'] ) {

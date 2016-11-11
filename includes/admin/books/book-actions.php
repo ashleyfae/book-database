@@ -438,6 +438,10 @@ add_action( 'wp_ajax_bdb_suggest_tags', 'bdb_suggest_tags' );
  * @return void
  */
 function bdb_book_review_meta_table( $book ) {
+	if ( 0 == $book->ID ) {
+		return;
+	}
+
 	$reviews = bdb_get_book_reviews( $book->ID );
 	?>
 	<div id="bdb-book-review-list" class="postbox">

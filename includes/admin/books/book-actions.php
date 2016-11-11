@@ -220,6 +220,49 @@ function bdb_book_pub_date_field( $book ) {
 add_action( 'book-database/book-edit/information-fields', 'bdb_book_pub_date_field' );
 
 /**
+ * Field: Pages
+ *
+ * @param BDB_Book $book
+ *
+ * @since 1.0.0
+ * @return void
+ */
+function bdb_book_pages_field( $book ) {
+	book_database()->html->meta_row( 'text', array(
+		'label' => __( 'Pages', 'book-database' )
+	), array(
+		'id'    => 'book_pages',
+		'name'  => 'pages',
+		'value' => $book->get_pages(),
+		'type'  => 'number'
+	) );
+}
+
+add_action( 'book-database/book-edit/information-fields', 'bdb_book_pages_field' );
+
+/**
+ * Field: Goodreads URL
+ *
+ * @param BDB_Book $book
+ *
+ * @since 1.0.0
+ * @return void
+ */
+function bdb_book_goodreads_url_field( $book ) {
+	book_database()->html->meta_row( 'text', array(
+		'label' => __( 'Pages', 'book-database' )
+	), array(
+		'id'          => 'book_goodreads_url',
+		'name'        => 'goodreads',
+		'value'       => $book->get_goodreads_url(),
+		'placeholder' => 'http://',
+		'type'        => 'url'
+	) );
+}
+
+add_action( 'book-database/book-edit/information-fields', 'bdb_book_goodreads_url_field' );
+
+/**
  * Field: Taxonomies
  *
  * @param BDB_Book $book

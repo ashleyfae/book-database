@@ -253,7 +253,7 @@ function bdb_book_goodreads_url_field( $book ) {
 		'label' => __( 'Goodreads URL', 'book-database' )
 	), array(
 		'id'          => 'book_goodreads_url',
-		'name'        => 'goodreads',
+		'name'        => 'goodreads_url',
 		'value'       => $book->get_goodreads_url(),
 		'placeholder' => 'http://',
 		'type'        => 'url'
@@ -448,6 +448,11 @@ function bdb_save_book() {
 	// Synopsis
 	if ( isset( $_POST['synopsis'] ) ) {
 		$book_data['synopsis'] = $_POST['synopsis'];
+	}
+
+	// Goodreads URL
+	if ( isset( $_POST['goodreads_url'] ) ) {
+		$book_data['goodreads_url'] = $_POST['goodreads_url'];
 	}
 
 	$terms = array();

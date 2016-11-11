@@ -347,6 +347,11 @@ function bdb_save_book() {
 		$book_data['title'] = $_POST['title'];
 	}
 
+	// Index Title
+	if ( isset( $_POST['index_title'] ) && 'original' != $_POST['index_title'] ) {
+		$book_data['index_title'] = ( 'custom' != $_POST['index_title'] ) ? $_POST['index_title'] : $_POST['index_title_custom'];
+	}
+
 	// Cover
 	if ( isset( $_POST['cover_id'] ) ) {
 		$book_data['cover'] = absint( $_POST['cover_id'] );

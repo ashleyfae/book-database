@@ -95,6 +95,15 @@ class BDB_Book {
 	private $pub_date;
 
 	/**
+	 * Number of pages
+	 *
+	 * @var string
+	 * @access private
+	 * @since  1.0.0
+	 */
+	private $pages;
+
+	/**
 	 * Synopsis
 	 *
 	 * @var string
@@ -639,8 +648,15 @@ class BDB_Book {
 		return apply_filters( 'book-database/book/get/formatted_pub_date', $date, $format, $raw_date, $this->ID, $this );
 	}
 
+	/**
+	 * Get Pages
+	 *
+	 * @access public
+	 * @since  1.0.0
+	 * @return int|null
+	 */
 	public function get_pages() {
-
+		return apply_filters( 'book-database/book/get/pages', $this->pages, $this->ID, $this );
 	}
 
 	public function get_goodreads_url() {

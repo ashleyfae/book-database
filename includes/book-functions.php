@@ -224,6 +224,7 @@ function bdb_get_formatted_series_name( $book_id ) {
  *                      `series_position` - Position in the series.
  *                      `series_name` - Use instead of `series_id` to create a new series.
  *                      `pub_date` - Publication date.
+ *                      `pages` - Number of pages.
  *                      `synopsis` - Book synopsis.
  *                      `terms` - Array of associated terms.
  *                      |----> `term_type` - Array of terms names of this type.
@@ -260,6 +261,7 @@ function bdb_insert_book( $data = array() ) {
 	$book_db_data['series_id']       = ( array_key_exists( 'series_id', $data ) && $data['series_id'] ) ? absint( $data['series_id'] ) : null;
 	$book_db_data['series_position'] = ( array_key_exists( 'series_position', $data ) && $data['series_position'] != '' ) ? sanitize_text_field( wp_strip_all_tags( $data['series_position'] ) ) : null;
 	$book_db_data['pub_date']        = $pub_date;
+	$book_db_data['pages']           = ( array_key_exists( 'pages', $data ) && $data['pages'] ) ? absint( $data['pages'] ) : null;
 	$book_db_data['synopsis']        = array_key_exists( 'synopsis', $data ) ? wp_kses_post( $data['synopsis'] ) : '';
 	$book_db_data['terms']           = array_key_exists( 'terms', $data ) ? $data['terms'] : false;
 

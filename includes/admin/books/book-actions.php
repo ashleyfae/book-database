@@ -250,7 +250,7 @@ add_action( 'book-database/book-edit/information-fields', 'bdb_book_pages_field'
  */
 function bdb_book_goodreads_url_field( $book ) {
 	book_database()->html->meta_row( 'text', array(
-		'label' => __( 'Pages', 'book-database' )
+		'label' => __( 'Goodreads URL', 'book-database' )
 	), array(
 		'id'          => 'book_goodreads_url',
 		'name'        => 'goodreads',
@@ -438,6 +438,11 @@ function bdb_save_book() {
 	// Pub Date
 	if ( isset( $_POST['pub_date'] ) ) {
 		$book_data['pub_date'] = $_POST['pub_date'];
+	}
+
+	// Pages
+	if ( isset( $_POST['pages'] ) ) {
+		$book_data['pages'] = $_POST['pages'];
 	}
 
 	// Synopsis

@@ -141,14 +141,14 @@ class BDB_Review_Index {
 		// Get the series
 		$series = '';
 		if ( $review->series_name && $review->series_position ) {
-			$series = sprintf( '(%s #%s)', $review->series_name, $review->series_position );
+			$series = sprintf( '(%s #%s)', stripslashes( $review->series_name ), $review->series_position );
 		}
 
 		$replace = array(
 			$url,
 			( ! empty( $url ) ) ? '</a>' : '',
-			( ! empty( $review->index_title ) ) ? $review->index_title : $review->title,
-			$review->author_name,
+			( ! empty( $review->index_title ) ) ? stripslashes( $review->index_title ) : stripslashes( $review->title ),
+			stripslashes( $review->author_name ),
 			$series,
 			$rating->format( 'html_stars' )
 		);

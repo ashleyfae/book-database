@@ -219,7 +219,7 @@ function bdb_get_registered_settings() {
 					'type' => 'book_layout',
 					'std'  => bdb_get_default_book_layout_keys()
 				),
-				'taxonomies'       => array(
+				'taxonomies'  => array(
 					'name' => sprintf( esc_html__( '%s Taxonomies', 'book-database' ), bdb_get_label_singular() ),
 					'desc' => '', // @todo
 					'id'   => 'taxonomies',
@@ -240,7 +240,16 @@ function bdb_get_registered_settings() {
 				)
 			)
 		) ),
-		'reviews' => array()
+		'reviews' => array(
+			'main' => array(
+				'reviews_page' => array(
+					'id'   => 'reviews_page',
+					'name' => esc_html__( 'Reviews Page', 'book-database' ),
+					'desc' => __( 'The page used for generating all taxonomy archives.', 'book-database' ),
+					'type' => 'text', // @todo switch to page dropdown
+				)
+			)
+		)
 	);
 
 	return apply_filters( 'book-database/settings/registered-settings', $bdb_settings );
@@ -513,6 +522,40 @@ function bdb_missing_callback( $args ) {
 		__( 'The callback function used for the %s setting is missing.', 'book-database' ),
 		'<strong>' . $args['id'] . '</strong>'
 	);
+}
+
+/**
+ * Callback: Text
+ *
+ * @param array $args Arguments passed by the setting.
+ *
+ * @since 1.0.0
+ * @return void
+ */
+function bdb_text_callback( $args ) {
+	$saved = bdb_get_option( $args['id'] );
+
+	if ( $saved ) {
+		$value = $saved;
+	} else {
+		$value = isset( $args['std'] ) ? $args['std'] : '';
+	}
+
+	if ( isset( $args['faux'] ) && true === $args['faux'] ) {
+		$args['readonly'] = true;
+		$value            = isset( $args['std'] ) ? $args['std'] : '';
+		$name             = '';
+	} else {
+		$name = 'name="bdb_settings[' . esc_attr( $args['id'] ) . ']"';
+	}
+
+	$size     = ( isset( $args['size'] ) && ! is_null( $args['size'] ) ) ? $args['size'] : 'regular';
+	$type     = ( isset( $args['type'] ) ) ? $args['type'] : 'text';
+	?>
+	<input type="<?php echo esc_attr( $type ); ?>" class="bookdb-description <?php echo esc_attr( sanitize_html_class( $size ) . '-text' ); ?>" id="bdb_settings[<?php echo bdb_sanitize_key( $args['id'] ); ?>]" <?php echo $name; ?> value="<?php echo esc_attr( stripslashes( $value ) ); ?>">
+	<?php if ( $args['desc'] ) : ?>
+		<label for="bdb_settings[<?php echo bdb_sanitize_key( $args['id'] ); ?>]"><?php echo wp_kses_post( $args['desc'] ); ?></label>
+	<?php endif;
 }
 
 /**

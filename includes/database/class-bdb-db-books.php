@@ -51,6 +51,7 @@ class BDB_DB_Books extends BDB_DB {
 			'pub_date'        => '%s',
 			'pages'           => '%d',
 			'synopsis'        => '%s',
+			'goodreads_url'   => '%s'
 		);
 	}
 
@@ -70,7 +71,8 @@ class BDB_DB_Books extends BDB_DB {
 			'series_position' => null,
 			'pub_date'        => null,
 			'pages'           => null,
-			'synopsis'        => ''
+			'synopsis'        => '',
+			'goodreads_url'   => ''
 		);
 	}
 
@@ -532,6 +534,7 @@ class BDB_DB_Books extends BDB_DB {
 		pub_date datetime,
 		pages bigint(20),
 		synopsis longtext NOT NULL,
+		goodreads_url text NOT NULL,
 		PRIMARY KEY  (ID),
 		INDEX series_id (series_id)
 		) CHARACTER SET utf8 COLLATE utf8_general_ci;";

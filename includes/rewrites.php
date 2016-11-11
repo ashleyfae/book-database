@@ -101,6 +101,24 @@ function bdb_rewrite_review_page_content( $content ) {
 		return $content;
 	}
 
+	switch ( $tax ) {
+
+		case 'author' :
+			// @todo
+			break;
+
+		case 'series' :
+			// @todo
+			break;
+
+		default :
+			$taxonomies = bdb_get_taxonomies();
+			if ( ! array_key_exists( $tax, $taxonomies ) ) {
+				break;
+			}
+
+	}
+
 	return 'rewritten';
 }
 

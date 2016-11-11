@@ -235,11 +235,13 @@ function bdb_set_book_terms( $book_id, $terms, $type, $append = false ) {
 
 			if ( $existing_term ) {
 				$term_id = $existing_term->term_id;
+				bdb_update_term_count( $term_id );
 			} else {
 				// Create new term.
 				$term_id = book_database()->book_terms->add( array(
-					'name' => sanitize_text_field( $term ),
-					'type' => sanitize_text_field( $type )
+					'name'  => sanitize_text_field( $term ),
+					'type'  => sanitize_text_field( $type ),
+					'count' => 1
 				) );
 			}
 
@@ -260,8 +262,7 @@ function bdb_set_book_terms( $book_id, $terms, $type, $append = false ) {
 		// Otherwise, create the relationship.
 		book_database()->book_term_relationships->add( array(
 			'term_id' => absint( $term_id ),
-			'book_id' => absint( $book_id ),
-			'count'   => 1
+			'book_id' => absint( $book_id )
 		) );
 
 	}

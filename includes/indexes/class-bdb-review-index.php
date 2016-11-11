@@ -128,12 +128,18 @@ class BDB_Review_Index {
 			'[rating]',
 		);
 
+		// Get the URL
 		$url = '';
-
 		if ( ! empty( $review->post_id ) ) {
 			$url = '<a href="' . esc_url( get_permalink( $review->post_id ) ) . '">';
 		} elseif ( ! empty( $review->url ) ) {
 			$url = '<a href="' . esc_url( $review->url ) . '" target="_blank">'; // new window
+		}
+
+		// Get the series
+		$series = '';
+		if ( $review->series_name && $review->series_position ) {
+			$series = sprintf( '(%s #%s)', $review->series_name, $review->series_position );
 		}
 
 		$replace = array(
@@ -141,7 +147,7 @@ class BDB_Review_Index {
 			( ! empty( $url ) ) ? '</a>' : '',
 			$review->title,
 			$review->author_name,
-			sprintf( '(%s #%s)', $review->series_name, $review->series_position ),
+			$series,
 			$rating->format( 'html_stars' )
 		);
 

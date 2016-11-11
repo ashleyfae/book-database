@@ -381,7 +381,7 @@ function bdb_save_book() {
 	}
 
 	$edit_url = add_query_arg( array(
-		'update-success' => 'true'
+		'bdb-message' => 'book-updated'
 	), bdb_get_admin_page_edit_book( absint( $new_book_id ) ) );
 
 	wp_safe_redirect( $edit_url );

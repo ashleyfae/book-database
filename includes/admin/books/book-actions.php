@@ -395,9 +395,6 @@ function bdb_save_book() {
 
 	// @todo meta
 
-	// Authors - this works, but it should be formatted differently.
-	// bdb_set_book_terms( $book_id, array( 'Sierra Simone' ), 'author' );
-
 	$new_book_id = bdb_insert_book( $book_data );
 
 	if ( ! $new_book_id || is_wp_error( $new_book_id ) ) {

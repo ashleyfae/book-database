@@ -161,7 +161,7 @@ class BDB_Book {
 
 		foreach ( $book as $key => $value ) {
 
-			$this->$key = stripslashes( $value );
+			$this->$key = $value;
 
 		}
 

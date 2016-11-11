@@ -116,6 +116,8 @@ class BDB_Review_Index {
 			return '';
 		}
 
+		$review = stripslashes_deep( $review );
+
 		$template = $this->template;
 		$rating   = new BDB_Rating( $review->rating );
 

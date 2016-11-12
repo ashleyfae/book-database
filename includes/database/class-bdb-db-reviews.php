@@ -338,7 +338,7 @@ class BDB_DB_Reviews extends BDB_DB {
 
 		// Reviews with a specific rating.
 		if ( ! empty( $args['rating'] ) ) {
-			$where .= $wpdb->prepare( " AND `rating` LIKE '%%%%" . '%s' . "%%%%' ", $args['rating'] ); // @todo check for word rating settings
+			$where .= $wpdb->prepare( " AND `rating` LIKE '" . '%s' . "' ", $args['rating'] );
 		}
 
 		// Reviews created for a specific date or in a date range.

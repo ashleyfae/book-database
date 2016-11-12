@@ -202,7 +202,7 @@ class BDB_Review_Query {
 
 		// Filter by rating.
 		if ( $this->query_vars['rating'] ) {
-			$where .= $wpdb->prepare( " AND rating LIKE '%%%%" . '%s' . "%%%%'", sanitize_text_field( wp_strip_all_tags( $this->query_vars['rating'] ) ) );
+			$where .= $wpdb->prepare( " AND rating LIKE '" . '%s' . "'", sanitize_text_field( wp_strip_all_tags( $this->query_vars['rating'] ) ) );
 		}
 
 		// Review date parameters

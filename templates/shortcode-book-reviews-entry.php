@@ -24,7 +24,7 @@ $review = $entry['review'];
 $rating = new BDB_Rating( $review->get_rating() );
 
 ?>
-<div class="book-review-entry">
+<div id="review-<?php echo absint( $review->ID ); ?>" class="book-review-entry">
 	<?php echo $book->get_cover( apply_filters( 'book-database/shortcode/book-reviews/entry/cover-image-size', 'thumbnail' ) ); ?>
 
 	<h2>

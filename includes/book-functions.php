@@ -240,7 +240,7 @@ function bdb_insert_book( $data = array() ) {
 	/* Series Table */
 
 	// If series name is given, let's add a new series.
-	if ( array_key_exists( 'series_name', $data ) && ! array_key_exists( 'series_id', $data ) ) {
+	if ( array_key_exists( 'series_name', $data ) && $data['series_name'] && ! array_key_exists( 'series_id', $data ) ) {
 		$series_id = bdb_insert_series( $data['series_name'] );
 
 		if ( $series_id ) {

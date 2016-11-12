@@ -13,6 +13,29 @@ if ( ! defined( 'ABSPATH' ) ) {
 }
 
 /**
+ * Load Assets
+ *
+ * @todo  Move to new file
+ *
+ * @since 1.0.0
+ * @return void
+ */
+function bdb_load_assets() {
+
+	$js_dir  = BDB_URL . 'assets/js/';
+	$css_dir = BDB_URL . 'assets/css/';
+
+	// Use minified libraries if SCRIPT_DEBUG is turned off
+	$suffix = ( defined( 'SCRIPT_DEBUG' ) && SCRIPT_DEBUG ) ? '' : '.min';
+
+	// CSS
+	wp_enqueue_style( 'book-database', $css_dir . 'front-end' . $suffix . '.css', array(), BDB_VERSION );
+
+}
+
+add_action( 'wp_enqueue_scripts', 'bdb_load_assets' );
+
+/**
  * Returns an array of post types that you can add reviews and
  * book information to.
  *

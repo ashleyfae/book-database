@@ -373,6 +373,10 @@ class BDB_DB_Reviews extends BDB_DB {
 
 		$reviews = wp_cache_get( $cache_key, 'reviews' );
 
+		if ( 'rating' == $args['orderby'] ) {
+			$args['orderby'] = $args['orderby'] . " * 1";
+		}
+
 		$args['orderby'] = esc_sql( $args['orderby'] );
 		$args['order']   = esc_sql( $args['order'] );
 

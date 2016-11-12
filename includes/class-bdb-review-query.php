@@ -157,7 +157,8 @@ class BDB_Review_Query {
 			'date'            => 'date_added',
 			'pub_date'        => 'book.pub_date',
 			'series_position' => 'book.series_position',
-			'pages'           => 'book.pages'
+			'pages'           => 'book.pages',
+			'rating'          => 'rating'
 		);
 
 		$this->orderby = array_key_exists( $this->query_vars['orderby'], $allowed_orderby ) ? $allowed_orderby[ $this->query_vars['orderby'] ] : $allowed_orderby['title'];
@@ -241,6 +242,11 @@ class BDB_Review_Query {
 		// Review date -- day
 		if ( $this->query_vars['day'] ) {
 			$where .= $wpdb->prepare( " AND %d = DAY ( date_added)", absint( $this->query_vars['day'] ) );
+		}
+
+		// Tweak order by rating.
+		if ( 'rating' == $this->orderby ) {
+			$this->orderby = $this->orderby . " * 1";
 		}
 
 		$query = "SELECT DISTINCT review.ID, review.post_id, review.url, review.rating, review.date_added,

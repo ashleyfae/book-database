@@ -40,6 +40,6 @@ $rating = new BDB_Rating( $review->get_rating() );
 	<?php endif; ?>
 
 	<?php if ( $review->get_url() ) : ?>
-		<a href="<?php echo esc_url( $review->get_url() ); ?>" class="button"><?php _e( 'Read Review', 'book-database' ); ?></a>
+		<a href="<?php echo esc_url( $review->get_url() ); ?>" class="btn btn-primary button bookdb-read-review-link"><?php _e( 'Read Review', 'book-database' ); ?></a>
 	<?php endif; ?>
 </div>

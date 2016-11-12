@@ -173,6 +173,7 @@ function bdb_book_reviews_shortcode( $atts, $content = '' ) {
 				<option value="date"<?php selected( $current_orderby, 'date' ) ?>><?php _e( 'Review Date', 'book-database' ); ?></option>
 				<option value="title"<?php selected( $current_orderby, 'title' ) ?>><?php _e( 'Book Title', 'book-database' ); ?></option>
 				<option value="author"<?php selected( $current_orderby, 'author' ) ?>><?php _e( 'Author Name', 'book-database' ); ?></option>
+				<option value="rating"<?php selected( $current_orderby, 'rating' ) ?>><?php _e( 'Rating', 'book-database' ); ?></option>
 				<option value="pub_date"<?php selected( $current_orderby, 'pub_date' ) ?>><?php _e( 'Publication Date', 'book-database' ); ?></option>
 				<option value="pages"<?php selected( $current_orderby, 'pages' ) ?>><?php _e( 'Number of Pages', 'book-database' ); ?></option>
 			</select>
@@ -182,13 +183,13 @@ function bdb_book_reviews_shortcode( $atts, $content = '' ) {
 			<label for="bookdb-order"><?php _e( 'Order', 'book-database' ); ?></label>
 			<select id="bookdb-order" name="order">
 				<option value="ASC"<?php selected( $current_order, 'ASC' ) ?>><?php _e( 'ASC (1, 2, 3; a, b, c)', 'book-database' ); ?></option>
-				<option value="DESC"<?php selected( $current_order, 'DESC' ) ?>><?php _e( 'DESC (3, 2, 1; c, b, a', 'book-database' ); ?></option>
+				<option value="DESC"<?php selected( $current_order, 'DESC' ) ?>><?php _e( 'DESC (3, 2, 1; c, b, a)', 'book-database' ); ?></option>
 			</select>
 		</p>
 
 		<div class="bookdb-filter-actions">
 			<button type="submit"><?php _e( 'Filter', 'book-database' ); ?></button>
-			<a href="<?php echo esc_url( get_permalink() ); ?>" class="button bookdb-reset-search-filters"><?php _e( 'Reset', 'book-database' ); ?></a>
+			<a href="<?php echo esc_url( get_permalink() ); ?>" class="btn btn-primary button bookdb-reset-search-filters"><?php _e( 'Reset', 'book-database' ); ?></a>
 		</div>
 	</form>
 	<?php

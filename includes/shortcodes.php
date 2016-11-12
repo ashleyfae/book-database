@@ -86,3 +86,26 @@ function bdb_review_index_shortcode( $atts, $content = '' ) {
 }
 
 add_shortcode( 'review-index', 'bdb_review_index_shortcode' );
+
+/**
+ * Reviews
+ *
+ * @param array  $atts    Shortcode attributes.
+ * @param string $content Shortcode content.
+ *
+ * @since 1.0.0
+ * @return string
+ */
+function bdb_book_reviews_shortcode( $atts, $content = '' ) {
+
+	$query = new BDB_Review_Query( array() ); // @todo dynamic args
+
+	if ( $query->have_reviews() ) {
+		foreach ( $query->get_reviews() as $entry ) {
+			var_dump( $entry );
+		}
+	}
+
+}
+
+add_shortcode( 'book-reviews', 'bdb_book_reviews_shortcode' );

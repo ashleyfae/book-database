@@ -92,7 +92,7 @@ class BDB_Review {
 	/**
 	 * BDB_Review constructor.
 	 *
-	 * @param int $id Review ID
+	 * @param int|object $id Review ID or object from database.
 	 *
 	 * @access public
 	 * @since  1.0.0
@@ -102,11 +102,7 @@ class BDB_Review {
 
 		$this->db = new BDB_DB_Reviews();
 
-		if ( ! is_numeric( $id ) ) {
-			return false;
-		}
-
-		$review = $this->db->get_review_by( 'ID', $id );
+		$review = is_object( $id ) ? $id : book_database()->reviews->get_review_by( 'ID', $id );
 
 		if ( empty( $review ) || ! is_object( $review ) ) {
 			return false;

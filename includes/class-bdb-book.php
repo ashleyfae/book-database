@@ -124,7 +124,7 @@ class BDB_Book {
 	/**
 	 * BDB_Book constructor.
 	 *
-	 * @param int $book_id
+	 * @param int|object $book_id Book ID to fetch from database or a prepared object in database format.
 	 *
 	 * @access public
 	 * @since  1.0.0

@@ -25,7 +25,13 @@ $rating = new BDB_Rating( $review->get_rating() );
 $url    = $review->is_external() ? $review->get_url() : home_url( '/?p=' . $review->get_post_id() );
 ?>
 <div id="review-<?php echo absint( $review->ID ); ?>" class="book-review-entry">
-	<?php echo $book->get_cover( apply_filters( 'book-database/shortcode/book-reviews/entry/cover-image-size', 'large' ) ); ?>
+	<?php
+	if ( $book->get_cover_id() ) {
+		echo $url ? '<a href="' . esc_url( $url ) . '">' : '';
+		echo $book->get_cover( apply_filters( 'book-database/shortcode/book-reviews/entry/cover-image-size', 'large' ) );
+		echo $url ? '</a>' : '';
+	}
+	?>
 
 	<?php if ( $review->get_rating() ) : ?>
 		<p class="book-review-rating">

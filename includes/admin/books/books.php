@@ -63,7 +63,7 @@ function bdb_books_list() {
 			<a href="<?php echo esc_url( bdb_get_admin_page_add_book() ); ?>" class="page-title-action"><?php _e( 'Add New', 'book-database' ); ?></a>
 		</h1>
 		<?php do_action( 'book-database/books/table/top' ); ?>
-		<form id="ubb-books-filter" method="GET" action="">
+		<form id="bookdb-books-filter" method="GET" action="">
 			<?php
 			$book_table->search_box( sprintf( __( 'Search %s', 'book-database' ), bdb_get_label_plural( true ) ), 'ubb-books' );
 			$book_table->display();

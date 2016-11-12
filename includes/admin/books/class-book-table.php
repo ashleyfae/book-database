@@ -146,9 +146,16 @@ class BDB_Books_Table extends WP_List_Table {
 	 */
 	public function column_default( $item, $column_name ) {
 
-		$book = new BDB_Book( $item['ID'] );
+		$book  = new BDB_Book( $item['ID'] );
+		$value = '';
 
 		switch ( $column_name ) {
+
+			case 'cover' :
+				if ( $book->get_cover_id() ) {
+					$value = '<a href="' . esc_url( bdb_get_admin_page_edit_book( $item['ID'] ) ) . '"><img src="' . esc_url( $book->get_cover_url( 'thumbnail' ) ) . '" alt="' . esc_attr( wp_strip_all_tags( $book->get_title() ) ) . '"></a>';
+				}
+				break;
 
 			case 'author' :
 				$authors = $book->get_author();
@@ -246,6 +253,7 @@ class BDB_Books_Table extends WP_List_Table {
 	public function get_columns() {
 		$columns = array(
 			'cb'       => '<input type="checkbox">',
+			'cover'    => __( 'Cover', 'book-database' ),
 			'title'    => __( 'Title', 'book-database' ),
 			'author'   => __( 'Author', 'book-database' ),
 			'series'   => __( 'Series', 'book-database' ),

@@ -120,6 +120,16 @@ function bdb_book_reviews_shortcode( $atts, $content = '' ) {
 		$args['rating'] = wp_strip_all_tags( $_GET['rating'] );
 	}
 
+	// Review Year
+	if ( isset( $_GET['review_year'] ) ) {
+		$args['year'] = absint( $_GET['review_year'] );
+	}
+
+	// Pub Year
+	if ( isset( $_GET['pub_year'] ) ) {
+		$args['pub_year'] = absint( $_GET['pub_year'] );
+	}
+
 	// Orderby
 	if ( isset( $_GET['orderby'] ) ) {
 		$args['orderby'] = wp_strip_all_tags( $_GET['orderby'] );
@@ -132,7 +142,7 @@ function bdb_book_reviews_shortcode( $atts, $content = '' ) {
 		$args['order'] = wp_strip_all_tags( $_GET['order'] );
 	}
 
-	$query    = new BDB_Review_Query( $args ); // @todo dynamic args
+	$query    = new BDB_Review_Query( $args );
 	$template = BDB_DIR . 'templates/shortcode-book-reviews-entry.php'; // @todo template function
 
 	$current_rating  = ( isset( $_GET['rating'] ) && 'any' != $_GET['rating'] ) ? $_GET['rating'] : 'any';

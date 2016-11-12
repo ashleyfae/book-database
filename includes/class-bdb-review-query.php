@@ -126,6 +126,7 @@ class BDB_Review_Query {
 			'year'        => false,
 			'month'       => false,
 			'day'         => false,
+			'pub_year'    => false,
 			'orderby'     => 'date',
 			'order'       => 'DESC',
 			'offset'      => false,
@@ -182,9 +183,6 @@ class BDB_Review_Query {
 		$join  = '';
 		$where = ' WHERE 1=1 ';
 
-		// Add author type.
-		$where .= $wpdb->prepare( " AND author.type = %s", 'author' );
-
 		// Filter by book title.
 		if ( $this->query_vars['book_title'] ) {
 			$where .= $wpdb->prepare( " AND book.title LIKE '%%%%" . '%s' . "%%%%'", sanitize_text_field( wp_strip_all_tags( $this->query_vars['book_title'] ) ) );
@@ -233,15 +231,20 @@ class BDB_Review_Query {
 
 		// Review date -- year
 		if ( $this->query_vars['year'] ) {
-			$where .= $wpdb->prepare( " AND %d = YEAR ( date_added)", absint( $this->query_vars['year'] ) );
+			$where .= $wpdb->prepare( " AND %d = YEAR ( date_added )", absint( $this->query_vars['year'] ) );
 		}
 		// Review date -- month
 		if ( $this->query_vars['month'] ) {
-			$where .= $wpdb->prepare( " AND %d = MONTH ( date_added)", absint( $this->query_vars['month'] ) );
+			$where .= $wpdb->prepare( " AND %d = MONTH ( date_added )", absint( $this->query_vars['month'] ) );
 		}
 		// Review date -- day
 		if ( $this->query_vars['day'] ) {
-			$where .= $wpdb->prepare( " AND %d = DAY ( date_added)", absint( $this->query_vars['day'] ) );
+			$where .= $wpdb->prepare( " AND %d = DAY ( date_added )", absint( $this->query_vars['day'] ) );
+		}
+
+		// Pub date -- year
+		if ( $this->query_vars['pub_year'] ) {
+			$where .= $wpdb->prepare( " AND %d = YEAR ( book.pub_date )", absint( $this->query_vars['pub_year'] ) );
 		}
 
 		// Tweak order by rating.
@@ -257,7 +260,7 @@ class BDB_Review_Query {
 				INNER JOIN {$this->tables['books']} as book ON review.book_id = book.ID
 				LEFT JOIN {$this->tables['series']} as series ON book.series_id = series.ID
 				LEFT JOIN {$this->tables['relationships']} as r ON book.ID = r.book_id
-				INNER JOIN {$this->tables['terms']} as author ON r.term_id = author.term_id
+				INNER JOIN {$this->tables['terms']} as author ON (r.term_id = author.term_id AND author.type = 'author')
 				{$join}
 				{$where}
 				ORDER BY {$this->orderby}

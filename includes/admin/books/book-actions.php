@@ -85,7 +85,7 @@ function bdb_book_title_alt_field( $book ) {
 	$index_title = $book->get_index_title();
 	$choices     = $book->get_title_choices();
 
-	if ( ! $index_title ) {
+	if ( ! $index_title || $book->get_title() == $index_title ) {
 		$selected = 'original';
 	} elseif ( array_key_exists( $index_title, $choices ) ) {
 		$selected = $choices[ $index_title ];
@@ -418,6 +418,8 @@ function bdb_save_book() {
 	// Index Title
 	if ( isset( $_POST['index_title'] ) && 'original' != $_POST['index_title'] ) {
 		$book_data['index_title'] = ( 'custom' != $_POST['index_title'] ) ? $_POST['index_title'] : $_POST['index_title_custom'];
+	} elseif ( isset( $_POST['index_title'] ) && 'original' == $_POST['index_title'] && isset( $book_data['title'] ) ) {
+		$book_data['index_title'] = $book_data['title'];
 	}
 
 	// Cover

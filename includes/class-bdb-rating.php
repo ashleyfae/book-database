@@ -111,6 +111,23 @@ class BDB_Rating {
 	}
 
 	/**
+	 * Format With Font Awesome
+	 *
+	 * @access public
+	 * @since  1.0.0
+	 * @return string
+	 */
+	public function format_font_awesome() {
+
+		if ( ! is_numeric( $this->rating ) ) {
+			return $this->format_text();
+		}
+
+		return apply_filters( 'book-database/rating/format/font_awesome', $this->repeat( '<i class="fa fa-star"></i>', '<i class="fa fa-star-half-o"></i>', '<i class="fa fa-star-o"></i>' ), $this->rating, $this );
+
+	}
+
+	/**
 	 * Format With HTML Stars
 	 *
 	 * @access public

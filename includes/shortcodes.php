@@ -98,13 +98,20 @@ add_shortcode( 'review-index', 'bdb_review_index_shortcode' );
  */
 function bdb_book_reviews_shortcode( $atts, $content = '' ) {
 
-	$query = new BDB_Review_Query( array() ); // @todo dynamic args
+	$query    = new BDB_Review_Query( array() ); // @todo dynamic args
+	$template = BDB_DIR . 'templates/shortcode-book-reviews-entry.php'; // @todo template function
+
+	ob_start();
 
 	if ( $query->have_reviews() ) {
+		echo '<div class="book-reviews-list">';
 		foreach ( $query->get_reviews() as $entry ) {
-			var_dump( $entry );
+			include $template;
 		}
+		echo '</div>';
 	}
+
+	return ob_get_clean();
 
 }
 

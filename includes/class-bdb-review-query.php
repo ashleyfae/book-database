@@ -49,6 +49,8 @@ class BDB_Review_Query {
 	 */
 	protected $per_page;
 
+	protected $current_page;
+
 	/**
 	 * Total number of reviews
 	 *
@@ -134,6 +136,8 @@ class BDB_Review_Query {
 		// Set up query vars.
 		$this->per_page   = $args['per_page'];
 		$this->query_vars = $args;
+
+		$this->current_page = ( isset( $_GET['bdbpage'] ) ) ? absint( $_GET['bdbpage'] ) : 1;
 
 		$this->query();
 
@@ -258,8 +262,7 @@ class BDB_Review_Query {
 		$this->total_reviews = $wpdb->get_var( $total_query );
 
 		// Add pagination parameters.
-		$page       = ( get_query_var( 'paged' ) ) ? get_query_var( 'paged' ) : 1;
-		$offset     = ( false !== $this->query_vars['offset'] ) ? $this->query_vars['offset'] : ( $page * $this->per_page ) - $this->per_page;
+		$offset     = ( false !== $this->query_vars['offset'] ) ? $this->query_vars['offset'] : ( $this->current_page * $this->per_page ) - $this->per_page;
 		$pagination = $wpdb->prepare( " LIMIT %d, %d", $offset, $this->per_page );
 
 		// Get the final results.
@@ -324,6 +327,19 @@ class BDB_Review_Query {
 		}
 
 		return $final;
+
+	}
+
+	public function get_pagination() {
+
+		return paginate_links( array(
+			'base'      => add_query_arg( 'bdbpage', '%#%' ),
+			'format'    => '',
+			'prev_text' => __( '&laquo;' ),
+			'next_text' => __( '&raquo;' ),
+			'total'     => ceil( $this->total_reviews / $this->per_page ),
+			'current'   => $this->current_page
+		) );
 
 	}
 

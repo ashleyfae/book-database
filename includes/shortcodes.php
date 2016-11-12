@@ -200,6 +200,8 @@ function bdb_book_reviews_shortcode( $atts, $content = '' ) {
 		echo '</div>';
 	}
 
+	echo $query->get_pagination();
+
 	return ob_get_clean();
 
 }

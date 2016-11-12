@@ -263,8 +263,6 @@ class BDB_Review_Query {
 				ORDER BY {$this->orderby}
 				{$this->order}";
 
-		print_r($query);
-
 		// Get the total number of results.
 		$total_query         = "SELECT COUNT(1) FROM ({$query}) AS combined_table";
 		$this->total_reviews = $wpdb->get_var( $total_query );

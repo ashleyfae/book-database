@@ -200,8 +200,7 @@ class BDB_DB_Book_Term_Relationships extends BDB_DB {
 			'term_id' => false,
 			'book_id' => false,
 			'orderby' => 'ID',
-			'order'   => 'DESC',
-			'count'   => false
+			'order'   => 'DESC'
 		);
 
 		$args = wp_parse_args( $args, $defaults );
@@ -253,10 +252,8 @@ class BDB_DB_Book_Term_Relationships extends BDB_DB {
 		$args['orderby'] = esc_sql( $args['orderby'] );
 		$args['order']   = esc_sql( $args['order'] );
 
-		$select_this = $args['count'] ? "COUNT($this->primary_key)" : '*';
-
 		if ( $relationships === false ) {
-			$query         = $wpdb->prepare( "SELECT $select_this FROM  $this->table_name $join $where GROUP BY $this->primary_key ORDER BY {$args['orderby']} {$args['order']} LIMIT %d,%d;", absint( $args['offset'] ), absint( $args['number'] ) );
+			$query         = $wpdb->prepare( "SELECT * FROM  $this->table_name $join $where GROUP BY $this->primary_key ORDER BY {$args['orderby']} {$args['order']} LIMIT %d,%d;", absint( $args['offset'] ), absint( $args['number'] ) );
 			$relationships = $wpdb->get_results( $query );
 			wp_cache_set( $cache_key, $relationships, 'book_term_relationships', 3600 );
 		}
@@ -272,12 +269,71 @@ class BDB_DB_Book_Term_Relationships extends BDB_DB {
 	 *
 	 * @access public
 	 * @since  1.0.0
-	 * @return array
+	 * @return int
 	 */
 	public function count( $args = array() ) {
-		$args['count'] = true;
 
-		return $this->get_relationships( $args );
+		global $wpdb;
+
+		$defaults = array(
+			'ID'      => false,
+			'offset'  => 0,
+			'term_id' => false,
+			'book_id' => false
+		);
+
+		$args = wp_parse_args( $args, $defaults );
+
+		// Big ass number to get them all.
+		if ( $args['number'] < 1 ) {
+			$args['number'] = 999999999999;
+		}
+
+		$join  = '';
+		$where = ' WHERE 1=1 ';
+
+		// Specific relationships.
+		if ( ! empty( $args['ID'] ) ) {
+			if ( is_array( $args['ID'] ) ) {
+				$ids = implode( ',', array_map( 'intval', $args['ID'] ) );
+			} else {
+				$ids = intval( $args['ID'] );
+			}
+			$where .= " AND `ID` IN( {$ids} ) ";
+		}
+
+		// Specific terms.
+		if ( ! empty( $args['term_id'] ) ) {
+			if ( is_array( $args['term_id'] ) ) {
+				$ids = implode( ',', array_map( 'intval', $args['term_id'] ) );
+			} else {
+				$ids = intval( $args['term_id'] );
+			}
+			$where .= " AND `term_id` IN( {$ids} ) ";
+		}
+
+		// Specific books.
+		if ( ! empty( $args['book_id'] ) ) {
+			if ( is_array( $args['book_id'] ) ) {
+				$ids = implode( ',', array_map( 'intval', $args['book_id'] ) );
+			} else {
+				$ids = intval( $args['book_id'] );
+			}
+			$where .= " AND `book_id` IN( {$ids} ) ";
+		}
+
+		$cache_key = md5( 'bdb_book_term_relationships_count_' . serialize( $args ) );
+
+		$count = wp_cache_get( $cache_key, 'book_term_relationships' );
+
+		if ( $count === false ) {
+			$query = "SELECT COUNT($this->primary_key) FROM " . $this->table_name . "{$join} {$where};";
+			$count = $wpdb->get_var( $query );
+			wp_cache_set( $cache_key, $count, 'book_term_relationships', 3600 );
+		}
+
+		return absint( $count );
+
 	}
 
 	/**

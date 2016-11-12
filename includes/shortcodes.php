@@ -186,9 +186,10 @@ function bdb_book_reviews_shortcode( $atts, $content = '' ) {
 			</select>
 		</p>
 
-		<button type="submit"><?php _e( 'Filter', 'book-database' ); ?></button>
-
-		<a href="<?php echo esc_url( get_permalink() ); ?>" class="button bookdb-reset-search-filters"><?php _e( 'Reset', 'book-database' ); ?></a>
+		<div class="bookdb-filter-actions">
+			<button type="submit"><?php _e( 'Filter', 'book-database' ); ?></button>
+			<a href="<?php echo esc_url( get_permalink() ); ?>" class="button bookdb-reset-search-filters"><?php _e( 'Reset', 'book-database' ); ?></a>
+		</div>
 	</form>
 	<?php
 

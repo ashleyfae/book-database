@@ -1,0 +1,7 @@
+{
+"version": 3,
+"mappings": "AAAA,2BAA4B,CACxB,MAAM,CAAE,SAAS,CAGrB,yBAA0B,CACtB,2BAA4B,CACxB,WAAW,CAAE,KAAK,CAClB,YAAY,CAAE,KAAK,CAGvB,qBAAsB,CAClB,KAAK,CAAE,IAAI,CACX,OAAO,CAAE,MAAM,CACf,KAAK,CAAE,KAAK,CAGhB,sBAAuB,CACnB,KAAK,CAAE,IAAI,CACX,OAAO,CAAE,MAAM",
+"sources": ["../sass/front-end/_reviews.scss"],
+"names": [],
+"file": "front-end.min.css"
+}

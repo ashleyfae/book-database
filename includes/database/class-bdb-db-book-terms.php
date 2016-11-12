@@ -92,7 +92,7 @@ class BDB_DB_Book_Terms extends BDB_DB {
 			$args['slug'] = bdb_unique_slug( $slug, $args['type'] );
 		}
 
-		$term = ( array_key_exists( 'term_id', $args ) ) ? $this->get_term_by( 'term_id', $args['term_id'] ) : false;
+		$term = ( array_key_exists( 'term_id', $args ) ) ? $this->get_term_by( 'ID', $args['term_id'] ) : false;
 
 		if ( $term ) {
 
@@ -178,7 +178,7 @@ class BDB_DB_Book_Terms extends BDB_DB {
 			return false;
 		}
 
-		if ( 'ID' == $field ) {
+		if ( 'ID' == $field || 'term_id' == $field ) {
 			if ( ! is_numeric( $value ) ) {
 				return false;
 			}
@@ -198,6 +198,8 @@ class BDB_DB_Book_Terms extends BDB_DB {
 
 		switch ( $field ) {
 
+			case 'term_id' :
+				// continue
 			case 'ID' :
 				$db_field = 'term_id';
 				break;

@@ -282,7 +282,7 @@ class BDB_DB_Book_Terms extends BDB_DB {
 
 		// Terms with a specific slug.
 		if ( ! empty( $args['slug'] ) ) {
-			$where .= $wpdb->prepare( " AND `slug` LIKE '%%%%" . '%s' . "%%%%' ", wp_strip_all_tags( $args['slug'] ) );
+			$where .= $wpdb->prepare( " AND `slug` = %s ", wp_strip_all_tags( $args['slug'] ) );
 		}
 
 		// Terms with a specific type.

@@ -202,7 +202,7 @@ function bdb_book_reviews_shortcode( $atts, $content = '' ) {
 		echo '</div>';
 	}
 
-	echo $query->get_pagination();
+	echo '<nav class="pagination bookdb-reviews-list-pagination">' . $query->get_pagination() . '</nav>';
 
 	return ob_get_clean();
 

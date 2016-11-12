@@ -6,6 +6,10 @@
     text-align: center;
 }
 
+.bookdb-reviews-list-pagination {
+    margin: 1.5em 0 !important; // @todo remove
+}
+
 @media (min-width: 768px) {
     #bookdb-filter-book-reviews {
         margin-left: -15px;

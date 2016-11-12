@@ -4,6 +4,9 @@
 .book-review-entry {
   text-align: center; }
 
+.bookdb-reviews-list-pagination {
+  margin: 1.5em 0 !important; }
+
 @media (min-width: 768px) {
   #bookdb-filter-book-reviews {
     margin-left: -15px;

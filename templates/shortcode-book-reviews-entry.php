@@ -22,16 +22,10 @@ $book = $entry['book'];
 $review = $entry['review'];
 
 $rating = new BDB_Rating( $review->get_rating() );
-
+$url    = $review->is_external() ? $review->get_url() : home_url( '/?p=' . $review->get_post_id() );
 ?>
 <div id="review-<?php echo absint( $review->ID ); ?>" class="book-review-entry">
-	<?php echo $book->get_cover( apply_filters( 'book-database/shortcode/book-reviews/entry/cover-image-size', 'thumbnail' ) ); ?>
-
-	<h2>
-		<?php
-		echo $book->get_title();
-		?>
-	</h2>
+	<?php echo $book->get_cover( apply_filters( 'book-database/shortcode/book-reviews/entry/cover-image-size', 'large' ) ); ?>
 
 	<?php if ( $review->get_rating() ) : ?>
 		<p class="book-review-rating">
@@ -39,7 +33,7 @@ $rating = new BDB_Rating( $review->get_rating() );
 		</p>
 	<?php endif; ?>
 
-	<?php if ( $review->get_url() ) : ?>
-		<a href="<?php echo esc_url( $review->get_url() ); ?>" class="btn btn-primary button bookdb-read-review-link"><?php _e( 'Read Review', 'book-database' ); ?></a>
+	<?php if ( $url ) : ?>
+		<a href="<?php echo esc_url( $url ); ?>" class="btn btn-primary button bookdb-read-review-link"><?php _e( 'Read Review', 'book-database' ); ?></a>
 	<?php endif; ?>
 </div>

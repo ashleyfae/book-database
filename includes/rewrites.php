@@ -4,6 +4,8 @@
  *
  * Used for creating the dynamic taxonomy archives.
  *
+ * @todo Merge this shit with [book-reviews]
+ *
  * @package   book-database
  * @copyright Copyright (c) 2016, Ashley Gibson
  * @license   GPL2+

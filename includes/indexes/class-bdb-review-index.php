@@ -135,7 +135,7 @@ class BDB_Review_Index {
 		// Get the URL
 		$url = '';
 		if ( ! empty( $review->post_id ) ) {
-			$url = '<a href="' . esc_url( get_permalink( $review->post_id ) ) . '">';
+			$url = '<a href="' . esc_url( home_url( '/?p=' . absint( $review->post_id ) ) ) . '">';
 		} elseif ( ! empty( $review->url ) ) {
 			$url = '<a href="' . esc_url( $review->url ) . '" target="_blank">'; // new window
 		}

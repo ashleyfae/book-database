@@ -111,8 +111,8 @@ function bdb_book_reviews_shortcode( $atts, $content = '' ) {
 	}
 
 	// Series
-	if ( isset( $_GET['series_name'] ) ) {
-		$args['series_name'] = wp_strip_all_tags( $_GET['series_name'] );
+	if ( isset( $_GET['series'] ) ) {
+		$args['series_name'] = wp_strip_all_tags( $_GET['series'] );
 	}
 
 	// Rating

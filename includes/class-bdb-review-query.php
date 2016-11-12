@@ -152,7 +152,7 @@ class BDB_Review_Query {
 	 */
 	protected function parse_orderby() {
 		$allowed_orderby = array(
-			'title'           => 'book.index_title, book.title',
+			'title'           => 'book.index_title',
 			'author'          => 'author.name',
 			'date'            => 'date_added',
 			'pub_date'        => 'book.pub_date',
@@ -262,6 +262,8 @@ class BDB_Review_Query {
 				{$where}
 				ORDER BY {$this->orderby}
 				{$this->order}";
+
+		print_r($query);
 
 		// Get the total number of results.
 		$total_query         = "SELECT COUNT(1) FROM ({$query}) AS combined_table";

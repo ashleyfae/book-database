@@ -153,7 +153,7 @@ class BDB_Books_Table extends WP_List_Table {
 
 			case 'cover' :
 				if ( $book->get_cover_id() ) {
-					$value = '<a href="' . esc_url( bdb_get_admin_page_edit_book( $item['ID'] ) ) . '"><img src="' . esc_url( $book->get_cover_url( 'thumbnail' ) ) . '" alt="' . esc_attr( wp_strip_all_tags( $book->get_title() ) ) . '"></a>';
+					$value = '<a href="' . esc_url( bdb_get_admin_page_edit_book( $item['ID'] ) ) . '">' . $book->get_cover( 'thumbnail' ) . '</a>';
 				}
 				break;
 

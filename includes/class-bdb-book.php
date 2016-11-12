@@ -454,7 +454,7 @@ class BDB_Book {
 	 *
 	 * @access public
 	 * @since  1.0.0
-	 * @return string
+	 * @return string|false
 	 */
 	public function get_cover_url( $size = 'full' ) {
 		$cover_id  = $this->get_cover_id();
@@ -465,6 +465,31 @@ class BDB_Book {
 		}
 
 		return apply_filters( 'book-database/book/get/cover_url', $cover_url, $cover_id, $this->ID, $this );
+	}
+
+	/**
+	 * Get Cover
+	 *
+	 * Return full HTML markup for the cover image.
+	 *
+	 * @param string|array $size Desired image size.
+	 * @param array        $args Arguments to use in wp_get_attachment_image()
+	 *
+	 * @uses   wp_get_attachment_image()
+	 *
+	 * @access public
+	 * @since  1.0.0
+	 * @return string|false
+	 */
+	public function get_cover( $size = 'full', $args = array() ) {
+		$cover_id = $this->get_cover_id();
+		$image    = false;
+
+		if ( $cover_id ) {
+			$image = wp_get_attachment_image( absint( $cover_id ), $size, false, $args );
+		}
+
+		return apply_filters( 'book-database/book/get/cover', $image, $cover_id, $this->ID, $this );
 	}
 
 	/**

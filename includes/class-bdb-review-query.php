@@ -182,22 +182,22 @@ class BDB_Review_Query {
 
 		// Filter by book title.
 		if ( $this->query_vars['book_title'] ) {
-			$where .= $wpdb->prepare( " AND book.title LIKE '%%%%" . '%s' . "%%%%'", wp_strip_all_tags( $this->query_vars['book_title'] ) );
+			$where .= $wpdb->prepare( " AND book.title LIKE '%%%%" . '%s' . "%%%%'", sanitize_text_field( wp_strip_all_tags( $this->query_vars['book_title'] ) ) );
 		}
 
 		// Filter by author name.
 		if ( $this->query_vars['author_name'] ) {
-			$where .= $wpdb->prepare( " AND author.name LIKE '%%%%" . '%s' . "%%%%'", wp_strip_all_tags( $this->query_vars['author_name'] ) );
+			$where .= $wpdb->prepare( " AND author.name LIKE '%%%%" . '%s' . "%%%%'", sanitize_text_field( wp_strip_all_tags( $this->query_vars['author_name'] ) ) );
 		}
 
 		// Filter by series name.
 		if ( $this->query_vars['series_name'] ) {
-			$where .= $wpdb->prepare( " AND series.name LIKE '%%%%" . '%s' . "%%%%'", wp_strip_all_tags( $this->query_vars['series_name'] ) );
+			$where .= $wpdb->prepare( " AND series.name LIKE '%%%%" . '%s' . "%%%%'", sanitize_text_field( wp_strip_all_tags( $this->query_vars['series_name'] ) ) );
 		}
 
 		// Filter by rating.
 		if ( $this->query_vars['rating'] ) {
-			$where .= $wpdb->prepare( " AND rating LIKE '%%%%" . '%s' . "%%%%'", wp_strip_all_tags( $this->query_vars['rating'] ) );
+			$where .= $wpdb->prepare( " AND rating LIKE '%%%%" . '%s' . "%%%%'", sanitize_text_field( wp_strip_all_tags( $this->query_vars['rating'] ) ) );
 		}
 
 		// Review date parameters
@@ -252,6 +252,8 @@ class BDB_Review_Query {
 				{$where}
 				ORDER BY {$this->orderby}
 				{$this->order}";
+
+		print_r($query);
 
 		// Get the total number of results.
 		$total_query         = "SELECT COUNT(1) FROM ({$query}) AS combined_table";

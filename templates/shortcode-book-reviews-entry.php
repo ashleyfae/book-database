@@ -25,12 +25,13 @@ $rating = new BDB_Rating( $review->get_rating() );
 
 ?>
 <div class="book-review-entry">
-	<?php
-	if ( $book->get_cover_id() ) {
-		echo '<img src="' . esc_url( $book->get_cover_url( 'thumbnail' ) ) . '" alt="' . esc_attr( wp_strip_all_tags( $book->get_title() ) ) . '">';
-	}
-	?>
-	<h2><?php echo $book->get_title(); ?></h2>
+	<?php echo $book->get_cover( apply_filters( 'book-database/shortcode/book-reviews/entry/cover-image-size', 'thumbnail' ) ); ?>
+
+	<h2>
+		<?php
+		echo $book->get_title();
+		?>
+	</h2>
 
 	<?php if ( $review->get_rating() ) : ?>
 		<p class="book-review-rating">

@@ -259,7 +259,7 @@ class BDB_DB_Books extends BDB_DB {
 
 		}
 
-		return $book;
+		return stripslashes_deep( $book );
 
 	}
 

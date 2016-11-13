@@ -18,6 +18,7 @@ I'm not sure if I'll ever officially release this. I'm mostly building this for 
 * Statistics.
 * Purchase links? Ew.
 * Update book info fields in book submission to only show enabled ones.
+* Possibly add something for tropes.
 
 For my site:
 

@@ -205,6 +205,8 @@ function bdb_book_reviews_shortcode( $atts, $content = '' ) {
 	</form>
 	<?php
 
+	echo '<div id="reviews">';
+
 	if ( $query->have_reviews() ) {
 		echo '<div class="bookdb-review-list-number-results">' . sprintf( _n( '%s review found', '%s reviews found', $query->total_reviews, 'book-database' ), $query->total_reviews ) . '</div>';
 		echo '<div class="book-reviews-list">';
@@ -217,6 +219,8 @@ function bdb_book_reviews_shortcode( $atts, $content = '' ) {
 	}
 
 	echo '<nav class="pagination bookdb-reviews-list-pagination">' . $query->get_pagination() . '</nav>';
+
+	echo '</div>';
 
 	return ob_get_clean();
 

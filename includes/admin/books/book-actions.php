@@ -279,28 +279,30 @@ function bdb_book_taxonomy_fields( $book ) {
 
 	foreach ( $taxonomies as $taxonomy_options ) {
 
-		$book_terms     = bdb_get_book_terms( $book->ID, $taxonomy_options['id'], array( 'fields' => 'names' ) ); // Terms assigned to this book.
-		$temp_all_terms = bdb_get_terms( array(
-			'type'    => $taxonomy_options['id'],
-			'fields'  => 'names',
-			'orderby' => 'name',
-			'order'   => 'ASC'
-		) );
-		$all_terms      = array();
-
-		if ( ! is_array( $temp_all_terms ) ) {
-			$temp_all_terms = array();
-		}
-
-		foreach ( $temp_all_terms as $term_name ) {
-			$all_terms[ $term_name ] = $term_name;
-		}
+		$book_terms = bdb_get_book_terms( $book->ID, $taxonomy_options['id'], array( 'fields' => 'names' ) ); // Terms assigned to this book.
 
 		ob_start();
 
 		if ( 'checkbox' == $taxonomy_options['display'] ) {
 
 			// "Categories"
+
+			$temp_all_terms = bdb_get_terms( array(
+				'number'  => - 1,
+				'type'    => $taxonomy_options['id'],
+				'fields'  => 'names',
+				'orderby' => 'name',
+				'order'   => 'ASC'
+			) );
+			$all_terms      = array();
+
+			if ( ! is_array( $temp_all_terms ) ) {
+				$temp_all_terms = array();
+			}
+
+			foreach ( $temp_all_terms as $term_name ) {
+				$all_terms[ $term_name ] = $term_name;
+			}
 
 			$checks = book_database()->html->multicheck( array(
 				'id'      => $taxonomy_options['id'],

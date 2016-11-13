@@ -516,7 +516,8 @@ function bdb_suggest_tags() {
 	$search = strtolower( wp_strip_all_tags( $_REQUEST['q'] ) );
 	$args   = array(
 		'name'   => $search,
-		'fields' => 'names'
+		'fields' => 'names',
+		'type'   => $type
 	);
 	$terms  = bdb_get_terms( $args );
 

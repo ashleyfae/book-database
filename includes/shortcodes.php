@@ -103,7 +103,20 @@ function bdb_book_reviews_shortcode( $atts, $content = '' ) {
 	$query->query();
 	$template = BDB_DIR . 'templates/shortcode-book-reviews-entry.php'; // @todo template function
 
+	$author_name    = $vars['author_name'];
 	$current_rating = $vars['rating'] ? $vars['rating'] : 'any';
+
+	// Special circumstances to make author name show up in text box.
+	if ( isset( $vars['terms']['author'] ) ) {
+		$author = bdb_get_term( array(
+			'term_id' => absint( $vars['terms']['author'] ),
+			'fields'  => 'names'
+		) );
+
+		if ( $author ) {
+			$author_name = $author;
+		}
+	}
 
 	ob_start();
 	?>
@@ -115,7 +128,7 @@ function bdb_book_reviews_shortcode( $atts, $content = '' ) {
 
 		<p class="bookdb-filter-option">
 			<label for="bookdb-book-author"><?php _e( 'Author', 'book-database' ); ?></label>
-			<input type="text" id="bookdb-book-author" name="author" value="<?php echo esc_attr( wp_strip_all_tags( $vars['author_name'] ) ); ?>">
+			<input type="text" id="bookdb-book-author" name="author" value="<?php echo esc_attr( wp_strip_all_tags( $author_name ) ); ?>">
 		</p>
 
 		<p class="bookdb-filter-option">

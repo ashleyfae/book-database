@@ -384,7 +384,7 @@ class BDB_Review_Query {
 
 		// Filter by misc terms.
 		if ( is_array( $this->query_vars['terms'] ) && count( $this->query_vars['terms'] ) ) {
-			$allowed_terms = array_keys( bdb_get_taxonomies() );
+			$allowed_terms = array_keys( bdb_get_taxonomies( true ) );
 
 			foreach ( $this->query_vars['terms'] as $tax => $term_id ) {
 				if ( ! in_array( $tax, $allowed_terms ) ) {

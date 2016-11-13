@@ -437,7 +437,16 @@ add_filter( 'book-database/book/formatted-info/value/goodreads_url', 'bdb_book_l
  * @return string
  */
 function bdb_book_layout_rating( $value, $enabled_fields, $book_id, $book ) {
-	// @todo
+	if ( null !== $book->get_rating() ) {
+		$rating       = new BDB_Rating( $book->get_rating() );
+		$fa_stars     = $rating->format( 'font_awesome' ); // @todo schema markup
+		$actual_value = is_numeric( $book->get_rating() ) ? $book->get_rating() : 0;
+
+		$value = '<span itemprop="reviewRating" itemscope itemtype="http://schema.org/Rating">';
+		$value .= '<span class="bookdb-font-awesome-star-wrap">' . $fa_stars . '</span>';
+		$value .= '<span class="bookdb-actual-rating-values"><span itemprop="ratingValue">' . esc_html( $actual_value ) . '</span>/<span itemprop="bestRating">' . esc_html( $rating->max ) . '</span></span>';
+		$value .= '</span>';
+	}
 
 	return $value;
 }

@@ -242,6 +242,7 @@ if ( ! class_exists( 'Book_Database' ) ) :
 				require_once BDB_DIR . 'includes/admin/admin-pages.php';
 				require_once BDB_DIR . 'includes/admin/admin-assets.php';
 				require_once BDB_DIR . 'includes/admin/class-bdb-notices.php';
+				require_once BDB_DIR . 'includes/admin/analytics/analytics.php';
 				require_once BDB_DIR . 'includes/admin/books/book-actions.php';
 				require_once BDB_DIR . 'includes/admin/books/book-functions.php';
 				require_once BDB_DIR . 'includes/admin/books/books.php';

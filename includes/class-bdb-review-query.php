@@ -125,6 +125,7 @@ class BDB_Review_Query {
 			'rating'      => false,
 			'genre'       => false,
 			'publisher'   => false,
+			'terms'       => false,
 			'date'        => false,
 			'year'        => false,
 			'month'       => false,
@@ -272,6 +273,27 @@ class BDB_Review_Query {
 										INNER JOIN {$this->tables['relationships']} r ON book.ID = r.book_id
 										{$inner_join}
 									)", 'publisher', sanitize_text_field( $this->query_vars['publisher'] ) );
+		}
+
+		// Filter by misc terms.
+		if ( is_array( $this->query_vars['terms'] ) ) {
+			$allowed_terms = array_keys( bdb_get_taxonomies() );
+
+			foreach ( $this->query_vars['terms'] as $tax => $term_id ) {
+				if ( ! in_array( $tax, $allowed_terms ) ) {
+					continue;
+				}
+
+				if ( ! is_numeric( $term_id ) ) {
+					continue;
+				}
+
+				$where .= $wpdb->prepare( "AND book.ID IN (
+										SELECT DISTINCT (book.ID) FROM {$this->tables['books']} book
+										INNER JOIN {$this->tables['relationships']} r ON book.ID = r.book_id
+										INNER JOIN {$this->tables['terms']} terms ON r.term_id = terms.term_id AND terms.type = %s AND terms.term_id = %d
+									)", sanitize_text_field( $tax ), absint( $term_id ) );
+			}
 		}
 
 		// Tweak order by rating.

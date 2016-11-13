@@ -104,6 +104,7 @@ function bdb_book_reviews_shortcode( $atts, $content = '' ) {
 
 	// Get stuff from query vars.
 	global $wp_query;
+
 	if ( array_key_exists( 'book_tax', $wp_query->query_vars ) && array_key_exists( 'book_term', $wp_query->query_vars ) ) {
 
 		if ( 'author' == $wp_query->query_vars['book_tax'] ) {
@@ -121,18 +122,30 @@ function bdb_book_reviews_shortcode( $atts, $content = '' ) {
 
 		} elseif ( 'series' == $wp_query->query_vars['book_tax'] ) {
 
-			$series_obj          = bdb_get_series( array(
-				'slug'   => sanitize_text_field(  wp_strip_all_tags( $wp_query->query_vars['book_term'] ) ),
+			$series_obj = bdb_get_series( array(
+				'slug'   => sanitize_text_field( wp_strip_all_tags( $wp_query->query_vars['book_term'] ) ),
 				'fields' => 'names'
 			) );
 
 			if ( $series_obj ) {
-				$series_name = $series_obj;
+				$series_name     = $series_obj;
+				$_GET['series']  = $series_name;
+				$_GET['orderby'] = 'pub_date';
+				$_GET['order']   = 'ASC';
 			}
 
 		} else {
 
-			$_GET[ wp_strip_all_tags( $wp_query->query_vars['book_tax'] ) ] = wp_strip_all_tags( $wp_query->query_vars['book_term'] );
+			$type    = sanitize_text_field( wp_strip_all_tags( $wp_query->query_vars['book_tax'] ) );
+			$term_id = bdb_get_term( array(
+				'type'   => $type,
+				'slug'   => sanitize_text_field( wp_strip_all_tags( $wp_query->query_vars['book_term'] ) ),
+				'fields' => 'ids'
+			) );
+
+			if ( $term_id ) {
+				$args['terms'][ $type ] = $term_id;
+			}
 
 		}
 

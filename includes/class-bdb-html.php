@@ -79,10 +79,11 @@ class BDB_HTML {
 
 		// Set up default args.
 		$defaults = array(
-			'options'         => $options,
-			'id'              => sanitize_html_class( $type . '_terms' ),
-			'name'            => sanitize_html_class( $type ),
-			'show_option_all' => esc_html__( 'Any', 'book-database' )
+			'options'          => $options,
+			'id'               => sanitize_html_class( $type . '_terms' ),
+			'name'             => sanitize_html_class( $type ),
+			'show_option_all'  => esc_html__( 'Any', 'book-database' ),
+			'show_option_none' => false
 		);
 
 		$args = wp_parse_args( $args, $defaults );

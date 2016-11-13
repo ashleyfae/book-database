@@ -121,12 +121,12 @@ function bdb_book_reviews_shortcode( $atts, $content = '' ) {
 	}
 
 	// Genre
-	if ( isset( $_GET['genre'] ) ) {
+	if ( isset( $_GET['genre'] ) && 'all' != $_GET['genre'] ) {
 		$args['genre'] = wp_strip_all_tags( $_GET['genre'] );
 	}
 
 	// Publisher
-	if ( isset( $_GET['publisher'] ) ) {
+	if ( isset( $_GET['publisher'] ) && 'all' != $_GET['publisher'] ) {
 		$args['publisher'] = wp_strip_all_tags( $_GET['publisher'] );
 	}
 
@@ -185,6 +185,22 @@ function bdb_book_reviews_shortcode( $atts, $content = '' ) {
 					<option value="<?php echo esc_attr( $value ); ?>" <?php selected( $current_rating, $value ); ?>><?php echo esc_html( $name ); ?></option>
 				<?php endforeach; ?>
 			</select>
+		</p>
+
+		<p class="bookdb-filter-option">
+			<label for="bookdb-genre"><?php _e( 'Genre', 'book-database' ); ?></label>
+			<?php echo book_database()->html->term_dropdown( 'genre', array(
+				'id'       => 'bookdb-genre',
+				'selected' => isset( $_GET['genre'] ) ? wp_strip_all_tags( $_GET['genre'] ) : 0
+			) ); ?>
+		</p>
+
+		<p class="bookdb-filter-option">
+			<label for="bookdb-publisher"><?php _e( 'Publisher', 'book-database' ); ?></label>
+			<?php echo book_database()->html->term_dropdown( 'publisher', array(
+				'id'       => 'bookdb-publisher',
+				'selected' => isset( $_GET['publisher'] ) ? wp_strip_all_tags( $_GET['publisher'] ) : 0
+			) ); ?>
 		</p>
 
 		<p class="bookdb-filter-option">

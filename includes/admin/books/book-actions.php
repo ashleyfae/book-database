@@ -331,7 +331,7 @@ function bdb_book_taxonomy_fields( $book ) {
 				<div class="jaxtag">
 					<div class="nojs-tags hide-if-js">
 						<label for="bookdb-input-tag-<?php echo esc_attr( $taxonomy_options['id'] ); ?>"><?php echo apply_filters( 'book-database/book-edit/authors/tags-desc', __( 'Enter the name of the author', 'easy-content-upgrades' ) ); ?></label>
-						<textarea name="book_terms[<?php echo esc_attr( $taxonomy_options['id'] ); ?>]" rows="3" cols="20" id="bookdb-input-tag-<?php echo esc_attr( $taxonomy_options['id'] ); ?>"><?php echo esc_textarea( '' ); ?></textarea>
+						<textarea name="book_terms[<?php echo esc_attr( $taxonomy_options['id'] ); ?>]" rows="3" cols="20" id="bookdb-input-tag-<?php echo esc_attr( $taxonomy_options['id'] ); ?>"><?php echo esc_textarea( implode( ', ', $book_terms ) ); ?></textarea>
 					</div>
 					<div class="bookdb-ajaxtag hide-if-no-js">
 						<p>

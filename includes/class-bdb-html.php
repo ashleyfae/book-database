@@ -45,6 +45,53 @@ class BDB_HTML {
 	}
 
 	/**
+	 * Term Dropdown
+	 *
+	 * @param string $type Term type.
+	 * @param array  $args Arguments to override the defaults.
+	 *
+	 * @access public
+	 * @since  1.0.0
+	 * @return string|false
+	 */
+	public function term_dropdown( $type, $args = array() ) {
+
+		$terms = bdb_get_terms( array(
+			'number'  => 100,
+			'type'    => $type,
+			'orderby' => 'name',
+			'order'   => 'ASC'
+		) );
+
+		if ( ! $terms ) {
+			return false;
+		}
+
+		$options = array();
+
+		foreach ( $terms as $term ) {
+			$options[ $term->term_id ] = $term->name;
+		}
+
+		if ( ! count( $options ) ) {
+			return false;
+		}
+
+		// Set up default args.
+		$defaults = array(
+			'options'         => $options,
+			'id'              => sanitize_html_class( $type . '_terms' ),
+			'name'            => sanitize_html_class( $type ),
+			'show_option_all' => esc_html__( 'Any', 'book-database' )
+		);
+
+		$args = wp_parse_args( $args, $defaults );
+
+		return $this->select( $args );
+
+	}
+
+	/**
 	 * Select Dropdown
 	 *
 	 * @param array $args Arguments to override the defaults.

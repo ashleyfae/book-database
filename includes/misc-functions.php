@@ -22,6 +22,12 @@ if ( ! defined( 'ABSPATH' ) ) {
  */
 function bdb_load_assets() {
 
+	// Only load assets on the review page.
+	$review_page_id = bdb_get_option( 'reviews_page' );
+	if ( ! $review_page_id || get_the_ID() != $review_page_id ) {
+		return;
+	}
+
 	$js_dir  = BDB_URL . 'assets/js/';
 	$css_dir = BDB_URL . 'assets/css/';
 

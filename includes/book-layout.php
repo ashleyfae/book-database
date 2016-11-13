@@ -207,7 +207,7 @@ function bdb_book_layout_cover( $value, $enabled_fields, $book_id, $book ) {
 		$value     = '<img src="' . esc_url( $book->get_cover_url() ) . '" alt="' . esc_attr( wp_strip_all_tags( $book->get_title() ) ) . '" class="' . esc_attr( $class ) . '" itemprop="image">';
 	}
 
-	return $value;
+	return '<div class="bookdb-book-info" itemscope itemtype="http://schema.org/Book">' . $value; // @todo move schema markup elsewhere
 }
 
 add_filter( 'book-database/book/formatted-info/value/cover', 'bdb_book_layout_cover', 10, 4 );
@@ -247,12 +247,12 @@ function bdb_book_layout_author( $value, $enabled_fields, $book_id, $book ) {
 		$names = array();
 
 		foreach ( $authors as $obj ) {
-			$names[] = bdb_link_terms() ? '<a href="' . esc_url( bdb_get_term_link( $obj ) ) . '">' . esc_html( $obj->name ) . '</a>' : esc_html( $obj->name );
+			$names[] = bdb_link_terms() ? '<a href="' . esc_url( bdb_get_term_link( $obj ) ) . '" itemprop="author">' . esc_html( $obj->name ) . '</a>' : '<span itemprop="author">' . esc_html( $obj->name ) . '</span>';
 		}
 
 		$name = implode( ', ', $names );
 
-		$value = '<span itemprop="author">' . $name . '</span>';
+		$value = $name;
 	}
 
 	return $value;
@@ -458,7 +458,7 @@ function bdb_book_layout_rating( $value, $enabled_fields, $book_id, $book ) {
 		$value .= '</span>';
 	}
 
-	return $value;
+	return '</div>' . $value; // @todo closing schema markup - move elsewhere
 }
 
 add_filter( 'book-database/book/formatted-info/value/rating', 'bdb_book_layout_rating', 10, 4 );

@@ -817,7 +817,7 @@ class BDB_Book {
 	 * @param string $type
 	 *
 	 * @access public
-	 * @since 1.0.0
+	 * @since  1.0.0
 	 * @return array|false
 	 */
 	public function get_term_type( $type ) {

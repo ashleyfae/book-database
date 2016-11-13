@@ -15,7 +15,6 @@ I'm not sure if I'll ever officially release this. I'm mostly building this for 
 
 ## Todo:
 
-* Review archives. <-- WIP
 * Statistics.
 * Pages & Goodreads URL in modal.
 * Purchase links? Ew.

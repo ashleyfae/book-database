@@ -241,3 +241,18 @@ function bdb_unique_slug( $slug, $type = 'author' ) {
 
 	return apply_filters( 'book-database/unique-slug', $new_slug, $slug );
 }
+
+/**
+ * Link Terms in Book Info
+ *
+ * Whether or not terms should link to the archive.
+ *
+ * Disable with this:
+ *      `add_filter( 'book-database/link-terms', '__return_false' );`
+ *
+ * @since 1.0.0
+ * @return bool
+ */
+function bdb_link_terms() {
+	return apply_filters( 'book-database/link-terms', true );
+}

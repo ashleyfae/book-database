@@ -59,7 +59,7 @@ function bdb_get_book_fields() {
 		'pub_date'      => array(
 			'name'        => __( 'Pub Date', 'book-database' ),
 			'placeholder' => '[pub_date]',
-			'label'       => sprintf( __( 'on %s', 'book-database' ), '[pub_date]' ),
+			'label'       => sprintf( __( ' on %s', 'book-database' ), '[pub_date]' ),
 			'linebreak'   => 'on'
 		),
 		'genre'         => array(
@@ -244,7 +244,18 @@ function bdb_book_layout_author( $value, $enabled_fields, $book_id, $book ) {
 	$author = $book->get_author();
 
 	if ( $author ) {
-		$value = '<span itemprop="author">' . $book->get_author_names() . '</span>';
+		if ( bdb_link_terms() ) {
+			$names = array();
+
+			foreach ( $author as $obj ) {
+				$names[] = '<a href="' . esc_url( bdb_get_term_link( $obj ) ) . '">' . esc_html( $obj->name ) . '</a>';
+			}
+
+			$name = implode( ', ', $names );
+		} else {
+			$name = $book->get_author_names();
+		}
+		$value = '<span itemprop="author">' . $name . '</span>';
 	}
 
 	return $value;
@@ -267,7 +278,7 @@ function bdb_book_layout_series( $value, $enabled_fields, $book_id, $book ) {
 	$series = $book->get_series_id();
 
 	if ( $series ) {
-		$value = $book->get_formatted_series();
+		$value = $book->get_formatted_series( true );
 	}
 
 	return $value;
@@ -293,7 +304,7 @@ function bdb_book_layout_publisher( $value, $enabled_fields, $book_id, $book ) {
 		$pub_names = array();
 
 		foreach ( $publishers as $pub ) {
-			$pub_names[] = '<span itemprop="publisher" itemtype="http://schema.org/Organization" itemscope="">' . $pub->name . '</span>';
+			$pub_names[] = '<span itemprop="publisher" itemtype="http://schema.org/Organization" itemscope=""><a href="' . esc_url( bdb_get_term_link( $pub ) ) . '">' . $pub->name . '</a></span>';
 		}
 
 		$value = implode( ', ', $pub_names );
@@ -345,7 +356,7 @@ function bdb_book_layout_genre( $value, $enabled_fields, $book_id, $book ) {
 		$genre_names = array();
 
 		foreach ( $genres as $genre ) {
-			$genre_names[] = '<span itemprop="genre">' . $genre->name . '</span>';
+			$genre_names[] = '<span itemprop="genre"><a href="' . esc_url( bdb_get_term_link( $genre ) ) . '">' . $genre->name . '</a></span>';
 		}
 
 		$value = implode( ', ', $genre_names );
@@ -397,7 +408,7 @@ function bdb_book_layout_source( $value, $enabled_fields, $book_id, $book ) {
 		$source_names = array();
 
 		foreach ( $sources as $source ) {
-			$source_names[] = $source->name;
+			$source_names[] = '<a href="' . esc_url( bdb_get_term_link( $source ) ) . '">' . $source->name . '</a>';
 		}
 
 		$value = implode( ', ', $source_names );

@@ -644,14 +644,47 @@ class BDB_Book {
 	 *
 	 * Combines the series name and position.
 	 *
+	 * @param bool $linked Whether or not to include the link.
+	 *
 	 * @uses   bdb_get_formatted_series_name()
 	 *
 	 * @access public
 	 * @since  1.0.0
-	 * @return string
+	 * @return string|false
 	 */
-	public function get_formatted_series() {
-		return bdb_get_formatted_series_name( $this->ID );
+	public function get_formatted_series( $linked = false ) {
+
+		if ( ! $this->get_series_id() ) {
+			return false;
+		}
+
+		global $wpdb;
+		$book_table   = book_database()->books->table_name;
+		$series_table = book_database()->series->table_name;
+		$query        = $wpdb->prepare( "SELECT series.name, series.slug from $series_table as series INNER JOIN $book_table as book on series.ID = book.series_id WHERE book.ID = %d", absint( $this->ID ) );
+		$series       = $wpdb->get_results( $query );
+
+		if ( ! is_array( $series ) ) {
+			return false;
+		}
+
+		$series = $series[0];
+
+		$series_name = $series->name;
+		$series_pos  = $this->get_series_position();
+
+		if ( $series_pos ) {
+			$formatted_name = sprintf( '%s #%s', $series_name, $series_pos );
+		} else {
+			$formatted_name = $series_name;
+		}
+
+		if ( $linked ) {
+			$formatted_name = '<a href="' . esc_url( bdb_get_term_link( $series->slug, 'series' ) ) . '">' . esc_html( $formatted_name ) . '</a>';
+		}
+
+		return $formatted_name;
+
 	}
 
 	/**

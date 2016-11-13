@@ -189,13 +189,14 @@ function bdb_get_book_series_name( $book_id, $with_position = false ) {
  * Returns the name of the series followed by # and the position. Example:
  * The Wrath & the Dawn #1
  *
- * @param int $book_id
+ * @param int          $book_id     ID of the book to get the series for.
+ * @param string|false $series_name Optionally pass the series name if you already know it.
  *
  * @since 1.0.0
  * @return string|false Name of the series with the position appended, or false on failure.
  */
-function bdb_get_formatted_series_name( $book_id ) {
-	$series_name    = bdb_get_book_series_name( $book_id, true );
+function bdb_get_formatted_series_name( $book_id, $series_name = false ) {
+	$series_name    = $series_name ? $series_name : bdb_get_book_series_name( $book_id, true );
 	$formatted_name = false;
 
 	if ( is_array( $series_name ) ) {

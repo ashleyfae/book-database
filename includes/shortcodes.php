@@ -183,6 +183,8 @@ function bdb_book_reviews_shortcode( $atts, $content = '' ) {
 			include $template;
 		}
 		echo '</div>';
+	} else {
+		echo '<p>' . __( 'No reviews found.', 'book-database' ) . '</p>';
 	}
 
 	echo '<nav class="pagination bookdb-reviews-list-pagination">' . $query->get_pagination() . '</nav>';

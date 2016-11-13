@@ -23,14 +23,16 @@ if ( ! defined( 'ABSPATH' ) ) {
  */
 function bdb_book_shortcode( $atts, $content = '' ) {
 	$atts = shortcode_atts( array(
-		'id' => 0
+		'id'     => 0,
+		'rating' => null
 	), $atts, 'book' );
 
 	if ( ! $atts['id'] || ! is_numeric( $atts['id'] ) ) {
 		return sprintf( __( 'Invalid book: %s', 'book-database' ), $atts['id'] );
 	}
 
-	$book      = new BDB_Book( absint( $atts['id'] ) );
+	$book = new BDB_Book( absint( $atts['id'] ) );
+	$book->set_rating( $atts['rating'] );
 	$book_info = $book->get_formatted_info();
 
 	return apply_filters( 'book-database/shortcodes/book/output', $book_info, $book, $atts, $content );

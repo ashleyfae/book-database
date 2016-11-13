@@ -15,6 +15,7 @@
          */
         init: function () {
             this.sort();
+            this.clone();
 
             $('.bookdb-book-option-toggle').click(this.toggleBookTextarea);
             $('#bookdb-book-layout-cover-changer').change(this.changeCoverAlignment);
@@ -26,7 +27,7 @@
             $('#bdb_book_reviews').on('click', '.bookdb-remove-book-review', this.removeReview);
             $('#index_title').on('change', this.toggleCustomIndexTitle);
             $('#book_title').on('keyup', this.writeOriginalIndexTitle)
-                            .on('blur', this.populateAltTitles);
+                .on('blur', this.populateAltTitles);
             $(document).ready(this.toggleCustomIndexTitle);
         },
 
@@ -49,6 +50,15 @@
                     }
                 }
             }).enableSelection();
+        },
+
+        /**
+         * Add New Taxonomy Type
+         */
+        clone: function () {
+            if ($.isFunction($.fn.relCopy)) {
+                $('#bookdb-add-term').relCopy();
+            }
         },
 
         /**
@@ -347,7 +357,7 @@
             var data = {
                 action: 'bdb_get_alt_titles',
                 nonce: book_database.nonce,
-               title: $(this).val()
+                title: $(this).val()
             };
 
             $.ajax({

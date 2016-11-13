@@ -122,6 +122,15 @@ class BDB_Book {
 	private $goodreads_url;
 
 	/**
+	 * Faux Rating
+	 *
+	 * @var int|string|null
+	 * @access private
+	 * @since  1.0.0
+	 */
+	private $rating;
+
+	/**
 	 * BDB_Book constructor.
 	 *
 	 * @param int|object $book_id Book ID to fetch from database or a prepared object in database format.
@@ -709,6 +718,34 @@ class BDB_Book {
 	 */
 	public function get_synopsis() {
 		return apply_filters( 'book-database/book/get/synopsis', $this->synopsis, $this->ID, $this );
+	}
+
+	/**
+	 * Set Rating
+	 *
+	 * This sets a faux rating so we can display it with the book information.
+	 *
+	 * @param string|int|null $rating
+	 *
+	 * @access public
+	 * @since  1.0.0
+	 * @return void
+	 */
+	public function set_rating( $rating ) {
+		$this->rating = $rating;
+	}
+
+	/**
+	 * Get Rating
+	 *
+	 * Returns the faux rating.
+	 *
+	 * @access public
+	 * @since  1.0.0
+	 * @return string|int|null
+	 */
+	public function get_rating() {
+		return apply_filters( 'book-database/book/get/rating', $this->rating, $this->ID, $this );
 	}
 
 	/**

@@ -1,0 +1,45 @@
+@media (min-width: 600px) {
+    #bookdb-review-analytics-metrics {
+        display: flex;
+        flex-flow: row wrap;
+        margin: 0 -20px;
+
+        * {
+            -webkit-box-sizing: border-box;
+            -moz-box-sizing: border-box;
+            box-sizing: border-box;
+        }
+    }
+
+    .bookdb-metric {
+        padding: 20px;
+        width: 50%;
+    }
+
+    .bookdb-metric-inner {
+        background: white;
+        border: 1px solid #e5e5e5;
+        padding: 10px;
+        text-align: center;
+    }
+}
+
+.bookdb-metric {
+    position: relative;
+
+    .top-text {
+        clear: both;
+        color: #999;
+        font-size: 14px;
+    }
+
+    h2 {
+        color: #0073aa;
+        font: {
+            size: 32px;
+            weight: bold;
+        }
+        margin: 0;
+        padding: 0;
+    }
+}

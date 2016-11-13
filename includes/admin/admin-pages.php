@@ -54,7 +54,8 @@ function bdb_is_admin_page() {
 	$bdb_page_ids = array(
 		'toplevel_page_bdb-books',
 		'book-library_page_bdb-reviews',
-		'book-library_page_bdb-settings'
+		'book-library_page_bdb-settings',
+		'book-library_page_bdb-analytics'
 	);
 
 	if ( in_array( $screen->id, $bdb_page_ids ) ) {

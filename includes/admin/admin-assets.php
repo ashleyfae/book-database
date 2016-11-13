@@ -47,6 +47,11 @@ function bdb_load_admin_scripts( $hook ) {
 		$deps[] = 'recopy';
 	}
 
+	// Only add analytics on analytics page.
+	if ( 'book-library_page_bdb-analytics' == $screen->id ) {
+		wp_enqueue_script( 'bookdb-analytics', $js_dir . 'admin/analytics' . $suffix . '.js', array( 'jquery' ), BDB_VERSION, true );
+	}
+
 	wp_enqueue_script( 'book-database', $js_dir . 'admin/admin' . $suffix . '.js', $deps, BDB_VERSION, true );
 
 	wp_localize_script( 'book-database', 'book_database', array(

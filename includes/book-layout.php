@@ -391,7 +391,17 @@ add_filter( 'book-database/book/formatted-info/value/pages', 'bdb_book_layout_pa
  * @return string
  */
 function bdb_book_layout_source( $value, $enabled_fields, $book_id, $book ) {
-	// @todo
+	$sources = bdb_get_book_terms( $book_id, 'source' );
+
+	if ( $sources && is_array( $sources ) ) {
+		$source_names = array();
+
+		foreach ( $sources as $source ) {
+			$source_names[] = $source->name;
+		}
+
+		$value = implode( ', ', $source_names );
+	}
 
 	return $value;
 }

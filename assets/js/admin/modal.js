@@ -361,6 +361,8 @@ var BookDB_Modal_Admin = {
             series_name: jQuery('#book_series_name').val(),
             series_position: jQuery('#book_series_position').val(),
             pub_date: jQuery('#book_pub_date').val(),
+            pages: jQuery('#book_pages').val(),
+            goodreads_url: jQuery('#book_goodreads_url').val(),
             synopsis: jQuery('#book_synopsis').val()
         };
 

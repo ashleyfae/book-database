@@ -122,6 +122,8 @@ class BDB_Review_Query {
 			'author_name' => false,
 			'series_name' => false,
 			'rating'      => false,
+			'genre'       => false,
+			'publisher'   => false,
 			'date'        => false,
 			'year'        => false,
 			'month'       => false,
@@ -245,6 +247,26 @@ class BDB_Review_Query {
 		// Pub date -- year
 		if ( $this->query_vars['pub_year'] ) {
 			$where .= $wpdb->prepare( " AND %d = YEAR ( book.pub_date )", absint( $this->query_vars['pub_year'] ) );
+		}
+
+		// Filter by genre
+		if ( $this->query_vars['genre'] ) {
+			$inner_join = is_numeric( $this->query_vars['genre'] ) ? "INNER JOIN {$this->tables['terms']} terms ON r.term_id = terms.term_id AND terms.type = %s AND terms.term_id = %d" : "INNER JOIN {$this->tables['terms']} terms ON r.term_id = terms.term_id AND terms.type = %s AND terms.slug = %s";
+			$where .= $wpdb->prepare( "AND book.ID IN (
+										SELECT DISTINCT (book.ID) FROM {$this->tables['books']} book
+										INNER JOIN {$this->tables['relationships']} r ON book.ID = r.book_id
+										{$inner_join}
+									)", 'genre', sanitize_text_field( $this->query_vars['genre'] ) );
+		}
+
+		// Filter by publisher
+		if ( $this->query_vars['publisher'] ) {
+			$inner_join = is_numeric( $this->query_vars['publisher'] ) ? "INNER JOIN {$this->tables['terms']} terms ON r.term_id = terms.term_id AND terms.type = %s AND terms.term_id = %d" : "INNER JOIN {$this->tables['terms']} terms ON r.term_id = terms.term_id AND terms.type = %s AND terms.slug = %s";
+			$where .= $wpdb->prepare( "AND book.ID IN (
+										SELECT DISTINCT (book.ID) FROM {$this->tables['books']} book
+										INNER JOIN {$this->tables['relationships']} r ON book.ID = r.book_id
+										{$inner_join}
+									)", 'publisher', sanitize_text_field( $this->query_vars['publisher'] ) );
 		}
 
 		// Tweak order by rating.

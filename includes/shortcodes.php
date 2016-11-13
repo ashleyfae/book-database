@@ -120,6 +120,16 @@ function bdb_book_reviews_shortcode( $atts, $content = '' ) {
 		$args['rating'] = wp_strip_all_tags( $_GET['rating'] );
 	}
 
+	// Genre
+	if ( isset( $_GET['genre'] ) ) {
+		$args['genre'] = wp_strip_all_tags( $_GET['genre'] );
+	}
+
+	// Publisher
+	if ( isset( $_GET['publisher'] ) ) {
+		$args['publisher'] = wp_strip_all_tags( $_GET['publisher'] );
+	}
+
 	// Review Year
 	if ( isset( $_GET['review_year'] ) ) {
 		$args['year'] = absint( $_GET['review_year'] );

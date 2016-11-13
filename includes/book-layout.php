@@ -247,7 +247,8 @@ function bdb_book_layout_author( $value, $enabled_fields, $book_id, $book ) {
 		$names = array();
 
 		foreach ( $authors as $obj ) {
-			$names[] = bdb_link_terms() ? '<a href="' . esc_url( bdb_get_term_link( $obj ) ) . '" itemprop="author">' . esc_html( $obj->name ) . '</a>' : '<span itemprop="author">' . esc_html( $obj->name ) . '</span>';
+			$name    = '<span itemprop="author">' . esc_html( $obj->name ) . '</span>';
+			$names[] = bdb_link_terms() ? '<a href="' . esc_url( bdb_get_term_link( $obj ) ) . '">' . $name . '</a>' : $name;
 		}
 
 		$name = implode( ', ', $names );
@@ -301,7 +302,8 @@ function bdb_book_layout_publisher( $value, $enabled_fields, $book_id, $book ) {
 		$pub_names = array();
 
 		foreach ( $publishers as $pub ) {
-			$pub_names[] = bdb_link_terms() ? '<a href="' . esc_url( bdb_get_term_link( $pub ) ) . '" itemprop="publisher" itemtype="http://schema.org/Organization" itemscope="">' . $pub->name . '</a>' : '<span itemprop="publisher" itemtype="http://schema.org/Organization" itemscope="">' . $pub->name . '</span>';
+			$name        = '<span itemprop="publisher">' . $pub->name . '</span>';
+			$pub_names[] = bdb_link_terms() ? '<a href="' . esc_url( bdb_get_term_link( $pub ) ) . '">' . $name . '</a>' : $name;
 		}
 
 		$value = implode( ', ', $pub_names );
@@ -353,7 +355,8 @@ function bdb_book_layout_genre( $value, $enabled_fields, $book_id, $book ) {
 		$genre_names = array();
 
 		foreach ( $genres as $genre ) {
-			$genre_names[]    = bdb_link_terms() ? '<a href="' . esc_url( bdb_get_term_link( $genre ) ) . '" itemprop="genre">' . $genre->name . '</a>' : '<span itemprop="genre">' . $genre->name . '</span>';
+			$name          = '<span itemprop="genre">' . $genre->name . '</span>';
+			$genre_names[] = bdb_link_terms() ? '<a href="' . esc_url( bdb_get_term_link( $genre ) ) . '">' . $name . '</a>' : $name;
 		}
 
 		$value = implode( ', ', $genre_names );

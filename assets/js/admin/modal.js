@@ -257,6 +257,8 @@ var BookDB_Modal_Admin = {
          * `cover_id`
          * `cover_url`
          * `title`
+         * `index_title`
+         * `index_title_choices`
          * `author` - array
          * `author_comma` - Comma-separated list of author names
          * `series_id`
@@ -285,6 +287,37 @@ var BookDB_Modal_Admin = {
         if (book.title) {
             jQuery('#book_title').val(book.title);
         }
+
+        // Start Index Title
+
+        var selectedIndexTitle;
+
+        if (!book.index_title || book.index_title == book.title) {
+            selectedIndexTitle = 'original';
+        } else if (book.index_title in book.index_title_choices) {
+            selectedIndexTitle = book.index_title;
+        } else {
+            selectedIndexTitle = 'custom';
+        }
+
+        if (book.index_title) {
+            var indexTitleField = jQuery('#index_title');
+            indexTitleField.empty().append('<option value="original">' + book.title + '</option>');
+
+            jQuery.each(book.index_title_choices, function (value, name) {
+                if ('original' != value) {
+                    indexTitleField.append('<option value="' + value + '">' + name + '</option>')
+                }
+            });
+
+            indexTitleField.append('<option value="custom">Custom</option>').val(selectedIndexTitle);// @todo var
+        }
+
+        if ('custom' == selectedIndexTitle) {
+            jQuery('#index_title_custom').val(book.index_title).show();
+        }
+
+        // End Index Title
 
         if (book.author_comma) {
             jQuery('#bookdb-input-tag-author').val(book.author_comma);

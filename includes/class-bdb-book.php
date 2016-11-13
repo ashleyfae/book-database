@@ -723,19 +723,21 @@ class BDB_Book {
 	public function get_data() {
 
 		$book = array(
-			'ID'              => $this->ID,
-			'cover_id'        => $this->get_cover_id(),
-			'cover_url'       => $this->get_cover_url( 'medium' ),
-			'title'           => $this->get_title(),
-			'author'          => $this->get_author(),
-			'author_comma'    => $this->get_author_names(),
-			'series_id'       => $this->get_series_id(),
-			'series_name'     => $this->get_series_name(),
-			'series_position' => $this->get_series_position(),
-			'pub_date'        => $this->get_formatted_pub_date(),
-			'pages'           => $this->get_pages(),
-			'synopsis'        => $this->get_synopsis(),
-			'goodreads_url'   => $this->get_goodreads_url()
+			'ID'                  => $this->ID,
+			'cover_id'            => $this->get_cover_id(),
+			'cover_url'           => $this->get_cover_url( 'medium' ),
+			'title'               => $this->get_title(),
+			'index_title'         => $this->get_index_title(),
+			'index_title_choices' => $this->get_title_choices(),
+			'author'              => $this->get_author(),
+			'author_comma'        => $this->get_author_names(),
+			'series_id'           => $this->get_series_id(),
+			'series_name'         => $this->get_series_name(),
+			'series_position'     => $this->get_series_position(),
+			'pub_date'            => $this->get_formatted_pub_date(),
+			'pages'               => $this->get_pages(),
+			'synopsis'            => $this->get_synopsis(),
+			'goodreads_url'       => $this->get_goodreads_url()
 		);
 
 		return apply_filters( 'book-database/book/get/data', $book, $this->ID, $this );

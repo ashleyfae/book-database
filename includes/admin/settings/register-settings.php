@@ -745,7 +745,7 @@ function bdb_taxonomies_callback( $args ) {
 	</table>
 
 	<div id="bookdb-clone-buttons">
-		<button id="bookdb-add-term" class="button button-secondary" rel=".bookdb-cloned"><?php esc_html_e( 'Add Term', 'book-database' ); ?></button>
+		<button id="bookdb-add-term" class="button button-secondary" rel=".bookdb-cloned"><?php esc_html_e( 'Add Taxonomy', 'book-database' ); ?></button>
 	</div>
 	<?php
 }

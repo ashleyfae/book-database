@@ -30,6 +30,7 @@ function bdb_load_admin_scripts( $hook ) {
 
 	$js_dir  = BDB_URL . 'assets/js/';
 	$css_dir = BDB_URL . 'assets/css/';
+	$screen  = get_current_screen();
 
 	// Use minified libraries if SCRIPT_DEBUG is turned off
 	$suffix = ( defined( 'SCRIPT_DEBUG' ) && SCRIPT_DEBUG ) ? '' : '.min';
@@ -39,6 +40,13 @@ function bdb_load_admin_scripts( $hook ) {
 
 	// JS
 	$deps = array( 'jquery', 'jquery-ui-sortable', 'suggest' );
+
+	// Only add recopy on settings page.
+	if ( 'book-library_page_bdb-settings' == $screen->id ) {
+		wp_enqueue_script( 'recopy', $js_dir . 'admin/jquery.recopy' . $suffix . '.js', $deps, '1.1.0', true );
+		$deps[] = 'recopy';
+	}
+
 	wp_enqueue_script( 'book-database', $js_dir . 'admin/admin' . $suffix . '.js', $deps, BDB_VERSION, true );
 
 	wp_localize_script( 'book-database', 'book_database', array(

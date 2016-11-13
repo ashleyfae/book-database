@@ -217,7 +217,7 @@ class BDB_Review_Query {
 		}
 
 		// Review Year
-		if ( isset( $_GET['review_year'] ) ) {
+		if ( isset( $_GET['review_year'] ) && 'all' != $_GET['review_year'] ) {
 			$this->query_vars['year'] = absint( $_GET['review_year'] );
 		}
 

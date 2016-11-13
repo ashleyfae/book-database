@@ -118,6 +118,8 @@ function bdb_book_reviews_shortcode( $atts, $content = '' ) {
 		}
 	}
 
+	$review_years = bdb_get_review_years();
+
 	ob_start();
 	?>
 	<form id="bookdb-filter-book-reviews" action="<?php echo esc_url( get_permalink() ); ?>" method="GET">
@@ -159,6 +161,18 @@ function bdb_book_reviews_shortcode( $atts, $content = '' ) {
 			<?php echo book_database()->html->term_dropdown( 'publisher', array(
 				'id'       => 'bookdb-publisher',
 				'selected' => isset( $vars['terms']['publisher'] ) ? absint( $vars['terms']['publisher'] ) : 0
+			) ); ?>
+		</p>
+
+		<p class="bookdb-filter-option">
+			<label for="bookdb-review-year"><?php _e( 'Review Year', 'book-database' ); ?></label>
+			<?php echo book_database()->html->select( array(
+				'id'               => 'bookdb-review-year',
+				'name'             => 'review_year',
+				'options'          => $review_years,
+				'show_option_all'  => esc_html__( 'Any', 'book-database' ),
+				'show_option_none' => false,
+				'selected'         => isset( $vars['year'] ) ? $vars['year'] : 'any'
 			) ); ?>
 		</p>
 

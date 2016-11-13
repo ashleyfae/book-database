@@ -153,3 +153,37 @@ function bdb_insert_review( $data = array() ) {
 	return $review_id;
 
 }
+
+/**
+ * Get Review Years
+ *
+ * Returns an array of all the years that reviews have been published in.
+ *
+ * @param string $order Either ASC or DESC.
+ *
+ * @since 1.0.0
+ * @return array|false
+ */
+function bdb_get_review_years( $order = 'DESC' ) {
+	global $wpdb;
+	$reviews_table = book_database()->reviews->table_name;
+	$years         = $wpdb->get_col( "SELECT DISTINCT YEAR(date_added) FROM $reviews_table" );
+
+	if ( ! is_array( $years ) ) {
+		return false;
+	}
+
+	if ( 'DESC' == $order ) {
+		arsort( $years );
+	} else {
+		asort( $years );
+	}
+
+	$final_years = array();
+
+	foreach ( $years as $year ) {
+		$final_years[ absint( $year ) ] = absint( $year );
+	}
+
+	return $final_years;
+}

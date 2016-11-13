@@ -263,6 +263,8 @@ var BookDB_Modal_Admin = {
          * `series_name`
          * `series_position`
          * `pub_date`
+         * `pages`
+         * `goodreads_url`
          * `synopsis`
          * `terms`
          */
@@ -298,6 +300,14 @@ var BookDB_Modal_Admin = {
 
         if (book.pub_date) {
             jQuery('#book_pub_date').val(book.pub_date);
+        }
+
+        if (book.pages) {
+            jQuery('#book_pages').val(book.pages);
+        }
+
+        if (book.goodreads_url) {
+            jQuery('#book_goodreads_url').val(book.goodreads_url);
         }
 
         if (book.synopsis) {

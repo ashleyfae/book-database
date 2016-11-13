@@ -215,6 +215,7 @@ function bdb_book_reviews_shortcode( $atts, $content = '' ) {
 	<?php
 
 	if ( $query->have_reviews() ) {
+		echo '<div class="bookdb-review-list-number-results">' . sprintf( _n( '%s review found', '%s reviews found', $query->total_reviews, 'book-database' ), $query->total_reviews ) . '</div>';
 		echo '<div class="book-reviews-list">';
 		foreach ( $query->get_reviews() as $entry ) {
 			include $template;

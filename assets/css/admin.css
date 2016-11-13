@@ -325,4 +325,15 @@
   .bookdb-table th {
     padding: 15px 10px; }
 
+.bookdb-settings-buttons {
+  clear: both; }
+  .bookdb-settings-buttons:before, .bookdb-settings-buttons:after {
+    clear: both;
+    content: ' ';
+    display: table; }
+  .bookdb-settings-buttons > p {
+    float: left;
+    margin: 1em 10px 1em 0;
+    padding: 0; }
+
 /*# sourceMappingURL=admin.css.map */

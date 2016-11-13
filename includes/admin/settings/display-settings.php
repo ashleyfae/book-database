@@ -111,11 +111,11 @@ function bdb_options_page() {
 					?>
 				</table>
 
-				<div class="ubb-settings-buttons">
+				<div class="bookdb-settings-buttons">
 					<?php submit_button(); ?>
 
-					<p id="ubb-reset-tab">
-						<button type="button" id="ubb-reset-tab-button" name="ubb-reset-defaults" class="button-secondary" data-current-tab="<?php echo esc_attr( $active_tab ); ?>" data-current-section="<?php echo esc_attr( $section ); ?>"><?php esc_attr_e( 'Reset Tab', 'book-database' ); ?></button>
+					<p id="bookdb-reset-tab">
+						<button type="button" id="bookdb-reset-tab-button" name="bookdb-reset-defaults" class="button-secondary" data-current-tab="<?php echo esc_attr( $active_tab ); ?>" data-current-section="<?php echo esc_attr( $section ); ?>"><?php esc_attr_e( 'Reset Tab', 'book-database' ); ?></button>
 					</p>
 				</div>
 			</form>

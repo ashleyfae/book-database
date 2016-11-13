@@ -10,3 +10,19 @@
         padding: 15px 10px;
     }
 }
+
+.bookdb-settings-buttons {
+    clear: both;
+
+    &:before, &:after {
+        clear: both;
+        content: ' ';
+        display: table;
+    }
+
+    > p {
+        float: left;
+        margin: 1em 10px 1em 0;
+        padding: 0;
+    }
+}

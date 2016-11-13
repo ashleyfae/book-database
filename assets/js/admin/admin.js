@@ -25,6 +25,8 @@
             $('#bookdb-add-review-fields-wrap').on('click', 'button', this.addReview);
             $('#bdb_book_reviews').on('click', '.bookdb-remove-book-review', this.removeReview);
             $('#index_title').on('change', this.toggleCustomIndexTitle);
+            $('#book_title').on('keyup', this.writeOriginalIndexTitle)
+                            .on('blur', this.populateAltTitles);
             $(document).ready(this.toggleCustomIndexTitle);
         },
 
@@ -323,6 +325,50 @@
                 customField.slideUp();
             }
 
+        },
+
+        /**
+         * Copies the book title to the 'original' option in the index dropdown.
+         *
+         * @param e
+         */
+        writeOriginalIndexTitle: function (e) {
+            $('#index_title option[value="original"]').text($(this).val());
+        },
+
+        /**
+         * Populate index titles with alternatives.
+         *
+         * @param e
+         */
+        populateAltTitles: function (e) {
+            var indexTitleSelect = $('#index_title');
+
+            var data = {
+                action: 'bdb_get_alt_titles',
+                nonce: book_database.nonce,
+               title: $(this).val()
+            };
+
+            $.ajax({
+                type: 'POST',
+                url: ajaxurl,
+                data: data,
+                dataType: "json",
+                success: function (response) {
+
+                    if (response.success) {
+
+                        indexTitleSelect.find('option[value="original"]').after('<option value="' + response.data + '">' + response.data + '</option>');
+
+                    }
+
+                }
+            }).fail(function (response) {
+                if (window.console && window.console.log) {
+                    console.log(response);
+                }
+            });
         }
 
     };

@@ -28,7 +28,15 @@ $url    = $review->is_external() ? $review->get_url() : home_url( '/?p=' . $revi
 	<?php
 	if ( $book->get_cover_id() ) {
 		echo $url ? '<a href="' . esc_url( $url ) . '">' : '';
-		echo $book->get_cover( apply_filters( 'book-database/shortcode/book-reviews/entry/cover-image-size', 'large' ) );
+
+		if ( function_exists( 'aq_resize' ) ) {
+			$resized   = aq_resize( $book->get_cover_url( 'full' ), 300, 452, true, true, true );
+			$final_img = $resized ? $resized : $book->get_cover_url( 'large' );
+			echo '<img src="' . esc_url( $final_img ) . '" alt="' . esc_attr( wp_strip_all_tags( $book->get_title() ) ) . '">';
+		} else {
+			echo $book->get_cover( apply_filters( 'book-database/shortcode/book-reviews/entry/cover-image-size', 'large' ) );
+		}
+
 		echo $url ? '</a>' : '';
 	}
 	?>

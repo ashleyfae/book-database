@@ -1,6 +1,15 @@
 #bookdb-filter-book-reviews {
   margin: 0 0 1.5em; }
 
+.book-reviews-list {
+  display: flex;
+  flex-flow: row wrap;
+  margin: 0 -10px; }
+
+.book-review-entry {
+  flex: 0 50%;
+  padding: 10px; }
+
 .book-review-entry {
   text-align: center; }
 
@@ -21,14 +30,8 @@
     clear: both;
     padding: 0 15px; }
 
-  .book-reviews-list {
-    display: flex;
-    flex-flow: row wrap;
-    margin: 0 -10px; }
-
   .book-review-entry {
-    flex: 0 33.3%;
-    padding: 10px; } }
+    flex: 0 33.3%; } }
 @media (min-width: 992px) {
   .book-review-entry {
     flex: 0 25%; } }

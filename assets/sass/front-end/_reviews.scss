@@ -2,6 +2,17 @@
     margin: 0 0 1.5em;
 }
 
+.book-reviews-list {
+    display: flex;
+    flex-flow: row wrap;
+    margin: 0 -10px;
+}
+
+.book-review-entry {
+    flex: 0 50%;
+    padding: 10px;
+}
+
 .book-review-entry {
     text-align: center;
 }
@@ -28,15 +39,8 @@
     }
 
     // Reviews
-    .book-reviews-list {
-        display: flex;
-        flex-flow: row wrap;
-        margin: 0 -10px;
-    }
-
     .book-review-entry {
         flex: 0 33.3%;
-        padding: 10px;
     }
 }
 

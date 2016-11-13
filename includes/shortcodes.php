@@ -98,134 +98,29 @@ add_shortcode( 'review-index', 'bdb_review_index_shortcode' );
  */
 function bdb_book_reviews_shortcode( $atts, $content = '' ) {
 
-	$args = array();
-
-	$book_title = $author_name = $series_name = '';
-
-	// Get stuff from query vars.
-	global $wp_query;
-
-	if ( array_key_exists( 'book_tax', $wp_query->query_vars ) && array_key_exists( 'book_term', $wp_query->query_vars ) ) {
-
-		if ( 'author' == $wp_query->query_vars['book_tax'] ) {
-
-			$args['author_slug'] = wp_strip_all_tags( $wp_query->query_vars['book_term'] );
-			$author_obj          = bdb_get_term( array(
-				'type'   => 'author',
-				'slug'   => sanitize_text_field( $args['author_slug'] ),
-				'fields' => 'names'
-			) );
-
-			if ( $author_obj ) {
-				$author_name = $author_obj;
-			}
-
-		} elseif ( 'series' == $wp_query->query_vars['book_tax'] ) {
-
-			$series_obj = bdb_get_series( array(
-				'slug'   => sanitize_text_field( wp_strip_all_tags( $wp_query->query_vars['book_term'] ) ),
-				'fields' => 'names'
-			) );
-
-			if ( $series_obj ) {
-				$series_name     = $series_obj;
-				$_GET['series']  = $series_name;
-				$_GET['orderby'] = 'pub_date';
-				$_GET['order']   = 'ASC';
-			}
-
-		} else {
-
-			$type    = sanitize_text_field( wp_strip_all_tags( $wp_query->query_vars['book_tax'] ) );
-			$term_id = bdb_get_term( array(
-				'type'   => $type,
-				'slug'   => sanitize_text_field( wp_strip_all_tags( $wp_query->query_vars['book_term'] ) ),
-				'fields' => 'ids'
-			) );
-
-			if ( $term_id ) {
-				$args['terms'][ $type ] = $term_id;
-			}
-
-		}
-
-	}
-
-	// Book title
-	if ( isset( $_GET['title'] ) ) {
-		$args['book_title'] = $book_title = wp_strip_all_tags( $_GET['title'] );
-	}
-
-	// Author
-	if ( isset( $_GET['author'] ) ) {
-		$args['author_name'] = $author_name = wp_strip_all_tags( $_GET['author'] );
-	}
-
-	// Series
-	if ( isset( $_GET['series'] ) ) {
-		$args['series_name'] = $series_name = wp_strip_all_tags( $_GET['series'] );
-	}
-
-	// Rating
-	if ( isset( $_GET['rating'] ) && 'any' != $_GET['rating'] ) {
-		$args['rating'] = wp_strip_all_tags( $_GET['rating'] );
-	}
-
-	// Genre
-	if ( isset( $_GET['genre'] ) && 'all' != $_GET['genre'] ) {
-		$args['genre'] = wp_strip_all_tags( $_GET['genre'] );
-	}
-
-	// Publisher
-	if ( isset( $_GET['publisher'] ) && 'all' != $_GET['publisher'] ) {
-		$args['publisher'] = wp_strip_all_tags( $_GET['publisher'] );
-	}
-
-	// Review Year
-	if ( isset( $_GET['review_year'] ) ) {
-		$args['year'] = absint( $_GET['review_year'] );
-	}
-
-	// Pub Year
-	if ( isset( $_GET['pub_year'] ) ) {
-		$args['pub_year'] = absint( $_GET['pub_year'] );
-	}
-
-	// Orderby
-	if ( isset( $_GET['orderby'] ) ) {
-		$args['orderby'] = wp_strip_all_tags( $_GET['orderby'] );
-	} else {
-		$args['orderby'] = 'date';
-	}
-
-	// Order
-	if ( isset( $_GET['order'] ) ) {
-		$args['order'] = wp_strip_all_tags( $_GET['order'] );
-	}
-
-	$query    = new BDB_Review_Query( $args );
+	$query = new BDB_Review_Query();
+	$vars  = $query->parse_query_args();
+	$query->query();
 	$template = BDB_DIR . 'templates/shortcode-book-reviews-entry.php'; // @todo template function
 
-	$current_rating  = ( isset( $_GET['rating'] ) && 'any' != $_GET['rating'] ) ? $_GET['rating'] : 'any';
-	$current_orderby = ( isset( $_GET['orderby'] ) && 'date' != $_GET['orderby'] ) ? $_GET['orderby'] : 'date';
-	$current_order   = ( isset( $_GET['order'] ) && 'ASC' == strtoupper( $_GET['order'] ) ) ? 'ASC' : 'DESC';
+	$current_rating = $vars['rating'] ? $vars['rating'] : 'any';
 
 	ob_start();
 	?>
-	<form id="bookdb-filter-book-reviews" action="" method="GET">
+	<form id="bookdb-filter-book-reviews" action="<?php echo esc_url( get_permalink() ); ?>" method="GET">
 		<p class="bookdb-filter-option">
 			<label for="bookdb-book-title"><?php _e( 'Book Title', 'book-database' ); ?></label>
-			<input type="text" id="bookdb-book-title" name="title" value="<?php echo esc_attr( wp_strip_all_tags( $book_title ) ); ?>">
+			<input type="text" id="bookdb-book-title" name="title" value="<?php echo esc_attr( wp_strip_all_tags( $vars['book_title'] ) ); ?>">
 		</p>
 
 		<p class="bookdb-filter-option">
 			<label for="bookdb-book-author"><?php _e( 'Author', 'book-database' ); ?></label>
-			<input type="text" id="bookdb-book-author" name="author" value="<?php echo esc_attr( wp_strip_all_tags( $author_name ) ); ?>">
+			<input type="text" id="bookdb-book-author" name="author" value="<?php echo esc_attr( wp_strip_all_tags( $vars['author_name'] ) ); ?>">
 		</p>
 
 		<p class="bookdb-filter-option">
 			<label for="bookdb-book-series"><?php _e( 'Series', 'book-database' ); ?></label>
-			<input type="text" id="bookdb-book-series" name="series" value="<?php echo esc_attr( wp_strip_all_tags( $series_name ) ); ?>">
+			<input type="text" id="bookdb-book-series" name="series" value="<?php echo esc_attr( wp_strip_all_tags( $vars['series_name'] ) ); ?>">
 		</p>
 
 		<p class="bookdb-filter-option">
@@ -242,7 +137,7 @@ function bdb_book_reviews_shortcode( $atts, $content = '' ) {
 			<label for="bookdb-genre"><?php _e( 'Genre', 'book-database' ); ?></label>
 			<?php echo book_database()->html->term_dropdown( 'genre', array(
 				'id'       => 'bookdb-genre',
-				'selected' => isset( $_GET['genre'] ) ? wp_strip_all_tags( $_GET['genre'] ) : 0
+				'selected' => isset( $vars['terms']['genre'] ) ? absint( $vars['terms']['genre'] ) : 0
 			) ); ?>
 		</p>
 
@@ -250,27 +145,27 @@ function bdb_book_reviews_shortcode( $atts, $content = '' ) {
 			<label for="bookdb-publisher"><?php _e( 'Publisher', 'book-database' ); ?></label>
 			<?php echo book_database()->html->term_dropdown( 'publisher', array(
 				'id'       => 'bookdb-publisher',
-				'selected' => isset( $_GET['publisher'] ) ? wp_strip_all_tags( $_GET['publisher'] ) : 0
+				'selected' => isset( $vars['terms']['publisher'] ) ? absint( $vars['terms']['publisher'] ) : 0
 			) ); ?>
 		</p>
 
 		<p class="bookdb-filter-option">
 			<label for="bookdb-orderby"><?php _e( 'Order by', 'book-database' ); ?></label>
 			<select id="bookdb-orderby" name="orderby">
-				<option value="date"<?php selected( $current_orderby, 'date' ) ?>><?php _e( 'Review Date', 'book-database' ); ?></option>
-				<option value="title"<?php selected( $current_orderby, 'title' ) ?>><?php _e( 'Book Title', 'book-database' ); ?></option>
-				<option value="author"<?php selected( $current_orderby, 'author' ) ?>><?php _e( 'Author Name', 'book-database' ); ?></option>
-				<option value="rating"<?php selected( $current_orderby, 'rating' ) ?>><?php _e( 'Rating', 'book-database' ); ?></option>
-				<option value="pub_date"<?php selected( $current_orderby, 'pub_date' ) ?>><?php _e( 'Publication Date', 'book-database' ); ?></option>
-				<option value="pages"<?php selected( $current_orderby, 'pages' ) ?>><?php _e( 'Number of Pages', 'book-database' ); ?></option>
+				<option value="date"<?php selected( $vars['orderby'], 'date' ) ?>><?php _e( 'Review Date', 'book-database' ); ?></option>
+				<option value="title"<?php selected( $vars['orderby'], 'title' ) ?>><?php _e( 'Book Title', 'book-database' ); ?></option>
+				<option value="author"<?php selected( $vars['orderby'], 'author' ) ?>><?php _e( 'Author Name', 'book-database' ); ?></option>
+				<option value="rating"<?php selected( $vars['orderby'], 'rating' ) ?>><?php _e( 'Rating', 'book-database' ); ?></option>
+				<option value="pub_date"<?php selected( $vars['orderby'], 'pub_date' ) ?>><?php _e( 'Publication Date', 'book-database' ); ?></option>
+				<option value="pages"<?php selected( $vars['orderby'], 'pages' ) ?>><?php _e( 'Number of Pages', 'book-database' ); ?></option>
 			</select>
 		</p>
 
 		<p class="bookdb-filter-option">
 			<label for="bookdb-order"><?php _e( 'Order', 'book-database' ); ?></label>
 			<select id="bookdb-order" name="order">
-				<option value="ASC"<?php selected( $current_order, 'ASC' ) ?>><?php _e( 'ASC (1, 2, 3; a, b, c)', 'book-database' ); ?></option>
-				<option value="DESC"<?php selected( $current_order, 'DESC' ) ?>><?php _e( 'DESC (3, 2, 1; c, b, a)', 'book-database' ); ?></option>
+				<option value="ASC"<?php selected( $vars['order'], 'ASC' ) ?>><?php _e( 'ASC (1, 2, 3; a, b, c)', 'book-database' ); ?></option>
+				<option value="DESC"<?php selected( $vars['order'], 'DESC' ) ?>><?php _e( 'DESC (3, 2, 1; c, b, a)', 'book-database' ); ?></option>
 			</select>
 		</p>
 

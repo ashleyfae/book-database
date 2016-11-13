@@ -96,6 +96,13 @@ class BDB_Review_Query {
 	 */
 	protected $query_vars;
 
+	/**
+	 * Results from the query
+	 *
+	 * @var array
+	 * @access protected
+	 * @since  1.0.0
+	 */
 	protected $reviews;
 
 	/**
@@ -125,7 +132,7 @@ class BDB_Review_Query {
 			'rating'      => false,
 			'genre'       => false,
 			'publisher'   => false,
-			'terms'       => false,
+			'terms'       => array(),
 			'date'        => false,
 			'year'        => false,
 			'month'       => false,
@@ -143,8 +150,6 @@ class BDB_Review_Query {
 		$this->query_vars = $args;
 
 		$this->current_page = ( isset( $_GET['bdbpage'] ) ) ? absint( $_GET['bdbpage'] ) : 1;
-
-		$this->query();
 
 	}
 
@@ -171,13 +176,115 @@ class BDB_Review_Query {
 	}
 
 	/**
+	 * Parse Query Args
+	 *
+	 * Puts together query arguments based on $_GET and query vars.
+	 *
+	 * @access public
+	 * @since  1.0.0
+	 * @return array Array of query vars.
+	 */
+	public function parse_query_args() {
+
+		// Book title
+		if ( isset( $_GET['title'] ) ) {
+			$this->query_vars['book_title'] = wp_strip_all_tags( $_GET['title'] );
+		}
+
+		// Author
+		if ( isset( $_GET['author'] ) ) {
+			$this->query_vars['author_name'] = $author_name = wp_strip_all_tags( $_GET['author'] );
+		}
+
+		// Series
+		if ( isset( $_GET['series'] ) ) {
+			$this->query_vars['series_name'] = $series_name = wp_strip_all_tags( $_GET['series'] );
+		}
+
+		// Rating
+		if ( isset( $_GET['rating'] ) && 'any' != $_GET['rating'] ) {
+			$this->query_vars['rating'] = wp_strip_all_tags( $_GET['rating'] );
+		}
+
+		// Genre
+		if ( isset( $_GET['genre'] ) && 'all' != $_GET['genre'] ) {
+			$this->query_vars['terms']['genre'] = absint( $_GET['genre'] );
+		}
+
+		// Publisher
+		if ( isset( $_GET['publisher'] ) && 'all' != $_GET['publisher'] ) {
+			$this->query_vars['terms']['publisher'] = absint( $_GET['publisher'] );
+		}
+
+		// Review Year
+		if ( isset( $_GET['review_year'] ) ) {
+			$this->query_vars['year'] = absint( $_GET['review_year'] );
+		}
+
+		// Pub Year
+		if ( isset( $_GET['pub_year'] ) ) {
+			$this->query_vars['pub_year'] = absint( $_GET['pub_year'] );
+		}
+
+		// Orderby
+		if ( isset( $_GET['orderby'] ) ) {
+			$this->query_vars['orderby'] = wp_strip_all_tags( $_GET['orderby'] );
+		}
+
+		// Order
+		if ( isset( $_GET['order'] ) ) {
+			$this->query_vars['order'] = wp_strip_all_tags( $_GET['order'] );
+		}
+
+		/*
+		 * Look in WP_Query
+		 */
+		global $wp_query;
+
+		if ( array_key_exists( 'book_tax', $wp_query->query_vars ) && array_key_exists( 'book_term', $wp_query->query_vars ) ) {
+
+			if ( 'series' == $wp_query->query_vars['book_tax'] ) {
+
+				$series_obj = bdb_get_series( array(
+					'slug'   => sanitize_text_field( wp_strip_all_tags( $wp_query->query_vars['book_term'] ) ),
+					'fields' => 'names'
+				) );
+
+				if ( $series_obj ) {
+					$this->query_vars['series_name'] = $series_obj;
+					$this->query_vars['orderby']     = 'pub_date';
+					$this->query_vars['order']       = 'ASC';
+				}
+
+			} else {
+
+				$type    = sanitize_text_field( wp_strip_all_tags( $wp_query->query_vars['book_tax'] ) );
+				$term_id = bdb_get_term( array(
+					'type'   => $type,
+					'slug'   => sanitize_text_field( wp_strip_all_tags( $wp_query->query_vars['book_term'] ) ),
+					'fields' => 'ids'
+				) );
+
+				if ( $term_id ) {
+					$this->query_vars['terms'][ $type ] = $term_id;
+				}
+
+			}
+
+		}
+
+		return $this->query_vars;
+
+	}
+
+	/**
 	 * Query
 	 *
 	 * @access protected
 	 * @since  1.0.0
 	 * @return void
 	 */
-	protected function query() {
+	public function query() {
 
 		// Set up order & orderby.
 		$this->parse_orderby();
@@ -276,7 +383,7 @@ class BDB_Review_Query {
 		}
 
 		// Filter by misc terms.
-		if ( is_array( $this->query_vars['terms'] ) ) {
+		if ( is_array( $this->query_vars['terms'] ) && count( $this->query_vars['terms'] ) ) {
 			$allowed_terms = array_keys( bdb_get_taxonomies() );
 
 			foreach ( $this->query_vars['terms'] as $tax => $term_id ) {

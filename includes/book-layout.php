@@ -207,7 +207,7 @@ function bdb_book_layout_cover( $value, $enabled_fields, $book_id, $book ) {
 		$value     = '<img src="' . esc_url( $book->get_cover_url() ) . '" alt="' . esc_attr( wp_strip_all_tags( $book->get_title() ) ) . '" class="' . esc_attr( $class ) . '" itemprop="image">';
 	}
 
-	return '<div class="bookdb-book-info" itemscope itemtype="http://schema.org/Book">' . $value; // @todo move schema markup elsewhere
+	return $value;
 }
 
 add_filter( 'book-database/book/formatted-info/value/cover', 'bdb_book_layout_cover', 10, 4 );
@@ -301,8 +301,7 @@ function bdb_book_layout_publisher( $value, $enabled_fields, $book_id, $book ) {
 		$pub_names = array();
 
 		foreach ( $publishers as $pub ) {
-			$this_pub    = bdb_link_terms() ? '<a href="' . esc_url( bdb_get_term_link( $pub ) ) . '">' . $pub->name . '</a>' : $pub->name;
-			$pub_names[] = '<span itemprop="publisher" itemtype="http://schema.org/Organization" itemscope="">' . $this_pub . '</span>';
+			$pub_names[] = bdb_link_terms() ? '<a href="' . esc_url( bdb_get_term_link( $pub ) ) . '" itemprop="publisher" itemtype="http://schema.org/Organization" itemscope="">' . $pub->name . '</a>' : '<span itemprop="publisher" itemtype="http://schema.org/Organization" itemscope="">' . $pub->name . '</span>';
 		}
 
 		$value = implode( ', ', $pub_names );
@@ -354,8 +353,7 @@ function bdb_book_layout_genre( $value, $enabled_fields, $book_id, $book ) {
 		$genre_names = array();
 
 		foreach ( $genres as $genre ) {
-			$this_genre    = bdb_link_terms() ? '<a href="' . esc_url( bdb_get_term_link( $genre ) ) . '">' . $genre->name . '</a>' : $genre->name;
-			$genre_names[] = '<span itemprop="genre">' . $this_genre . '</span>';
+			$genre_names[]    = bdb_link_terms() ? '<a href="' . esc_url( bdb_get_term_link( $genre ) ) . '" itemprop="genre">' . $genre->name . '</a>' : '<span itemprop="genre">' . $genre->name . '</span>';
 		}
 
 		$value = implode( ', ', $genre_names );
@@ -458,7 +456,7 @@ function bdb_book_layout_rating( $value, $enabled_fields, $book_id, $book ) {
 		$value .= '</span>';
 	}
 
-	return '</div>' . $value; // @todo closing schema markup - move elsewhere
+	return $value;
 }
 
 add_filter( 'book-database/book/formatted-info/value/rating', 'bdb_book_layout_rating', 10, 4 );

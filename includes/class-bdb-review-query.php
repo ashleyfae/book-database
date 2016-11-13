@@ -120,6 +120,7 @@ class BDB_Review_Query {
 		$defaults = array(
 			'book_title'  => false,
 			'author_name' => false,
+			'author_slug' => false,
 			'series_name' => false,
 			'rating'      => false,
 			'genre'       => false,
@@ -193,6 +194,10 @@ class BDB_Review_Query {
 		// Filter by author name.
 		if ( $this->query_vars['author_name'] ) {
 			$where .= $wpdb->prepare( " AND author.name LIKE '%%%%" . '%s' . "%%%%'", sanitize_text_field( wp_strip_all_tags( $this->query_vars['author_name'] ) ) );
+		}
+		// Filter by author slug.
+		if ( $this->query_vars['author_slug'] ) {
+			$where .= $wpdb->prepare( " AND author.slug = %s", sanitize_text_field( wp_strip_all_tags( $this->query_vars['author_slug'] ) ) );
 		}
 
 		// Filter by series name.

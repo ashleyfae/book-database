@@ -100,19 +100,57 @@ function bdb_book_reviews_shortcode( $atts, $content = '' ) {
 
 	$args = array();
 
+	$book_title = $author_name = $series_name = '';
+
+	// Get stuff from query vars.
+	global $wp_query;
+	if ( array_key_exists( 'book_tax', $wp_query->query_vars ) && array_key_exists( 'book_term', $wp_query->query_vars ) ) {
+
+		if ( 'author' == $wp_query->query_vars['book_tax'] ) {
+
+			$args['author_slug'] = wp_strip_all_tags( $wp_query->query_vars['book_term'] );
+			$author_obj          = bdb_get_term( array(
+				'type'   => 'author',
+				'slug'   => sanitize_text_field( $args['author_slug'] ),
+				'fields' => 'names'
+			) );
+
+			if ( $author_obj ) {
+				$author_name = $author_obj;
+			}
+
+		} elseif ( 'series' == $wp_query->query_vars['book_tax'] ) {
+
+			$series_obj          = bdb_get_series( array(
+				'slug'   => sanitize_text_field(  wp_strip_all_tags( $wp_query->query_vars['book_term'] ) ),
+				'fields' => 'names'
+			) );
+
+			if ( $series_obj ) {
+				$series_name = $series_obj;
+			}
+
+		} else {
+
+			$_GET[ wp_strip_all_tags( $wp_query->query_vars['book_tax'] ) ] = wp_strip_all_tags( $wp_query->query_vars['book_term'] );
+
+		}
+
+	}
+
 	// Book title
 	if ( isset( $_GET['title'] ) ) {
-		$args['book_title'] = wp_strip_all_tags( $_GET['title'] );
+		$args['book_title'] = $book_title = wp_strip_all_tags( $_GET['title'] );
 	}
 
 	// Author
 	if ( isset( $_GET['author'] ) ) {
-		$args['author_name'] = wp_strip_all_tags( $_GET['author'] );
+		$args['author_name'] = $author_name = wp_strip_all_tags( $_GET['author'] );
 	}
 
 	// Series
 	if ( isset( $_GET['series'] ) ) {
-		$args['series_name'] = wp_strip_all_tags( $_GET['series'] );
+		$args['series_name'] = $series_name = wp_strip_all_tags( $_GET['series'] );
 	}
 
 	// Rating
@@ -164,17 +202,17 @@ function bdb_book_reviews_shortcode( $atts, $content = '' ) {
 	<form id="bookdb-filter-book-reviews" action="" method="GET">
 		<p class="bookdb-filter-option">
 			<label for="bookdb-book-title"><?php _e( 'Book Title', 'book-database' ); ?></label>
-			<input type="text" id="bookdb-book-title" name="title" value="<?php echo isset( $_GET['title'] ) ? esc_attr( wp_strip_all_tags( $_GET['title'] ) ) : ''; ?>">
+			<input type="text" id="bookdb-book-title" name="title" value="<?php echo esc_attr( wp_strip_all_tags( $book_title ) ); ?>">
 		</p>
 
 		<p class="bookdb-filter-option">
 			<label for="bookdb-book-author"><?php _e( 'Author', 'book-database' ); ?></label>
-			<input type="text" id="bookdb-book-author" name="author" value="<?php echo isset( $_GET['author'] ) ? esc_attr( wp_strip_all_tags( $_GET['author'] ) ) : ''; ?>">
+			<input type="text" id="bookdb-book-author" name="author" value="<?php echo esc_attr( wp_strip_all_tags( $author_name ) ); ?>">
 		</p>
 
 		<p class="bookdb-filter-option">
 			<label for="bookdb-book-series"><?php _e( 'Series', 'book-database' ); ?></label>
-			<input type="text" id="bookdb-book-series" name="series" value="<?php echo isset( $_GET['series'] ) ? esc_attr( wp_strip_all_tags( $_GET['series'] ) ) : ''; ?>">
+			<input type="text" id="bookdb-book-series" name="series" value="<?php echo esc_attr( wp_strip_all_tags( $series_name ) ); ?>">
 		</p>
 
 		<p class="bookdb-filter-option">

@@ -237,9 +237,11 @@ class BDB_DB_Series extends BDB_DB {
 			'number'  => 20,
 			'offset'  => 0,
 			'name'    => false,
+			'slug'    => false,
 			'author'  => false, // @todo Make this work - join needed.
 			'orderby' => 'ID',
-			'order'   => 'DESC'
+			'order'   => 'DESC',
+			'fields'  => 'all'
 		);
 
 		$args = wp_parse_args( $args, $defaults );
@@ -267,9 +269,21 @@ class BDB_DB_Series extends BDB_DB {
 			$where .= $wpdb->prepare( " AND `name` LIKE '%%%%" . '%s' . "%%%%' ", wp_strip_all_tags( $args['name'] ) );
 		}
 
+		// Series with a specific slug.
+		if ( ! empty( $args['slug'] ) ) {
+			$where .= $wpdb->prepare( " AND `slug` = %s ", wp_strip_all_tags( $args['slug'] ) );
+		}
+
 		// @todo author
 
 		$args['orderby'] = ! array_key_exists( $args['orderby'], $this->get_columns() ) ? 'ID' : $args['orderby'];
+
+		$select_this = '*';
+		if ( 'names' == $args['fields'] ) {
+			$select_this = 'series.name';
+		} elseif ( 'ids' == $args['fields'] ) {
+			$select_this = 'series.ID';
+		}
 
 		$cache_key = md5( 'bdb_series_' . serialize( $args ) );
 
@@ -279,8 +293,12 @@ class BDB_DB_Series extends BDB_DB {
 		$args['order']   = esc_sql( $args['order'] );
 
 		if ( $series === false ) {
-			$query  = $wpdb->prepare( "SELECT * FROM  $this->table_name $join $where GROUP BY $this->primary_key ORDER BY {$args['orderby']} {$args['order']} LIMIT %d,%d;", absint( $args['offset'] ), absint( $args['number'] ) );
-			$series = $wpdb->get_results( $query );
+			$query  = $wpdb->prepare( "SELECT $select_this FROM  $this->table_name AS series $join $where GROUP BY $this->primary_key ORDER BY {$args['orderby']} {$args['order']} LIMIT %d,%d;", absint( $args['offset'] ), absint( $args['number'] ) );
+			if ( 'names' == $args['fields'] || 'ids' == $args['fields'] ) {
+				$series = $wpdb->get_col( $query );
+			} else {
+				$series = $wpdb->get_results( $query );
+			}
 			wp_cache_set( $cache_key, $series, 'series', 3600 );
 		}
 

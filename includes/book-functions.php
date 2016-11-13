@@ -312,6 +312,30 @@ function bdb_insert_series( $series_name, $description = '' ) {
 }
 
 /**
+ * Get Series
+ *
+ * Returns a single series.
+ *
+ * @param array $args Query arguments to override the defaults.
+ *
+ * @since 1.0.0
+ * @return object|false Database object or false.
+ */
+function bdb_get_series( $args = array() ) {
+	$defaults   = array(
+		'number' => 1
+	);
+	$args       = wp_parse_args( $args, $defaults );
+	$all_series = book_database()->series->get_series( $args );
+
+	if ( ! is_array( $all_series ) ) {
+		return false;
+	}
+
+	return $all_series[0];
+}
+
+/**
  * Generate Alternative Book Title
  *
  * For example:

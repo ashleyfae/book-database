@@ -241,20 +241,17 @@ add_filter( 'book-database/book/formatted-info/value/title', 'bdb_book_layout_ti
  * @return string
  */
 function bdb_book_layout_author( $value, $enabled_fields, $book_id, $book ) {
-	$author = $book->get_author();
+	$authors = $book->get_term_type( 'author' );
 
-	if ( $author ) {
-		if ( bdb_link_terms() ) {
-			$names = array();
+	if ( $authors ) {
+		$names = array();
 
-			foreach ( $author as $obj ) {
-				$names[] = '<a href="' . esc_url( bdb_get_term_link( $obj ) ) . '">' . esc_html( $obj->name ) . '</a>';
-			}
-
-			$name = implode( ', ', $names );
-		} else {
-			$name = $book->get_author_names();
+		foreach ( $authors as $obj ) {
+			$names[] = bdb_link_terms() ? '<a href="' . esc_url( bdb_get_term_link( $obj ) ) . '">' . esc_html( $obj->name ) . '</a>' : esc_html( $obj->name );
 		}
+
+		$name = implode( ', ', $names );
+
 		$value = '<span itemprop="author">' . $name . '</span>';
 	}
 
@@ -298,7 +295,7 @@ add_filter( 'book-database/book/formatted-info/value/series', 'bdb_book_layout_s
  * @return string
  */
 function bdb_book_layout_publisher( $value, $enabled_fields, $book_id, $book ) {
-	$publishers = bdb_get_book_terms( $book_id, 'publisher' );
+	$publishers = $book->get_term_type( 'publisher' );
 
 	if ( $publishers && is_array( $publishers ) ) {
 		$pub_names = array();
@@ -351,7 +348,7 @@ add_filter( 'book-database/book/formatted-info/value/pub_date', 'bdb_book_layout
  * @return string
  */
 function bdb_book_layout_genre( $value, $enabled_fields, $book_id, $book ) {
-	$genres = bdb_get_book_terms( $book_id, 'genre' );
+	$genres = $book->get_term_type( 'genre' );
 
 	if ( $genres && is_array( $genres ) ) {
 		$genre_names = array();
@@ -404,7 +401,7 @@ add_filter( 'book-database/book/formatted-info/value/pages', 'bdb_book_layout_pa
  * @return string
  */
 function bdb_book_layout_source( $value, $enabled_fields, $book_id, $book ) {
-	$sources = bdb_get_book_terms( $book_id, 'source' );
+	$sources = $book->get_term_type( 'source' );
 
 	if ( $sources && is_array( $sources ) ) {
 		$source_names = array();

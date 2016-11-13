@@ -131,6 +131,15 @@ class BDB_Book {
 	private $rating;
 
 	/**
+	 * All terms associated with the book, grouped by type
+	 *
+	 * @var array
+	 * @access private
+	 * @since  1.0.0
+	 */
+	private $terms;
+
+	/**
 	 * BDB_Book constructor.
 	 *
 	 * @param int|object $book_id Book ID to fetch from database or a prepared object in database format.
@@ -779,6 +788,44 @@ class BDB_Book {
 	 */
 	public function get_rating() {
 		return apply_filters( 'book-database/book/get/rating', $this->rating, $this->ID, $this );
+	}
+
+	/**
+	 * Get Terms
+	 *
+	 * Returns all terms associated with the book, grouped by type.
+	 *
+	 * @access public
+	 * @since  1.0.0
+	 * @return array|false
+	 */
+	public function get_terms() {
+
+		if ( ! isset( $this->terms ) ) {
+			$this->terms = bdb_get_all_book_terms( $this->ID );
+		}
+
+		return apply_filters( 'book-database/book/get/terms', $this->terms, $this->ID, $this );
+
+	}
+
+	/**
+	 * Get Terms of Type
+	 *
+	 * Returns all terms of a certain type.
+	 *
+	 * @param string $type
+	 *
+	 * @access public
+	 * @since 1.0.0
+	 * @return array|false
+	 */
+	public function get_term_type( $type ) {
+
+		$all_terms = $this->get_terms();
+
+		return array_key_exists( $type, $all_terms ) ? $all_terms[ $type ] : false;
+
 	}
 
 	/**

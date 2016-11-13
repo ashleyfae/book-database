@@ -72,7 +72,7 @@ function bdb_rewrite_tags() {
 	add_rewrite_tag( '%book_term%', '([^&]+)' );
 }
 
-add_action( 'init', 'bdb_rewrite_tags' ); // @todo add to install
+add_action( 'init', 'bdb_rewrite_tags' );
 
 /**
  * Create Rewrite Rules
@@ -90,4 +90,4 @@ function bdb_rewrite_rules() {
 	add_rewrite_rule( '^' . bdb_get_reviews_endpoint() . '/([^/]*)/([^/]*)/?', 'index.php?page_id=' . absint( $page_id ) . '&book_tax=$matches[1]&book_term=$matches[2]', 'top' );
 }
 
-add_action( 'init', 'bdb_rewrite_rules' ); // @todo add to install
+add_action( 'init', 'bdb_rewrite_rules' );

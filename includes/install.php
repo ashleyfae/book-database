@@ -99,6 +99,11 @@ function bdb_run_install() {
 		}
 	}
 
+	// Rewrite rules.
+	bdb_rewrite_tags();
+	bdb_rewrite_rules();
+	flush_rewrite_rules();
+
 	// Bail if activating from network, or bulk
 	if ( is_network_admin() || isset( $_GET['activate-multi'] ) ) {
 		return;

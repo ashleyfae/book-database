@@ -70,6 +70,16 @@ function bdb_get_terms( $args = array() ) {
 	return $terms;
 }
 
+/**
+ * Get Term
+ *
+ * @uses  bdb_get_terms() to return only one result.
+ *
+ * @param array $args Query arguments to override the defaults.
+ *
+ * @since 1.0.0
+ * @return object|false Single term object or false if none.
+ */
 function bdb_get_term( $args = array() ) {
 	$default = array( 'number' => 1 );
 	$args    = wp_parse_args( $args, $default );

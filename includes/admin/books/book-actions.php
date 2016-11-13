@@ -26,7 +26,7 @@ if ( ! defined( 'ABSPATH' ) ) {
  */
 function bdb_book_cover_field( $book ) {
 	$cover_id = $book->get_cover_id();
-	$url      = $book->get_cover_url( 'medium' );
+	$url      = $book->get_cover_url( 'large' );
 
 	ob_start();
 

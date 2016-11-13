@@ -362,3 +362,26 @@ function bdb_update_term_count( $term_id ) {
 
 	return book_database()->book_terms->add( $args );
 }
+
+/**
+ * Get Term Archive Link
+ *
+ * @param string|object $term Term object or slug.
+ * @param bool|string   $type Term type or you can leave as false if an object is passed to `$term`.
+ *
+ * @since 1.0.0
+ * @return string|false
+ */
+function bdb_get_term_archive_link( $term, $type = false ) {
+	$slug = is_object( $term ) ? $term->slug : $term;
+	$type = is_object( $term ) ? $term->type : $type;
+
+	if ( empty( $slug ) || empty( $type ) ) {
+		return false;
+	}
+
+	$base_url  = untrailingslashit( bdb_get_reviews_page_url() );
+	$final_url = sprintf( '%1$s/%2$s/%3$s', $base_url, urlencode( $type ), urlencode( $slug ) );
+
+	return apply_filters( 'book-database/term-archive-link', $final_url, $slug, $type, $term );
+}

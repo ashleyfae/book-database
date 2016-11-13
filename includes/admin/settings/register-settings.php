@@ -229,11 +229,16 @@ function bdb_get_registered_settings() {
 						array(
 							'id'      => 'publisher',
 							'name'    => esc_html__( 'Publisher', 'book-database' ),
-							'display' => 'checkbox' // text, checkbox
+							'display' => 'text' // text, checkbox
 						),
 						array(
 							'id'      => 'genre',
 							'name'    => esc_html__( 'Genre', 'book-database' ),
+							'display' => 'text'
+						),
+						array(
+							'id'      => 'source',
+							'name'    => esc_html__( 'Source', 'book-database' ),
 							'display' => 'checkbox'
 						)
 					)
@@ -549,8 +554,8 @@ function bdb_text_callback( $args ) {
 		$name = 'name="bdb_settings[' . esc_attr( $args['id'] ) . ']"';
 	}
 
-	$size     = ( isset( $args['size'] ) && ! is_null( $args['size'] ) ) ? $args['size'] : 'regular';
-	$type     = ( isset( $args['type'] ) ) ? $args['type'] : 'text';
+	$size = ( isset( $args['size'] ) && ! is_null( $args['size'] ) ) ? $args['size'] : 'regular';
+	$type = ( isset( $args['type'] ) ) ? $args['type'] : 'text';
 	?>
 	<input type="<?php echo esc_attr( $type ); ?>" class="bookdb-description <?php echo esc_attr( sanitize_html_class( $size ) . '-text' ); ?>" id="bdb_settings[<?php echo bdb_sanitize_key( $args['id'] ); ?>]" <?php echo $name; ?> value="<?php echo esc_attr( stripslashes( $value ) ); ?>">
 	<?php if ( $args['desc'] ) : ?>

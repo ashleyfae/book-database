@@ -68,21 +68,18 @@ function bdb_analytics_page() {
 			</div>
 
 			<div class="bookdb-analytics-column">
-				<div class="bookdb-metric">
-					<div class="bookdb-metric-inner">
-						<p class="top-text"><?php _e( 'Genres', 'book-database' ); ?></p>
-						<div class="bookdb-loading"></div>
-						<div id="genre-breakdown"></div>
+				<?php
+				$taxes = bdb_get_taxonomies( false );
+				ksort( $taxes );
+				foreach ( $taxes as $type => $options ) : ?>
+					<div class="bookdb-metric">
+						<div class="bookdb-metric-inner">
+							<p class="top-text"><?php printf( __( '%s Breakdown', 'book-database' ), esc_html( $options['name'] ) ); ?></p>
+							<div class="bookdb-loading"></div>
+							<div id="<?php echo esc_attr( $type ); ?>-breakdown"></div>
+						</div>
 					</div>
-				</div>
-
-				<div class="bookdb-metric">
-					<div class="bookdb-metric-inner">
-						<p class="top-text"><?php _e( 'Publishers', 'book-database' ); ?></p>
-						<div class="bookdb-loading"></div>
-						<div id="publisher-breakdown"></div>
-					</div>
-				</div>
+				<?php endforeach; ?>
 			</div>
 
 			<div id="bookdb-list-of-reviews" class="bookdb-analytics-column">

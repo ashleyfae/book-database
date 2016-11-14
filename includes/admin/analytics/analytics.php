@@ -26,6 +26,27 @@ function bdb_analytics_page() {
 			<?php _e( 'Review Analytics', 'book-database' ); ?>
 		</h1>
 
+		<?php
+		$analytics = BDB_Analytics::instance();
+		$date_hash = hash( 'md5', $analytics::$startstr . $analytics::$endstr );
+		$results = get_transient( 'bdb_analytics_1_' . $date_hash );
+		$results = false;
+
+		if ( false == $results ) {
+
+			$results = array(
+				'number-reviews' => $analytics->get_number_reviews(),
+				'pages'          => $analytics->get_pages_read(),
+				'avg-rating'     => $analytics->get_average_rating()
+			);
+
+			var_dump($results);
+
+			set_transient( 'bdb_analytics_1_' . $date_hash, $results, HOUR_IN_SECONDS );
+
+		}
+		?>
+
 		<div class="bookdb-date-range"></div> <!-- @todo -->
 
 		<section id="bookdb-review-analytics-metrics">

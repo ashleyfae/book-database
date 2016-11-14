@@ -27,14 +27,14 @@ if ( ! defined( 'ABSPATH' ) ) {
 function bdb_analytics_batch_1() {
 
 	$start = ( isset( $_POST['start'] ) && ! empty( $_POST['start'] ) ) ? wp_strip_all_tags( $_POST['start'] ) : '-30 days';
-	$end   = ( isset( $_POST['end'] ) && ! empty( $_GET['end'] ) ) ? wp_strip_all_tags( $_POST['end'] ) : 'now';
+	$end   = ( isset( $_POST['end'] ) && ! empty( $_POST['end'] ) ) ? wp_strip_all_tags( $_POST['end'] ) : 'now';
 
 	$analytics = BDB_Analytics::instance();
 	$analytics->set_dates( $start, $end );
 
 	$date_hash = hash( 'md5', $analytics::$startstr . $analytics::$endstr );
 	$results   = get_transient( 'bdb_analytics_1_' . $date_hash );
-	$results   = false;
+	//$results   = false;
 
 	if ( false == $results ) {
 
@@ -75,6 +75,15 @@ function bdb_analytics_batch_1() {
 
 add_action( 'wp_ajax_bdb_analytics_batch_1', 'bdb_analytics_batch_1' );
 
+/**
+ * Batch 1
+ *
+ * Includes:
+ *      + Rating/count breakdowns for each term type.
+ *
+ * @since 1.0.0
+ * @return void
+ */
 function bdb_analytics_batch_2() {
 
 	$start = ( isset( $_POST['start'] ) && ! empty( $_POST['start'] ) ) ? wp_strip_all_tags( $_POST['start'] ) : '-30 days';
@@ -85,7 +94,7 @@ function bdb_analytics_batch_2() {
 
 	$date_hash = hash( 'md5', $analytics::$startstr . $analytics::$endstr );
 	$results   = get_transient( 'bdb_analytics_2_' . $date_hash );
-	$results   = false;
+	//$results   = false;
 
 	if ( false == $results ) {
 

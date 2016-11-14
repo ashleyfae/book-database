@@ -6,8 +6,29 @@
          * Initialize
          */
         init: function () {
-            // @todo set date range
             BDB_Analytics.getStats();
+        },
+
+        /**
+         * Set Date Range Values
+         *
+         * @param e
+         */
+        setRanges: function (e) {
+
+            if ('custom' == $(this).val()) {
+
+                $('#bookdb-start').val('').attr('type', 'text');
+                $('#bookdb-end').val('').attr('type', 'text');
+
+            } else {
+
+                var selected = $(this).find('option:selected');
+                $('#bookdb-start').val(selected.data('start')).attr('type', 'hidden');
+                $('#bookdb-end').val(selected.data('end')).attr('type', 'hidden');
+
+            }
+
         },
 
         /**
@@ -17,12 +38,13 @@
 
             var loading = '<div id="circleG"><div id="circleG_1" class="circleG"></div><div id="circleG_2" class="circleG"></div><div id="circleG_3" class="circleG"></div></div>';
 
+            $('.bookdb-result').empty();
             $('.bookdb-loading').html(loading).show();
 
             var data = {
                 action: 'bdb_analytics_batch_1',
-                start: 'January 1st 2015',
-                end: 'December 31st 2015'
+                start: $('#bookdb-start').val(),
+                end: $('#bookdb-end').val()
             };
 
             $.post(window.ajaxurl, data, BDB_Analytics.firstBatchResponse).then(function () {
@@ -52,8 +74,6 @@
          */
         firstBatchResponse: function (response) {
 
-            console.log(response);
-
             if (true != !response.success) {
                 $.each(response.data, function (id, val) {
                     var element = $('#' + id);
@@ -62,13 +82,6 @@
 
                     // Book list
                     if ('book-list' == id) {
-
-                        /*element.html('<ul></ul>');
-                        var list = element.find('ul');
-
-                        $.each(val, function (review_key, review_val) {
-                            list.append('<li><a href="' + review_val.edit_review_link + '" class="book-rating ' + review_val.rating_class + '" title="Edit Review">' + review_val.rating + '</a> <a href="' + review_val.edit_book_link + '" title="Edit Book">' + review_val.book + '</a> <span class="review-date">[' + review_val.date + ']</span></li>');
-                        });*/
 
                         element.html('<table><thead><tr><th>Rating</th><th>Book</th><th>Date</th></tr></thead><tbody></tbody></table>');
                         var list = element.find('tbody');
@@ -131,5 +144,15 @@
     };
 
     jQuery(document).ready(BDB_Analytics.init);
+
+    // Set ranges.
+    $('#bookdb-range').on('change', BDB_Analytics.setRanges);
+
+    // Update results.
+    $('#bookdb-date-range').on('click', 'button', function (e) {
+        e.preventDefault();
+
+        BDB_Analytics.getStats();
+    });
 
 })(window, document, jQuery);

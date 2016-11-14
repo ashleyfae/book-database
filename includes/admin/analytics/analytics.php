@@ -20,6 +20,11 @@ if ( ! defined( 'ABSPATH' ) ) {
  */
 function bdb_analytics_page() {
 
+	$analytics = BDB_Analytics::instance();
+	$results = array(
+		'rating-breakdown' => $analytics->get_rating_breakdown(),
+		//'terms'          => $analytics->get_terms_breakdown(),
+	);
 	?>
 	<div id="bookdb-review-analytics-wrap" class="wrap">
 		<h1>

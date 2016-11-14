@@ -311,4 +311,41 @@ class BDB_Analytics {
 
 	}
 
+	/**
+	 * Get Rating Breakdown
+	 *
+	 * Returns a table containing the rating breakdown for the time period. It's an array of all available
+	 * ratings and the number of reviews for that rating.
+	 *
+	 * @access public
+	 * @since  1.0.0
+	 * @return array
+	 */
+	public function get_rating_breakdown() {
+
+		global $wpdb;
+		$reviews_table = book_database()->reviews->table_name;
+
+		$query   = $wpdb->prepare( "SELECT rating, COUNT(rating) AS count FROM {$reviews_table} WHERE `date_added` >= %s AND `date_added` <= %s GROUP BY rating ORDER BY rating + 0 DESC", date( 'Y-m-d 00:00:00', self::$start ), date( 'Y-m-d 00:00:00', self::$end ) );
+		$results = $wpdb->get_results( $query );
+
+		$available_ratings = bdb_get_available_ratings();
+		$final_array       = array();
+
+		foreach ( $available_ratings as $key => $name ) {
+			$final_array[ $key ] = 0;
+		}
+
+		if ( is_array( $results ) ) {
+			foreach ( $results as $result ) {
+				if ( array_key_exists( $result->rating, $final_array ) ) {
+					$final_array[ $result->rating ] = $result->count;
+				}
+			}
+		}
+
+		return $final_array;
+
+	}
+
 }

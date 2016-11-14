@@ -37,13 +37,29 @@ function bdb_analytics_batch_1() {
 
 	if ( false == $results ) {
 
-		$rating = $analytics->get_average_rating();
+		$average_rating         = $analytics->get_average_rating();
+		$rating_breakdown       = $analytics->get_rating_breakdown();
+		$available_ratings      = bdb_get_available_ratings();
+		$rating_breakdown_final = array();
+
+		// Reformat the rating breakdown.
+		foreach ( $rating_breakdown as $rating => $number ) {
+			if ( ! array_key_exists( $rating, $available_ratings ) ) {
+				continue;
+			}
+			$rating_name              = $available_ratings[ $rating ];
+			$rating_breakdown_final[] = array(
+				'rating' => esc_html( $rating_name ),
+				'count'  => absint( $number )
+			);
+		}
 
 		$results = array(
-			'number-reviews' => $analytics->get_number_reviews(),
-			'pages'          => $analytics->get_pages_read(),
-			'avg-rating'     => sprintf( _n( '%s Star', '%s Stars', $rating, 'book-database' ), $rating ),
-			'book-list'      => $analytics->get_book_list()
+			'number-reviews'   => $analytics->get_number_reviews(),
+			'pages'            => $analytics->get_pages_read(),
+			'avg-rating'       => sprintf( _n( '%s Star', '%s Stars', $average_rating, 'book-database' ), $average_rating ),
+			'book-list'        => $analytics->get_book_list(),
+			'rating-breakdown' => $rating_breakdown_final
 		);
 
 		set_transient( 'bdb_analytics_1_' . $date_hash, $results, HOUR_IN_SECONDS );

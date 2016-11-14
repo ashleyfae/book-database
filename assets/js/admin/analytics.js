@@ -57,7 +57,19 @@
             if (true != !response.success) {
                 $.each(response.data, function (id, val) {
                     var element = $('#' + id);
-                    element.html(val);
+
+                    element.empty();
+
+                    if ('book-list' == id) {
+                        element.html('<ul></ul>');
+                        var list = element.find('ul');
+
+                        $.each(val, function (review_key, review_val) {
+                            list.append('<li><a href="' + review_val.edit_review_link + '" class="book-rating ' + review_val.rating_class + '" title="Edit Review">' + review_val.rating + '</a> <a href="' + review_val.edit_book_link + '" title="Edit Book">' + review_val.book + '</a> <span class="review-date">[' + review_val.date + ']</span></li>');
+                        });
+                    } else {
+                        element.html(val);
+                    }
                     element.parents('.bookdb-metric-inner').find('.bookdb-loading').empty().hide();
                 });
             }

@@ -164,6 +164,67 @@ class BDB_Rating {
 
 	}
 
+	public function format_html_class() {
+
+		$allowed = bdb_get_available_ratings();
+		$class   = '';
+
+		switch ( $this->rating ) {
+
+			case '5' :
+				$class = 'five-stars';
+				break;
+
+			case '4.5' :
+				$class = 'four-half-stars';
+				break;
+
+			case '4' :
+				$class = 'four-stars';
+				break;
+
+			case '3.5' :
+				$class = 'three-half-stars';
+				break;
+
+			case '3' :
+				$class = 'three-stars';
+				break;
+
+			case '2.5' :
+				$class = 'two-half-stars';
+				break;
+
+			case '2' :
+				$class = 'two-stars';
+				break;
+
+			case '1.5' :
+				$class = 'one-half-stars';
+				break;
+
+			case '1' :
+				$class = 'one-star';
+				break;
+
+			case '0.5' :
+				$class = 'half-star';
+				break;
+
+			case '0' :
+				$class = 'zero-stars';
+				break;
+
+			case 'dnf' :
+				$class = 'dnf';
+				break;
+
+		}
+
+		return apply_filters( 'book-database/rating/format/html_class', $class, $allowed, $this->rating, $this );
+
+	}
+
 	/**
 	 * Repeat Text/HTML for Number of Stars
 	 *

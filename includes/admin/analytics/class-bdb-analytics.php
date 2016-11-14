@@ -299,6 +299,7 @@ class BDB_Analytics {
 				$list[] = array(
 					'book'             => sprintf( _x( '%s by %s', 'book title by author', 'book-database' ), $review->book_title, $review->author_name ),
 					'rating'           => $rating->format( 'html_stars' ),
+					'rating_class'     => sanitize_html_class( $rating->format( 'html_class' ) ),
 					'edit_review_link' => bdb_get_admin_page_edit_review( absint( $review->ID ) ),
 					'edit_book_link'   => bdb_get_admin_page_edit_book( absint( $review->book_id ) ),
 					'date'             => mysql2date( $date_format, $review->date_added )

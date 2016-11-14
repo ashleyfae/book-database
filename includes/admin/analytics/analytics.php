@@ -20,11 +20,6 @@ if ( ! defined( 'ABSPATH' ) ) {
  */
 function bdb_analytics_page() {
 
-	$analytics = BDB_Analytics::instance();
-	$results = array(
-		'rating-breakdown' => $analytics->get_rating_breakdown(),
-		//'terms'          => $analytics->get_terms_breakdown(),
-	);
 	?>
 	<div id="bookdb-review-analytics-wrap" class="wrap">
 		<h1>
@@ -35,66 +30,68 @@ function bdb_analytics_page() {
 
 		<section id="bookdb-review-analytics-metrics">
 
-			<div class="bookdb-metric">
-				<div class="bookdb-metric-inner">
-					<p class="top-text"><?php _e( 'Reviews', 'book-database' ); ?></p>
-					<div class="bookdb-loading"></div>
-					<h2 id="number-reviews"></h2>
-					<p class="bottom-text" id="number-reviews-compare"><span></span></p>
+			<div class="bookdb-analytics-column">
+				<div class="bookdb-metric">
+					<div class="bookdb-metric-inner">
+						<p class="top-text"><?php _e( 'Reviews', 'book-database' ); ?></p>
+						<div class="bookdb-loading"></div>
+						<h2 id="number-reviews"></h2>
+						<p class="bottom-text" id="number-reviews-compare"><span></span></p>
+					</div>
+				</div>
+
+				<div class="bookdb-metric">
+					<div class="bookdb-metric-inner">
+						<p class="top-text"><?php _e( 'Pages Read', 'book-database' ); ?></p>
+						<div class="bookdb-loading"></div>
+						<h2 id="pages"></h2>
+						<p class="bottom-text" id="pages-compare"><span></span></p>
+					</div>
+				</div>
+
+				<div class="bookdb-metric">
+					<div class="bookdb-metric-inner">
+						<p class="top-text"><?php _e( 'Average Rating', 'book-database' ); ?></p>
+						<div class="bookdb-loading"></div>
+						<h2 id="avg-rating"></h2>
+						<p class="bottom-text" id="avg-rating-compare"><span></span></p>
+					</div>
+				</div>
+
+				<div class="bookdb-metric">
+					<div class="bookdb-metric-inner">
+						<p class="top-text"><?php _e( 'Rating Breakdown', 'book-database' ); ?></p>
+						<div class="bookdb-loading"></div>
+						<div id="rating-breakdown"></div>
+					</div>
 				</div>
 			</div>
 
-			<div class="bookdb-metric">
-				<div class="bookdb-metric-inner">
-					<p class="top-text"><?php _e( 'Pages Read', 'book-database' ); ?></p>
-					<div class="bookdb-loading"></div>
-					<h2 id="pages"></h2>
-					<p class="bottom-text" id="pages-compare"><span></span></p>
+			<div class="bookdb-analytics-column">
+				<div class="bookdb-metric">
+					<div class="bookdb-metric-inner">
+						<p class="top-text"><?php _e( 'Genres', 'book-database' ); ?></p>
+						<div class="bookdb-loading"></div>
+						<div id="genre-breakdown"></div>
+					</div>
+				</div>
+
+				<div class="bookdb-metric">
+					<div class="bookdb-metric-inner">
+						<p class="top-text"><?php _e( 'Publishers', 'book-database' ); ?></p>
+						<div class="bookdb-loading"></div>
+						<div id="publisher-breakdown"></div>
+					</div>
 				</div>
 			</div>
 
-			<div class="bookdb-metric">
-				<div class="bookdb-metric-inner">
-					<p class="top-text"><?php _e( 'Average Rating', 'book-database' ); ?></p>
-					<div class="bookdb-loading"></div>
-					<h2 id="avg-rating"></h2>
-					<p class="bottom-text" id="avg-rating-compare"><span></span></p>
-				</div>
-			</div>
-
-			<div class="bookdb-metric">
-				<div class="bookdb-metric-inner">
-					<p class="top-text"><?php _e( 'Rating Breakdown', 'book-database' ); ?></p>
-					<div class="bookdb-loading"></div>
-					<div id="rating-breakdown"></div> <!-- @todo Table of each rating with number -->
-				</div>
-			</div>
-
-			<div class="bookdb-metric">
-				<div class="bookdb-metric-inner">
-					<p class="top-text"><?php _e( 'Genres', 'book-database' ); ?></p>
-					<div class="bookdb-loading"></div>
-					<div id="genre-breakdown"></div> <!-- @todo Table of each genre with number -->
-				</div>
-			</div>
-
-			<div class="bookdb-metric">
-				<div class="bookdb-metric-inner">
-					<p class="top-text"><?php _e( 'Publishers', 'book-database' ); ?></p>
-					<div class="bookdb-loading"></div>
-					<div id="publisher-breakdown"></div> <!-- @todo Table of each genre with number -->
-				</div>
-			</div>
-
-		</section>
-
-		<section id="bookdb-list-of-reviews">
-
-			<div class="bookdb-metric">
-				<div class="bookdb-metric-inner">
-					<p class="top-text"><?php _e( 'Books Reviewed', 'book-database' ); ?></p>
-					<div class="bookdb-loading"></div>
-					<div id="book-list"></div>
+			<div id="bookdb-list-of-reviews" class="bookdb-analytics-column">
+				<div class="bookdb-metric">
+					<div class="bookdb-metric-inner">
+						<p class="top-text"><?php _e( 'Books Reviewed (20 max)', 'book-database' ); ?></p>
+						<div class="bookdb-loading"></div>
+						<div id="book-list"></div>
+					</div>
 				</div>
 			</div>
 

@@ -3,32 +3,8 @@
   -moz-box-sizing: border-box;
   box-sizing: border-box; }
 
-@media (min-width: 600px) {
-  #bookdb-review-analytics-metrics {
-    display: flex;
-    flex-flow: row wrap;
-    margin: 0 -20px; }
-
-  .bookdb-metric {
-    padding: 20px;
-    width: 50%; }
-
-  .bookdb-metric-inner {
-    background: white;
-    border: 1px solid #e5e5e5;
-    padding: 10px;
-    text-align: center; } }
-@media (min-width: 768px) {
-  #bookdb-review-analytics-metrics {
-    float: left;
-    width: 66%; }
-
-  #bookdb-list-of-reviews {
-    float: right;
-    width: 33%; }
-    #bookdb-list-of-reviews .bookdb-metric {
-      width: 100%; } }
 .bookdb-metric {
+  margin: 20px 0;
   position: relative; }
   .bookdb-metric .top-text {
     clear: both;
@@ -41,31 +17,50 @@
     margin: 0;
     padding: 0; }
 
-#book-list {
-  color: #999;
-  text-align: left; }
-  #book-list li {
+.bookdb-metric-inner {
+  background: white;
+  border: 1px solid #e5e5e5;
+  padding: 10px;
+  text-align: center; }
+
+@media (min-width: 1200px) {
+  #bookdb-review-analytics-metrics {
+    display: flex;
+    flex-flow: row wrap;
+    margin: 0 -20px; }
+
+  .bookdb-analytics-column {
+    padding: 0 20px;
+    width: 33.3%; } }
+#book-list a {
+  color: #444;
+  text-decoration: none; }
+  #book-list a:hover {
+    color: #222; }
+#book-list .book-rating {
+  display: inline-block;
+  min-width: 60px; }
+  #book-list .book-rating.five-stars, #book-list .book-rating.four-half-stars, #book-list .book-rating.four-stars {
+    color: #090; }
+  #book-list .book-rating.three-half-stars, #book-list .book-rating.three-stars, #book-list .book-rating.two-half-stars {
+    color: #da9d1c; }
+  #book-list .book-rating.two-stars, #book-list .book-rating.one-half-stars, #book-list .book-rating.one-star, #book-list .book-rating.half-star, #book-list .book-rating.zero-stars, #book-list .book-rating.dnf {
+    color: #c00; }
+#book-list .review-date {
+  color: #999; }
+
+.bookdb-metric table {
+  margin: 1em auto;
+  text-align: left;
+  width: 100%; }
+  .bookdb-metric table th {
+    background: #f9f9f9;
     border-bottom: 1px solid #eee;
-    clear: both;
-    margin: 0;
-    overflow: hidden;
-    padding: 10px 0; }
-    #book-list li .review-date {
-      float: right; }
-  #book-list a {
-    color: #999;
-    text-decoration: none; }
-    #book-list a:hover {
-      color: #333; }
-  #book-list .book-rating {
-    display: inline-block;
-    min-width: 60px; }
-    #book-list .book-rating.five-stars, #book-list .book-rating.four-half-stars, #book-list .book-rating.four-stars {
-      color: #090; }
-    #book-list .book-rating.three-half-stars, #book-list .book-rating.three-stars, #book-list .book-rating.two-half-stars {
-      color: #da9d1c; }
-    #book-list .book-rating.two-stars, #book-list .book-rating.one-half-stars, #book-list .book-rating.one-star, #book-list .book-rating.half-star, #book-list .book-rating.zero-stars, #book-list .book-rating.dnf {
-      color: #c00; }
+    font-weight: 600; }
+  .bookdb-metric table th, .bookdb-metric table td {
+    padding: 10px; }
+  .bookdb-metric table tbody tr:nth-child(even) {
+    background: #f9f9f9; }
 
 .bookdb-loading {
   min-height: 30px; }

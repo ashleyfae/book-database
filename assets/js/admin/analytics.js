@@ -21,8 +21,8 @@
 
             var data = {
                 action: 'bdb_analytics_batch_1',
-                start: '',
-                end: ''
+                start: 'January 1st 2015',
+                end: 'December 31st 2015'
             };
 
             $.post(window.ajaxurl, data, BDB_Analytics.firstBatchResponse).then(function () {
@@ -63,17 +63,25 @@
                     // Book list
                     if ('book-list' == id) {
 
-                        element.html('<ul></ul>');
+                        /*element.html('<ul></ul>');
                         var list = element.find('ul');
 
                         $.each(val, function (review_key, review_val) {
                             list.append('<li><a href="' + review_val.edit_review_link + '" class="book-rating ' + review_val.rating_class + '" title="Edit Review">' + review_val.rating + '</a> <a href="' + review_val.edit_book_link + '" title="Edit Book">' + review_val.book + '</a> <span class="review-date">[' + review_val.date + ']</span></li>');
+                        });*/
+
+                        element.html('<table><thead><tr><th>Rating</th><th>Book</th><th>Date</th></tr></thead><tbody></tbody></table>');
+                        var list = element.find('tbody');
+
+                        $.each(val, function (review_key, review_val) {
+                            list.append('<tr><td><a href="' + review_val.edit_review_link + '" class="book-rating ' + review_val.rating_class + '" title="Edit Review">' + review_val.rating + '</a></td><td><a href="' + review_val.edit_book_link + '" title="Edit Book">' + review_val.book + '</a></td><td class="review-date">[' + review_val.date + ']</td></tr>');
                         });
 
                     } else if ('rating-breakdown' == id) {
 
-                        element.html('<table></table>');
-                        var table = element.find('table');
+                        // Rating breakdown.
+                        element.html('<table><thead><tr><th>Rating</th><th>Number of Books</th></tr></thead><tbody></tbody></table>');
+                        var table = element.find('tbody');
 
                         $.each(val, function (key, rating) {
                             table.append('<tr><td>' + rating.rating + '</td><td>' + rating.count + '</td></tr>');
@@ -104,6 +112,19 @@
          * @param response
          */
         secondBatchResponse: function (response) {
+
+            $.each(response.data, function (type, html) {
+                var wrap = $('#' + type + '-breakdown');
+
+                if (!wrap.length) {
+                    return true;
+                }
+
+                // Stop loader.
+                wrap.parents('.bookdb-metric-inner').find('.bookdb-loading').empty().hide();
+
+                wrap.empty().html('<table><thead><tr><th>Name</th><th>Number of Reviews</th><th>Average Rating</th></tr></thead><tbody>' + html + '</tbody></table>')
+            });
 
         }
 

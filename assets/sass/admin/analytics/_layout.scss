@@ -6,43 +6,8 @@
     }
 }
 
-@media (min-width: 600px) {
-    #bookdb-review-analytics-metrics {
-        display: flex;
-        flex-flow: row wrap;
-        margin: 0 -20px;
-    }
-
-    .bookdb-metric {
-        padding: 20px;
-        width: 50%;
-    }
-
-    .bookdb-metric-inner {
-        background: white;
-        border: 1px solid #e5e5e5;
-        padding: 10px;
-        text-align: center;
-    }
-}
-
-@media (min-width: 768px) {
-    #bookdb-review-analytics-metrics {
-        float: left;
-        width: 66%;
-    }
-
-    #bookdb-list-of-reviews {
-        float: right;
-        width: 33%;
-
-        .bookdb-metric {
-            width: 100%;
-        }
-    }
-}
-
 .bookdb-metric {
+    margin: 20px 0;
     position: relative;
 
     .top-text {
@@ -62,29 +27,34 @@
     }
 }
 
-// Book List
-#book-list {
-    color: #999;
-    text-align: left;
+.bookdb-metric-inner {
+    background: white;
+    border: 1px solid #e5e5e5;
+    padding: 10px;
+    text-align: center;
+}
 
-    li {
-        border-bottom: 1px solid #eee;
-        clear: both;
-        margin: 0;
-        overflow: hidden;
-        padding: 10px 0;
-
-        .review-date {
-            float: right;
-        }
+@media (min-width: 1200px) {
+    #bookdb-review-analytics-metrics {
+        display: flex;
+        flex-flow: row wrap;
+        margin: 0 -20px;
     }
 
+    .bookdb-analytics-column {
+        padding: 0 20px;
+        width: 33.3%;
+    }
+}
+
+// Book List
+#book-list {
     a {
-        color: #999;
+        color: #444;
         text-decoration: none;
 
         &:hover {
-            color: #333;
+            color: #222;
         }
     }
 
@@ -111,6 +81,35 @@
         &.zero-stars,
         &.dnf {
             color: #c00;
+        }
+    }
+
+    .review-date {
+        color: #999;
+    }
+}
+
+// Tables
+.bookdb-metric {
+    table {
+        margin: 1em auto;
+        text-align: left;
+        width: 100%;
+
+        th {
+            background: #f9f9f9;
+            border-bottom: 1px solid #eee;
+            font-weight: 600;
+        }
+
+        th, td {
+            padding: 10px;
+        }
+
+        tbody {
+            tr:nth-child(even) {
+                background: #f9f9f9;
+            }
         }
     }
 }

@@ -231,19 +231,13 @@ class BDB_Analytics {
 		global $wpdb;
 		$book_table      = book_database()->books->table_name;
 		$book_ids        = self::$instance->get_book_ids();
-		$book_ids_string = implode( ',', array_map( 'intval', $book_ids ) );
-		$total_pages     = 0;
+		$book_ids_string = implode( ',', array_map( 'absint', $book_ids ) );
 
-		$query = $wpdb->prepare( "SELECT pages FROM {$book_table} WHERE `ID` IN (%s)", $book_ids_string );
-		$pages = $wpdb->get_col( $query );
+		$query       = "SELECT SUM(pages) FROM {$book_table} WHERE `ID` IN ({$book_ids_string})";
+		$pages       = $wpdb->get_var( $query );
+		$total_pages = number_format( absint( $pages ) );
 
-		foreach ( $pages as $page ) {
-			if ( $page ) {
-				$total_pages = $total_pages + absint( $page );
-			}
-		}
-
-		return absint( $total_pages );
+		return $total_pages;
 
 	}
 
@@ -294,6 +288,11 @@ class BDB_Analytics {
 		$date_format = get_option( 'date_format' );
 
 		if ( is_array( $reviews ) ) {
+			// Maybe slice array.
+			if ( count( $reviews ) > 20 ) {
+				$reviews = array_slice( $reviews, 0, 20 );
+			}
+
 			foreach ( $reviews as $review ) {
 				$rating = new BDB_Rating( $review->rating );
 				$list[] = array(
@@ -326,6 +325,8 @@ class BDB_Analytics {
 		global $wpdb;
 		$reviews_table = book_database()->reviews->table_name;
 
+		//$query   = $wpdb->prepare( "SELECT rating, COUNT(rating) AS count FROM {$reviews_table} WHERE `date_added` >= %s AND `date_added` <= %s GROUP BY rating ORDER BY rating + 0 DESC", date( 'Y-m-d 00:00:00', self::$start ), date( 'Y-m-d 00:00:00', self::$end ) );
+
 		$query   = $wpdb->prepare( "SELECT rating, COUNT(rating) AS count FROM {$reviews_table} WHERE `date_added` >= %s AND `date_added` <= %s GROUP BY rating ORDER BY rating + 0 DESC", date( 'Y-m-d 00:00:00', self::$start ), date( 'Y-m-d 00:00:00', self::$end ) );
 		$results = $wpdb->get_results( $query );
 
@@ -345,6 +346,55 @@ class BDB_Analytics {
 		}
 
 		return $final_array;
+
+	}
+
+	/**
+	 * Terms Breakdown
+	 *
+	 * Returns an array of all terms used in the book reviews in this period with
+	 * the following information:
+	 *      + Number of reviews for this term.
+	 *      + Average rating for this term.
+	 *
+	 * @param bool $term_type
+	 *
+	 * @access public
+	 * @since  1.0.0
+	 * @return array
+	 */
+	public function get_terms_breakdown( $term_type = false ) {
+
+		$types     = bdb_get_taxonomies();
+		$breakdown = array();
+
+		global $wpdb;
+		$review_table       = book_database()->reviews->table_name;
+		$relationship_table = book_database()->book_term_relationships->table_name;
+		$term_table         = book_database()->book_terms->table_name;
+
+		$where = '';
+
+		if ( $term_type && array_key_exists( $term_type, $types ) ) {
+			$where .= $wpdb->prepare( " AND term.type = %s", wp_strip_all_tags( sanitize_text_field( $term_type ) ) );
+		}
+
+		$query = $wpdb->prepare( "SELECT COUNT(rating) as number_reviews, ROUND(AVG(IF(rating = 'dnf', 0, rating)), 2) as avg_rating, term.name, term.type
+									FROM {$review_table} reviews
+									INNER JOIN {$relationship_table} r on r.book_id = reviews.book_id
+									INNER JOIN {$term_table} term on term.term_id = r.term_id
+									WHERE `date_added` >= %s
+									AND `date_added` <= %s
+									{$where}
+									GROUP BY term.type, term.name
+									ORDER BY term.name ASC",
+			date( 'Y-m-d 00:00:00', self::$start ),
+			date( 'Y-m-d 00:00:00', self::$end )
+		);
+
+		$results = $wpdb->get_results( $query );
+
+		return $results;
 
 	}
 

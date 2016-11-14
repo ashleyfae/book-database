@@ -15,7 +15,8 @@ I'm not sure if I'll ever officially release this. I'm mostly building this for 
 
 ## Todo:
 
-* Statistics.
+* Analytics: datepicker for custom range.
+* Front-end shortcode statistics.
 * Purchase links? Ew.
 * Update book info fields in book submission to only show enabled ones.
 * Possibly add something for tropes.

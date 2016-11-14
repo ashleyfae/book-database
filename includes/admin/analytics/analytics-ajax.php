@@ -42,7 +42,8 @@ function bdb_analytics_batch_1() {
 		$results = array(
 			'number-reviews' => $analytics->get_number_reviews(),
 			'pages'          => $analytics->get_pages_read(),
-			'avg-rating'     => sprintf( _n( '%s Star', '%s Stars', $rating, 'book-database' ), $rating )
+			'avg-rating'     => sprintf( _n( '%s Star', '%s Stars', $rating, 'book-database' ), $rating ),
+			'book-list'      => $analytics->get_book_list()
 		);
 
 		set_transient( 'bdb_analytics_1_' . $date_hash, $results, HOUR_IN_SECONDS );

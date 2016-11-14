@@ -138,13 +138,35 @@ class BDB_Analytics {
 
 		if ( ! isset( self::$reviews ) ) {
 
-			self::$reviews = book_database()->reviews->get_reviews( array(
+			/*self::$reviews = book_database()->reviews->get_reviews( array(
 				'number'     => - 1,
 				'date_added' => array(
 					'start' => self::$startstr,
 					'end'   => self::$endstr
 				)
-			) );
+			) );*/
+
+			global $wpdb;
+			$review_table       = book_database()->reviews->table_name;
+			$book_table         = book_database()->books->table_name;
+			$relationship_table = book_database()->book_term_relationships->table_name;
+			$term_table         = book_database()->book_terms->table_name;
+
+			$query = $wpdb->prepare( "SELECT DISTINCT review.ID, review.rating, review.date_added,
+										book.ID as book_id, book.title as book_title,
+										author.name as author_name
+									FROM {$review_table} as review
+									INNER JOIN {$book_table} as book ON review.book_id = book.ID
+									LEFT JOIN {$relationship_table} as r ON book.ID = r.book_id
+									INNER JOIN {$term_table} as author ON (r.term_id = author.term_id AND author.type = 'author')
+									WHERE `date_added` >= %s
+									AND `date_added` <= %s
+									ORDER BY review.date_added DESC",
+				date( 'Y-m-d 00:00:00', self::$start ),
+				date( 'Y-m-d 00:00:00', self::$end )
+			);
+
+			self::$reviews = $wpdb->get_results( $query );
 
 		}
 
@@ -253,6 +275,38 @@ class BDB_Analytics {
 		$average = round( $total_count / $number_ratings, 1 );
 
 		return $average;
+
+	}
+
+	/**
+	 * Get Book List
+	 *
+	 * Returns an array of the list of books reviewed in this time.
+	 *
+	 * @access public
+	 * @since  1.0.0
+	 * @return array
+	 */
+	public function get_book_list() {
+
+		$reviews     = self::$instance->query_reviews();
+		$list        = array();
+		$date_format = get_option( 'date_format' );
+
+		if ( is_array( $reviews ) ) {
+			foreach ( $reviews as $review ) {
+				$rating = new BDB_Rating( $review->rating );
+				$list[] = array(
+					'book'             => sprintf( _x( '%s by %s', 'book title by author', 'book-database' ), $review->book_title, $review->author_name ),
+					'rating'           => $rating->format( 'html_stars' ),
+					'edit_review_link' => bdb_get_admin_page_edit_review( absint( $review->ID ) ),
+					'edit_book_link'   => bdb_get_admin_page_edit_book( absint( $review->book_id ) ),
+					'date'             => mysql2date( $date_format, $review->date_added )
+				);
+			}
+		}
+
+		return $list;
 
 	}
 

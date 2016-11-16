@@ -116,6 +116,7 @@
          * @param e
          */
         toggleAddReviewFields: function (e) {
+            e.preventDefault();
             $('#bookdb-add-review-fields').slideDown();
         },
 

@@ -142,7 +142,7 @@ function bdb_render_post_book_reviews_meta_box( $post ) {
 			) );
 			?>
 
-			<button type="button" class="button"><?php esc_html_e( 'Add Review', 'book-database' ); ?></button>
+			<button type="button" class="button"><?php esc_html_e( 'Associate review with post', 'book-database' ); ?></button>
 		</div>
 	</div>
 	<?php

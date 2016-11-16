@@ -69,7 +69,7 @@ class BDB_Reviews_Table extends WP_List_Table {
 	 *
 	 * @var bool
 	 * @access private
-	 * @since 1.0.0
+	 * @since  1.0.0
 	 */
 	private $display_delete_message = false;
 
@@ -406,10 +406,12 @@ class BDB_Reviews_Table extends WP_List_Table {
 		$orderby = isset( $_GET['orderby'] ) ? sanitize_text_field( $_GET['orderby'] ) : 'ID';
 
 		$args = array(
-			'number'  => $this->per_page,
-			'offset'  => $offset,
-			'order'   => $order,
-			'orderby' => $orderby
+			'number'             => $this->per_page,
+			'offset'             => $offset,
+			'order'              => $order,
+			'orderby'            => $orderby,
+			'include_book_title' => true,
+			'include_author'     => true
 		);
 
 		// Filter by book title.
@@ -437,15 +439,14 @@ class BDB_Reviews_Table extends WP_List_Table {
 
 				$review_obj = new BDB_Review( $review->ID );
 				$user_id    = ! empty( $review->user_id ) ? intval( $review->user_id ) : 0;
-				$book       = $review->book_id ? new BDB_Book( $review->book_id ) : false;
 
 				$data[] = array(
 					'ID'         => $review->ID,
 					'book_id'    => $review->book_id,
 					'post_id'    => $review->post_id,
 					'url'        => $review->url,
-					'book_title' => $book ? $book->get_title() : false,
-					'author'     => $book ? $book->get_author_names() : false,
+					'book_title' => $review->book_title,
+					'author'     => $review->author_name,
 					'user_id'    => $user_id,
 					'date'       => $review->date_added,
 					'rating'     => $review_obj->get_rating()

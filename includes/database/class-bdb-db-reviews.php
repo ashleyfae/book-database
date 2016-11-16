@@ -274,16 +274,18 @@ class BDB_DB_Reviews extends BDB_DB {
 		global $wpdb;
 
 		$defaults = array(
-			'ID'         => false,
-			'number'     => 20,
-			'offset'     => 0,
-			'book_id'    => false,
-			'post_id'    => false,
-			'user_id'    => 0,
-			'rating'     => false,
-			'orderby'    => 'ID',
-			'order'      => 'DESC',
-			'date_added' => false
+			'ID'                 => false,
+			'number'             => 20,
+			'offset'             => 0,
+			'book_id'            => false,
+			'post_id'            => false,
+			'user_id'            => 0,
+			'rating'             => false,
+			'orderby'            => 'ID',
+			'order'              => 'DESC',
+			'date_added'         => false,
+			'include_book_title' => false,
+			'include_author'     => false
 		);
 
 		$args = wp_parse_args( $args, $defaults );
@@ -293,8 +295,9 @@ class BDB_DB_Reviews extends BDB_DB {
 			$args['number'] = 999999999999;
 		}
 
-		$join  = '';
-		$where = ' WHERE 1=1 ';
+		$select = '';
+		$join   = '';
+		$where  = ' WHERE 1=1 ';
 
 		// Specific reviews.
 		if ( ! empty( $args['ID'] ) ) {
@@ -334,6 +337,22 @@ class BDB_DB_Reviews extends BDB_DB {
 				$ids = intval( $args['post_id'] );
 			}
 			$where .= " AND `post_id` IN( {$ids} ) ";
+		}
+
+		// Include book title.
+		if ( $args['include_book_title'] ) {
+			$book_table = book_database()->books->table_name;
+			$select .= ", book.title as book_title";
+			$join .= " LEFT JOIN {$book_table} as book on book.ID = review.book_id";
+		}
+
+		// Include book author.
+		if ( $args['include_author'] ) {
+			$terms_table = book_database()->book_terms->table_name;
+			$r_table     = book_database()->book_term_relationships->table_name;
+			$select .= ", GROUP_CONCAT(author.name SEPARATOR ', ') as author_name";
+			$join .= " LEFT JOIN {$r_table} as r on r.book_id = review.book_id";
+			$join .= " INNER JOIN {$terms_table} as author on (author.term_id = r.term_id AND author.type = 'author')";
 		}
 
 		// Reviews with a specific rating.
@@ -381,7 +400,7 @@ class BDB_DB_Reviews extends BDB_DB {
 		$args['order']   = esc_sql( $args['order'] );
 
 		if ( $reviews === false ) {
-			$query   = $wpdb->prepare( "SELECT * FROM  $this->table_name $join $where GROUP BY $this->primary_key ORDER BY {$args['orderby']} {$args['order']} LIMIT %d,%d;", absint( $args['offset'] ), absint( $args['number'] ) );
+			$query   = $wpdb->prepare( "SELECT review.*$select FROM  $this->table_name AS review $join $where GROUP BY $this->primary_key ORDER BY {$args['orderby']} {$args['order']} LIMIT %d,%d;", absint( $args['offset'] ), absint( $args['number'] ) );
 			$reviews = $wpdb->get_results( $query );
 			wp_cache_set( $cache_key, $reviews, 'reviews', 3600 );
 		}

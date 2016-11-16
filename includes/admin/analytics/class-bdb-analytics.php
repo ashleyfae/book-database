@@ -138,14 +138,6 @@ class BDB_Analytics {
 
 		if ( ! isset( self::$reviews ) ) {
 
-			/*self::$reviews = book_database()->reviews->get_reviews( array(
-				'number'     => - 1,
-				'date_added' => array(
-					'start' => self::$startstr,
-					'end'   => self::$endstr
-				)
-			) );*/
-
 			global $wpdb;
 			$review_table       = book_database()->reviews->table_name;
 			$book_table         = book_database()->books->table_name;
@@ -325,8 +317,6 @@ class BDB_Analytics {
 		global $wpdb;
 		$reviews_table = book_database()->reviews->table_name;
 
-		//$query   = $wpdb->prepare( "SELECT rating, COUNT(rating) AS count FROM {$reviews_table} WHERE `date_added` >= %s AND `date_added` <= %s GROUP BY rating ORDER BY rating + 0 DESC", date( 'Y-m-d 00:00:00', self::$start ), date( 'Y-m-d 00:00:00', self::$end ) );
-
 		$query   = $wpdb->prepare( "SELECT rating, COUNT(rating) AS count FROM {$reviews_table} WHERE `date_added` >= %s AND `date_added` <= %s GROUP BY rating ORDER BY rating + 0 DESC", date( 'Y-m-d 00:00:00', self::$start ), date( 'Y-m-d 00:00:00', self::$end ) );
 		$results = $wpdb->get_results( $query );
 
@@ -391,6 +381,8 @@ class BDB_Analytics {
 			date( 'Y-m-d 00:00:00', self::$start ),
 			date( 'Y-m-d 00:00:00', self::$end )
 		);
+
+		//file_put_contents( BDB_DIR . 'log.txt', $query . "\n\n", FILE_APPEND );
 
 		$results = $wpdb->get_results( $query );
 

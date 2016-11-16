@@ -319,6 +319,7 @@ class BDB_Analytics {
 
 		$query   = $wpdb->prepare( "SELECT rating, COUNT(rating) AS count FROM {$reviews_table} WHERE `date_added` >= %s AND `date_added` <= %s GROUP BY rating ORDER BY rating + 0 DESC", date( 'Y-m-d 00:00:00', self::$start ), date( 'Y-m-d 00:00:00', self::$end ) );
 		$results = $wpdb->get_results( $query );
+		//file_put_contents( BDB_DIR . 'log.txt', $query . "\n\n", FILE_APPEND );
 
 		$available_ratings = bdb_get_available_ratings();
 		$final_array       = array();
@@ -355,8 +356,7 @@ class BDB_Analytics {
 	 */
 	public function get_terms_breakdown( $term_type = false ) {
 
-		$types     = bdb_get_taxonomies();
-		$breakdown = array();
+		$types = bdb_get_taxonomies();
 
 		global $wpdb;
 		$review_table       = book_database()->reviews->table_name;

@@ -403,6 +403,18 @@ var BookDB_Modal_Admin = {
             terms[type] = textarea.val();
         });
 
+        // Collect all category terms.
+        jQuery('.bookdb-taxonomy-checkboxes').each(function () {
+            var type = jQuery(this).data('type');
+            var selectedValues = jQuery(this).find('input:checkbox:checked').map(function () {
+                return this.value;
+            }).get();
+
+            terms[type] = selectedValues;
+        });
+
+        console.log(terms);
+
         var book = {
             ID: this.editingBook,
             cover: jQuery('#book_cover_id').val(),

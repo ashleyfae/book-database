@@ -387,6 +387,22 @@ var BookDB_Modal_Admin = {
      */
     insert_update_book: function (button) {
 
+        jQuery(document).trigger('bdb_modal_before_insert_update_book');
+
+        var terms = {};
+
+        // Collect all tag terms.
+        jQuery('.bookdb-box-row .hide-if-js').each(function () {
+            var textarea = jQuery(this).find('textarea');
+
+            if (!textarea.length) {
+                return true;
+            }
+
+            var type = textarea.data('type');
+            terms[type] = textarea.val();
+        });
+
         var book = {
             ID: this.editingBook,
             cover: jQuery('#book_cover_id').val(),
@@ -396,7 +412,8 @@ var BookDB_Modal_Admin = {
             pub_date: jQuery('#book_pub_date').val(),
             pages: jQuery('#book_pages').val(),
             goodreads_url: jQuery('#book_goodreads_url').val(),
-            synopsis: jQuery('#book_synopsis').val()
+            synopsis: jQuery('#book_synopsis').val(),
+            terms: terms
         };
 
         var seriesID = jQuery('#series_id');

@@ -110,10 +110,13 @@
             newTerm.val('');
         },
 
+        /**
+         * Toggle 'Add Review' Fields
+         *
+         * @param e
+         */
         toggleAddReviewFields: function (e) {
-
             $('#bookdb-add-review-fields').slideDown();
-
         },
 
         /**
@@ -436,7 +439,12 @@
 
             // Save tags on save/publish.
             $('#post, #bookdb-book-page-wrapper > form').submit(function (e) {
-                //e.preventDefault();
+                $('.bookdb-tags-wrap').each(function () {
+                    BookDB_Tags.flushTags(this, false, 1);
+                });
+            });
+
+            $(document).on('bdb_modal_before_insert_update_book', function () {
                 $('.bookdb-tags-wrap').each(function () {
                     BookDB_Tags.flushTags(this, false, 1);
                 });

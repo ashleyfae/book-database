@@ -140,7 +140,7 @@ function bdb_ajax_search_book() {
 
 	$books = bdb_get_books( apply_filters( 'book-database/admin/books/search-book-args', $args, $search, $field ) );
 
-	if ( ! is_array( $books ) ) {
+	if ( ! is_array( $books ) || ! count( $books ) ) {
 		wp_send_json_error( __( 'No results found.', 'book-database' ) );
 	}
 

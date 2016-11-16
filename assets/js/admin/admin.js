@@ -21,6 +21,7 @@
             $('#bookdb-book-layout-cover-changer').change(this.changeCoverAlignment);
             $('.bookdb-new-checkbox-term').on('click', '.button', this.addCheckboxTerm);
             $('.bookdb-new-checkbox-term .bookdb-new-checkbox-term-value').keypress(this.addCheckboxTerm);
+            $('#bookdb-add-review').on('click', this.toggleAddReviewFields);
             $('#bookdb-add-review-search-book-input').keypress(this.searchForBookToReview);
             $('#bookdb-add-review-search-for-book').on('click', 'button', this.searchForBookToReview);
             $('#bookdb-add-review-fields-wrap').on('click', 'button', this.addReview);
@@ -107,6 +108,12 @@
 
             checkboxWrap.append('<label><input type="checkbox" name="' + checkboxName + '" class="bookdb-checkbox" value="' + newTerm.val() + '" checked="checked"> ' + newTerm.val() + '</label>');
             newTerm.val('');
+        },
+
+        toggleAddReviewFields: function (e) {
+
+            $('#bookdb-add-review-fields').slideDown();
+
         },
 
         /**

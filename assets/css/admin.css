@@ -321,8 +321,10 @@
     margin-left: 4px;
     margin-right: 4px; }
 
+#bookdb-add-review-fields,
 #bookdb-add-review-fields-wrap {
   display: none; }
+  #bookdb-add-review-fields .spinner,
   #bookdb-add-review-fields-wrap .spinner {
     float: none; }
 

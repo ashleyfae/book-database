@@ -283,6 +283,7 @@ class BDB_DB_Books extends BDB_DB {
 			'title'           => false,
 			'author_id'       => false,
 			'author_name'     => false,
+			'series_name'     => false,
 			'series_id'       => false,
 			'series_position' => false,
 			'pub_date'        => false,
@@ -357,6 +358,11 @@ class BDB_DB_Books extends BDB_DB {
 				$ids = intval( $args['series_id'] );
 			}
 			$where .= " AND `series_id` IN( {$ids} ) ";
+		}
+
+		// Series name.
+		if ( ! empty( $args['series_name'] ) ) {
+			$where .= $wpdb->prepare( " AND series.name LIKE '%%%%" . '%s' . "%%%%'", wp_strip_all_tags( $args['series_name'] ) );
 		}
 
 		// Series in a certain position.

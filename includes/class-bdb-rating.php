@@ -164,6 +164,15 @@ class BDB_Rating {
 
 	}
 
+	/**
+	 * Format as HTML Class
+	 *
+	 * For use in class attributes.
+	 *
+	 * @access public
+	 * @since 1.0.0
+	 * @return string
+	 */
 	public function format_html_class() {
 
 		$allowed = bdb_get_available_ratings();

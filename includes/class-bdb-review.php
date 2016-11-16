@@ -504,6 +504,8 @@ class BDB_Review {
 	 * the post where the review is located (if provided). Return false if all
 	 * else fails.
 	 *
+	 * @todo Ditch the permalink shit and create a new method.
+	 *
 	 * @access public
 	 * @since  1.0.0
 	 * @return string|false URL to review or false if none.

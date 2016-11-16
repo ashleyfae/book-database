@@ -3,7 +3,7 @@
  * Functions that run on install.
  *
  * @package   book-database
- * @copyright Copyright (c) 2016, Ashley GIbson
+ * @copyright Copyright (c) 2016, Ashley Gibson
  * @license   GPL2+
  */
 

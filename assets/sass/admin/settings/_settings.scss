@@ -11,6 +11,16 @@
     }
 }
 
+.bookdb-description {
+    color: #666;
+    display: block;
+    font: {
+        size: 13px;
+        style: italic;
+    }
+    margin: 2px 0 5px;
+}
+
 .bookdb-settings-buttons {
     clear: both;
 

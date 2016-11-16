@@ -248,10 +248,11 @@ function bdb_get_registered_settings() {
 		'reviews' => array(
 			'main' => array(
 				'reviews_page' => array(
-					'id'   => 'reviews_page',
-					'name' => esc_html__( 'Reviews Page', 'book-database' ),
-					'desc' => __( 'The page used for generating all taxonomy archives.', 'book-database' ),
-					'type' => 'text', // @todo switch to page dropdown
+					'id'      => 'reviews_page',
+					'name'    => esc_html__( 'Reviews Page', 'book-database' ),
+					'desc'    => __( 'The page used for generating all taxonomy archives.', 'book-database' ),
+					'type'    => 'select',
+					'options' => bdb_get_pages()
 				)
 			)
 		)
@@ -355,6 +356,20 @@ function bdb_settings_sanitize_number_field( $input ) {
 }
 
 add_filter( 'book-database/settings/sanitize/number', 'bdb_settings_sanitize_number_field' );
+
+/**
+ * Sanitize Select Field
+ *
+ * @param string $input
+ *
+ * @since 1.0.0
+ * @return string
+ */
+function bdb_settings_sanitize_select_field( $input ) {
+	return trim( sanitize_text_field( wp_strip_all_tags( $input ) ) );
+}
+
+add_filter( 'book-database/settings/sanitize/select', 'bdb_settings_sanitize_select_field' );
 
 /**
  * Sanitize: Book Layout
@@ -557,9 +572,41 @@ function bdb_text_callback( $args ) {
 	$size = ( isset( $args['size'] ) && ! is_null( $args['size'] ) ) ? $args['size'] : 'regular';
 	$type = ( isset( $args['type'] ) ) ? $args['type'] : 'text';
 	?>
-	<input type="<?php echo esc_attr( $type ); ?>" class="bookdb-description <?php echo esc_attr( sanitize_html_class( $size ) . '-text' ); ?>" id="bdb_settings[<?php echo bdb_sanitize_key( $args['id'] ); ?>]" <?php echo $name; ?> value="<?php echo esc_attr( stripslashes( $value ) ); ?>">
+	<input type="<?php echo esc_attr( $type ); ?>" class="bookdb-description <?php echo esc_attr( sanitize_html_class( $size ) . '-text' ); ?>" id="bdb_settings_<?php echo bdb_sanitize_key( $args['id'] ); ?>" <?php echo $name; ?> value="<?php echo esc_attr( stripslashes( $value ) ); ?>">
 	<?php if ( $args['desc'] ) : ?>
-		<label for="bdb_settings[<?php echo bdb_sanitize_key( $args['id'] ); ?>]"><?php echo wp_kses_post( $args['desc'] ); ?></label>
+		<label for="bdb_settings_<?php echo bdb_sanitize_key( $args['id'] ); ?>" class="bookdb-description"><?php echo wp_kses_post( $args['desc'] ); ?></label>
+	<?php endif;
+}
+
+/**
+ * Callback: Select
+ *
+ * @param array $args Arguments passed by the setting.
+ *
+ * @since 1.0.0
+ * @return void
+ */
+function bdb_select_callback( $args ) {
+	$saved = bdb_get_option( $args['id'] );
+
+	if ( $saved ) {
+		$value = $saved;
+	} else {
+		$value = isset( $args['std'] ) ? $args['std'] : '';
+	}
+
+	if ( ! is_array( $args['options'] ) ) {
+		$args['options'] = array();
+	}
+
+	?>
+	<select id="bdb_settings_<?php echo bdb_sanitize_key( $args['id'] ); ?>" name="bdb_settings[<?php echo bdb_sanitize_key( $args['id'] ); ?>]">
+		<?php foreach ( $args['options'] as $key => $name ) : ?>
+			<option value="<?php echo esc_attr( $key ); ?>" <?php selected( $key, $value ); ?>><?php echo esc_html( $name ); ?></option>
+		<?php endforeach; ?>
+	</select>
+	<?php if ( $args['desc'] ) : ?>
+		<label for="bdb_settings_<?php echo bdb_sanitize_key( $args['id'] ); ?>" class="bookdb-description"><?php echo wp_kses_post( $args['desc'] ); ?></label>
 	<?php endif;
 }
 
@@ -748,4 +795,34 @@ function bdb_taxonomies_callback( $args ) {
 		<button id="bookdb-add-term" class="button button-secondary" rel=".bookdb-cloned"><?php esc_html_e( 'Add Taxonomy', 'book-database' ); ?></button>
 	</div>
 	<?php
+	bdb_get_pages();
+}
+
+/**
+ * Get Pages
+ *
+ * Returns a list of all published pages on the site.
+ *
+ * @param bool $force Force the pages to be loaded even if not on the settings page.
+ *
+ * @since 1.0.0
+ * @return array
+ */
+function bdb_get_pages( $force = false ) {
+
+	$pages_options = array( '' => '' );
+
+	if ( ( ! isset( $_GET['page'] ) || 'bdb-settings' != $_GET['page'] ) && ! $force ) {
+		return $pages_options;
+	}
+
+	$pages = get_pages();
+	if ( $pages ) {
+		foreach ( $pages as $page ) {
+			$pages_options[ $page->ID ] = $page->post_title;
+		}
+	}
+
+	return $pages_options;
+
 }

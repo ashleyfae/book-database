@@ -477,6 +477,13 @@
   .bookdb-table th {
     padding: 15px 10px; }
 
+.bookdb-description {
+  color: #666;
+  display: block;
+  font-size: 13px;
+  font-style: italic;
+  margin: 2px 0 5px; }
+
 .bookdb-settings-buttons {
   clear: both; }
   .bookdb-settings-buttons:before, .bookdb-settings-buttons:after {

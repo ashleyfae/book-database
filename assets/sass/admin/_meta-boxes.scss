@@ -1,3 +1,18 @@
+#bookdb-book-page-wrapper,
+#bookdb-review-page-wrapper {
+    .postbox {
+        > h2 {
+            border-bottom: 1px solid #eee;
+            font: {
+                size: 14px;
+            }
+            line-height: 1.4;
+            margin: 0;
+            padding: 8px 12px;
+        }
+    }
+}
+
 .bookdb-box-row {
     margin: 1.5em 0;
 

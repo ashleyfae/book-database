@@ -182,6 +182,8 @@ class BDB_Books_Table extends WP_List_Table {
 						$url   = add_query_arg( array( 'series_id' => urlencode( $item['series_id'] ) ), bdb_get_admin_page_books() );
 						$value = '<a href="' . esc_url( $url ) . '">' . esc_html( $name ) . '</a>';
 					}
+				} else {
+					$value = '&ndash;';
 				}
 				break;
 

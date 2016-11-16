@@ -439,6 +439,8 @@ class BDB_DB_Book_Terms extends BDB_DB {
 		links longtext NOT NULL,
 		count bigint(20) NOT NULL,
 		PRIMARY KEY  (term_id),
+		UNIQUE KEY id_type_name (term_id, type, name),
+		UNIQUE KEY id_type_slug (term_id, type, slug),
 		INDEX type (type),
 		INDEX name (name)
 		) CHARACTER SET utf8 COLLATE utf8_general_ci;";

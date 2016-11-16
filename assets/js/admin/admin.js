@@ -221,7 +221,7 @@
                 book_id: book_id.val(),
                 rating: rating.val(),
                 user_id: user_id.val(),
-                post_id: $('#post_id').val()
+                post_id: $('#post_ID').val()
             };
 
             var data = {
@@ -248,7 +248,7 @@
                         // Update table.
                         $('#bookdb-no-book-reviews-message').remove();
 
-                        table.find('tbody').append('<tr data-id="' + response.data.ID + '"><td>' + response.data.ID + '</td><td>' + response.data.book + '</td><td>' + response.data.rating + '</td><td>' + response.data.shortcode + '</td><td>' + response.data.remove + '</td></tr>');
+                        table.find('tbody').append('<tr data-id="' + response.data.ID + '"><td>' + response.data.ID + '</td><td>' + response.data.book + '</td><td>' + response.data.rating + '</td><td><code>' + response.data.shortcode + '</code></td><td>' + response.data.remove + '</td></tr>');
 
                         // Hide rating fields.
                         wrap.hide();

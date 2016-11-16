@@ -452,7 +452,9 @@ class BDB_DB_Books extends BDB_DB {
 		$defaults = array(
 			'ID'              => false,
 			'title'           => false,
-			'author'          => false, // @todo Make this work - join needed.
+			'author_id'       => false, // @todo Make this work - join needed.
+			'author_name'     => false,
+			'series_name'     => false,
 			'series_id'       => false,
 			'series_position' => false,
 			'pub_date'        => false
@@ -493,6 +495,32 @@ class BDB_DB_Books extends BDB_DB {
 			$where .= $wpdb->prepare( " AND `series_position` LIKE '%s'", wp_strip_all_tags( $args['series_position'] ) );
 		}
 
+		// Author
+		if ( ! empty( $args['author_id'] ) || ! empty( $args['author_name'] ) ) {
+
+			$term_relationship_table = book_database()->book_term_relationships->table_name;
+			$term_table              = book_database()->book_terms->table_name;
+
+			$join .= " RIGHT JOIN $term_relationship_table as r on book.ID = r.book_id INNER JOIN $term_table as t on (r.term_id = t.term_id AND t.type = 'author')";
+
+			if ( $args['author_id'] ) {
+				$where .= $wpdb->prepare( " AND AND t.term_id = %d", absint( $args['author_id'] ) );
+			}
+
+			if ( $args['author_name'] ) {
+				$where .= $wpdb->prepare( " AND t.name LIKE '%%%%" . '%s' . "%%%%'", wp_strip_all_tags( $args['author_name'] ) );
+			}
+
+		}
+
+		// Series name.
+		if ( ! empty( $args['series_name'] ) ) {
+			$series_table = book_database()->series->table_name;
+
+			$join .= " LEFT JOIN $series_table as series on book.series_id = series.ID";
+			$where .= $wpdb->prepare( " AND series.name LIKE '%%%%" . '%s' . "%%%%'", wp_strip_all_tags( $args['series_name'] ) );
+		}
+
 		// Books published on a given date or in a range.
 		if ( ! empty( $args['pub_date'] ) ) {
 
@@ -524,7 +552,7 @@ class BDB_DB_Books extends BDB_DB {
 		$count = wp_cache_get( $cache_key, 'books' );
 
 		if ( $count === false ) {
-			$query = "SELECT COUNT($this->primary_key) FROM " . $this->table_name . "{$join} {$where};";
+			$query = "SELECT COUNT(book.ID) FROM " . $this->table_name . " as book {$join} {$where};";
 			$count = $wpdb->get_var( $query );
 			wp_cache_set( $cache_key, $count, 'books', 3600 );
 		}

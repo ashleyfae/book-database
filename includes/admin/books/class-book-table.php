@@ -114,10 +114,21 @@ class BDB_Books_Table extends WP_List_Table {
 			echo '<input type="hidden" name="order" value="' . esc_attr( $_REQUEST['order'] ) . '">';
 		}
 
+		$title  = isset( $_REQUEST['book_title'] ) ? wp_unslash( $_REQUEST['book_title'] ) : '';
+		$author = isset( $_REQUEST['book_author'] ) ? wp_unslash( $_REQUEST['book_author'] ) : '';
+		$series = isset( $_REQUEST['series_name'] ) ? wp_unslash( $_REQUEST['series_name'] ) : '';
+
 		?>
 		<p class="search-box">
-			<label class="screen-reader-text" for="<?php echo esc_attr( $input_id ); ?>"><?php echo $text; ?></label>
-			<input type="search" id="<?php echo esc_attr( $input_id ); ?>" name="s" value="<?php _admin_search_query(); ?>">
+			<label class="screen-reader-text" for="<?php echo esc_attr( $input_id ); ?>-title"><?php esc_html_e( 'Search by book title', 'book-database' ); ?></label>
+			<input type="search" id="<?php echo esc_attr( $input_id ); ?>-title" name="book_title" value="<?php echo esc_attr( $title ); ?>" placeholder="<?php esc_attr_e( 'Book title', 'book-database' ); ?>">
+
+			<label class="screen-reader-text" for="<?php echo esc_attr( $input_id ); ?>-author"><?php esc_html_e( 'Search by author name', 'book-database' ); ?></label>
+			<input type="search" id="<?php echo esc_attr( $input_id ); ?>-author" name="book_author" value="<?php echo esc_attr( $author ); ?>" placeholder="<?php esc_attr_e( 'Author name', 'book-database' ); ?>">
+
+			<label class="screen-reader-text" for="<?php echo esc_attr( $input_id ); ?>-series"><?php esc_html_e( 'Search by series name', 'book-database' ); ?></label>
+			<input type="search" id="<?php echo esc_attr( $input_id ); ?>-series" name="series_name" value="<?php echo esc_attr( $series ); ?>" placeholder="<?php esc_attr_e( 'Series name', 'book-database' ); ?>">
+
 			<?php submit_button( $text, 'button', false, false, array( 'ID' => 'search-submit' ) ); ?>
 		</p>
 		<?php
@@ -409,7 +420,6 @@ class BDB_Books_Table extends WP_List_Table {
 		$data    = array();
 		$paged   = $this->get_paged();
 		$offset  = $this->per_page * ( $paged - 1 );
-		$search  = $this->get_search();
 		$order   = isset( $_GET['order'] ) ? sanitize_text_field( $_GET['order'] ) : 'DESC';
 		$orderby = isset( $_GET['orderby'] ) ? sanitize_text_field( $_GET['orderby'] ) : 'ID';
 
@@ -432,10 +442,19 @@ class BDB_Books_Table extends WP_List_Table {
 			$args['orderby']   = 'series_position';
 		}
 
-		if ( is_numeric( $search ) ) {
-			$args['ID'] = $search;
-		} else {
-			$args['title'] = $search;
+		// Filter by book title
+		if ( isset( $_GET['book_title'] ) ) {
+			$args['title'] = wp_strip_all_tags( $_GET['book_title'] );
+		}
+
+		// Filter by author name
+		if ( isset( $_GET['book_author'] ) ) {
+			$args['author_name'] = wp_strip_all_tags( $_GET['book_author'] );
+		}
+
+		// Filter by series name
+		if ( isset( $_GET['series_name'] ) ) {
+			$args['series_name'] = wp_strip_all_tags( $_GET['series_name'] );
 		}
 
 		$this->args = $args;
@@ -489,7 +508,7 @@ class BDB_Books_Table extends WP_List_Table {
 
 		$this->items = $this->books_data();
 
-		$this->total = bdb_count_total_reviews( $this->args );
+		$this->total = book_database()->books->count( $this->args );
 
 		$this->set_pagination_args( array(
 			'total_items' => $this->total,

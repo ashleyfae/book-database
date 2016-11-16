@@ -65,7 +65,7 @@ function bdb_books_list() {
 		<?php do_action( 'book-database/books/table/top' ); ?>
 		<form id="bookdb-books-filter" method="GET" action="">
 			<?php
-			$book_table->search_box( sprintf( __( 'Search %s', 'book-database' ), bdb_get_label_plural( true ) ), 'ubb-books' );
+			$book_table->search_box( sprintf( __( 'Search %s', 'book-database' ), bdb_get_label_plural( true ) ), 'bookdb' );
 			$book_table->display();
 			?>
 			<input type="hidden" name="post_type" value="bdb_book">

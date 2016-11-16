@@ -287,7 +287,8 @@ class BDB_DB_Books extends BDB_DB {
 			'series_position' => false,
 			'pub_date'        => false,
 			'orderby'         => 'ID',
-			'order'           => 'DESC'
+			'order'           => 'DESC',
+			'include_author'  => false
 		);
 
 		$args = wp_parse_args( $args, $defaults );
@@ -304,6 +305,14 @@ class BDB_DB_Books extends BDB_DB {
 
 		// Join on series table to return the series name.
 		$join .= " LEFT JOIN $series_table as series on books.series_id = series.ID";
+
+		// Include author name.
+		if ( $args['include_author'] ) {
+			$term_relationship_table = book_database()->book_term_relationships->table_name;
+			$term_table              = book_database()->book_terms->table_name;
+
+			$join .= " LEFT JOIN {$term_relationship_table} as ar on books.ID = ar.book_id LEFT JOIN {$term_table} as author on (ar.term_id = author.term_id AND author.type = 'author')";
+		}
 
 		// Filter by specific author ID.
 		if ( $args['author_id'] ) {
@@ -406,6 +415,9 @@ class BDB_DB_Books extends BDB_DB {
 		$select_this = 'books.*, series.name as series_name';
 		if ( $args['author_id'] || $args['author_name'] ) {
 			$select_this .= ', t.term_id as author_id, t.name as author_name';
+		}
+		if ( $args['include_author'] ) {
+			$select_this .= ", GROUP_CONCAT(author.name SEPARATOR ',') as author_name, GROUP_CONCAT(author.term_id SEPARATOR ',') as author_id";
 		}
 
 		if ( $books === false ) {

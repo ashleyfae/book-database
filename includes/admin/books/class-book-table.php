@@ -146,7 +146,7 @@ class BDB_Books_Table extends WP_List_Table {
 	 */
 	public function column_default( $item, $column_name ) {
 
-		$book  = new BDB_Book( $item['ID'] );
+		$book  = new BDB_Book( $item );
 		$value = '';
 
 		switch ( $column_name ) {
@@ -158,13 +158,15 @@ class BDB_Books_Table extends WP_List_Table {
 				break;
 
 			case 'author' :
-				$authors = $book->get_author();
-				$output  = array();
+				$author_names = $item['author_name'] ? explode( ',', $item['author_name'] ) : array();
+				$author_ids   = $item['author_id'] ? explode( ',', $item['author_id'] ) : array();
+				$output       = array();
 
-				if ( is_array( $authors ) ) {
-					foreach ( $authors as $author ) {
-						$url      = add_query_arg( array( 'author_id' => urlencode( $author->term_id ) ), bdb_get_admin_page_books() );
-						$output[] = '<a href="' . esc_url( $url ) . '">' . esc_html( $author->name ) . '</a>';
+				if ( count( $author_names ) ) {
+					foreach ( $author_names as $key => $author_name ) {
+						$author_id = absint( trim( $author_ids[ $key ] ) );
+						$url       = add_query_arg( array( 'author_id' => urlencode( $author_id ) ), bdb_get_admin_page_books() );
+						$output[]  = '<a href="' . esc_url( $url ) . '">' . esc_html( trim( $author_name ) ) . '</a>';
 					}
 				}
 
@@ -410,10 +412,11 @@ class BDB_Books_Table extends WP_List_Table {
 		$orderby = isset( $_GET['orderby'] ) ? sanitize_text_field( $_GET['orderby'] ) : 'ID';
 
 		$args = array(
-			'number'  => $this->per_page,
-			'offset'  => $offset,
-			'order'   => $order,
-			'orderby' => $orderby
+			'number'         => $this->per_page,
+			'offset'         => $offset,
+			'order'          => $order,
+			'orderby'        => $orderby,
+			'include_author' => true
 		);
 
 		// Filter by author.
@@ -445,7 +448,9 @@ class BDB_Books_Table extends WP_List_Table {
 					'series_name'     => $book->series_name,
 					'series_id'       => $book->series_id,
 					'series_position' => $book->series_position,
-					'pub_date'        => $book->pub_date
+					'pub_date'        => $book->pub_date,
+					'author_name'     => $book->author_name,
+					'author_id'       => $book->author_id
 				);
 			}
 		}

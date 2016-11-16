@@ -142,7 +142,7 @@ class BDB_Book {
 	/**
 	 * BDB_Book constructor.
 	 *
-	 * @param int|object $book_id Book ID to fetch from database or a prepared object in database format.
+	 * @param int|object|array $book_id Book ID to fetch from database or a prepared object in database format.
 	 *
 	 * @access public
 	 * @since  1.0.0
@@ -150,9 +150,9 @@ class BDB_Book {
 	 */
 	public function __construct( $book_id ) {
 
-		$book = is_object( $book_id ) ? $book_id : book_database()->books->get_book( $book_id );
+		$book = ( is_object( $book_id ) || is_array( $book_id ) ) ? $book_id : book_database()->books->get_book( $book_id );
 
-		if ( empty( $book ) || ! is_object( $book ) ) {
+		if ( empty( $book ) || ( ! is_object( $book ) && ! is_array( $book ) ) ) {
 			return false;
 		}
 
@@ -173,7 +173,7 @@ class BDB_Book {
 	 */
 	private function setup_book( $book ) {
 
-		if ( ! is_object( $book ) ) {
+		if ( ! is_object( $book ) && ! is_array( $book ) ) {
 			return false;
 		}
 

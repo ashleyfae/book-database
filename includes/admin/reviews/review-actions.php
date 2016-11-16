@@ -137,6 +137,44 @@ function bdb_review_date_added_field( $review ) {
 
 add_action( 'book-database/review-edit/fields', 'bdb_review_date_added_field' );
 
+/**
+ * Box: Associated Book Information
+ *
+ * Displays information about the associated book.
+ *
+ * @param BDB_Review $review
+ *
+ * @since 1.0.0
+ * @return void
+ */
+function bdb_review_show_associated_book( $review ) {
+	if ( ! $review->book_id ) {
+		return;
+	}
+
+	$book = new BDB_Book( absint( $review->book_id ) );
+
+	if ( ! $book->ID > 0 ) {
+		return;
+	}
+
+	?>
+	<div class="postbox">
+		<h2><?php _e( 'Associated Book', 'book-database' ); ?></h2>
+		<div class="inside">
+			<?php do_action( 'book-database/review-edit/associated-book/before', $review, $book ); ?>
+			<div id="bookdb-book-associated-with-review">
+				<?php echo $book->get_formatted_info(); ?>
+				<a href="<?php echo esc_url( bdb_get_admin_page_edit_book( $book->ID ) ); ?>" class="button"><?php _e( 'Edit book in admin panel', 'book-database' ); ?></a>
+			</div>
+			<?php do_action( 'book-database/review-edit/associated-book/after', $review, $book ); ?>
+		</div>
+	</div>
+	<?php
+}
+
+add_action( 'book-database/review-edit/after-fields', 'bdb_review_show_associated_book' );
+
 /*
  * Below: Saving Functions
  */

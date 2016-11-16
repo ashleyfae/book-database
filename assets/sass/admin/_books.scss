@@ -3,3 +3,24 @@
         width: 150px;
     }
 }
+
+#bookdb-book-associated-with-review {
+    clear: both;
+    line-height: 1.8;
+
+    &:before, &:after {
+        clear: both;
+        content: '';
+        display: table;
+    }
+
+    .alignleft {
+        margin-right: 1.5em;
+    }
+
+    blockquote {
+        font: {
+            style: italic;
+        }
+    }
+}

@@ -140,6 +140,18 @@
 .toplevel_page_bdb-books #cover {
   width: 150px; }
 
+#bookdb-book-associated-with-review {
+  clear: both;
+  line-height: 1.8; }
+  #bookdb-book-associated-with-review:before, #bookdb-book-associated-with-review:after {
+    clear: both;
+    content: '';
+    display: table; }
+  #bookdb-book-associated-with-review .alignleft {
+    margin-right: 1.5em; }
+  #bookdb-book-associated-with-review blockquote {
+    font-style: italic; }
+
 #bookdb-book-page-wrapper .postbox > h2,
 #bookdb-review-page-wrapper .postbox > h2 {
   border-bottom: 1px solid #eee;

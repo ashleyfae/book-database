@@ -2,6 +2,8 @@
 /**
  * Shortcode: Book Reviews - Single Book Entry
  *
+ * @todo Delete the specific Nose Graze stuff like aq_resize and whatever else.
+ *
  * @package   book-database
  * @copyright Copyright (c) 2016, Ashley Gibson
  * @license   GPL2+

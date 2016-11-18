@@ -67,9 +67,5 @@ function bdb_is_admin_page() {
 		$is_bdb_page = true;
 	}
 
-	//var_dump($screen);wp_die();
-
-	// @todo
-
 	return apply_filters( 'book-database/is-admin-page', $is_bdb_page, $screen );
 }

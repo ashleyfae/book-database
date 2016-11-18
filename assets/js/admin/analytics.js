@@ -1,4 +1,4 @@
-(function (window, document, $, undefined) {
+(function (window, document, $) {
 
     var BDB_Analytics = {
 
@@ -67,6 +67,7 @@
          *      + Number of reviews
          *      + Pages read
          *      + Average rating
+         *      + Rating breakdown
          *
          * These are super quick to retrieve so we do them first.
          *
@@ -83,17 +84,17 @@
                     // Book list
                     if ('book-list' == id) {
 
-                        element.html('<table><thead><tr><th>Rating</th><th>Book</th><th>Date</th></tr></thead><tbody></tbody></table>');
+                        element.html('<table><thead><tr><th>' + bookdb_analytics.l10n.rating + '</th><th>' + bookdb_analytics.l10n.book + '</th><th>' + bookdb_analytics.l10n.date + '</th></tr></thead><tbody></tbody></table>');
                         var list = element.find('tbody');
 
                         $.each(val, function (review_key, review_val) {
-                            list.append('<tr><td><a href="' + review_val.edit_review_link + '" class="book-rating ' + review_val.rating_class + '" title="Edit Review">' + review_val.rating + '</a></td><td><a href="' + review_val.edit_book_link + '" title="Edit Book">' + review_val.book + '</a></td><td class="review-date">[' + review_val.date + ']</td></tr>');
+                            list.append('<tr><td><a href="' + review_val.edit_review_link + '" class="book-rating ' + review_val.rating_class + '" title="' + bookdb_analytics.l10n.edit_review + '">' + review_val.rating + '</a></td><td><a href="' + review_val.edit_book_link + '" title="' + bookdb_analytics.l10n.edit_book + '">' + review_val.book + '</a></td><td class="review-date">[' + review_val.date + ']</td></tr>');
                         });
 
                     } else if ('rating-breakdown' == id) {
 
                         // Rating breakdown.
-                        element.html('<table><thead><tr><th>Rating</th><th>Number of Books</th></tr></thead><tbody></tbody></table>');
+                        element.html('<table><thead><tr><th>' + bookdb_analytics.l10n.rating + '</th><th>' + bookdb_analytics.l10n.number_books + '</th></tr></thead><tbody></tbody></table>');
                         var table = element.find('tbody');
 
                         $.each(val, function (key, rating) {
@@ -115,10 +116,12 @@
         /**
          * Handle Second Batch Response
          *
+         * For taxonomies.
+         *
          * Includes:
-         *      + Rating breakdown
          *      + Genre breakdown
          *      + Publishers breakdown
+         *      + Source breakdown
          *
          * These operations are a tad more intensive so they'll take longer to load.
          *
@@ -136,7 +139,7 @@
                 // Stop loader.
                 wrap.parents('.bookdb-metric-inner').find('.bookdb-loading').empty().hide();
 
-                wrap.empty().html('<table><thead><tr><th>Name</th><th>Number of Reviews</th><th>Average Rating</th></tr></thead><tbody>' + html + '</tbody></table>')
+                wrap.empty().html('<table><thead><tr><th>' + bookdb_analytics.l10n.name + '</th><th>' + bookdb_analytics.l10n.number_reviews + '</th><th>' + bookdb_analytics.l10n.average_rating + '</th></tr></thead><tbody>' + html + '</tbody></table>')
             });
 
         }

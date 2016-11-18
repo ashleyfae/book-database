@@ -50,6 +50,20 @@ function bdb_load_admin_scripts( $hook ) {
 	// Only add analytics on analytics page.
 	if ( 'book-library_page_bdb-analytics' == $screen->id ) {
 		wp_enqueue_script( 'bookdb-analytics', $js_dir . 'admin/analytics' . $suffix . '.js', array( 'jquery' ), BDB_VERSION, true );
+
+		wp_localize_script( 'bookdb-analytics', 'bookdb_analytics', array(
+			'l10n' => array(
+				'average_rating' => esc_html__( 'Average Rating', 'book-database' ),
+				'book'           => esc_html__( 'Book', 'book-database' ),
+				'date'           => esc_html__( 'Date', 'book-database' ),
+				'edit_book'      => esc_attr__( 'Edit Book', 'book-database' ),
+				'edit_review'    => esc_attr__( 'Edit Review', 'book-database' ),
+				'name'           => esc_html__( 'Name', 'book-database' ),
+				'number_books'   => esc_html__( 'Number of Books', 'book-database' ),
+				'number_reviews' => esc_html__( 'Number of Reviews', 'book-database' ),
+				'rating'         => esc_html__( 'Rating', 'book-database' )
+			)
+		) );
 	}
 
 	wp_enqueue_script( 'book-database', $js_dir . 'admin/admin' . $suffix . '.js', $deps, BDB_VERSION, true );
@@ -58,8 +72,8 @@ function bdb_load_admin_scripts( $hook ) {
 		'ajax_url' => admin_url( 'admin-ajax.php' ),
 		'nonce'    => wp_create_nonce( 'book-database' ),
 		'l10n'     => array(
-			'review_remove'         => __( 'Are you sure you wish to delete this review?', 'book-database' ),
-			'error_removing_review' => __( 'Error: Review ID not found.', 'book-database' )
+			'review_remove'         => esc_html__( 'Are you sure you wish to delete this review?', 'book-database' ),
+			'error_removing_review' => esc_html__( 'Error: Review ID not found.', 'book-database' )
 		)
 	) );
 }

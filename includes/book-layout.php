@@ -444,6 +444,23 @@ function bdb_book_layout_goodreads_url( $value, $enabled_fields, $book_id, $book
 add_filter( 'book-database/book/formatted-info/value/goodreads_url', 'bdb_book_layout_goodreads_url', 10, 4 );
 
 /**
+ * Value: Buy Link
+ *
+ * @param mixed    $value
+ * @param array    $enabled_fields
+ * @param int      $book_id
+ * @param BDB_Book $book
+ *
+ * @since 1.0.0
+ * @return string
+ */
+function bdb_book_layout_buy_link( $value, $enabled_fields, $book_id, $book ) {
+	return $book->get_buy_link();
+}
+
+add_filter( 'book-database/book/formatted-info/value/buy_link', 'bdb_book_layout_buy_link', 10, 4 );
+
+/**
  * Value: Rating
  *
  * @param mixed    $value

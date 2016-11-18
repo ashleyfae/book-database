@@ -122,6 +122,15 @@ class BDB_Book {
 	private $goodreads_url;
 
 	/**
+	 * Buy Link
+	 *
+	 * @var string
+	 * @access private
+	 * @since  1.0.0
+	 */
+	private $buy_link;
+
+	/**
 	 * Faux Rating
 	 *
 	 * @var int|string|null
@@ -749,6 +758,17 @@ class BDB_Book {
 	 */
 	public function get_goodreads_url() {
 		return apply_filters( 'book-database/book/get/goodreads_url', $this->goodreads_url, $this->ID, $this );
+	}
+
+	/**
+	 * Get Purchase Link
+	 *
+	 * @access public
+	 * @since  1.0.0
+	 * @return int|null
+	 */
+	public function get_buy_link() {
+		return apply_filters( 'book-database/book/get/buy_link', $this->buy_link, $this->ID, $this );
 	}
 
 	/**

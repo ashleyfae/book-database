@@ -74,27 +74,29 @@ $menu = bdb_get_modal_menu();
 				</div>
 
 				<div class="bookdb-frame-content">
-					<?php
-					foreach ( $menu as $menu_item => $options ) {
-						$active      = isset( $options['default'] ) && $options['default'];
-						$default_tab = $active && isset( $options['default_tab'] ) ? $options['default_tab'] : '';
+					<form id="bookdb-modal-form" method="POST">
+						<?php
+						foreach ( $menu as $menu_item => $options ) {
+							$active      = isset( $options['default'] ) && $options['default'];
+							$default_tab = $active && isset( $options['default_tab'] ) ? $options['default_tab'] : '';
 
-						foreach ( $options['tabs'] as $tab => $tab_options ) {
-							$tab_uid   = $menu_item . '-' . $tab;
-							$tab_class = $default_tab == $tab ? ' active' : '';
-							$label     = isset( $tab_options['label'] ) ? $tab_options['label'] : '';
-							$template  = isset( $tab_options['template'] ) ? $tab_options['template'] : '';
+							foreach ( $options['tabs'] as $tab => $tab_options ) {
+								$tab_uid   = $menu_item . '-' . $tab;
+								$tab_class = $default_tab == $tab ? ' active' : '';
+								$label     = isset( $tab_options['label'] ) ? $tab_options['label'] : '';
+								$template  = isset( $tab_options['template'] ) ? $tab_options['template'] : '';
 
-							echo '<div id="bookdb-tab-' . esc_attr( $tab_uid ) . '" class="bookdb-frame-content-tab' . esc_attr( $tab_class ) . '">';
+								echo '<div id="bookdb-tab-' . esc_attr( $tab_uid ) . '" class="bookdb-frame-content-tab' . esc_attr( $tab_class ) . '">';
 
-							if ( file_exists( $template ) ) {
-								include( $template );
+								if ( file_exists( $template ) ) {
+									include( $template );
+								}
+
+								echo '</div>';
 							}
-
-							echo '</div>';
 						}
-					}
-					?>
+						?>
+					</form>
 				</div>
 
 				<div class="bookdb-frame-toolbar">

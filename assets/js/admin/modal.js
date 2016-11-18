@@ -389,55 +389,13 @@ var BookDB_Modal_Admin = {
 
         jQuery(document).trigger('bdb_modal_before_insert_update_book');
 
-        var terms = {};
-
-        // Collect all tag terms.
-        jQuery('.bookdb-box-row .hide-if-js').each(function () {
-            var textarea = jQuery(this).find('textarea');
-
-            if (!textarea.length) {
-                return true;
-            }
-
-            var type = textarea.data('type');
-            terms[type] = textarea.val();
-        });
-
-        // Collect all category terms.
-        jQuery('.bookdb-taxonomy-checkboxes').each(function () {
-            var type = jQuery(this).data('type');
-            var selectedValues = jQuery(this).find('input:checkbox:checked').map(function () {
-                return this.value;
-            }).get();
-
-            terms[type] = selectedValues;
-        });
-
-        console.log(terms);
-
-        var book = {
-            ID: this.editingBook,
-            cover: jQuery('#book_cover_id').val(),
-            title: jQuery('#book_title').val(),
-            series_name: jQuery('#book_series_name').val(),
-            series_position: jQuery('#book_series_position').val(),
-            pub_date: jQuery('#book_pub_date').val(),
-            pages: jQuery('#book_pages').val(),
-            goodreads_url: jQuery('#book_goodreads_url').val(),
-            synopsis: jQuery('#book_synopsis').val(),
-            terms: terms
-        };
-
-        var seriesID = jQuery('#series_id');
-
-        if (seriesID.length) {
-            book.series_id = seriesID.val();
-        }
+        var bookInfo = jQuery('#bookdb-modal-form').serialize();
 
         var data = {
             action: 'bdb_save_book',
             nonce: bookdb_modal.nonce,
-            book: book
+            book_id: this.editingBook,
+            book_info: bookInfo
         };
 
         this.startLoader(button);

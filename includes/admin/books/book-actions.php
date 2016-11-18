@@ -40,7 +40,7 @@ function bdb_book_cover_field( $book ) {
 		<button class="button bookdb-remove-image" style="<?php echo ! $cover_id ? 'display: none;' : ''; ?>"><?php esc_html_e( 'Remove Image', 'book-database' ); ?></button>
 	</div>
 
-	<input type="hidden" id="book_cover_id" name="cover_id" value="<?php echo esc_attr( absint( $cover_id ) ); ?>">
+	<input type="hidden" id="book_cover_id" name="cover" value="<?php echo esc_attr( absint( $cover_id ) ); ?>">
 	<?php
 
 	$field = ob_get_clean();
@@ -425,8 +425,8 @@ function bdb_save_book() {
 	}
 
 	// Cover
-	if ( isset( $_POST['cover_id'] ) ) {
-		$book_data['cover'] = absint( $_POST['cover_id'] );
+	if ( isset( $_POST['cover'] ) ) {
+		$book_data['cover'] = absint( $_POST['cover'] );
 	}
 
 	// Series Name

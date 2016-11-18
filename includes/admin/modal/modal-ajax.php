@@ -78,7 +78,19 @@ add_action( 'wp_ajax_bdb_get_book', 'bdb_ajax_get_book' );
 function bdb_ajax_save_book() {
 	check_ajax_referer( 'book-database', 'nonce' );
 
-	$book_data = isset( $_POST['book'] ) ? $_POST['book'] : array();
+	$book_id = isset( $_POST['book_id'] ) ? $_POST['book_id'] : 0;
+
+	parse_str( $_POST['book_info'], $book_data );
+
+	if ( $book_id ) {
+		$book_data['ID'] = absint( $book_id );
+	}
+
+	// Move `book_terms` to `terms`.
+	if ( array_key_exists( 'book_terms', $book_data ) ) {
+		$book_data['terms'] = $book_data['book_terms'];
+		unset( $book_data['book_terms'] );
+	}
 
 	if ( ! current_user_can( 'edit_posts' ) ) {
 		wp_send_json_error( __( 'Error: You do not have permission to add books.', 'book-database' ) );

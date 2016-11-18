@@ -263,6 +263,28 @@ function bdb_book_goodreads_url_field( $book ) {
 add_action( 'book-database/book-edit/information-fields', 'bdb_book_goodreads_url_field' );
 
 /**
+ * Field: Buy Link
+ *
+ * @param BDB_Book $book
+ *
+ * @since 1.0.0
+ * @return void
+ */
+function bdb_book_buy_link_field( $book ) {
+	book_database()->html->meta_row( 'text', array(
+		'label' => __( 'Purchase Link', 'book-database' )
+	), array(
+		'id'          => 'book_buy_link',
+		'name'        => 'buy_link',
+		'value'       => $book->get_buy_link(),
+		'placeholder' => 'http://',
+		'type'        => 'url'
+	) );
+}
+
+add_action( 'book-database/book-edit/information-fields', 'bdb_book_buy_link_field' );
+
+/**
  * Field: Taxonomies
  *
  * @param BDB_Book $book
@@ -462,6 +484,11 @@ function bdb_save_book() {
 	// Goodreads URL
 	if ( isset( $_POST['goodreads_url'] ) ) {
 		$book_data['goodreads_url'] = $_POST['goodreads_url'];
+	}
+
+	// Buy link
+	if ( isset( $_POST['buy_link'] ) ) {
+		$book_data['buy_link'] = $_POST['buy_link'];
 	}
 
 	$terms = array();

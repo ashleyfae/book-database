@@ -844,7 +844,7 @@ class BDB_Book {
 
 		$all_terms = $this->get_terms();
 
-		return array_key_exists( $type, $all_terms ) ? $all_terms[ $type ] : false;
+		return ( is_array( $all_terms ) && array_key_exists( $type, $all_terms ) ) ? $all_terms[ $type ] : false;
 
 	}
 

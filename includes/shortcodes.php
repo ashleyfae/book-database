@@ -333,14 +333,7 @@ add_action( 'book-database/shortcodes/book-reviews/filter-form', 'bdb_reviews_fi
  * @return void
  */
 function bdb_reviews_filter_form_orderby( $vars, $query, $atts, $content ) {
-	$allowed_orderby = array(
-		'date'     => esc_html__( 'Review Date', 'book-database' ),
-		'title'    => esc_html__( 'Book Title', 'book-database' ),
-		'author'   => esc_html__( 'Author Name', 'book-database' ),
-		'rating'   => esc_html__( 'Rating', 'book-database' ),
-		'pub_date' => esc_html__( 'Publication Date', 'book-database' ),
-		'pages'    => esc_html__( 'Number of Pages', 'book-database' )
-	);
+
 	?>
 	<p class="bookdb-filter-option">
 		<label for="bookdb-orderby"><?php _e( 'Order by', 'book-database' ); ?></label>
@@ -348,7 +341,7 @@ function bdb_reviews_filter_form_orderby( $vars, $query, $atts, $content ) {
 			'id'               => 'bookdb-orderby',
 			'name'             => 'orderby',
 			'selected'         => sanitize_text_field( $vars['orderby'] ),
-			'options'          => apply_filters( 'book-database/shortcodes/book-reviews/orderby-options', $allowed_orderby ),
+			'options'          => bdb_get_allowed_orderby(),
 			'show_option_all'  => false,
 			'show_option_none' => false
 		) ); ?>

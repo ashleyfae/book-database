@@ -227,3 +227,16 @@ function bdb_unique_slug( $slug, $type = 'author' ) {
 function bdb_link_terms() {
 	return apply_filters( 'book-database/link-terms', true );
 }
+
+function bdb_get_allowed_orderby() {
+	$allowed_orderby = array(
+		'date'     => esc_html__( 'Review Date', 'book-database' ),
+		'title'    => esc_html__( 'Book Title', 'book-database' ),
+		'author'   => esc_html__( 'Author Name', 'book-database' ),
+		'rating'   => esc_html__( 'Rating', 'book-database' ),
+		'pub_date' => esc_html__( 'Publication Date', 'book-database' ),
+		'pages'    => esc_html__( 'Number of Pages', 'book-database' )
+	);
+
+	return apply_filters( 'book-database/allowed-orderby-for-reviews', $allowed_orderby );
+}

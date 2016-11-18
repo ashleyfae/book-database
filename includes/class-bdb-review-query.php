@@ -228,7 +228,13 @@ class BDB_Review_Query {
 
 		// Orderby
 		if ( isset( $_GET['orderby'] ) ) {
-			$this->query_vars['orderby'] = wp_strip_all_tags( $_GET['orderby'] );
+			$orderby = wp_strip_all_tags( $_GET['orderby'] );
+
+			if ( ! array_key_exists( $orderby, bdb_get_allowed_orderby() ) ) {
+				$orderby = 'date';
+			}
+
+			$this->query_vars['orderby'] = $orderby;
 		}
 
 		// Order

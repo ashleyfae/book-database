@@ -16,6 +16,34 @@ if ( ! defined( 'ABSPATH' ) ) {
  * Below: Book Information Fields
  */
 
+function bdb_setup_book_meta_fields() {
+	$enabled_fields = bdb_get_option( 'book_layout', bdb_get_default_book_field_values() );
+
+	if ( ! is_array( $enabled_fields ) ) {
+		return;
+	}
+
+	foreach ( $enabled_fields as $key => $options ) {
+		$function = 'bdb_book_' . $key . '_field';
+
+		if ( ! function_exists( $function ) ) {
+			continue;
+		}
+
+		add_action( 'book-database/book-edit/information-fields', $function );
+
+		// Add title alt field after title.
+		if ( 'title' == $key ) {
+			add_action( 'book-database/book-edit/information-fields', 'bdb_book_title_alt_field' );
+		}
+	}
+
+	// Add taxonomies last.
+	add_action( 'book-database/book-edit/information-fields', 'bdb_book_taxonomy_fields' );
+}
+
+add_action( 'init', 'bdb_setup_book_meta_fields', 10 );
+
 /**
  * Field: Book Cover
  *
@@ -51,7 +79,7 @@ function bdb_book_cover_field( $book ) {
 	) );
 }
 
-add_action( 'book-database/book-edit/information-fields', 'bdb_book_cover_field' );
+//add_action( 'book-database/book-edit/information-fields', 'bdb_book_cover_field' );
 
 /**
  * Field: Book Title
@@ -71,7 +99,7 @@ function bdb_book_title_field( $book ) {
 	) );
 }
 
-add_action( 'book-database/book-edit/information-fields', 'bdb_book_title_field' );
+//add_action( 'book-database/book-edit/information-fields', 'bdb_book_title_field' );
 
 /**
  * Field: Alternative Book Title
@@ -115,7 +143,7 @@ function bdb_book_title_alt_field( $book ) {
 	) );
 }
 
-add_action( 'book-database/book-edit/information-fields', 'bdb_book_title_alt_field' );
+//add_action( 'book-database/book-edit/information-fields', 'bdb_book_title_alt_field' );
 
 /**
  * Field: Author
@@ -153,7 +181,7 @@ function bdb_book_author_field( $book ) {
 	book_database()->html->meta_row( 'raw', array( 'label' => __( 'Author(s)', 'book-database' ), 'field' => $field ) );
 }
 
-add_action( 'book-database/book-edit/information-fields', 'bdb_book_author_field' );
+//add_action( 'book-database/book-edit/information-fields', 'bdb_book_author_field' );
 
 /**
  * Field: Book Series
@@ -196,7 +224,7 @@ function bdb_book_series_field( $book ) {
 	<?php
 }
 
-add_action( 'book-database/book-edit/information-fields', 'bdb_book_series_field' );
+//add_action( 'book-database/book-edit/information-fields', 'bdb_book_series_field' );
 
 /**
  * Field: Publication Date
@@ -217,7 +245,7 @@ function bdb_book_pub_date_field( $book ) {
 	) );
 }
 
-add_action( 'book-database/book-edit/information-fields', 'bdb_book_pub_date_field' );
+//add_action( 'book-database/book-edit/information-fields', 'bdb_book_pub_date_field' );
 
 /**
  * Field: Pages
@@ -238,7 +266,7 @@ function bdb_book_pages_field( $book ) {
 	) );
 }
 
-add_action( 'book-database/book-edit/information-fields', 'bdb_book_pages_field' );
+//add_action( 'book-database/book-edit/information-fields', 'bdb_book_pages_field' );
 
 /**
  * Field: Goodreads URL
@@ -260,7 +288,7 @@ function bdb_book_goodreads_url_field( $book ) {
 	) );
 }
 
-add_action( 'book-database/book-edit/information-fields', 'bdb_book_goodreads_url_field' );
+//add_action( 'book-database/book-edit/information-fields', 'bdb_book_goodreads_url_field' );
 
 /**
  * Field: Buy Link
@@ -282,7 +310,7 @@ function bdb_book_buy_link_field( $book ) {
 	) );
 }
 
-add_action( 'book-database/book-edit/information-fields', 'bdb_book_buy_link_field' );
+//add_action( 'book-database/book-edit/information-fields', 'bdb_book_buy_link_field' );
 
 /**
  * Field: Taxonomies
@@ -378,8 +406,6 @@ function bdb_book_taxonomy_fields( $book ) {
 	}
 }
 
-add_action( 'book-database/book-edit/information-fields', 'bdb_book_taxonomy_fields' );
-
 /**
  * Field: Synopsis
  *
@@ -398,7 +424,7 @@ function bdb_book_synopsis_field( $book ) {
 	) );
 }
 
-add_action( 'book-database/book-edit/information-fields', 'bdb_book_synopsis_field' );
+//add_action( 'book-database/book-edit/information-fields', 'bdb_book_synopsis_field' );
 
 /*
  * Below: Saving Functions

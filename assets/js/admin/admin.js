@@ -405,8 +405,6 @@
 
         /**
          * Initialize
-         *
-         * @todo Verify with saving.
          */
         init: function () {
             var self = this,

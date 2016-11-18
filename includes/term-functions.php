@@ -265,6 +265,7 @@ function bdb_set_book_terms( $book_id, $terms, $type, $append = false ) {
 				// Create new term.
 				$term_id = book_database()->book_terms->add( array(
 					'name'  => sanitize_text_field( $term ),
+					'slug'  => bdb_unique_slug( sanitize_title( $term ), sanitize_text_field( $type ) ),
 					'type'  => sanitize_text_field( $type ),
 					'count' => 1
 				) );

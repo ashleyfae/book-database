@@ -86,9 +86,19 @@ function bdb_ajax_save_book() {
 		$book_data['ID'] = absint( $book_id );
 	}
 
-	// Move `book_terms` to `terms`.
-	if ( array_key_exists( 'book_terms', $book_data ) ) {
-		$book_data['terms'] = $book_data['book_terms'];
+	// Move `book_terms` to `terms` and format.
+	if ( array_key_exists( 'book_terms', $book_data ) && is_array( $book_data['book_terms'] ) ) {
+		$terms = array();
+		foreach ( $book_data['book_terms'] as $type => $term_string ) {
+			$type = bdb_sanitize_key( $type );
+			if ( is_array( $term_string ) ) {
+				$term_array = $term_string;
+			} else {
+				$term_array = $term_string ? explode( ',', $term_string ) : array();
+			}
+			$terms[ $type ] = array_map( 'trim', $term_array );
+		}
+		$book_data['terms'] = $terms;
 		unset( $book_data['book_terms'] );
 	}
 

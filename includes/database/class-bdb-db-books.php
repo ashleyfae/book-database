@@ -454,7 +454,7 @@ class BDB_DB_Books extends BDB_DB {
 		$defaults = array(
 			'ID'              => false,
 			'title'           => false,
-			'author_id'       => false, // @todo Make this work - join needed.
+			'author_id'       => false,
 			'author_name'     => false,
 			'series_name'     => false,
 			'series_id'       => false,

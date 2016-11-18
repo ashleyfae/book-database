@@ -86,6 +86,12 @@ function bdb_get_book_fields() {
 			'label'       => sprintf( '<a href="%1$s">%2$s</a>', '[goodreads]', __( 'Goodreads', 'book-database' ) ),
 			'linebreak'   => 'on'
 		),
+		'buy_link'      => array(
+			'name'        => __( 'Purchase Link', 'book-database' ),
+			'placeholder' => '[buy]',
+			'label'       => sprintf( '<a href="%1$s" target="_blank">%2$s</a>', '[buy]', __( 'Buy the Book', 'book-database' ) ),
+			'linebreak'   => 'on'
+		),
 		'rating'        => array(
 			'name'        => __( 'Rating', 'book-database' ),
 			'placeholder' => '[rating]',
@@ -140,6 +146,7 @@ function bdb_get_default_book_layout_keys() {
 		'pages',
 		'source',
 		'goodreads_url',
+		'buy_link',
 		'rating',
 		'synopsis'
 	);

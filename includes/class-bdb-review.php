@@ -504,7 +504,7 @@ class BDB_Review {
 	 * the post where the review is located (if provided). Return false if all
 	 * else fails.
 	 *
-	 * @todo Ditch the permalink shit and create a new method.
+	 * @todo   Ditch the permalink shit and create a new method.
 	 *
 	 * @access public
 	 * @since  1.0.0
@@ -521,6 +521,26 @@ class BDB_Review {
 		}
 
 		return apply_filters( 'book-database/review/get/url', $url, $this->ID, $this );
+
+	}
+
+	/**
+	 * Get Formatted URL
+	 *
+	 * Returns the URL to the external review if provided, otherwise the URL to
+	 * the post where the review is located (if provided). Return false if all
+	 * else fails.
+	 *
+	 * @param bool $use_id Whether or not to build the post URL with the ID rather
+	 *                     than pretty permalinks. By setting to `true`, fewer queries
+	 *                     are performed.
+	 *
+	 * @access public
+	 * @since  1.0.0
+	 * @return string|false URL to review or false if none.
+	 */
+	public function get_final_url( $use_id = true ) {
+
 
 	}
 

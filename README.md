@@ -27,8 +27,6 @@ I'm not sure if I'll ever officially release this. I'm mostly building this for 
 
 * Analytics: datepicker for custom range.
 * Front-end shortcode statistics. Or maybe not.
-* Purchase links? Ew. Maybe just one.
-* Update book info fields in book submission to only show enabled ones.
 * Possibly add something for tropes. Or this could just be a book term.
 * Erotica warning.
 * Improve filter form on review archive. Maybe put it in a function with actions for each parameter so they can be added/removed.

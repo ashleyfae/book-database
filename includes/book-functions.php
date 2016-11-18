@@ -228,6 +228,7 @@ function bdb_get_formatted_series_name( $book_id, $series_name = false ) {
  *                      `pages` - Number of pages.
  *                      `synopsis` - Book synopsis.
  *                      `goodreads_url` - Link to Goodreads page.
+ *                      `buy_link` - Link to purchase page.
  *                      `terms` - Array of associated terms.
  *                      |----> `term_type` - Array of terms names of this type.
  *
@@ -266,6 +267,7 @@ function bdb_insert_book( $data = array() ) {
 	$book_db_data['pages']           = ( array_key_exists( 'pages', $data ) && $data['pages'] ) ? absint( $data['pages'] ) : null;
 	$book_db_data['synopsis']        = array_key_exists( 'synopsis', $data ) ? wp_kses_post( $data['synopsis'] ) : '';
 	$book_db_data['goodreads_url']   = array_key_exists( 'goodreads_url', $data ) ? esc_url_raw( $data['goodreads_url'] ) : '';
+	$book_db_data['buy_link']        = array_key_exists( 'buy_link', $data ) ? esc_url_raw( $data['buy_link'] ) : '';
 	$book_db_data['terms']           = ( array_key_exists( 'terms', $data ) && is_array( $data['terms'] ) ) ? $data['terms'] : array();
 
 	if ( array_key_exists( 'ID', $data ) && $data['ID'] > 0 ) {

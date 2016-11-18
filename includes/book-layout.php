@@ -474,7 +474,7 @@ add_filter( 'book-database/book/formatted-info/value/buy_link', 'bdb_book_layout
 function bdb_book_layout_rating( $value, $enabled_fields, $book_id, $book ) {
 	if ( null !== $book->get_rating() ) {
 		$rating       = new BDB_Rating( $book->get_rating() );
-		$fa_stars     = $rating->format( 'font_awesome' ); // @todo schema markup
+		$fa_stars     = $rating->format( 'font_awesome' );
 		$actual_value = is_numeric( $book->get_rating() ) ? $book->get_rating() : 0;
 
 		$value = '<span itemprop="reviewRating" itemscope itemtype="http://schema.org/Rating">';

@@ -266,7 +266,7 @@ function bdb_insert_book( $data = array() ) {
 	$book_db_data['pages']           = ( array_key_exists( 'pages', $data ) && $data['pages'] ) ? absint( $data['pages'] ) : null;
 	$book_db_data['synopsis']        = array_key_exists( 'synopsis', $data ) ? wp_kses_post( $data['synopsis'] ) : '';
 	$book_db_data['goodreads_url']   = array_key_exists( 'goodreads_url', $data ) ? esc_url_raw( $data['goodreads_url'] ) : '';
-	$book_db_data['terms']           = array_key_exists( 'terms', $data ) ? $data['terms'] : false;
+	$book_db_data['terms']           = ( array_key_exists( 'terms', $data ) && is_array( $data['terms'] ) ) ? $data['terms'] : array();
 
 	if ( array_key_exists( 'ID', $data ) && $data['ID'] > 0 ) {
 		$book_db_data['ID'] = absint( $data['ID'] );
@@ -278,10 +278,18 @@ function bdb_insert_book( $data = array() ) {
 		return new WP_Error( 'error-inserting-book', __( 'Error inserting book information into database.', 'book-database' ) );
 	}
 
-	if ( is_array( $book_db_data['terms'] ) ) {
-		foreach ( $book_db_data['terms'] as $type => $terms ) {
-			bdb_set_book_terms( $book_id, $terms, $type, false );
-		}
+	/* Set Terms */
+
+	$terms      = array();
+	$taxonomies = bdb_get_taxonomies( true );
+	foreach ( $taxonomies as $id => $options ) {
+		$terms[ $id ] = array();
+	}
+
+	$final_terms = array_merge( $terms, $book_db_data['terms'] );
+
+	foreach ( $final_terms as $type => $terms ) {
+		bdb_set_book_terms( $book_id, $terms, $type, false );
 	}
 
 	return $book_id;

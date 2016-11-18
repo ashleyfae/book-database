@@ -2,7 +2,7 @@
 /**
  * Shortcode: Book Reviews - Single Book Entry
  *
- * @todo Delete the specific Nose Graze stuff like aq_resize and whatever else.
+ * @todo      Delete the specific Nose Graze stuff like aq_resize and whatever else.
  *
  * @package   book-database
  * @copyright Copyright (c) 2016, Ashley Gibson
@@ -24,7 +24,7 @@ $book = $entry['book'];
 $review = $entry['review'];
 
 $rating = new BDB_Rating( $review->get_rating() );
-$url    = $review->is_external() ? $review->get_url() : home_url( '/?p=' . $review->get_post_id() );
+$url    = $review->get_final_url();
 ?>
 <div id="review-<?php echo absint( $review->ID ); ?>" class="book-review-entry">
 	<?php

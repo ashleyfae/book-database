@@ -68,7 +68,7 @@ function bdb_review_url_field( $review ) {
 	book_database()->html->meta_row( 'text', array( 'label' => __( 'External Review URL', 'book-database' ) ), array(
 		'id'          => 'external_url',
 		'name'        => 'external_url',
-		'value'       => $review->is_external() ? $review->get_url() : false,
+		'value'       => $review->get_external_url(),
 		'type'        => 'url',
 		'placeholder' => 'http://',
 		'desc'        => __( 'Enter a URL to the external review location. Leave blank if this is a review associated with a blog post.', 'book-database' )

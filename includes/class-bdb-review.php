@@ -498,26 +498,20 @@ class BDB_Review {
 	}
 
 	/**
-	 * Get URL
+	 * Get External URL
 	 *
-	 * Returns the URL to the external review if provided, otherwise the URL to
-	 * the post where the review is located (if provided). Return false if all
-	 * else fails.
-	 *
-	 * @todo   Ditch the permalink shit and create a new method.
+	 * Returns the URL to the external review if provided, or false if none is set.
 	 *
 	 * @access public
 	 * @since  1.0.0
 	 * @return string|false URL to review or false if none.
 	 */
-	public function get_url() {
+	public function get_external_url() {
 
 		$url = false;
 
 		if ( $this->url ) {
 			$url = $this->url;
-		} elseif ( $this->post_id ) {
-			$url = get_permalink( absint( $this->post_id ) );
 		}
 
 		return apply_filters( 'book-database/review/get/url', $url, $this->ID, $this );
@@ -525,7 +519,7 @@ class BDB_Review {
 	}
 
 	/**
-	 * Get Formatted URL
+	 * Get Final URL
 	 *
 	 * Returns the URL to the external review if provided, otherwise the URL to
 	 * the post where the review is located (if provided). Return false if all
@@ -541,6 +535,17 @@ class BDB_Review {
 	 */
 	public function get_final_url( $use_id = true ) {
 
+		$url = false;
+
+		if ( $this->get_external_url() ) {
+			$url = $this->get_external_url();
+		} elseif ( $this->post_id && $use_id ) {
+			$url = add_query_arg( array( 'p' => absint( $this->post_id ) ), home_url() );
+		} elseif ( $this->post_id ) {
+			$url = get_permalink( absint( $this->post_id ) );
+		}
+
+		return apply_filters( 'book-database/review/get/final_url', $url, $use_id, $this->ID, $this );
 
 	}
 

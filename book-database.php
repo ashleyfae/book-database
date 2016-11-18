@@ -1,7 +1,7 @@
 <?php
 /**
  * Plugin Name: Book Database
- * Plugin URI: @todo
+ * Plugin URI: https://github.com/nosegraze/book-database
  * Description: Maintain a database of books and reviews.
  * Version: 0.1.0
  * Author: Ashley Gibson

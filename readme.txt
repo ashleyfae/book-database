@@ -1,6 +1,6 @@
 === Book Database ===
 Author URI: https://www.nosegraze.com
-Plugin URI: @todo
+Plugin URI: https://github.com/nosegraze/book-database
 Requires at least: 4.4
 Tested up to: 4.6.1
 License: GPLv2 or later

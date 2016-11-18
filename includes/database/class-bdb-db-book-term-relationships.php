@@ -284,11 +284,6 @@ class BDB_DB_Book_Term_Relationships extends BDB_DB {
 
 		$args = wp_parse_args( $args, $defaults );
 
-		// Big ass number to get them all.
-		if ( $args['number'] < 1 ) {
-			$args['number'] = 999999999999;
-		}
-
 		$join  = '';
 		$where = ' WHERE 1=1 ';
 

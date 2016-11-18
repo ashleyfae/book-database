@@ -504,3 +504,24 @@ function bdb_book_layout_synopsis( $value, $enabled_fields, $book_id, $book ) {
 }
 
 add_filter( 'book-database/book/formatted-info/value/synopsis', 'bdb_book_layout_synopsis', 10, 4 );
+
+/**
+ * Book Layout Wrapper
+ *
+ * Wraps the entire HTML in a `<div>` with the book ID.
+ *
+ * @param string   $html Formatted book info.
+ * @param BDB_Book $book Book object.
+ *
+ * @since 1.0.0
+ * @return string
+ */
+function bdb_book_layout_wrapper( $html, $book ) {
+	if ( empty( $html ) ) {
+		return $html;
+	}
+
+	return '<div id="book-' . esc_attr( $book->ID ) . '" class="bookdb-book-info">' . $html . '</div>';
+}
+
+add_filter( 'book-database/book/formatted-info/output', 'bdb_book_layout_wrapper', 10, 2 );

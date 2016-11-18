@@ -24,7 +24,7 @@ $book = $entry['book'];
 $review = $entry['review'];
 
 $rating = new BDB_Rating( $review->get_rating() );
-$url    = $review->get_final_url();
+$url    = $review->get_permalink();
 ?>
 <div id="review-<?php echo absint( $review->ID ); ?>" class="book-review-entry">
 	<?php

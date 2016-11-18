@@ -519,7 +519,7 @@ class BDB_Review {
 	}
 
 	/**
-	 * Get Final URL
+	 * Get Permalink
 	 *
 	 * Returns the URL to the external review if provided, otherwise the URL to
 	 * the post where the review is located (if provided). Return false if all
@@ -533,7 +533,7 @@ class BDB_Review {
 	 * @since  1.0.0
 	 * @return string|false URL to review or false if none.
 	 */
-	public function get_final_url( $use_id = true ) {
+	public function get_permalink( $use_id = true ) {
 
 		$url = false;
 

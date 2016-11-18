@@ -525,15 +525,17 @@ class BDB_Review {
 	 * the post where the review is located (if provided). Return false if all
 	 * else fails.
 	 *
-	 * @param bool $use_id Whether or not to build the post URL with the ID rather
-	 *                     than pretty permalinks. By setting to `true`, fewer queries
-	 *                     are performed.
+	 * @param bool $use_id      Whether or not to build the post URL with the ID rather
+	 *                          than pretty permalinks. By setting to `true`, fewer queries
+	 *                          are performed.
+	 * @param bool $id_appended Whether or not to append #book-{#} to the URL to jump to
+	 *                          the book information.
 	 *
 	 * @access public
 	 * @since  1.0.0
 	 * @return string|false URL to review or false if none.
 	 */
-	public function get_permalink( $use_id = true ) {
+	public function get_permalink( $use_id = true, $id_appended = true ) {
 
 		$url = false;
 
@@ -545,7 +547,11 @@ class BDB_Review {
 			$url = get_permalink( absint( $this->post_id ) );
 		}
 
-		return apply_filters( 'book-database/review/get/final_url', $url, $use_id, $this->ID, $this );
+		if ( apply_filters( 'book-database/review/permalink/append-book-id', $id_appended, $this ) && ! empty( $url ) && ! $this->is_external() ) {
+			$url .= '#book-' . absint( $this->book_id );
+		}
+
+		return apply_filters( 'book-database/review/get/permalink', $url, $use_id, $this->ID, $this );
 
 	}
 

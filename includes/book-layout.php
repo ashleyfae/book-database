@@ -83,7 +83,7 @@ function bdb_get_book_fields() {
 		'goodreads_url' => array(
 			'name'        => __( 'Goodreads', 'book-database' ),
 			'placeholder' => '[goodreads]',
-			'label'       => sprintf( '<a href="%1$s">%2$s</a>', '[goodreads]', __( 'Goodreads', 'book-database' ) ),
+			'label'       => sprintf( '<a href="%1$s" target="_blank">%2$s</a>', '[goodreads]', __( 'Goodreads', 'book-database' ) ),
 			'linebreak'   => 'on'
 		),
 		'buy_link'      => array(

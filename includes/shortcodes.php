@@ -103,7 +103,7 @@ function bdb_book_reviews_shortcode( $atts, $content = '' ) {
 	$query = new BDB_Review_Query();
 	$vars  = $query->parse_query_args();
 	$query->query();
-	$template = BDB_DIR . 'templates/shortcode-book-reviews-entry.php'; // @todo template function
+	$template = bdb_get_template_part( 'shortcode-book-reviews-entry', '', false );
 
 	$author_name    = $vars['author_name'];
 	$current_rating = $vars['rating'] ? $vars['rating'] : 'any';
@@ -207,7 +207,7 @@ function bdb_book_reviews_shortcode( $atts, $content = '' ) {
 
 	echo '<div id="reviews">';
 
-	if ( $query->have_reviews() ) {
+	if ( $query->have_reviews() && ! empty( $template ) ) {
 		echo '<div class="bookdb-review-list-number-results">' . sprintf( _n( '%s review found', '%s reviews found', $query->total_reviews, 'book-database' ), $query->total_reviews ) . '</div>';
 		echo '<div class="book-reviews-list">';
 		foreach ( $query->get_reviews() as $entry ) {

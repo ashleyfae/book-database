@@ -146,7 +146,7 @@ function bdb_get_theme_template_paths() {
 	$file_paths = array(
 		1   => trailingslashit( get_stylesheet_directory() ) . $template_dir,
 		10  => trailingslashit( get_template_directory() ) . $template_dir,
-		100 => bdb_get_theme_template_dir_name()
+		100 => bdb_get_templates_dir()
 	);
 
 	$file_paths = apply_filters( 'book-database/template-paths', $file_paths );

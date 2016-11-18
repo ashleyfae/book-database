@@ -233,7 +233,7 @@ class BDB_Review_Query {
 
 		// Order
 		if ( isset( $_GET['order'] ) ) {
-			$this->query_vars['order'] = wp_strip_all_tags( $_GET['order'] );
+			$this->query_vars['order'] = ( 'ASC' == $_GET['order'] ) ? 'ASC' : 'DESC';
 		}
 
 		/*

@@ -15,8 +15,6 @@ if ( ! defined( 'ABSPATH' ) ) {
 /**
  * Render Shortcode Preview
  *
- * @todo  Turn this into real book preview.
- *
  * @since 1.0.0
  * @return void
  */

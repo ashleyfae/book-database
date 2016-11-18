@@ -228,6 +228,14 @@ function bdb_link_terms() {
 	return apply_filters( 'book-database/link-terms', true );
 }
 
+/**
+ * Get Allowed Orderby Options
+ *
+ * Used in review queries.
+ *
+ * @since 1.0.0
+ * @return array
+ */
 function bdb_get_allowed_orderby() {
 	$allowed_orderby = array(
 		'date'     => esc_html__( 'Review Date', 'book-database' ),

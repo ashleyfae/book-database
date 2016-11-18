@@ -45,9 +45,8 @@
                 content = content.replace('>Loading Book #' + id[1] + '<', '>' + response.data + '<');
                 editor.setContent(content);
             });
-
-            // @todo: add in max width, possible float, etc.
-            return '<div class="bookdb-shortcode" style="display: block; cursor: pointer; margin: 5px; padding: 10px; border: 1px solid #999;" contentEditable="false" ' +
+            
+            return '<div class="bookdb-shortcode" style="display: block; clear: both; overflow: hidden; cursor: pointer; margin: 5px; padding: 10px; border: 1px solid #999;" contentEditable="false" ' +
                 'data-bookdb-book="' + id[1] + '" data-bookdb-shortcode="' + data + '" data-mce-resize="false" data-mce-placeholder="1">Loading Book #' + id[1] + '</div>';
         }
 

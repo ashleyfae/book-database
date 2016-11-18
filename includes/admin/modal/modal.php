@@ -110,12 +110,13 @@ function bdb_enqueue_modal_scripts() {
 		'nonce'    => wp_create_nonce( 'book-database' ),
 		'l10n'     => array(
 			'action_button_default' => esc_html__( 'Insert', 'book-database' ),
-			'action_button_update'  => __( 'Update', 'book-database' ),
-			'editing'               => __( 'Editing', 'book-database' ),
-			'insert_new_book'       => __( 'Insert New Book', 'book-database' ),
-			'media_title'           => __( 'Select or Upload Image', 'book-database' ),
-			'media_button'          => __( 'Use Image', 'book-database' ),
-			'shortcode_remove'      => __( 'Are you sure you want to remove this book?', 'book-database' )
+			'action_button_update'  => esc_html__( 'Update', 'book-database' ),
+			'custom'                => esc_html__( 'Custom', 'book-database' ),
+			'editing'               => esc_html__( 'Editing', 'book-database' ),
+			'insert_new_book'       => esc_html__( 'Insert New Book', 'book-database' ),
+			'media_title'           => esc_html__( 'Select or Upload Image', 'book-database' ),
+			'media_button'          => esc_html__( 'Use Image', 'book-database' ),
+			'shortcode_remove'      => esc_html__( 'Are you sure you want to remove this book?', 'book-database' )
 		)
 	) );
 }

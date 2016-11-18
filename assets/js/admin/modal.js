@@ -310,7 +310,7 @@ var BookDB_Modal_Admin = {
                 }
             });
 
-            indexTitleField.append('<option value="custom">Custom</option>').val(selectedIndexTitle);// @todo var
+            indexTitleField.append('<option value="custom">' + bookdb_modal.l10n.custom + '</option>').val(selectedIndexTitle);
         }
 
         if ('custom' == selectedIndexTitle) {

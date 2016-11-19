@@ -80,18 +80,21 @@ class BDB_Reviews_by_Tax extends BDB_Review_Index {
 			"SELECT DISTINCT review.ID, review.post_id, review.url, review.rating,
 				        book.title, book.index_title, book.series_position,
 				        series.ID as series_id, series.name as series_name,
-				        author.term_id as author_id, author.name as author_name
+				        author.term_id as author_id, GROUP_CONCAT(DISTINCT author.name SEPARATOR ', ') as author_name
 				FROM {$this->tables['reviews']} as review
 				INNER JOIN {$this->tables['books']} as book ON review.book_id = book.ID
 				LEFT JOIN {$this->tables['series']} as series ON book.series_id = series.ID
 				LEFT JOIN {$this->tables['relationships']} as r ON book.ID = r.book_id
-				INNER JOIN {$this->tables['terms']} as author ON r.term_id = author.term_id
-				INNER JOIN {$this->tables['terms']} as term on r.term_id = %d
-				WHERE author.type = %s
+				INNER JOIN {$this->tables['terms']} as author ON (r.term_id = author.term_id AND author.type = 'author')
+				WHERE book.ID IN (
+					SELECT DISTINCT (book.ID) FROM {$this->tables['books']} book
+					INNER JOIN {$this->tables['relationships']} r ON book.ID = r.book_id
+					INNER JOIN {$this->tables['terms']} terms on r.term_id = terms.term_id AND terms.term_id = %d
+				)
+				GROUP BY review.ID
 				ORDER BY {$this->orderby}
 				{$this->order}",
-			absint( $term_id ),
-			'author'
+			absint( $term_id )
 		);
 
 		$reviews = $wpdb->get_results( $query );

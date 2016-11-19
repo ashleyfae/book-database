@@ -2,8 +2,6 @@
 /**
  * Shortcode: Book Reviews - Single Book Entry
  *
- * @todo      Delete the specific Nose Graze stuff like aq_resize and whatever else.
- *
  * @package   book-database
  * @copyright Copyright (c) 2016, Ashley Gibson
  * @license   GPL2+
@@ -30,15 +28,7 @@ $url    = $review->get_permalink();
 	<?php
 	if ( $book->get_cover_id() ) {
 		echo $url ? '<a href="' . esc_url( $url ) . '">' : '';
-
-		if ( function_exists( 'aq_resize' ) ) {
-			$resized   = aq_resize( $book->get_cover_url( 'full' ), 300, 452, true, true, true );
-			$final_img = $resized ? $resized : $book->get_cover_url( 'large' );
-			echo '<img src="' . esc_url( $final_img ) . '" alt="' . esc_attr( wp_strip_all_tags( $book->get_title() ) ) . '">';
-		} else {
-			echo $book->get_cover( apply_filters( 'book-database/shortcode/book-reviews/entry/cover-image-size', 'large' ) );
-		}
-
+		echo $book->get_cover( apply_filters( 'book-database/shortcode/book-reviews/entry/cover-image-size', 'medium' ) );
 		echo $url ? '</a>' : '';
 	}
 	?>
@@ -50,6 +40,6 @@ $url    = $review->get_permalink();
 	<?php endif; ?>
 
 	<?php if ( $url ) : ?>
-		<a href="<?php echo esc_url( $url ); ?>" class="btn btn-primary button bookdb-read-review-link"><?php _e( 'Read Review', 'book-database' ); ?></a>
+		<a href="<?php echo esc_url( $url ); ?>" class="button bookdb-read-review-link"><?php _e( 'Read Review', 'book-database' ); ?></a>
 	<?php endif; ?>
 </div>

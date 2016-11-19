@@ -42,7 +42,7 @@ add_filter( 'book-database/books/views', 'bdb_register_default_book_views' );
 function bdb_ajax_get_alt_titles() {
 	check_ajax_referer( 'book-database', 'nonce' );
 
-	$title = wp_strip_all_tags( $_POST['title'] );
+	$title = stripslashes( wp_strip_all_tags( $_POST['title'] ) );
 
 	if ( ! $title ) {
 		wp_send_json_error( __( 'Error: missing title.', 'book-database' ) );

@@ -51,7 +51,7 @@ add_shortcode( 'book', 'bdb_book_shortcode' );
  */
 function bdb_review_index_shortcode( $atts, $content = '' ) {
 	$atts = shortcode_atts( array(
-		'type'    => 'title', // title, author, series, publisher, genre
+		'type'    => 'title', // title, author, series, publisher, genre @todo year
 		'orderby' => 'title', // title, author, date, pub_date, series_position, pages
 		'order'   => 'ASC', // ASC, DESC
 		'letters' => 'yes' // yes, no

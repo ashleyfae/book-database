@@ -203,7 +203,11 @@ class BDB_Review_Query {
 
 		// Rating
 		if ( isset( $_GET['rating'] ) && 'any' != $_GET['rating'] ) {
-			$this->query_vars['rating'] = wp_strip_all_tags( $_GET['rating'] );
+			$allowed_ratings = bdb_get_available_ratings();
+
+			if ( array_key_exists( $_GET['rating'], $allowed_ratings ) ) {
+				$this->query_vars['rating'] = wp_strip_all_tags( $_GET['rating'] );
+			}
 		}
 
 		// Genre
@@ -260,6 +264,14 @@ class BDB_Review_Query {
 					$this->query_vars['series_name'] = $series_obj;
 					$this->query_vars['orderby']     = 'pub_date';
 					$this->query_vars['order']       = 'ASC';
+				}
+
+			} elseif ( 'rating' == $wp_query->query_vars['book_tax'] ) {
+
+				$allowed_ratings = bdb_get_available_ratings();
+
+				if ( array_key_exists( $wp_query->query_vars['book_term'], $allowed_ratings ) ) {
+					$this->query_vars['rating'] = wp_strip_all_tags( $wp_query->query_vars['book_term'] );
 				}
 
 			} else {

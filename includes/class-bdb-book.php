@@ -842,9 +842,41 @@ class BDB_Book {
 	 */
 	public function get_term_type( $type ) {
 
-		$all_terms = $this->get_terms();
+		if ( isset( $this->terms ) ) {
+			$all_terms = $this->get_terms();
+			$terms     = ( is_array( $all_terms ) && array_key_exists( $type, $all_terms ) ) ? $all_terms[ $type ] : false;
+		} else {
+			$terms = bdb_get_book_terms( $this->ID, $type );
+		}
 
-		return ( is_array( $all_terms ) && array_key_exists( $type, $all_terms ) ) ? $all_terms[ $type ] : false;
+		return $terms;
+
+	}
+
+	/**
+	 * Has Term
+	 *
+	 * Checks whether or not this book has a given term.
+	 *
+	 * @param string|int $name_or_id Term name or ID to check.
+	 * @param string     $type       Term type (`author`, `genre`, etc.).
+	 *
+	 * @access public
+	 * @since  1.0.0
+	 * @return bool
+	 */
+	public function has_term( $name_or_id, $type ) {
+
+		$terms = $this->get_term_type( $type );
+
+		if ( ! is_array( $terms ) ) {
+			return false;
+		}
+
+		$to_pluck = is_numeric( $name_or_id ) ? 'term_id' : 'name';
+		$fields   = wp_list_pluck( $terms, $to_pluck );
+
+		return in_array( $name_or_id, $fields );
 
 	}
 

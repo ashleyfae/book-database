@@ -386,3 +386,9 @@ function bdb_get_term_link( $term, $type = false ) {
 
 	return apply_filters( 'book-database/term-archive-link', $final_url, $slug, $type, $term );
 }
+
+function bdb_has_term( $book_id_or_object, $term_name_or_id, $term_type ) {
+	$book = new BDB_Book( $book_id_or_object );
+
+	return $book->has_term( $term_name_or_id, $term_type );
+}

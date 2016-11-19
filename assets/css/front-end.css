@@ -23,7 +23,7 @@
   width: 100%; }
 
 .bookdb-reviews-list-pagination {
-  margin: 1.5em 0 !important; }
+  margin: 1.5em 0; }
 
 @media (min-width: 768px) {
   #bookdb-filter-book-reviews {

@@ -35,7 +35,7 @@ class BDB_Reviews_by_Title extends BDB_Review_Index {
 			"SELECT DISTINCT review.ID, review.post_id, review.url, review.rating,
 				        book.title, book.index_title, book.series_position,
 				        series.ID as series_id, series.name as series_name,
-				        author.term_id as author_id, GROUP_CONCAT(author.name SEPARATOR ', ') as author_name
+				        author.term_id as author_id, GROUP_CONCAT(DISTINCT author.name SEPARATOR ', ') as author_name
 				FROM {$this->tables['reviews']} as review
 				INNER JOIN {$this->tables['books']} as book ON review.book_id = book.ID
 				LEFT JOIN {$this->tables['series']} as series ON book.series_id = series.ID

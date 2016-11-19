@@ -56,18 +56,16 @@ class BDB_Reviews_by_Series extends BDB_Review_Index {
 			"SELECT DISTINCT review.ID, review.post_id, review.url, review.rating,
 				        book.title, book.series_position,
 				        series.ID as series_id, series.name as series_name,
-				        author.term_id as author_id, author.name as author_name
+				        author.term_id as author_id, GROUP_CONCAT(DISTINCT author.name SEPARATOR ', ') as author_name
 				FROM {$this->tables['reviews']} as review
-				INNER JOIN {$this->tables['books']} as book ON review.book_id = book.ID
+				INNER JOIN {$this->tables['books']} as book ON (review.book_id = book.ID AND book.series_id = %d)
 				LEFT JOIN {$this->tables['series']} as series ON book.series_id = series.ID
 				LEFT JOIN {$this->tables['relationships']} as r ON book.ID = r.book_id
-				INNER JOIN {$this->tables['terms']} as author ON r.term_id = author.term_id
-				INNER JOIN {$this->tables['series']} on book.series_id = %d
-				WHERE author.type = %s
+				INNER JOIN {$this->tables['terms']} as author ON (r.term_id = author.term_id AND author.type = 'author')
+				GROUP BY review.ID
 				ORDER BY {$this->orderby}
 				{$this->order}",
-			absint( $series_id ),
-			'author'
+			absint( $series_id )
 		);
 
 		$reviews = $wpdb->get_results( $query );

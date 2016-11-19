@@ -386,6 +386,10 @@ class BDB_DB_Reviews extends BDB_DB {
 
 		}
 
+		if ( 'date' == $args['orderby'] ) {
+			$args['orderby'] = 'date_added';
+		}
+
 		$args['orderby'] = ! array_key_exists( $args['orderby'], $this->get_columns() ) ? 'ID' : $args['orderby'];
 
 		$cache_key = md5( 'bdb_reviews_' . serialize( $args ) );

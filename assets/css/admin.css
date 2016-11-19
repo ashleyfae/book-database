@@ -152,6 +152,9 @@
   #bookdb-book-associated-with-review blockquote {
     font-style: italic; }
 
+.book-library_page_bdb-reviews #ID {
+  width: 100px; }
+
 #bookdb-book-page-wrapper .postbox > h2,
 #bookdb-review-page-wrapper .postbox > h2 {
   border-bottom: 1px solid #eee;

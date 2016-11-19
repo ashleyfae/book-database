@@ -59,28 +59,42 @@ function bdb_review_index_shortcode( $atts, $content = '' ) {
 
 	$output = '';
 
-	switch ( $atts['type'] ) {
+	// Check for cache.
+	$cache_key = 'bookdb_review_index_' . serialize( $atts );
+	$cache     = get_transient( $cache_key );
 
-		case 'title' :
-			$index  = new BDB_Reviews_by_Title( $atts, $content );
-			$output = $index->display();
-			break;
+	if ( $cache ) {
+		$output = $cache;
+	} else {
 
-		case 'series' :
-			$index  = new BDB_Reviews_by_Series( $atts, $content );
-			$output = $index->display();
-			break;
+		switch ( $atts['type'] ) {
 
-		default :
-			$taxonomies = bdb_get_taxonomies( true );
-
-			if ( ! array_key_exists( $atts['type'], $taxonomies ) ) {
+			case 'title' :
+				$index  = new BDB_Reviews_by_Title( $atts, $content );
+				$output = $index->display();
 				break;
-			}
 
-			$index  = new BDB_Reviews_by_Tax( $atts, $content );
-			$output = $index->display();
-			break;
+			case 'series' :
+				$index  = new BDB_Reviews_by_Series( $atts, $content );
+				$output = $index->display();
+				break;
+
+			default :
+				$taxonomies = bdb_get_taxonomies( true );
+
+				if ( ! array_key_exists( $atts['type'], $taxonomies ) ) {
+					break;
+				}
+
+				$index  = new BDB_Reviews_by_Tax( $atts, $content );
+				$output = $index->display();
+				break;
+
+		}
+
+		if ( $output ) {
+			set_transient( $cache_key, $output, DAY_IN_SECONDS );
+		}
 
 	}
 

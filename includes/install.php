@@ -88,17 +88,6 @@ function bdb_run_install() {
 	@book_database()->book_terms->create_table();
 	@book_database()->book_term_relationships->create_table();
 
-	if ( ! $current_version ) {
-		require_once BDB_DIR . 'includes/admin/upgrades/upgrade-functions.php';
-
-		// When new upgrade routines are added, mark them as complete on fresh install.
-		$upgrade_routines = array();
-
-		foreach ( $upgrade_routines as $upgrade ) {
-			bdb_set_upgrade_complete( $upgrade );
-		}
-	}
-
 	// Rewrite rules.
 	bdb_rewrite_tags();
 	bdb_rewrite_rules();

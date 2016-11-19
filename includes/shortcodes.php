@@ -122,7 +122,7 @@ function bdb_book_reviews_shortcode( $atts, $content = '' ) {
 	ob_start();
 	?>
 	<form id="bookdb-filter-book-reviews" action="<?php echo esc_url( get_permalink() ); ?>" method="GET">
-		<?php do_action( 'book-database/shortcodes/book-reviews/filter-form', $vars, $query, $atts, $content ); ?>
+		<?php do_action( 'book-database/shortcodes/book-reviews/filter-form', stripslashes_deep( $vars ), $query, $atts, $content ); ?>
 	</form>
 	<?php
 

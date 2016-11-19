@@ -540,7 +540,7 @@ class BDB_DB_Reviews extends BDB_DB {
 		post_id bigint(20) NOT NULL,
 		url mediumtext NOT NULL,
 		user_id bigint(20) NOT NULL,
-		rating mediumtext NOT NULL,
+		rating varchar(32) NOT NULL,
 		date_added datetime NOT NULL,
 		PRIMARY KEY  (ID),
 		UNIQUE KEY book_id_rating (book_id, rating),

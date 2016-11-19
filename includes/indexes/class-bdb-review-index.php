@@ -116,7 +116,7 @@ class BDB_Review_Index {
 			return '';
 		}
 
-		$review = stripslashes_deep( $review );
+		$review = wp_unslash( $review );
 
 		$template = $this->template;
 		$rating   = new BDB_Rating( $review->rating );

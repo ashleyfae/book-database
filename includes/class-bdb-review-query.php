@@ -452,7 +452,7 @@ class BDB_Review_Query {
 		// Get the final results.
 		$reviews = $wpdb->get_results( $query . $pagination );
 
-		$this->reviews = stripslashes_deep( $reviews );
+		$this->reviews = wp_unslash( $reviews );
 
 	}
 

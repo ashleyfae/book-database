@@ -572,7 +572,7 @@ function bdb_text_callback( $args ) {
 	$size = ( isset( $args['size'] ) && ! is_null( $args['size'] ) ) ? $args['size'] : 'regular';
 	$type = ( isset( $args['type'] ) ) ? $args['type'] : 'text';
 	?>
-	<input type="<?php echo esc_attr( $type ); ?>" class="bookdb-description <?php echo esc_attr( sanitize_html_class( $size ) . '-text' ); ?>" id="bdb_settings_<?php echo bdb_sanitize_key( $args['id'] ); ?>" <?php echo $name; ?> value="<?php echo esc_attr( stripslashes( $value ) ); ?>">
+	<input type="<?php echo esc_attr( $type ); ?>" class="bookdb-description <?php echo esc_attr( sanitize_html_class( $size ) . '-text' ); ?>" id="bdb_settings_<?php echo bdb_sanitize_key( $args['id'] ); ?>" <?php echo $name; ?> value="<?php echo esc_attr( wp_unslash( $value ) ); ?>">
 	<?php if ( $args['desc'] ) : ?>
 		<label for="bdb_settings_<?php echo bdb_sanitize_key( $args['id'] ); ?>" class="bookdb-description"><?php echo wp_kses_post( $args['desc'] ); ?></label>
 	<?php endif;
@@ -766,11 +766,11 @@ function bdb_taxonomies_callback( $args ) {
 			<tr class="bookdb-cloned">
 				<td>
 					<label for="bdb_settings[<?php echo esc_attr( $args['id'] ); ?>]_id_<?php echo $i; ?>" class="screen-reader-text"><?php _e( 'ID for the term', 'book-database' ); ?></label>
-					<input type="text" class="regular-text" id="bdb_settings[<?php echo esc_attr( $args['id'] ); ?>]_id_<?php echo $i; ?>" name="bdb_settings[<?php echo esc_attr( $args['id'] ); ?>][<?php echo $i; ?>][id]" value="<?php echo esc_attr( stripslashes( $id ) ); ?>">
+					<input type="text" class="regular-text" id="bdb_settings[<?php echo esc_attr( $args['id'] ); ?>]_id_<?php echo $i; ?>" name="bdb_settings[<?php echo esc_attr( $args['id'] ); ?>][<?php echo $i; ?>][id]" value="<?php echo esc_attr( wp_unslash( $id ) ); ?>">
 				</td>
 				<td>
 					<label for="bdb_settings[<?php echo esc_attr( $args['id'] ); ?>]_name_<?php echo $i; ?>" class="screen-reader-text"><?php _e( 'Name for the term', 'book-database' ); ?></label>
-					<input type="text" class="regular-text" id="bdb_settings[<?php echo esc_attr( $args['id'] ); ?>]_name_<?php echo $i; ?>" name="bdb_settings[<?php echo esc_attr( $args['id'] ); ?>][<?php echo $i; ?>][name]" value="<?php echo esc_attr( stripslashes( $name ) ); ?>">
+					<input type="text" class="regular-text" id="bdb_settings[<?php echo esc_attr( $args['id'] ); ?>]_name_<?php echo $i; ?>" name="bdb_settings[<?php echo esc_attr( $args['id'] ); ?>][<?php echo $i; ?>][name]" value="<?php echo esc_attr( wp_unslash( $name ) ); ?>">
 				</td>
 				<td>
 					<label for="bdb_settings[<?php echo esc_attr( $args['id'] ); ?>]_display_<?php echo $i; ?>" class="screen-reader-text"><?php _e( 'Term display type', 'book-database' ); ?></label>

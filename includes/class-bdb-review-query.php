@@ -417,7 +417,7 @@ class BDB_Review_Query {
 		$query = "SELECT DISTINCT review.ID, review.post_id, review.url, review.rating, review.date_added,
 				        book.ID as book_id, book.cover as book_cover_id, book.title as book_title, book.index_title as book_index_title, book.series_position,
 				        series.ID as series_id, series.name as series_name,
-				        author.term_id as author_id, author.name as author_name
+				        author.term_id as author_id, GROUP_CONCAT(author.name SEPARATOR ', ') as author_name
 				FROM {$this->tables['reviews']} as review
 				INNER JOIN {$this->tables['books']} as book ON review.book_id = book.ID
 				LEFT JOIN {$this->tables['series']} as series ON book.series_id = series.ID
@@ -425,6 +425,7 @@ class BDB_Review_Query {
 				INNER JOIN {$this->tables['terms']} as author ON (r.term_id = author.term_id AND author.type = 'author')
 				{$join}
 				{$where}
+				GROUP BY review.ID
 				ORDER BY {$this->orderby}
 				{$this->order}";
 

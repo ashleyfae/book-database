@@ -76,7 +76,7 @@ function bdb_get_book_reviews( $book_id, $args = array() ) {
  * @since 1.0.0
  * @return int
  */
-function bdb_count_total_reviews( $args ) {
+function bdb_count_reviews( $args ) {
 	return book_database()->reviews->count( $args );
 }
 

@@ -468,7 +468,7 @@ class BDB_Reviews_Table extends WP_List_Table {
 	 * @uses   BDB_Reviews_Table::get_columns()
 	 * @uses   WP_List_Table::get_sortable_columns()
 	 * @uses   BDB_Reviews_Table::reviews_data()
-	 * @uses   bdb_count_total_reviews()
+	 * @uses   bdb_count_reviews()
 	 * @uses   WP_List_Table::set_pagination_args()
 	 *
 	 * @access public
@@ -488,7 +488,7 @@ class BDB_Reviews_Table extends WP_List_Table {
 
 		$this->items = $this->reviews_data();
 
-		$this->total = bdb_count_total_reviews( $this->args );
+		$this->total = bdb_count_reviews( $this->args );
 
 		$this->set_pagination_args( array(
 			'total_items' => $this->total,

@@ -481,6 +481,10 @@ function bdb_book_layout_rating( $value, $enabled_fields, $book_id, $book ) {
 		$value .= '<span class="bookdb-font-awesome-star-wrap">' . $fa_stars . '</span>';
 		$value .= '<span class="bookdb-actual-rating-values"><span itemprop="ratingValue">' . esc_html( $actual_value ) . '</span>/<span itemprop="bestRating">' . esc_html( $rating->max ) . '</span></span>';
 		$value .= '</span>';
+
+		if ( bdb_link_terms() ) {
+			$value = '<a href="' . esc_url( bdb_get_term_link( $book->get_rating(), 'rating' ) ) . '">' . $value . '</a>';
+		}
 	}
 
 	return $value;

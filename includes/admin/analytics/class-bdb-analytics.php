@@ -241,11 +241,14 @@ class BDB_Analytics {
 	public function get_pages_read() {
 
 		global $wpdb;
-		$book_table      = book_database()->books->table_name;
-		$book_ids        = self::$instance->get_book_ids();
-		$book_ids_string = implode( ',', array_map( 'absint', $book_ids ) );
+		$book_table    = book_database()->books->table_name;
+		$reading_table = book_database()->reading_list->table_name;
 
-		$query       = "SELECT SUM(pages) FROM {$book_table} WHERE `ID` IN ({$book_ids_string})";
+		$query       = $wpdb->prepare(
+			"SELECT SUM(pages) from $book_table book INNER JOIN $reading_table list ON (list.book_id = book.ID AND `date_finished` >= %s AND `date_finished` <= %s)",
+			date( 'Y-m-d 00:00:00', self::$start ),
+			date( 'Y-m-d 00:00:00', self::$end )
+		);
 		$pages       = $wpdb->get_var( $query );
 		$total_pages = number_format( absint( $pages ) );
 

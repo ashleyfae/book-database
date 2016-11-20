@@ -253,7 +253,7 @@ class BDB_Reviews_Table extends WP_List_Table {
 			'book_title' => __( 'Book Title', 'book-database' ),
 			'author'     => __( 'Author', 'book-database' ),
 			'rating'     => __( 'Rating', 'book-database' ),
-			'date'       => __( 'Date', 'book-database' )
+			'date'       => __( 'Date Written', 'book-database' )
 		);
 
 		return apply_filters( 'book-database/reviews-table/review-columns', $columns );

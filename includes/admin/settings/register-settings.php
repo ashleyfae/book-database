@@ -247,12 +247,19 @@ function bdb_get_registered_settings() {
 		) ),
 		'reviews' => array(
 			'main' => array(
-				'reviews_page' => array(
+				'reviews_page'        => array(
 					'id'      => 'reviews_page',
 					'name'    => esc_html__( 'Reviews Page', 'book-database' ),
 					'desc'    => __( 'The page used for generating all taxonomy archives.', 'book-database' ),
 					'type'    => 'select',
 					'options' => bdb_get_pages()
+				),
+				'sync_published_date' => array(
+					'id'   => 'sync_published_date',
+					'name' => esc_html__( 'Sync Review Publish Date', 'book-database' ),
+					'desc' => __( 'When a review is connected to a post, the review publication date will be synced to the post\'s date.', 'book-database' ),
+					'type' => 'checkbox',
+					'std'  => false
 				)
 			)
 		),

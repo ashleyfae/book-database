@@ -87,13 +87,14 @@ function bdb_count_reviews( $args ) {
  * is updated instead.
  *
  * @param array $data   Review data. Arguments include:
- *                      `ID` - To update an existing book (optional).
+ *                      `ID` - To update an existing review (optional).
  *                      `book_id` - Book ID associated with the review (optional).
  *                      `post_id` - Post associated with the review (optional).
  *                      `url` - URL to an external book review (optional).
  *                      `user_id` - User who the review is for. If omitted, current user is used.
  *                      `rating` - Rating for the book (optional).
  *                      `date_written` - Timestamp for when the review was added. If omitted, current time is used.
+ *                      `date_published` - Tiemstamp for when the review was published.
  *
  * @since 1.0.0
  * @return int|WP_Error ID of the review inserted or updated, or WP_Error on failure.
@@ -193,4 +194,38 @@ function bdb_get_review_years( $type = 'written', $order = 'DESC' ) {
 	}
 
 	return $final_years;
+}
+
+/**
+ * Sync Review Publication Date with Post Date
+ *
+ * @param int $post_id
+ *
+ * @since 1.1.0
+ * @return void
+ */
+function bdb_sync_review_publish_date( $post_id ) {
+	$post_reviews = bdb_get_post_reviews( $post_id );
+	$review_ids   = array();
+
+	if ( empty( $post_reviews ) ) {
+		return;
+	}
+
+	$post_date    = get_the_date( 'Y-m-d H:i:s', $post_id );
+	$review_table = book_database()->reviews->table_name;
+
+	foreach ( $post_reviews as $review ) {
+		$review_ids[] = absint( $review->ID );
+	}
+
+	$id_string = implode( ',', $review_ids );
+
+	global $wpdb;
+	$query = $wpdb->prepare(
+		"UPDATE $review_table SET date_published = %s WHERE ID IN ($id_string)",
+		$post_date
+	);
+
+	$wpdb->query( $query );
 }

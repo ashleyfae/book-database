@@ -521,7 +521,7 @@ class BDB_DB_Reading_List extends BDB_DB {
 		date_finished datetime,
 		PRIMARY KEY  (ID),
 		INDEX book_id (book_id),
-		INDEX post_id (post_id),
+		INDEX review_id (review_id),
 		INDEX user_id (user_id),
 		INDEX date_started (date_started),
 		INDEX date_finished (date_finished)

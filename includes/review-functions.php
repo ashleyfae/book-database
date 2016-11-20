@@ -229,3 +229,41 @@ function bdb_sync_review_publish_date( $post_id ) {
 
 	$wpdb->query( $query );
 }
+
+/**
+ * Sync Review Publish Date
+ *
+ * @param int $post_id
+ *
+ * @uses  bdb_sync_review_publish_date()
+ *
+ * @since 1.0.0
+ * @return void
+ */
+function bdb_run_sync_review_publish_date( $post_id ) {
+
+	// Bail on auto save.
+	if ( defined( 'DOING_AUTOSAVE' ) && DOING_AUTOSAVE ) {
+		return;
+	}
+
+	// Check the user's permissions.
+	if ( 'page' == $_POST['post_type'] ) {
+		if ( ! current_user_can( 'edit_page', $post_id ) ) {
+			return;
+		}
+	} else {
+		if ( ! current_user_can( 'edit_post', $post_id ) ) {
+			return;
+		}
+	}
+
+	if ( ! bdb_get_option( 'sync_published_date' ) ) {
+		return;
+	}
+
+	bdb_sync_review_publish_date( $post_id );
+
+}
+
+add_action( 'save_post', 'bdb_run_sync_review_publish_date' );

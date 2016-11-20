@@ -93,7 +93,7 @@ function bdb_count_reviews( $args ) {
  *                      `url` - URL to an external book review (optional).
  *                      `user_id` - User who the review is for. If omitted, current user is used.
  *                      `rating` - Rating for the book (optional).
- *                      `date_added` - Timestamp for when the review was added. If omitted, current time is used.
+ *                      `date_written` - Timestamp for when the review was added. If omitted, current time is used.
  *
  * @since 1.0.0
  * @return int|WP_Error ID of the review inserted or updated, or WP_Error on failure.
@@ -135,8 +135,8 @@ function bdb_insert_review( $data = array() ) {
 	}
 
 	// Date Added
-	if ( array_key_exists( 'date_added', $data ) ) {
-		$review_db_data['date_added'] = sanitize_text_field( $data['date_added'] );
+	if ( array_key_exists( 'date_written', $data ) ) {
+		$review_db_data['date_written'] = sanitize_text_field( $data['date_written'] );
 	}
 
 	// Review ID
@@ -167,7 +167,7 @@ function bdb_insert_review( $data = array() ) {
 function bdb_get_review_years( $order = 'DESC' ) {
 	global $wpdb;
 	$reviews_table = book_database()->reviews->table_name;
-	$years         = $wpdb->get_col( "SELECT DISTINCT YEAR(date_added) FROM $reviews_table" );
+	$years         = $wpdb->get_col( "SELECT DISTINCT YEAR(date_written) FROM $reviews_table" );
 
 	if ( ! is_array( $years ) ) {
 		return false;

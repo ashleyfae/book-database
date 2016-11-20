@@ -448,7 +448,7 @@ class BDB_Reviews_Table extends WP_List_Table {
 					'book_title' => $review->book_title,
 					'author'     => $review->author_name,
 					'user_id'    => $user_id,
-					'date'       => $review->date_added,
+					'date'       => $review->date_written,
 					'rating'     => $review_obj->get_rating()
 				);
 

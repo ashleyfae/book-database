@@ -125,7 +125,7 @@ add_action( 'book-database/review-edit/fields', 'bdb_review_rating_field' );
  * @since 1.0.0
  * @return void
  */
-function bdb_review_date_added_field( $review ) {
+function bdb_review_date_written_field( $review ) {
 	book_database()->html->meta_row( 'text', array( 'label' => __( 'Date', 'book-database' ) ), array(
 		'id'    => 'review_date',
 		'name'  => 'review_date',
@@ -135,7 +135,7 @@ function bdb_review_date_added_field( $review ) {
 	) );
 }
 
-add_action( 'book-database/review-edit/fields', 'bdb_review_date_added_field' );
+add_action( 'book-database/review-edit/fields', 'bdb_review_date_written_field' );
 
 /**
  * Box: Associated Book Information
@@ -226,7 +226,7 @@ function bdb_save_review() {
 	// Format the date.
 	if ( isset( $_POST['review_date'] ) && ! empty( $_POST['review_date'] ) ) {
 		$timestamp                 = strtotime( wp_strip_all_tags( $_POST['review_date'] ) );
-		$review_data['date_added'] = date( 'Y-m-d H:i:s', $timestamp );
+		$review_data['date_written'] = date( 'Y-m-d H:i:s', $timestamp );
 	}
 
 	$new_review_id = bdb_insert_review( apply_filters( 'book-database/review/save/review-data', $review_data, $review_id, $_POST ) );

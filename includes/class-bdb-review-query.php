@@ -172,7 +172,8 @@ class BDB_Review_Query {
 		$allowed_orderby = array(
 			'title'           => 'book.index_title',
 			'author'          => 'author.name',
-			'date'            => 'date_written',
+			'date'            => 'date_published',
+			'date_written'    => 'date_written',
 			'pub_date'        => 'book.pub_date',
 			'series_position' => 'book.series_position',
 			'pages'           => 'book.pages',

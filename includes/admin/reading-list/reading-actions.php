@@ -115,7 +115,7 @@ function bdb_book_reading_list_table( $book ) {
 				), array(
 					'id'    => 'percent_complete',
 					'name'  => 'percent_complete',
-					'value' => '',
+					'value' => 100,
 					'type'  => 'number',
 					'desc'  => __( 'Percentage of the book you\'ve read.', 'book-database' )
 				) );

@@ -34,7 +34,7 @@ function bdb_analytics_batch_1() {
 
 	$date_hash = hash( 'md5', $analytics::$startstr . $analytics::$endstr );
 	$results   = get_transient( 'bdb_analytics_1_' . $date_hash );
-	//$results   = false; // uncomment to debug
+	$results   = false; // uncomment to debug
 
 	if ( false == $results ) {
 
@@ -56,6 +56,7 @@ function bdb_analytics_batch_1() {
 		}
 
 		$results = array(
+			'number-books'     => $analytics->get_number_books_read(),
 			'number-reviews'   => $analytics->get_number_reviews(),
 			'pages'            => $analytics->get_pages_read(),
 			'avg-rating'       => sprintf( _n( '%s Star', '%s Stars', $average_rating, 'book-database' ), $average_rating ),
@@ -94,7 +95,7 @@ function bdb_analytics_batch_2() {
 
 	$date_hash = hash( 'md5', $analytics::$startstr . $analytics::$endstr );
 	$results   = get_transient( 'bdb_analytics_2_' . $date_hash );
-	//$results   = false; // uncomment to debug
+	$results   = false; // uncomment to debug
 
 	if ( false == $results ) {
 

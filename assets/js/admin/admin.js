@@ -30,6 +30,10 @@
             $('#book_title').on('keyup', this.writeOriginalIndexTitle)
                 .on('blur', this.populateAltTitles);
             $(document).ready(this.toggleCustomIndexTitle);
+            $('#bookdb-read-book').on('click', this.toggleReadingListFields);
+            $('#bookdb-submit-reading-entry').on('click', this.submitReadingEntry);
+            $('.bookdb-edit-reading-entry').on('click', this.editReadingEntry);
+            $('.bookdb-delete-reading-entry').on('click', this.deleteReadingEntry);
         },
 
         /**
@@ -381,6 +385,186 @@
                     if (response.success) {
 
                         indexTitleSelect.find('option[value="original"]').after('<option value="' + response.data + '">' + response.data + '</option>');
+
+                    }
+
+                }
+            }).fail(function (response) {
+                if (window.console && window.console.log) {
+                    console.log(response);
+                }
+            });
+        },
+
+        /**
+         * Toggle Reading List FIelds
+         *
+         * @param e
+         */
+        toggleReadingListFields: function (e) {
+            e.preventDefault();
+
+            $('#bookdb-read-book-fields').slideToggle();
+        },
+
+        /**
+         * Submit Reading Entry
+         *
+         * @param e
+         */
+        submitReadingEntry: function (e) {
+            e.preventDefault();
+
+            var button = $(this);
+            var wrap = $('#bookdb-read-book-fields');
+
+            button.attr('disabled', true);
+
+            var entry = {
+                book_id: wrap.data('book-id'),
+                date_started: $('#reading_start_date').val(),
+                date_finished: $('#reading_end_date').val(),
+                user_id: $('#reading_user_id').val(),
+                review_id: $('#review_id').val(),
+                complete: $('#percent_complete').val()
+            };
+
+            var data = {
+                action: 'bdb_save_reading_entry',
+                nonce: book_database.nonce,
+                entry: entry
+            };
+
+            $.ajax({
+                type: 'POST',
+                url: ajaxurl,
+                data: data,
+                dataType: "json",
+                success: function (response) {
+
+                    button.attr('disabled', false);
+
+                    if (response.success) {
+
+                        $('#bookdb-no-reading-list-entries').remove();
+
+                        wrap.parents('.postbox').find('tbody').append(response.data);
+
+                        $('#bookdb-read-book-fields').slideUp();
+
+                    }
+
+                }
+            }).fail(function (response) {
+                if (window.console && window.console.log) {
+                    console.log(response);
+                }
+            });
+        },
+
+        /**
+         * Edit Reading Entry
+         *
+         * @param e
+         * @returns {boolean}
+         */
+        editReadingEntry: function (e) {
+            e.preventDefault();
+
+            var button = $(this);
+            var wrap = $('#bookdb-read-book-fields');
+            var tr = $(this).parents('tr');
+            var entryID = tr.data('entry-id');
+            var entry = {};
+
+            if (typeof entryID == 'undefined' || entryID == '') {
+                return false;
+            }
+
+            // Replace 'Edit' button.
+            button.addClass('button-primary').text('Save'); // @todo l10n
+
+            tr.find('.bookdb-reading-list-display-value').hide();
+            tr.find('.bookdb-reading-list-edit-value').show();
+
+            button.on('click', function (e) {
+                e.preventDefault();
+
+                button.attr('disabled', true);
+
+                var entry = {
+                    ID: entryID,
+                    book_id: wrap.data('book-id'),
+                    date_started: tr.find('.bookdb-reading-list-date-started input').val(),
+                    date_finished: tr.find('.bookdb-reading-list-date-finished input').val(),
+                    user_id: tr.find('.bookdb-reading-list-user-id input').val(),
+                    review_id: tr.find('.bookdb-reading-list-review-id input').val(),
+                    complete: tr.find('.bookdb-reading-list-complete input').val()
+                };
+
+                var data = {
+                    action: 'bdb_save_reading_entry',
+                    nonce: book_database.nonce,
+                    entry: entry
+                };
+
+                $.ajax({
+                    type: 'POST',
+                    url: ajaxurl,
+                    data: data,
+                    dataType: "json",
+                    success: function (response) {
+                        button.attr('disabled', false);
+
+                        if (response.success) {
+                            tr.replaceWith(response.data);
+                            Book_Database.init();
+                        }
+
+                    }
+                }).fail(function (response) {
+                    if (window.console && window.console.log) {
+                        console.log(response);
+                    }
+                });
+            });
+        },
+
+        /**
+         * Delete Reading Entry
+         *
+         * @param e
+         */
+        deleteReadingEntry: function (e) {
+            e.preventDefault();
+
+            if (!confirm(book_database.l10n.reading_entry_remove)) {
+                return false;
+            }
+
+            var button = $(this);
+            var tr = button.parents('tr');
+
+            button.attr('disabled', true);
+
+            var data = {
+                action: 'bdb_delete_reading_entry',
+                nonce: book_database.nonce,
+                entry_id: tr.data('entry-id')
+            };
+
+            $.ajax({
+                type: 'POST',
+                url: ajaxurl,
+                data: data,
+                dataType: "json",
+                success: function (response) {
+
+                    button.attr('disabled', false);
+
+                    if (response.success) {
+
+                        tr.remove();
 
                     }
 

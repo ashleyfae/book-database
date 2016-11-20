@@ -46,7 +46,16 @@ function bdb_analytics_page() {
 			<div class="bookdb-analytics-column">
 				<div class="bookdb-metric">
 					<div class="bookdb-metric-inner">
-						<p class="top-text"><?php _e( 'Reviews', 'book-database' ); ?></p>
+						<p class="top-text"><?php _e( 'Books Read', 'book-database' ); ?></p>
+						<div class="bookdb-loading"></div>
+						<h2 id="number-books" class="bookdb-result"></h2>
+						<p class="bottom-text" id="number-books-compare"><span></span></p>
+					</div>
+				</div>
+				
+				<div class="bookdb-metric">
+					<div class="bookdb-metric-inner">
+						<p class="top-text"><?php _e( 'Reviews Written', 'book-database' ); ?></p>
 						<div class="bookdb-loading"></div>
 						<h2 id="number-reviews" class="bookdb-result"></h2>
 						<p class="bottom-text" id="number-reviews-compare"><span></span></p>
@@ -98,7 +107,7 @@ function bdb_analytics_page() {
 			<div id="bookdb-list-of-reviews" class="bookdb-analytics-column">
 				<div class="bookdb-metric">
 					<div class="bookdb-metric-inner">
-						<p class="top-text"><?php _e( 'Books Reviewed (20 max)', 'book-database' ); ?></p>
+						<p class="top-text"><?php _e( 'Reviews Written (20 max)', 'book-database' ); ?></p>
 						<div class="bookdb-loading"></div>
 						<div id="book-list" class="bookdb-result"></div>
 					</div>

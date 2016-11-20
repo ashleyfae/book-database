@@ -3,7 +3,7 @@
  * Plugin Name: Book Database
  * Plugin URI: https://github.com/nosegraze/book-database
  * Description: Maintain a database of books and reviews.
- * Version: 1.0.1
+ * Version: 1.1.0
  * Author: Ashley Gibson
  * Author URI: http://www.nosegraze.com
  * License: GPL2 License
@@ -98,6 +98,13 @@ if ( ! class_exists( 'Book_Database' ) ) :
 		public $book_term_relationships;
 
 		/**
+		 * @var BDB_DB_Reading_List
+		 * @access public
+		 * @since  1.1.0
+		 */
+		public $reading_list;
+
+		/**
 		 * @var BDB_HTML
 		 * @access public
 		 * @since  1.0.0
@@ -133,6 +140,7 @@ if ( ! class_exists( 'Book_Database' ) ) :
 				self::$instance->series                  = new BDB_DB_Series();
 				self::$instance->book_terms              = new BDB_DB_Book_Terms();
 				self::$instance->book_term_relationships = new BDB_DB_Book_Term_Relationships();
+				self::$instance->reading_list            = new BDB_DB_Reading_List();
 				self::$instance->html                    = new BDB_HTML();
 			}
 
@@ -177,7 +185,7 @@ if ( ! class_exists( 'Book_Database' ) ) :
 		private function setup_constants() {
 
 			if ( ! defined( 'BDB_VERSION' ) ) {
-				define( 'BDB_VERSION', '1.0.1' );
+				define( 'BDB_VERSION', '1.1.0' );
 			}
 			if ( ! defined( 'BDB_DIR' ) ) {
 				define( 'BDB_DIR', plugin_dir_path( __FILE__ ) );
@@ -215,6 +223,7 @@ if ( ! class_exists( 'Book_Database' ) ) :
 			require_once BDB_DIR . 'includes/database/class-bdb-db-books.php';
 			require_once BDB_DIR . 'includes/database/class-bdb-db-book-terms.php';
 			require_once BDB_DIR . 'includes/database/class-bdb-db-book-term-relationships.php';
+			require_once BDB_DIR . 'includes/database/class-bdb-db-reading-list.php';
 			require_once BDB_DIR . 'includes/database/class-bdb-db-reviews.php';
 			require_once BDB_DIR . 'includes/database/class-bdb-db-review-meta.php';
 			require_once BDB_DIR . 'includes/database/class-bdb-db-series.php';
@@ -222,6 +231,9 @@ if ( ! class_exists( 'Book_Database' ) ) :
 			require_once BDB_DIR . 'includes/indexes/class-bdb-reviews-by-series.php';
 			require_once BDB_DIR . 'includes/indexes/class-bdb-reviews-by-tax.php';
 			require_once BDB_DIR . 'includes/indexes/class-bdb-reviews-by-title.php';
+			require_once BDB_DIR . 'includes/reading-list/class-bdb-reading-entry.php';
+			require_once BDB_DIR . 'includes/reading-list/class-bdb-reading-query.php';
+			require_once BDB_DIR . 'includes/reading-list/reading-functions.php';
 			require_once BDB_DIR . 'includes/assets.php';
 			require_once BDB_DIR . 'includes/book-functions.php';
 			require_once BDB_DIR . 'includes/book-layout.php';
@@ -255,6 +267,7 @@ if ( ! class_exists( 'Book_Database' ) ) :
 				require_once BDB_DIR . 'includes/admin/modal/modal-button.php';
 				require_once BDB_DIR . 'includes/admin/modal/shortcode-preview.php';
 				require_once BDB_DIR . 'includes/admin/posts/meta-box.php';
+				require_once BDB_DIR . 'includes/admin/reading-list/reading-actions.php';
 				require_once BDB_DIR . 'includes/admin/reviews/review-actions.php';
 				require_once BDB_DIR . 'includes/admin/reviews/review-functions.php';
 				require_once BDB_DIR . 'includes/admin/reviews/reviews.php';

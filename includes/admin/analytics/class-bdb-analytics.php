@@ -197,6 +197,26 @@ class BDB_Analytics {
 	}
 
 	/**
+	 * Get Number of Books Read
+	 *
+	 * @todo verify
+	 *
+	 * @return int
+	 */
+	public function get_number_books_read() {
+
+		$count = book_database()->reading_list->count( array(
+			'date_finished' => array(
+				'start' => self::$startstr,
+				'end'   => self::$endstr
+			)
+		) );
+
+		return $count;
+
+	}
+
+	/**
 	 * Get Number of Reviews
 	 *
 	 * @access public
@@ -221,15 +241,25 @@ class BDB_Analytics {
 	public function get_pages_read() {
 
 		global $wpdb;
-		$book_table      = book_database()->books->table_name;
-		$book_ids        = self::$instance->get_book_ids();
-		$book_ids_string = implode( ',', array_map( 'absint', $book_ids ) );
+		$book_table    = book_database()->books->table_name;
+		$reading_table = book_database()->reading_list->table_name;
+		$pages_read    = 0;
 
-		$query       = "SELECT SUM(pages) FROM {$book_table} WHERE `ID` IN ({$book_ids_string})";
-		$pages       = $wpdb->get_var( $query );
-		$total_pages = number_format( absint( $pages ) );
+		$query   = $wpdb->prepare(
+			"SELECT pages,complete from $book_table book INNER JOIN $reading_table list ON (list.book_id = book.ID AND `date_finished` >= %s AND `date_finished` <= %s)",
+			date( 'Y-m-d 00:00:00', self::$start ),
+			date( 'Y-m-d 00:00:00', self::$end )
+		);
+		$results = $wpdb->get_results( $query );
 
-		return $total_pages;
+		if ( $results ) {
+			foreach ( $results as $result ) {
+
+				$pages_read = $pages_read + round( $result->pages * ( $result->complete / 100 ) );
+			}
+		}
+
+		return number_format( absint( $pages_read ) );
 
 	}
 

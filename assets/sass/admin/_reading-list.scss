@@ -1,0 +1,16 @@
+#bdb-book-reading-list {
+    table {
+        margin-bottom: 1.5em;
+
+        input[type="text"],
+        input[type="number"] {
+            display: block;
+            width: 100%;
+        }
+    }
+}
+
+#bookdb-read-book-fields,
+.bookdb-reading-list-edit-value{
+    display: none;
+}

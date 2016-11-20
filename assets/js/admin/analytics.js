@@ -74,6 +74,7 @@
          * @param response
          */
         firstBatchResponse: function (response) {
+            console.log(response);
 
             if (true != !response.success) {
                 $.each(response.data, function (id, val) {

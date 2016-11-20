@@ -243,16 +243,23 @@ class BDB_Analytics {
 		global $wpdb;
 		$book_table    = book_database()->books->table_name;
 		$reading_table = book_database()->reading_list->table_name;
+		$pages_read    = 0;
 
-		$query       = $wpdb->prepare(
-			"SELECT SUM(pages) from $book_table book INNER JOIN $reading_table list ON (list.book_id = book.ID AND `date_finished` >= %s AND `date_finished` <= %s)",
+		$query   = $wpdb->prepare(
+			"SELECT pages,complete from $book_table book INNER JOIN $reading_table list ON (list.book_id = book.ID AND `date_finished` >= %s AND `date_finished` <= %s)",
 			date( 'Y-m-d 00:00:00', self::$start ),
 			date( 'Y-m-d 00:00:00', self::$end )
 		);
-		$pages       = $wpdb->get_var( $query );
-		$total_pages = number_format( absint( $pages ) );
+		$results = $wpdb->get_results( $query );
 
-		return $total_pages;
+		if ( $results ) {
+			foreach ( $results as $result ) {
+
+				$pages_read = $pages_read + round( $result->pages * ( $result->complete / 100 ) );
+			}
+		}
+
+		return number_format( absint( $pages_read ) );
 
 	}
 

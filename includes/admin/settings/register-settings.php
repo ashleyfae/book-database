@@ -369,6 +369,20 @@ function bdb_settings_sanitize_number_field( $input ) {
 add_filter( 'book-database/settings/sanitize/number', 'bdb_settings_sanitize_number_field' );
 
 /**
+ * Sanitize Checkbox Field
+ *
+ * @param int $input
+ *
+ * @since 1.0.0
+ * @return bool
+ */
+function bdb_settings_sanitize_checkbox_field( $input ) {
+	return ( 1 == intval( $input ) ) ? true : false;
+}
+
+add_filter( 'book-database/settings/sanitize/checkbox', 'bdb_settings_sanitize_checkbox_field' );
+
+/**
  * Sanitize Select Field
  *
  * @param string $input
@@ -584,6 +598,25 @@ function bdb_text_callback( $args ) {
 	$type = ( isset( $args['type'] ) ) ? $args['type'] : 'text';
 	?>
 	<input type="<?php echo esc_attr( $type ); ?>" class="bookdb-description <?php echo esc_attr( sanitize_html_class( $size ) . '-text' ); ?>" id="bdb_settings_<?php echo bdb_sanitize_key( $args['id'] ); ?>" <?php echo $name; ?> value="<?php echo esc_attr( wp_unslash( $value ) ); ?>">
+	<?php if ( $args['desc'] ) : ?>
+		<label for="bdb_settings_<?php echo bdb_sanitize_key( $args['id'] ); ?>" class="bookdb-description"><?php echo wp_kses_post( $args['desc'] ); ?></label>
+	<?php endif;
+}
+
+/**
+ * Callback: Checkbox
+ *
+ * @param array $args Arguments passed by the setting.
+ *
+ * @since 1.0.0
+ * @return void
+ */
+function bdb_checkbox_callback( $args ) {
+	$saved = bdb_get_option( $args['id'] );
+
+	?>
+	<input type="hidden" name="bdb_settings[<?php echo bdb_sanitize_key( $args['id'] ); ?>]" value="-1">
+	<input type="checkbox" id="bdb_settings_<?php echo bdb_sanitize_key( $args['id'] ); ?>" name="bdb_settings[<?php echo bdb_sanitize_key( $args['id'] ); ?>]" value="1" <?php checked( 1, $saved ); ?>>
 	<?php if ( $args['desc'] ) : ?>
 		<label for="bdb_settings_<?php echo bdb_sanitize_key( $args['id'] ); ?>" class="bookdb-description"><?php echo wp_kses_post( $args['desc'] ); ?></label>
 	<?php endif;

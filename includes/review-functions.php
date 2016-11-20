@@ -233,11 +233,13 @@ function bdb_sync_review_publish_date( $post_id ) {
 /**
  * Sync Review Publish Date
  *
+ * Runs when saving a post.
+ *
  * @param int $post_id
  *
  * @uses  bdb_sync_review_publish_date()
  *
- * @since 1.0.0
+ * @since 1.1.0
  * @return void
  */
 function bdb_run_sync_review_publish_date( $post_id ) {
@@ -267,3 +269,31 @@ function bdb_run_sync_review_publish_date( $post_id ) {
 }
 
 add_action( 'save_post', 'bdb_run_sync_review_publish_date' );
+
+/**
+ * Sync Review Publish Date
+ *
+ * Runs when a post transitions into the 'publish' status.
+ *
+ * @param string  $new_status
+ * @param string  $old_status
+ * @param WP_Post $post
+ *
+ * @uses  bdb_sync_review_publish_date()
+ *
+ * @since 1.1.0
+ * @return void
+ */
+function bdb_run_sync_review_publish_date_on_transition( $new_status, $old_status, $post ) {
+
+	if ( ! bdb_get_option( 'sync_published_date' ) ) {
+		return;
+	}
+
+	if ( 'publish' == $new_status && 'publish' != $old_status ) {
+		bdb_sync_review_publish_date( $post->ID );
+	}
+
+}
+
+add_action( 'transition_post_status', 'bdb_run_sync_review_publish_date_on_transition', 10, 3 );

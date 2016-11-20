@@ -317,7 +317,7 @@ add_action( 'book-database/shortcodes/book-reviews/filter-form', 'bdb_reviews_fi
  * @return void
  */
 function bdb_reviews_filter_form_review_year( $vars, $query, $atts, $content ) {
-	$review_years = bdb_get_review_years();
+	$review_years = bdb_get_review_years( 'written' );
 	?>
 	<p class="bookdb-filter-option">
 		<label for="bookdb-review-year"><?php _e( 'Review Year', 'book-database' ); ?></label>

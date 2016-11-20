@@ -164,15 +164,17 @@ function bdb_insert_review( $data = array() ) {
  *
  * Returns an array of all the years that reviews have been published in.
  *
+ * @param string $type  Date type - either `written` or `published`.
  * @param string $order Either ASC or DESC.
  *
  * @since 1.0.0
  * @return array|false
  */
-function bdb_get_review_years( $order = 'DESC' ) {
+function bdb_get_review_years( $type = 'written', $order = 'DESC' ) {
 	global $wpdb;
 	$reviews_table = book_database()->reviews->table_name;
-	$years         = $wpdb->get_col( "SELECT DISTINCT YEAR(date_written) FROM $reviews_table" );
+	$date_type     = ( $type == 'written' ) ? 'date_written' : 'date_published';
+	$years         = $wpdb->get_col( "SELECT DISTINCT YEAR($date_type) FROM $reviews_table" );
 
 	if ( ! is_array( $years ) ) {
 		return false;

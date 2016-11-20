@@ -193,7 +193,7 @@ class BDB_Book {
 		}
 
 		// We absolutely need an ID. Otherwise nothing works.
-		if ( ! empty( $this->ID ) && ! empty( $this->book_id ) ) {
+		if ( ! empty( $this->ID ) ) {
 			return true;
 		}
 

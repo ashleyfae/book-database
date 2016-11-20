@@ -40,6 +40,7 @@ function bdb_book_reading_list_table( $book ) {
 					<th><?php _e( 'Date Finished', 'book-database' ); ?></th>
 					<th><?php _e( 'Review ID', 'book-database' ); ?></th>
 					<th><?php _e( 'User ID', 'book-database' ); ?></th>
+					<th><?php _e( '% Complete', 'book-database' ); ?></th>
 					<th><?php _e( 'Actions', 'book-database' ); ?></th>
 				</tr>
 				</thead>
@@ -107,6 +108,17 @@ function bdb_book_reading_list_table( $book ) {
 					'type'  => 'number',
 					'desc'  => __( 'If there\'s a review connected to this read, enter the ID here. Or you can add it later.', 'book-database' )
 				) );
+
+				// % Complete
+				book_database()->html->meta_row( 'text', array(
+					'label' => __( '% Complete', 'book-database' )
+				), array(
+					'id'    => 'percent_complete',
+					'name'  => 'percent_complete',
+					'value' => '',
+					'type'  => 'number',
+					'desc'  => __( 'Percentage of the book you\'ve read.', 'book-database' )
+				) );
 				?>
 
 				<button type="button" id="bookdb-submit-reading-entry" class="button"><?php esc_html_e( 'Submit', 'book-database' ); ?></button>
@@ -171,6 +183,15 @@ function bdb_reading_entry_tr( $entry ) {
 
 			<div class="bookdb-reading-list-edit-value">
 				<input type="number" value="<?php echo esc_attr( $entry->user_id ); ?>">
+			</div>
+		</td>
+		<td class="bookdb-reading-list-complete">
+			<div class="bookdb-reading-list-display-value">
+				<?php echo absint( $entry->complete ); ?>%
+			</div>
+
+			<div class="bookdb-reading-list-edit-value">
+				<input type="number" value="<?php echo esc_attr( $entry->complete ); ?>">
 			</div>
 		</td>
 		<td>

@@ -46,6 +46,7 @@ function bdb_get_book_reading_list( $book_id, $args = array() ) {
  *                    `user_id` - ID of the user who read the book. If omitted, current user ID is used.
  *                    `date_started` - Date the book was started.
  *                    `date_finished` - Date the book was finished.
+ *                    `complete` - Percentage complete.
  *
  * @since 1.1.0
  * @return bool|false Entry ID on success or false on failure.
@@ -95,6 +96,10 @@ function bdb_insert_reading_entry( $data = array() ) {
 		$sanitized_data['date_finished'] = date( 'Y-m-d H:i:s', $timestamp );
 	} else {
 		$sanitized_data['date_finished'] = null;
+	}
+
+	if ( array_key_exists( 'complete', $data ) ) {
+		$sanitized_data['complete'] = absint( $data['complete'] );
 	}
 
 	$result = book_database()->reading_list->add( $sanitized_data );

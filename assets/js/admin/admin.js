@@ -425,7 +425,8 @@
                 date_started: $('#reading_start_date').val(),
                 date_finished: $('#reading_end_date').val(),
                 user_id: $('#reading_user_id').val(),
-                review_id: $('#review_id').val()
+                review_id: $('#review_id').val(),
+                complete: $('#percent_complete').val()
             };
 
             var data = {
@@ -497,7 +498,8 @@
                     date_started: tr.find('.bookdb-reading-list-date-started input').val(),
                     date_finished: tr.find('.bookdb-reading-list-date-finished input').val(),
                     user_id: tr.find('.bookdb-reading-list-user-id input').val(),
-                    review_id: tr.find('.bookdb-reading-list-review-id input').val()
+                    review_id: tr.find('.bookdb-reading-list-review-id input').val(),
+                    complete: tr.find('.bookdb-reading-list-complete input').val()
                 };
 
                 var data = {
@@ -526,38 +528,6 @@
                     }
                 });
             });
-        },
-
-        /**
-         * Save Reading Entry
-         *
-         * @param entry
-         * @param button
-         */
-        saveReadingEntry: function (entry, button) {
-
-            var data = {
-                action: 'bdb_save_reading_entry',
-                nonce: book_database.nonce,
-                entry: entry
-            };
-
-            $.ajax({
-                type: 'POST',
-                url: ajaxurl,
-                data: data,
-                dataType: "json",
-                success: function (response) {
-                    button.attr('disabled', false);
-                    return response;
-
-                }
-            }).fail(function (response) {
-                if (window.console && window.console.log) {
-                    console.log(response);
-                }
-            });
-
         },
 
         /**

@@ -255,6 +255,17 @@ function bdb_get_registered_settings() {
 					'options' => bdb_get_pages()
 				)
 			)
+		),
+		'misc'    => array(
+			'main' => array(
+				'delete_on_uninstall' => array(
+					'id'   => 'delete_on_uninstall',
+					'name' => esc_html__( 'Delete on Uninstall', 'book-database' ),
+					'desc' => __( 'Check to permanently delete all plugin data on uninstall.', 'book-database' ),
+					'type' => 'checkbox',
+					'std'  => false
+				)
+			)
 		)
 	);
 

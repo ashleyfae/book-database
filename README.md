@@ -28,8 +28,6 @@ I'm not sure if I'll ever officially release this. I'm mostly building this for 
 * Analytics: datepicker for custom range.
 * Front-end shortcode statistics. Or maybe not.
 * Possibly add something for tropes. Or this could just be a book term.
-* Maybe restrict [book-reviews] to show reviews with dates in the past only.. hmm.
 * Remove menu from book modal.
-* Remove "Misc" settings tab.
 * Better search on Reviews table page in admin area.
 * Add reading list.

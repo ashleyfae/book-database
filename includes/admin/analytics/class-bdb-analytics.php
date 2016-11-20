@@ -153,6 +153,7 @@ class BDB_Analytics {
 									INNER JOIN {$term_table} as author ON (r.term_id = author.term_id AND author.type = 'author')
 									WHERE `date_written` >= %s
 									AND `date_written` <= %s
+									GROUP BY book.ID
 									ORDER BY review.date_written DESC",
 				date( 'Y-m-d 00:00:00', self::$start ),
 				date( 'Y-m-d 00:00:00', self::$end )

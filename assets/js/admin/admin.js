@@ -30,7 +30,7 @@
             $('#book_title').on('keyup', this.writeOriginalIndexTitle)
                 .on('blur', this.populateAltTitles);
             $(document).ready(this.toggleCustomIndexTitle);
-            $('#bookdb-read-book').on('click', this.openReadingListFields);
+            $('#bookdb-read-book').on('click', this.toggleReadingListFields);
             $('#bookdb-submit-reading-entry').on('click', this.submitReadingEntry);
             $('.bookdb-delete-reading-entry').on('click', this.deleteReadingEntry);
         },
@@ -396,14 +396,14 @@
         },
 
         /**
-         * Open Reading List FIelds
+         * Toggle Reading List FIelds
          *
          * @param e
          */
-        openReadingListFields: function (e) {
+        toggleReadingListFields: function (e) {
             e.preventDefault();
 
-            $('#bookdb-read-book-fields').slideDown();
+            $('#bookdb-read-book-fields').slideToggle();
         },
 
         /**
@@ -447,6 +447,8 @@
                         $('#bookdb-no-reading-list-entries').remove();
 
                         wrap.parents('.postbox').find('tbody').append(response.data);
+
+                        $('#bookdb-read-book-fields').slideUp();
 
                     }
 

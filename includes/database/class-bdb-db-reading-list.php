@@ -63,8 +63,8 @@ class BDB_DB_Reading_List extends BDB_DB {
 			'book_id'       => 0,
 			'review_id'     => 0,
 			'user_id'       => 0,
-			'date_started'  => '',
-			'date_finished' => ''
+			'date_started'  => null,
+			'date_finished' => null
 		);
 	}
 

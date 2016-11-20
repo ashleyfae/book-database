@@ -22,11 +22,15 @@ if ( ! defined( 'ABSPATH' ) ) {
  * @since 1.1.0
  * @return array|false
  */
-function bdb_get_book_reading_list( $book_id ) {
+function bdb_get_book_reading_list( $book_id, $args = array() ) {
 
-	$entries = book_database()->reading_list->get_entries( array(
+	$default_args = array(
 		'book_id' => absint( $book_id )
-	) );
+	);
+
+	$args = wp_parse_args( $args, $default_args );
+
+	$entries = book_database()->reading_list->get_entries( $args );
 
 	return $entries;
 
@@ -78,14 +82,19 @@ function bdb_insert_reading_entry( $data = array() ) {
 	}
 
 	// Format start date.
-	if ( array_key_exists( 'date_started', $data ) ) {
+	if ( array_key_exists( 'date_started', $data ) && ! empty( $data['date_started'] ) ) {
 		$timestamp                      = strtotime( wp_strip_all_tags( $data['date_started'] ) );
 		$sanitized_data['date_started'] = date( 'Y-m-d H:i:s', $timestamp );
+	} else {
+		$sanitized_data['date_started'] = null;
 	}
+
 	// Format end date.
-	if ( array_key_exists( 'date_finished', $data ) ) {
+	if ( array_key_exists( 'date_finished', $data ) && ! empty( $data['date_finished'] ) ) {
 		$timestamp                       = strtotime( wp_strip_all_tags( $data['date_finished'] ) );
 		$sanitized_data['date_finished'] = date( 'Y-m-d H:i:s', $timestamp );
+	} else {
+		$sanitized_data['date_finished'] = null;
 	}
 
 	$result = book_database()->reading_list->add( $sanitized_data );

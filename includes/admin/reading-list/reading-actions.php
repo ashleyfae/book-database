@@ -25,7 +25,10 @@ function bdb_book_reading_list_table( $book ) {
 		return;
 	}
 
-	$entries = bdb_get_book_reading_list( $book->ID );
+	$entries = bdb_get_book_reading_list( $book->ID, array(
+		'orderby' => 'date_finished',
+		'order'   => 'ASC'
+	) );
 	?>
 	<div id="bdb-book-reading-list" class="postbox">
 		<h2><?php esc_html_e( 'Reading List', 'book-database' ) ?></h2>
@@ -37,14 +40,13 @@ function bdb_book_reading_list_table( $book ) {
 					<th><?php _e( 'Date Finished', 'book-database' ); ?></th>
 					<th><?php _e( 'Review ID', 'book-database' ); ?></th>
 					<th><?php _e( 'User ID', 'book-database' ); ?></th>
-					<th><?php _e( 'Remove', 'book-database' ); ?></th>
+					<th><?php _e( 'Actions', 'book-database' ); ?></th>
 				</tr>
 				</thead>
 				<tbody>
 				<?php
 				if ( $entries ) {
 					foreach ( $entries as $entry ) {
-						var_dump( $entry );
 						bdb_reading_entry_tr( $entry );
 					}
 
@@ -136,6 +138,7 @@ function bdb_reading_entry_tr( $entry ) {
 			<?php echo absint( $entry->user_id ); ?>
 		</td>
 		<td>
+			<button type="button" class="button bookdb-edit-reading-entry"><?php _e( 'Edit', 'book-database' ); ?></button>
 			<button type="button" class="button bookdb-delete-reading-entry"><?php _e( 'Remove', 'book-database' ); ?></button>
 		</td>
 	</tr>

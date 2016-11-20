@@ -42,13 +42,14 @@ class BDB_DB_Reviews extends BDB_DB {
 	 */
 	public function get_columns() {
 		return array(
-			'ID'         => '%d',
-			'book_id'    => '%d',
-			'post_id'    => '%d',
-			'url'        => '%s',
-			'user_id'    => '%d',
-			'rating'     => '%s',
-			'date_added' => '%s'
+			'ID'             => '%d',
+			'book_id'        => '%d',
+			'post_id'        => '%d',
+			'url'            => '%s',
+			'user_id'        => '%d',
+			'rating'         => '%s',
+			'date_added'     => '%s',
+			'date_published' => '%s'
 		);
 	}
 
@@ -61,12 +62,13 @@ class BDB_DB_Reviews extends BDB_DB {
 	 */
 	public function get_column_defaults() {
 		return array(
-			'book_id'    => 0,
-			'post_id'    => 0,
-			'url'        => '',
-			'user_id'    => 0,
-			'rating'     => '',
-			'date_added' => date( 'Y-m-d H:i:s' )
+			'book_id'        => 0,
+			'post_id'        => 0,
+			'url'            => '',
+			'user_id'        => 0,
+			'rating'         => '',
+			'date_added'     => date( 'Y-m-d H:i:s' ),
+			'date_published' => date( 'Y-m-d H:i:s' ),
 		);
 	}
 
@@ -546,6 +548,7 @@ class BDB_DB_Reviews extends BDB_DB {
 		user_id bigint(20) NOT NULL,
 		rating varchar(32) NOT NULL,
 		date_added datetime NOT NULL,
+		date_published datetime NOT NULL,
 		PRIMARY KEY  (ID),
 		UNIQUE KEY book_id_rating (book_id, rating),
 		INDEX book_id (book_id),

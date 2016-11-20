@@ -249,17 +249,6 @@ function bdb_run_sync_review_publish_date( $post_id ) {
 		return;
 	}
 
-	// Check the user's permissions.
-	if ( 'page' == $_POST['post_type'] ) {
-		if ( ! current_user_can( 'edit_page', $post_id ) ) {
-			return;
-		}
-	} else {
-		if ( ! current_user_can( 'edit_post', $post_id ) ) {
-			return;
-		}
-	}
-
 	if ( ! bdb_get_option( 'sync_published_date' ) ) {
 		return;
 	}

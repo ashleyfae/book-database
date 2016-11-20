@@ -287,7 +287,9 @@ class BDB_DB_Reviews extends BDB_DB {
 			'order'              => 'DESC',
 			'date_written'       => false,
 			'include_book_title' => false,
-			'include_author'     => false
+			'include_author'     => false,
+			'book_title'         => false, // Only works if `include_book_title` is `true`.
+			'author_name'        => false, // Only works if `include_author` is `true`.
 		);
 
 		$args = wp_parse_args( $args, $defaults );
@@ -346,6 +348,10 @@ class BDB_DB_Reviews extends BDB_DB {
 			$book_table = book_database()->books->table_name;
 			$select .= ", book.title as book_title";
 			$join .= " LEFT JOIN {$book_table} as book on book.ID = review.book_id";
+
+			if ( $args['book_title'] ) {
+				$where .= $wpdb->prepare( " AND `title` LIKE '%%%%" . '%s' . "%%%%' ", sanitize_text_field( wp_strip_all_tags( $args['book_title'] ) ) );
+			}
 		}
 
 		// Include book author.
@@ -355,11 +361,15 @@ class BDB_DB_Reviews extends BDB_DB {
 			$select .= ", GROUP_CONCAT(author.name SEPARATOR ', ') as author_name";
 			$join .= " LEFT JOIN {$r_table} as r on r.book_id = review.book_id";
 			$join .= " INNER JOIN {$terms_table} as author on (author.term_id = r.term_id AND author.type = 'author')";
+
+			if ( $args['author_name'] ) {
+				$where .= $wpdb->prepare( " AND `name` LIKE '%%%%" . '%s' . "%%%%' ", sanitize_text_field( wp_strip_all_tags( $args['author_name'] ) ) );
+			}
 		}
 
 		// Reviews with a specific rating.
 		if ( ! empty( $args['rating'] ) ) {
-			$where .= $wpdb->prepare( " AND `rating` LIKE '" . '%s' . "' ", $args['rating'] );
+			$where .= $wpdb->prepare( " AND `rating` LIKE '" . '%s' . "' ", wp_strip_all_tags( $args['rating'] ) );
 		}
 
 		// Reviews created for a specific date or in a date range.

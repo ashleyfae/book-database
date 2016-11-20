@@ -115,10 +115,26 @@ class BDB_Reviews_Table extends WP_List_Table {
 			echo '<input type="hidden" name="order" value="' . esc_attr( $_REQUEST['order'] ) . '">';
 		}
 
+		$book_title      = isset( $_REQUEST['book_title'] ) ? wp_unslash( $_REQUEST['book_title'] ) : '';
+		$author          = isset( $_REQUEST['book_author'] ) ? wp_unslash( $_REQUEST['book_author'] ) : '';
+		$rating          = isset( $_REQUEST['rating'] ) ? wp_unslash( $_REQUEST['rating'] ) : 'any';
+		$allowed_ratings = bdb_get_available_ratings();
 		?>
 		<p class="search-box">
-			<label class="screen-reader-text" for="<?php echo esc_attr( $input_id ); ?>"><?php echo $text; ?></label>
-			<input type="search" id="<?php echo esc_attr( $input_id ); ?>" name="s" value="<?php _admin_search_query(); ?>">
+			<label class="screen-reader-text" for="book_title"><?php _e( 'Search by book title', 'book-database' ); ?></label>
+			<input type="search" id="book_title" name="book_title" value="<?php echo esc_attr( $book_title ); ?>" placeholder="<?php esc_attr_e( 'Book title', 'book-database' ); ?>">
+
+			<label class="screen-reader-text" for="book_author"><?php _e( 'Search by author name', 'book-database' ); ?></label>
+			<input type="search" id="book_author" name="book_author" value="<?php echo esc_attr( $author ); ?>" placeholder="<?php esc_attr_e( 'Author name', 'book-database' ); ?>">
+
+			<label class="screen-reader-text" for="book_rating"><?php _e( 'Filter by rating', 'book-database' ); ?></label>
+			<select id="book_rating" name="rating">
+				<option value="any" <?php selected( 'any', $rating ); ?>><?php esc_html_e( 'Rating', 'book-database' ); ?></option>
+				<?php foreach ( $allowed_ratings as $value => $name ) : ?>
+					<option value="<?php echo esc_attr( $value ); ?>" <?php selected( $value, $rating ); ?>><?php echo esc_html( $name ); ?></option>
+				<?php endforeach; ?>
+			</select>
+
 			<?php submit_button( $text, 'button', false, false, array( 'ID' => 'search-submit' ) ); ?>
 		</p>
 		<?php
@@ -420,14 +436,18 @@ class BDB_Reviews_Table extends WP_List_Table {
 		}
 
 		// Filter by rating.
-		if ( isset( $_GET['rating'] ) ) {
+		if ( isset( $_GET['rating'] ) && 'any' != $_GET['rating'] ) {
 			$args['rating'] = sanitize_text_field( $_GET['rating'] );
 		}
 
-		if ( is_numeric( $search ) ) {
-			$args['ID'] = $search;
-		} elseif ( strpos( $search, 'user:' ) !== false ) {
-			$args['user_id'] = trim( str_replace( 'user:', '', $search ) );
+		// Filter by book title.
+		if ( isset( $_GET['book_title'] ) ) {
+			$args['book_title'] = sanitize_text_field( wp_strip_all_tags( $_GET['book_title'] ) );
+		}
+
+		// Filter by author.
+		if ( isset( $_GET['book_author'] ) ) {
+			$args['author_name'] = sanitize_text_field( wp_strip_all_tags( $_GET{'book_author'} ) );
 		}
 
 		$this->args = $args;

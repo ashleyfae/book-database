@@ -506,7 +506,7 @@ class BDB_DB_Books extends BDB_DB {
 			$join .= " RIGHT JOIN $term_relationship_table as r on book.ID = r.book_id INNER JOIN $term_table as t on (r.term_id = t.term_id AND t.type = 'author')";
 
 			if ( $args['author_id'] ) {
-				$where .= $wpdb->prepare( " AND AND t.term_id = %d", absint( $args['author_id'] ) );
+				$where .= $wpdb->prepare( " AND t.term_id = %d", absint( $args['author_id'] ) );
 			}
 
 			if ( $args['author_name'] ) {

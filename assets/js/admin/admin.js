@@ -32,6 +32,7 @@
             $(document).ready(this.toggleCustomIndexTitle);
             $('#bookdb-read-book').on('click', this.toggleReadingListFields);
             $('#bookdb-submit-reading-entry').on('click', this.submitReadingEntry);
+            $('.bookdb-edit-reading-entry').on('click', this.editReadingEntry);
             $('.bookdb-delete-reading-entry').on('click', this.deleteReadingEntry);
         },
 
@@ -458,6 +459,104 @@
                     console.log(response);
                 }
             });
+        },
+
+        /**
+         * Edit Reading Entry
+         *
+         * @param e
+         * @returns {boolean}
+         */
+        editReadingEntry: function (e) {
+            e.preventDefault();
+
+            var button = $(this);
+            var wrap = $('#bookdb-read-book-fields');
+            var tr = $(this).parents('tr');
+            var entryID = tr.data('entry-id');
+            var entry = {};
+
+            if (typeof entryID == 'undefined' || entryID == '') {
+                return false;
+            }
+
+            // Replace 'Edit' button.
+            button.addClass('button-primary').text('Save'); // @todo l10n
+
+            tr.find('.bookdb-reading-list-display-value').hide();
+            tr.find('.bookdb-reading-list-edit-value').show();
+
+            button.on('click', function (e) {
+                e.preventDefault();
+
+                button.attr('disabled', true);
+
+                var entry = {
+                    ID: entryID,
+                    book_id: wrap.data('book-id'),
+                    date_started: tr.find('.bookdb-reading-list-date-started input').val(),
+                    date_finished: tr.find('.bookdb-reading-list-date-finished input').val(),
+                    user_id: tr.find('.bookdb-reading-list-user-id input').val(),
+                    review_id: tr.find('.bookdb-reading-list-review-id input').val()
+                };
+
+                var data = {
+                    action: 'bdb_save_reading_entry',
+                    nonce: book_database.nonce,
+                    entry: entry
+                };
+
+                $.ajax({
+                    type: 'POST',
+                    url: ajaxurl,
+                    data: data,
+                    dataType: "json",
+                    success: function (response) {
+                        button.attr('disabled', false);
+
+                        if (response.success) {
+                            tr.replaceWith(response.data); // @todo re-initialize edit button ?
+                        }
+
+                    }
+                }).fail(function (response) {
+                    if (window.console && window.console.log) {
+                        console.log(response);
+                    }
+                });
+            });
+        },
+
+        /**
+         * Save Reading Entry
+         *
+         * @param entry
+         * @param button
+         */
+        saveReadingEntry: function (entry, button) {
+
+            var data = {
+                action: 'bdb_save_reading_entry',
+                nonce: book_database.nonce,
+                entry: entry
+            };
+
+            $.ajax({
+                type: 'POST',
+                url: ajaxurl,
+                data: data,
+                dataType: "json",
+                success: function (response) {
+                    button.attr('disabled', false);
+                    return response;
+
+                }
+            }).fail(function (response) {
+                if (window.console && window.console.log) {
+                    console.log(response);
+                }
+            });
+
         },
 
         /**

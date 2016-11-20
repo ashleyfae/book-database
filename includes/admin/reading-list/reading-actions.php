@@ -121,21 +121,46 @@ add_action( 'book-database/book-edit/after-information-fields', 'bdb_book_readin
 function bdb_reading_entry_tr( $entry ) {
 	?>
 	<tr data-entry-id="<?php echo esc_attr( $entry->ID ); ?>">
-		<td>
-			<?php echo bdb_format_mysql_date( $entry->date_started ); ?>
+		<td class="bookdb-reading-list-date-started">
+			<div class="bookdb-reading-list-display-value">
+				<?php echo bdb_format_mysql_date( $entry->date_started ); ?>
+			</div>
+
+			<div class="bookdb-reading-list-edit-value">
+				<input type="text" value="<?php echo esc_attr( bdb_format_mysql_date( $entry->date_started ) ); ?>">
+			</div>
 		</td>
-		<td>
-			<?php echo bdb_format_mysql_date( $entry->date_finished ); ?>
+		<td class="bookdb-reading-list-date-finished">
+			<div class="bookdb-reading-list-display-value">
+				<?php echo bdb_format_mysql_date( $entry->date_finished ); ?>
+			</div>
+
+			<div class="bookdb-reading-list-edit-value">
+				<input type="text" value="<?php echo esc_attr( bdb_format_mysql_date( $entry->date_finished ) ); ?>">
+			</div>
 		</td>
-		<td>
-			<?php
-			if ( $entry->review_id ) {
-				echo '<a href="' . esc_url( bdb_get_admin_page_edit_review( absint( $entry->review_id ) ) ) . '">' . absint( $entry->review_id ) . '</a>';
-			}
-			?>
+		<td class="bookdb-reading-list-review-id">
+			<div class="bookdb-reading-list-display-value">
+				<?php
+				if ( $entry->review_id ) {
+					echo '<a href="' . esc_url( bdb_get_admin_page_edit_review( absint( $entry->review_id ) ) ) . '">' . sprintf( __( '%d (Edit)', 'book-database' ), absint( $entry->review_id ) ) . '</a>';
+				}
+				?>
+			</div>
+
+			<div class="bookdb-reading-list-edit-value">
+				<?php $review_id = ! empty( $entry->review_id ) ? absint( $entry->review_id ) : ''; ?>
+				<input type="number" value="<?php echo esc_attr( $review_id ); ?>">
+			</div>
 		</td>
-		<td>
-			<?php echo absint( $entry->user_id ); ?>
+		<td class="bookdb-reading-list-user-id">
+			<div class="bookdb-reading-list-display-value">
+				<?php echo absint( $entry->user_id ); ?>
+			</div>
+
+			<div class="bookdb-reading-list-edit-value">
+				<input type="number" value="<?php echo esc_attr( $entry->user_id ); ?>">
+			</div>
 		</td>
 		<td>
 			<button type="button" class="button bookdb-edit-reading-entry"><?php _e( 'Edit', 'book-database' ); ?></button>

@@ -656,4 +656,24 @@ class BDB_Review {
 
 	}
 
+	/**
+	 * Is Review Published
+	 *
+	 * Returns `true` if the review is external or if the review published date
+	 * is in the past.
+	 *
+	 * @access public
+	 * @since  1.0.0
+	 * @return bool
+	 */
+	public function is_review_published() {
+
+		if ( $this->is_external() ) {
+			return true;
+		}
+
+		return ( strtotime( $this->get_date_published() ) <= time() );
+
+	}
+
 }

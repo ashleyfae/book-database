@@ -529,7 +529,7 @@ class BDB_DB_Reading_List extends BDB_DB {
 		INDEX date_started (date_started),
 		INDEX date_finished (date_finished),
 		INDEX complete (complete),
-		INDEX date_finished_complete (date_finished, complete),
+		INDEX date_finished_complete (date_finished, complete)
 		) CHARACTER SET utf8 COLLATE utf8_general_ci;";
 
 		dbDelta( $sql );

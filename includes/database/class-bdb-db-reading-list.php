@@ -522,7 +522,7 @@ class BDB_DB_Reading_List extends BDB_DB {
 		date_started datetime,
 		date_finished datetime,
 		complete bigint(3) NOT NULL,
-		PRIMARY KEY  (ID),
+		PRIMARY KEY (ID),
 		INDEX book_id (book_id),
 		INDEX review_id (review_id),
 		INDEX user_id (user_id),

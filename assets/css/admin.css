@@ -498,4 +498,7 @@
     margin: 1em 10px 1em 0;
     padding: 0; }
 
+input[type="checkbox"] + .bookdb-description {
+  display: inline; }
+
 /*# sourceMappingURL=admin.css.map */

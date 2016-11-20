@@ -47,7 +47,8 @@ class BDB_DB_Reading_List extends BDB_DB {
 			'review_id'     => '%d',
 			'user_id'       => '%d',
 			'date_started'  => '%s',
-			'date_finished' => '%s'
+			'date_finished' => '%s',
+			'complete'      => '%d'
 		);
 	}
 
@@ -64,7 +65,8 @@ class BDB_DB_Reading_List extends BDB_DB {
 			'review_id'     => 0,
 			'user_id'       => 0,
 			'date_started'  => null,
-			'date_finished' => null
+			'date_finished' => null,
+			'complete'      => 0
 		);
 	}
 
@@ -519,12 +521,15 @@ class BDB_DB_Reading_List extends BDB_DB {
 		user_id bigint(20) NOT NULL,
 		date_started datetime,
 		date_finished datetime,
+		complete bigint(3) NOT NULL,
 		PRIMARY KEY  (ID),
 		INDEX book_id (book_id),
 		INDEX review_id (review_id),
 		INDEX user_id (user_id),
 		INDEX date_started (date_started),
-		INDEX date_finished (date_finished)
+		INDEX date_finished (date_finished),
+		INDEX complete (complete),
+		INDEX date_finished_complete (date_finished, complete),
 		) CHARACTER SET utf8 COLLATE utf8_general_ci;";
 
 		dbDelta( $sql );

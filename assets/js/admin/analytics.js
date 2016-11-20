@@ -75,8 +75,6 @@
          */
         firstBatchResponse: function (response) {
 
-            console.log(response);
-
             if (true != !response.success) {
                 $.each(response.data, function (id, val) {
                     var element = $('#' + id);
@@ -91,6 +89,15 @@
 
                         $.each(val, function (review_key, review_val) {
                             list.append('<tr><td><a href="' + review_val.edit_review_link + '" class="book-rating ' + review_val.rating_class + '" title="' + bookdb_analytics.l10n.edit_review + '">' + review_val.rating + '</a></td><td><a href="' + review_val.edit_book_link + '" title="' + bookdb_analytics.l10n.edit_book + '">' + review_val.book + '</a></td><td class="review-date">[' + review_val.date + ']</td></tr>');
+                        });
+
+                    } else if ('read-not-reviewed' == id) {
+
+                        element.html('<table><thead><tr><th>' + bookdb_analytics.l10n.book + '</th><th>' + bookdb_analytics.l10n.date + '</th></tr></thead><tbody></tbody></table>');
+                        var list = element.find('tbody');
+
+                        $.each(val, function (book_key, book_val) {
+                            list.append('<tr><td><a href="' + book_val.edit_book_link + '" title="' + bookdb_analytics.l10n.edit_book + '">' + book_val.book + '</a></td><td class="review-date">[' + book_val.date + ']</td></tr>');
                         });
 
                     } else if ('rating-breakdown' == id) {

@@ -127,9 +127,9 @@ function bdb_analytics_page() {
 
 				<div class="bookdb-metric">
 					<div class="bookdb-metric-inner">
-						<p class="top-text"><?php _e( 'Read but Not Reviewed (20 max)', 'book-database' ); ?></p>
+						<p class="top-text"><?php _e( 'Read But Not Reviewed (20 max)', 'book-database' ); ?></p>
 						<div class="bookdb-loading"></div>
-						<div id="read-list" class="bookdb-result"></div>
+						<div id="read-not-reviewed" class="bookdb-result"></div>
 					</div>
 				</div>
 			</div>

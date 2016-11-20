@@ -146,7 +146,7 @@ class BDB_Analytics {
 
 			$query = $wpdb->prepare( "SELECT DISTINCT review.ID, review.rating, review.date_written,
 										book.ID as book_id, book.title as book_title,
-										author.name as author_name
+										GROUP_CONCAT(author.name SEPARATOR ', ') as author_name
 									FROM {$review_table} as review
 									INNER JOIN {$book_table} as book ON review.book_id = book.ID
 									LEFT JOIN {$relationship_table} as r ON book.ID = r.book_id
@@ -367,7 +367,57 @@ class BDB_Analytics {
 					'rating_class'     => sanitize_html_class( $rating->format( 'html_class' ) ),
 					'edit_review_link' => bdb_get_admin_page_edit_review( absint( $review->ID ) ),
 					'edit_book_link'   => bdb_get_admin_page_edit_book( absint( $review->book_id ) ),
-					'date'             => mysql2date( $date_format, $review->date_written )
+					'date'             => bdb_format_mysql_date( $review->date_written )
+				);
+			}
+		}
+
+		return $list;
+
+	}
+
+	/**
+	 * Books Read but Not Reviewed
+	 *
+	 * @access public
+	 * @since  1.1.0
+	 * @return array
+	 */
+	public function get_read_not_reviewed() {
+
+		$list = array();
+
+		global $wpdb;
+		$book_table         = book_database()->books->table_name;
+		$reading_table      = book_database()->reading_list->table_name;
+		$relationship_table = book_database()->book_term_relationships->table_name;
+		$term_table         = book_database()->book_terms->table_name;
+
+		$query = $wpdb->prepare( "SELECT DISTINCT list.ID, list.date_started, list.date_finished,
+										book.ID as book_id, book.title as book_title,
+										GROUP_CONCAT(author.name SEPARATOR ', ') as author_name
+									FROM {$reading_table} as list
+									INNER JOIN {$book_table} as book ON list.book_id = book.ID
+									LEFT JOIN {$relationship_table} as r ON book.ID = r.book_id
+									INNER JOIN {$term_table} as author ON (r.term_id = author.term_id AND author.type = 'author')
+									WHERE `date_finished` >= %s
+									AND `date_finished` <= %s
+									AND `review_id` = 0
+									GROUP BY book.ID
+									ORDER BY list.date_finished DESC
+									LIMIT 20",
+			date( 'Y-m-d 00:00:00', self::$start ),
+			date( 'Y-m-d 00:00:00', self::$end )
+		);
+
+		$books = $wpdb->get_results( $query );
+
+		if ( is_array( $books ) ) {
+			foreach ( $books as $book ) {
+				$list[] = array(
+					'book'           => sprintf( _x( '%s by %s', 'book title by author', 'book-database' ), $book->book_title, $book->author_name ),
+					'edit_book_link' => bdb_get_admin_page_edit_book( absint( $book->book_id ) ),
+					'date'           => bdb_format_mysql_date( $book->date_finished )
 				);
 			}
 		}

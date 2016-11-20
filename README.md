@@ -30,3 +30,13 @@ I'm not sure if I'll ever officially release this. I'm mostly building this for 
 * Possibly add something for tropes. Or this could just be a book term.
 * Remove menu from book modal.
 * Add reading list.
+
+## Fun Queries:
+
+Most read books:
+
+`SELECT book_id, book.title, COUNT(*) AS count FROM `wp_bdb_reading_list` list INNER JOIN `wp_bdb_books` book on book.ID = list.book_id GROUP BY book_id ORDER BY count DESC LIMIT 25`
+
+Get all the books and their ratings from a specific term name ("Fantasy") and within a specific time period (the year 2016):
+
+`SELECT book.title, review.rating FROM `wp_bdb_reviews` review INNER JOIN `wp_bdb_books` book on book.ID = review.book_id INNER JOIN `wp_bdb_book_term_relationships` r on r.book_id = review.book_id INNER JOIN `wp_bdb_book_terms` term on (term.term_id = r.term_id AND term.name = 'Fantasy') WHERE `date_written` >= '2016-01-01 00:00:00' AND `date_written` <= '2016-12-31 00:00:00' ORDER BY book.title ASC`

@@ -152,6 +152,12 @@
   #bookdb-book-associated-with-review blockquote {
     font-style: italic; }
 
+#bdb-book-reading-list table {
+  margin-bottom: 1.5em; }
+
+#bookdb-read-book-fields {
+  display: none; }
+
 .book-library_page_bdb-reviews #ID {
   width: 100px; }
 

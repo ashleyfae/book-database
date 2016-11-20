@@ -248,3 +248,28 @@ function bdb_get_allowed_orderby() {
 
 	return apply_filters( 'book-database/allowed-orderby-for-reviews', $allowed_orderby );
 }
+
+/**
+ * Format MySQL Date
+ *
+ * @param string      $mysql_date MySQL date.
+ * @param bool|string $format     Date format or leave false to use WP date setting.
+ *
+ * @since 1.1.0
+ * @return bool|int|string Formatted date.
+ */
+function bdb_format_mysql_date( $mysql_date, $format = false ) {
+
+	if ( empty( $mysql_date ) ) {
+		return false;
+	}
+
+	if ( false == $format ) {
+		$format = get_option( 'date_format' );
+	}
+
+	$date = $mysql_date ? mysql2date( $format, $mysql_date ) : false;
+
+	return $date;
+
+}

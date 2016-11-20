@@ -88,7 +88,7 @@ class BDB_Review_Index {
 		$allowed_orderby = array(
 			'title'           => 'book.index_title, book.title',
 			'author'          => 'author.name',
-			'date'            => 'review.date_added',
+			'date'            => 'review.date_written',
 			'pub_date'        => 'book.pub_date',
 			'series_position' => 'book.series_position',
 			'pages'           => 'book.pages'

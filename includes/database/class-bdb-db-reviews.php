@@ -48,7 +48,7 @@ class BDB_DB_Reviews extends BDB_DB {
 			'url'            => '%s',
 			'user_id'        => '%d',
 			'rating'         => '%s',
-			'date_added'     => '%s',
+			'date_written'   => '%s',
 			'date_published' => '%s'
 		);
 	}
@@ -67,7 +67,7 @@ class BDB_DB_Reviews extends BDB_DB {
 			'url'            => '',
 			'user_id'        => 0,
 			'rating'         => '',
-			'date_added'     => date( 'Y-m-d H:i:s' ),
+			'date_written'   => date( 'Y-m-d H:i:s' ),
 			'date_published' => date( 'Y-m-d H:i:s' ),
 		);
 	}
@@ -285,7 +285,7 @@ class BDB_DB_Reviews extends BDB_DB {
 			'rating'             => false,
 			'orderby'            => 'ID',
 			'order'              => 'DESC',
-			'date_added'         => false,
+			'date_written'       => false,
 			'include_book_title' => false,
 			'include_author'     => false
 		);
@@ -363,33 +363,33 @@ class BDB_DB_Reviews extends BDB_DB {
 		}
 
 		// Reviews created for a specific date or in a date range.
-		if ( ! empty( $args['date_added'] ) ) {
+		if ( ! empty( $args['date_written'] ) ) {
 
-			if ( is_array( $args['date_added'] ) ) {
+			if ( is_array( $args['date_written'] ) ) {
 
-				if ( ! empty( $args['date_added']['start'] ) ) {
-					$start = date( 'Y-m-d 00:00:00', strtotime( $args['date_added']['start'] ) );
-					$where .= " AND `date_added` >= '{$start}'";
+				if ( ! empty( $args['date_written']['start'] ) ) {
+					$start = date( 'Y-m-d 00:00:00', strtotime( $args['date_written']['start'] ) );
+					$where .= " AND `date_written` >= '{$start}'";
 				}
 
-				if ( ! empty( $args['date_added']['end'] ) ) {
-					$end = date( 'Y-m-d 23:59:59', strtotime( $args['date_added']['end'] ) );
-					$where .= " AND `date_added` <= '{$end}'";
+				if ( ! empty( $args['date_written']['end'] ) ) {
+					$end = date( 'Y-m-d 23:59:59', strtotime( $args['date_written']['end'] ) );
+					$where .= " AND `date_written` <= '{$end}'";
 				}
 
 			} else {
 
-				$year  = date( 'Y', strtotime( $args['date_added'] ) );
-				$month = date( 'm', strtotime( $args['date_added'] ) );
-				$day   = date( 'd', strtotime( $args['date_added'] ) );
-				$where .= " AND $year = YEAR ( date_added ) AND $month = MONTH ( date_added ) AND $day = DAY ( date_added )";
+				$year  = date( 'Y', strtotime( $args['date_written'] ) );
+				$month = date( 'm', strtotime( $args['date_written'] ) );
+				$day   = date( 'd', strtotime( $args['date_written'] ) );
+				$where .= " AND $year = YEAR ( date_written ) AND $month = MONTH ( date_written ) AND $day = DAY ( date_written )";
 
 			}
 
 		}
 
 		if ( 'date' == $args['orderby'] ) {
-			$args['orderby'] = 'date_added';
+			$args['orderby'] = 'date_written';
 		}
 
 		$args['orderby'] = ! array_key_exists( $args['orderby'], $this->get_columns() ) ? 'ID' : $args['orderby'];
@@ -429,12 +429,12 @@ class BDB_DB_Reviews extends BDB_DB {
 		global $wpdb;
 
 		$defaults = array(
-			'ID'         => false,
-			'book_id'    => false,
-			'post_id'    => false,
-			'user_id'    => 0,
-			'rating'     => false,
-			'date_added' => false
+			'ID'           => false,
+			'book_id'      => false,
+			'post_id'      => false,
+			'user_id'      => 0,
+			'rating'       => false,
+			'date_written' => false
 		);
 
 		$args = wp_parse_args( $args, $defaults );
@@ -488,26 +488,26 @@ class BDB_DB_Reviews extends BDB_DB {
 		}
 
 		// Reviews created for a specific date or in a date range.
-		if ( ! empty( $args['date_added'] ) ) {
+		if ( ! empty( $args['date_written'] ) ) {
 
-			if ( is_array( $args['date_added'] ) ) {
+			if ( is_array( $args['date_written'] ) ) {
 
-				if ( ! empty( $args['date_added']['start'] ) ) {
-					$start = date( 'Y-m-d 00:00:00', strtotime( $args['date_added']['start'] ) );
-					$where .= " AND `date_added` >= '{$start}'";
+				if ( ! empty( $args['date_written']['start'] ) ) {
+					$start = date( 'Y-m-d 00:00:00', strtotime( $args['date_written']['start'] ) );
+					$where .= " AND `date_written` >= '{$start}'";
 				}
 
-				if ( ! empty( $args['date_added']['end'] ) ) {
-					$end = date( 'Y-m-d 23:59:59', strtotime( $args['date_added']['end'] ) );
-					$where .= " AND `date_added` <= '{$end}'";
+				if ( ! empty( $args['date_written']['end'] ) ) {
+					$end = date( 'Y-m-d 23:59:59', strtotime( $args['date_written']['end'] ) );
+					$where .= " AND `date_written` <= '{$end}'";
 				}
 
 			} else {
 
-				$year  = date( 'Y', strtotime( $args['date_added'] ) );
-				$month = date( 'm', strtotime( $args['date_added'] ) );
-				$day   = date( 'd', strtotime( $args['date_added'] ) );
-				$where .= " AND $year = YEAR ( date_added ) AND $month = MONTH ( date_added ) AND $day = DAY ( date_added )";
+				$year  = date( 'Y', strtotime( $args['date_written'] ) );
+				$month = date( 'm', strtotime( $args['date_written'] ) );
+				$day   = date( 'd', strtotime( $args['date_written'] ) );
+				$where .= " AND $year = YEAR ( date_written ) AND $month = MONTH ( date_written ) AND $day = DAY ( date_written )";
 
 			}
 
@@ -547,7 +547,7 @@ class BDB_DB_Reviews extends BDB_DB {
 		url mediumtext NOT NULL,
 		user_id bigint(20) NOT NULL,
 		rating varchar(32) NOT NULL,
-		date_added datetime NOT NULL,
+		date_written datetime NOT NULL,
 		date_published datetime NOT NULL,
 		PRIMARY KEY  (ID),
 		UNIQUE KEY book_id_rating (book_id, rating),

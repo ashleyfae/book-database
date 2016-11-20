@@ -164,7 +164,7 @@ class BDB_Review_Query {
 		$allowed_orderby = array(
 			'title'           => 'book.index_title',
 			'author'          => 'author.name',
-			'date'            => 'date_added',
+			'date'            => 'date_written',
 			'pub_date'        => 'book.pub_date',
 			'series_position' => 'book.series_position',
 			'pages'           => 'book.pages',
@@ -343,12 +343,12 @@ class BDB_Review_Query {
 
 				if ( ! empty( $this->query_vars['date']['start'] ) ) {
 					$start = date( 'Y-m-d 00:00:00', strtotime( $this->query_vars['date']['start'] ) );
-					$where .= " AND `date_added` >= '{$start}'";
+					$where .= " AND `date_written` >= '{$start}'";
 				}
 
 				if ( ! empty( $this->query_vars['date']['end'] ) ) {
 					$end = date( 'Y-m-d 23:59:59', strtotime( $this->query_vars['date']['end'] ) );
-					$where .= " AND `date_added` <= '{$end}'";
+					$where .= " AND `date_written` <= '{$end}'";
 				}
 
 			} else {
@@ -356,7 +356,7 @@ class BDB_Review_Query {
 				$year  = date( 'Y', strtotime( $this->query_vars['date'] ) );
 				$month = date( 'm', strtotime( $this->query_vars['date'] ) );
 				$day   = date( 'd', strtotime( $this->query_vars['date'] ) );
-				$where .= " AND $year = YEAR ( date_added ) AND $month = MONTH ( date_added ) AND $day = DAY ( date_added )";
+				$where .= " AND $year = YEAR ( date_written ) AND $month = MONTH ( date_written ) AND $day = DAY ( date_written )";
 
 			}
 
@@ -364,15 +364,15 @@ class BDB_Review_Query {
 
 		// Review date -- year
 		if ( $this->query_vars['year'] ) {
-			$where .= $wpdb->prepare( " AND %d = YEAR ( date_added )", absint( $this->query_vars['year'] ) );
+			$where .= $wpdb->prepare( " AND %d = YEAR ( date_written )", absint( $this->query_vars['year'] ) );
 		}
 		// Review date -- month
 		if ( $this->query_vars['month'] ) {
-			$where .= $wpdb->prepare( " AND %d = MONTH ( date_added )", absint( $this->query_vars['month'] ) );
+			$where .= $wpdb->prepare( " AND %d = MONTH ( date_written )", absint( $this->query_vars['month'] ) );
 		}
 		// Review date -- day
 		if ( $this->query_vars['day'] ) {
-			$where .= $wpdb->prepare( " AND %d = DAY ( date_added )", absint( $this->query_vars['day'] ) );
+			$where .= $wpdb->prepare( " AND %d = DAY ( date_written )", absint( $this->query_vars['day'] ) );
 		}
 
 		// Pub date -- year
@@ -438,7 +438,7 @@ class BDB_Review_Query {
 			$this->orderby = $this->orderby . " * 1";
 		}
 
-		$query = "SELECT DISTINCT review.ID, review.post_id, review.url, review.rating, review.date_added,
+		$query = "SELECT DISTINCT review.ID, review.post_id, review.url, review.rating, review.date_written,
 				        book.ID as book_id, book.cover as book_cover_id, book.title as book_title, book.index_title as book_index_title, book.series_position,
 				        series.ID as series_id, series.name as series_name,
 				        author.term_id as author_id, GROUP_CONCAT(author.name SEPARATOR ', ') as author_name
@@ -513,7 +513,7 @@ class BDB_Review_Query {
 			$review_tmp->post_id    = $entry->post_id;
 			$review_tmp->url        = $entry->url;
 			$review_tmp->rating     = $entry->rating;
-			$review_tmp->date_added = $entry->date_added;
+			$review_tmp->date_written = $entry->date_written;
 			$review                 = new BDB_Review( $review_tmp );
 
 			$final[] = array(

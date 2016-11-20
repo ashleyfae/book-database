@@ -144,16 +144,16 @@ class BDB_Analytics {
 			$relationship_table = book_database()->book_term_relationships->table_name;
 			$term_table         = book_database()->book_terms->table_name;
 
-			$query = $wpdb->prepare( "SELECT DISTINCT review.ID, review.rating, review.date_added,
+			$query = $wpdb->prepare( "SELECT DISTINCT review.ID, review.rating, review.date_written,
 										book.ID as book_id, book.title as book_title,
 										author.name as author_name
 									FROM {$review_table} as review
 									INNER JOIN {$book_table} as book ON review.book_id = book.ID
 									LEFT JOIN {$relationship_table} as r ON book.ID = r.book_id
 									INNER JOIN {$term_table} as author ON (r.term_id = author.term_id AND author.type = 'author')
-									WHERE `date_added` >= %s
-									AND `date_added` <= %s
-									ORDER BY review.date_added DESC",
+									WHERE `date_written` >= %s
+									AND `date_written` <= %s
+									ORDER BY review.date_written DESC",
 				date( 'Y-m-d 00:00:00', self::$start ),
 				date( 'Y-m-d 00:00:00', self::$end )
 			);
@@ -293,7 +293,7 @@ class BDB_Analytics {
 					'rating_class'     => sanitize_html_class( $rating->format( 'html_class' ) ),
 					'edit_review_link' => bdb_get_admin_page_edit_review( absint( $review->ID ) ),
 					'edit_book_link'   => bdb_get_admin_page_edit_book( absint( $review->book_id ) ),
-					'date'             => mysql2date( $date_format, $review->date_added )
+					'date'             => mysql2date( $date_format, $review->date_written )
 				);
 			}
 		}
@@ -317,7 +317,7 @@ class BDB_Analytics {
 		global $wpdb;
 		$reviews_table = book_database()->reviews->table_name;
 
-		$query   = $wpdb->prepare( "SELECT rating, COUNT(rating) AS count FROM {$reviews_table} WHERE `date_added` >= %s AND `date_added` <= %s GROUP BY rating ORDER BY rating + 0 DESC", date( 'Y-m-d 00:00:00', self::$start ), date( 'Y-m-d 00:00:00', self::$end ) );
+		$query   = $wpdb->prepare( "SELECT rating, COUNT(rating) AS count FROM {$reviews_table} WHERE `date_written` >= %s AND `date_written` <= %s GROUP BY rating ORDER BY rating + 0 DESC", date( 'Y-m-d 00:00:00', self::$start ), date( 'Y-m-d 00:00:00', self::$end ) );
 		$results = $wpdb->get_results( $query );
 		//file_put_contents( BDB_DIR . 'log.txt', $query . "\n\n", FILE_APPEND );
 
@@ -373,8 +373,8 @@ class BDB_Analytics {
 									FROM {$review_table} reviews
 									INNER JOIN {$relationship_table} r on r.book_id = reviews.book_id
 									INNER JOIN {$term_table} term on term.term_id = r.term_id
-									WHERE `date_added` >= %s
-									AND `date_added` <= %s
+									WHERE `date_written` >= %s
+									AND `date_written` <= %s
 									{$where}
 									GROUP BY term.type, term.name
 									ORDER BY term.name ASC",

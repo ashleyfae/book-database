@@ -78,7 +78,7 @@ class BDB_Review {
 	 * @access public
 	 * @since  1.0.0
 	 */
-	public $date_added;
+	public $date_written;
 
 	/**
 	 * The database abstraction
@@ -591,7 +591,7 @@ class BDB_Review {
 	 * @return string
 	 */
 	public function get_date() {
-		return apply_filters( 'book-database/review/get/date', $this->date_added, $this->ID, $this );
+		return apply_filters( 'book-database/review/get/date', $this->date_written, $this->ID, $this );
 	}
 
 	/**

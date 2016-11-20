@@ -40,6 +40,7 @@ function bdb_analytics_batch_1() {
 
 		$average_rating         = $analytics->get_average_rating();
 		$rating_breakdown       = $analytics->get_rating_breakdown();
+		$books_read             = $analytics->get_number_books_read();
 		$available_ratings      = bdb_get_available_ratings();
 		$rating_breakdown_final = array();
 
@@ -56,7 +57,9 @@ function bdb_analytics_batch_1() {
 		}
 
 		$results = array(
-			'number-books'     => $analytics->get_number_books_read(),
+			'number-books'     => $books_read['total'],
+			'number-rereads'   => $books_read['rereads'],
+			'number-new'       => $books_read['new'],
 			'number-reviews'   => $analytics->get_number_reviews(),
 			'pages'            => $analytics->get_pages_read(),
 			'avg-rating'       => sprintf( _n( '%s Star', '%s Stars', $average_rating, 'book-database' ), $average_rating ),

@@ -199,20 +199,64 @@ class BDB_Analytics {
 	/**
 	 * Get Number of Books Read
 	 *
-	 * @todo verify
+	 * @todo   Not sure if rereads are tracking correctly.
 	 *
-	 * @return int
+	 * @access public
+	 * @since  1.1.0
+	 * @return array Array including:
+	 *               `total` - Total number of books *completed*.
+	 *               `rereads` - Number of rereads completed.
+	 *               `new` - Number of new books read.
 	 */
 	public function get_number_books_read() {
 
-		$count = book_database()->reading_list->count( array(
+		global $wpdb;
+		$book_table    = book_database()->books->table_name;
+		$reading_table = book_database()->reading_list->table_name;
+
+		$read = array(
+			'total'   => 0,
+			'rereads' => 0,
+			'new'     => 0
+		);
+
+		$reading_list = book_database()->reading_list->get_entries( array(
 			'date_finished' => array(
 				'start' => self::$startstr,
 				'end'   => self::$endstr
 			)
 		) );
 
-		return $count;
+		$read['total'] = is_array( $reading_list ) ? count( $reading_list ) : 0;
+
+		if ( is_array( $reading_list ) ) {
+			// Get rereads.
+			$book_ids       = wp_list_pluck( $reading_list, 'book_id' );
+			$book_id_string = implode( ',', array_map( 'absint', $book_ids ) );
+
+			$reading_ids       = wp_list_pluck( $reading_list, 'ID' );
+			$reading_id_string = implode( ',', array_map( 'absint', $reading_ids ) );
+
+			$query = $wpdb->prepare(
+				"SELECT COUNT(list.ID)
+					FROM $reading_table list
+					INNER JOIN $book_table book ON book.ID = list.book_id
+					WHERE book.ID IN ($book_id_string)
+					AND list.ID NOT IN ($reading_id_string)
+					AND `date_finished` < %s",
+				date( 'Y-m-d 00:00:00', self::$end )
+			);
+
+			//print_r($query);wp_die();
+
+			$rereads = $wpdb->get_var( $query );
+
+			$read['rereads'] = absint( $rereads );
+		}
+
+		$read['new'] = $read['total'] - $read['rereads'];
+
+		return $read;
 
 	}
 

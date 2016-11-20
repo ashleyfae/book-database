@@ -515,7 +515,8 @@
                         button.attr('disabled', false);
 
                         if (response.success) {
-                            tr.replaceWith(response.data); // @todo re-initialize edit button ?
+                            tr.replaceWith(response.data);
+                            Book_Database.init();
                         }
 
                     }

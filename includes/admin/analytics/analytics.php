@@ -46,6 +46,15 @@ function bdb_analytics_page() {
 			<div class="bookdb-analytics-column">
 				<div class="bookdb-metric">
 					<div class="bookdb-metric-inner">
+						<p class="top-text"><?php _e( 'Books Read', 'book-database' ); ?></p>
+						<div class="bookdb-loading"></div>
+						<h2 id="number-books" class="bookdb-result"></h2>
+						<p class="bottom-text" id="number-books-compare"><span></span></p>
+					</div>
+				</div>
+				
+				<div class="bookdb-metric">
+					<div class="bookdb-metric-inner">
 						<p class="top-text"><?php _e( 'Reviews', 'book-database' ); ?></p>
 						<div class="bookdb-loading"></div>
 						<h2 id="number-reviews" class="bookdb-result"></h2>

@@ -197,6 +197,26 @@ class BDB_Analytics {
 	}
 
 	/**
+	 * Get Number of Books Read
+	 *
+	 * @todo verify
+	 *
+	 * @return int
+	 */
+	public function get_number_books_read() {
+
+		$count = book_database()->reading_list->count( array(
+			'date_finished' => array(
+				'start' => self::$startstr,
+				'end'   => self::$endstr
+			)
+		) );
+
+		return $count;
+
+	}
+
+	/**
 	 * Get Number of Reviews
 	 *
 	 * @access public

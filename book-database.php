@@ -98,6 +98,13 @@ if ( ! class_exists( 'Book_Database' ) ) :
 		public $book_term_relationships;
 
 		/**
+		 * @var BDB_DB_Reading_List
+		 * @access public
+		 * @since  1.1.0
+		 */
+		public $reading_list;
+
+		/**
 		 * @var BDB_HTML
 		 * @access public
 		 * @since  1.0.0
@@ -133,6 +140,7 @@ if ( ! class_exists( 'Book_Database' ) ) :
 				self::$instance->series                  = new BDB_DB_Series();
 				self::$instance->book_terms              = new BDB_DB_Book_Terms();
 				self::$instance->book_term_relationships = new BDB_DB_Book_Term_Relationships();
+				self::$instance->reading_list            = new BDB_DB_Reading_List();
 				self::$instance->html                    = new BDB_HTML();
 			}
 
@@ -215,6 +223,7 @@ if ( ! class_exists( 'Book_Database' ) ) :
 			require_once BDB_DIR . 'includes/database/class-bdb-db-books.php';
 			require_once BDB_DIR . 'includes/database/class-bdb-db-book-terms.php';
 			require_once BDB_DIR . 'includes/database/class-bdb-db-book-term-relationships.php';
+			require_once BDB_DIR . 'includes/database/class-bdb-db-reading-list.php';
 			require_once BDB_DIR . 'includes/database/class-bdb-db-reviews.php';
 			require_once BDB_DIR . 'includes/database/class-bdb-db-review-meta.php';
 			require_once BDB_DIR . 'includes/database/class-bdb-db-series.php';

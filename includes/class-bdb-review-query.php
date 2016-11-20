@@ -343,12 +343,12 @@ class BDB_Review_Query {
 
 				if ( ! empty( $this->query_vars['date']['start'] ) ) {
 					$start = date( 'Y-m-d 00:00:00', strtotime( $this->query_vars['date']['start'] ) );
-					$where .= " AND `date_written` >= '{$start}'";
+					$where .= " AND `date_published` >= '{$start}'";
 				}
 
 				if ( ! empty( $this->query_vars['date']['end'] ) ) {
 					$end = date( 'Y-m-d 23:59:59', strtotime( $this->query_vars['date']['end'] ) );
-					$where .= " AND `date_written` <= '{$end}'";
+					$where .= " AND `date_published` <= '{$end}'";
 				}
 
 			} else {
@@ -356,7 +356,7 @@ class BDB_Review_Query {
 				$year  = date( 'Y', strtotime( $this->query_vars['date'] ) );
 				$month = date( 'm', strtotime( $this->query_vars['date'] ) );
 				$day   = date( 'd', strtotime( $this->query_vars['date'] ) );
-				$where .= " AND $year = YEAR ( date_written ) AND $month = MONTH ( date_written ) AND $day = DAY ( date_written )";
+				$where .= " AND $year = YEAR ( date_published ) AND $month = MONTH ( date_published ) AND $day = DAY ( date_published )";
 
 			}
 
@@ -364,15 +364,15 @@ class BDB_Review_Query {
 
 		// Review date -- year
 		if ( $this->query_vars['year'] ) {
-			$where .= $wpdb->prepare( " AND %d = YEAR ( date_written )", absint( $this->query_vars['year'] ) );
+			$where .= $wpdb->prepare( " AND %d = YEAR ( date_published )", absint( $this->query_vars['year'] ) );
 		}
 		// Review date -- month
 		if ( $this->query_vars['month'] ) {
-			$where .= $wpdb->prepare( " AND %d = MONTH ( date_written )", absint( $this->query_vars['month'] ) );
+			$where .= $wpdb->prepare( " AND %d = MONTH ( date_published )", absint( $this->query_vars['month'] ) );
 		}
 		// Review date -- day
 		if ( $this->query_vars['day'] ) {
-			$where .= $wpdb->prepare( " AND %d = DAY ( date_written )", absint( $this->query_vars['day'] ) );
+			$where .= $wpdb->prepare( " AND %d = DAY ( date_published )", absint( $this->query_vars['day'] ) );
 		}
 
 		// Pub date -- year
@@ -438,7 +438,7 @@ class BDB_Review_Query {
 			$this->orderby = $this->orderby . " * 1";
 		}
 
-		$query = "SELECT DISTINCT review.ID, review.post_id, review.url, review.rating, review.date_written,
+		$query = "SELECT DISTINCT review.ID, review.post_id, review.url, review.rating, review.date_written, review.date_published,
 				        book.ID as book_id, book.cover as book_cover_id, book.title as book_title, book.index_title as book_index_title, book.series_position,
 				        series.ID as series_id, series.name as series_name,
 				        author.term_id as author_id, GROUP_CONCAT(author.name SEPARATOR ', ') as author_name
@@ -452,6 +452,8 @@ class BDB_Review_Query {
 				GROUP BY review.ID
 				ORDER BY {$this->orderby}
 				{$this->order}";
+
+		print_r( $query );
 
 		// Get the total number of results.
 		$total_query         = "SELECT COUNT(1) FROM ({$query}) AS combined_table";
@@ -507,14 +509,14 @@ class BDB_Review_Query {
 			$book                      = new BDB_Book( $book_tmp );
 
 			// Set up review class.
-			$review_tmp             = new stdClass();
-			$review_tmp->ID         = $entry->ID;
-			$review_tmp->book_id    = $entry->book_id;
-			$review_tmp->post_id    = $entry->post_id;
-			$review_tmp->url        = $entry->url;
-			$review_tmp->rating     = $entry->rating;
-			$review_tmp->date_written = $entry->date_written;
-			$review                 = new BDB_Review( $review_tmp );
+			$review_tmp                 = new stdClass();
+			$review_tmp->ID             = $entry->ID;
+			$review_tmp->book_id        = $entry->book_id;
+			$review_tmp->post_id        = $entry->post_id;
+			$review_tmp->url            = $entry->url;
+			$review_tmp->rating         = $entry->rating;
+			$review_tmp->date_published = $entry->date_published;
+			$review                     = new BDB_Review( $review_tmp );
 
 			$final[] = array(
 				'book'   => $book,

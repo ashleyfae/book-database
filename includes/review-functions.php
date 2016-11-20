@@ -134,9 +134,14 @@ function bdb_insert_review( $data = array() ) {
 		}
 	}
 
-	// Date Added
+	// Date Written
 	if ( array_key_exists( 'date_written', $data ) ) {
 		$review_db_data['date_written'] = sanitize_text_field( $data['date_written'] );
+	}
+
+	// Date Published
+	if ( array_key_exists( 'date_published', $data ) ) {
+		$review_db_data['date_published'] = sanitize_text_field( $data['date_published'] );
 	}
 
 	// Review ID

@@ -118,7 +118,7 @@ function bdb_review_rating_field( $review ) {
 add_action( 'book-database/review-edit/fields', 'bdb_review_rating_field' );
 
 /**
- * Field: Date Added
+ * Field: Date Written
  *
  * @param BDB_Review $review
  *
@@ -126,16 +126,36 @@ add_action( 'book-database/review-edit/fields', 'bdb_review_rating_field' );
  * @return void
  */
 function bdb_review_date_written_field( $review ) {
-	book_database()->html->meta_row( 'text', array( 'label' => __( 'Date', 'book-database' ) ), array(
+	book_database()->html->meta_row( 'text', array( 'label' => __( 'Date Written', 'book-database' ) ), array(
 		'id'    => 'review_date',
 		'name'  => 'review_date',
 		'value' => false !== $review->get_date() ? $review->get_formatted_date() : '',
 		'type'  => 'text',
-		'desc'  => __( 'Date of the review. Leave blank to use today\'s date. You only need to fill this out if entering back-dated reviews.', 'book-database' )
+		'desc'  => __( 'Date the review was written. Leave blank to use today\'s date.', 'book-database' )
 	) );
 }
 
 add_action( 'book-database/review-edit/fields', 'bdb_review_date_written_field' );
+
+/**
+ * Field: Date Published
+ *
+ * @param BDB_Review $review
+ *
+ * @since 1.0.0
+ * @return void
+ */
+function bdb_review_date_published_field( $review ) {
+	book_database()->html->meta_row( 'text', array( 'label' => __( 'Date Published', 'book-database' ) ), array(
+		'id'    => 'review_date_published',
+		'name'  => 'review_date_published',
+		'value' => false !== $review->get_date_published() ? $review->format_date( $review->get_date_published() ) : '',
+		'type'  => 'text',
+		'desc'  => __( 'Date the review was published on the blog. Leave blank to use today\'s date.', 'book-database' )
+	) );
+}
+
+add_action( 'book-database/review-edit/fields', 'bdb_review_date_published_field' );
 
 /**
  * Box: Associated Book Information
@@ -223,10 +243,16 @@ function bdb_save_review() {
 		$review_data[ $db_field ] = $_POST[ $post_field ];
 	}
 
-	// Format the date.
+	// Format the date written.
 	if ( isset( $_POST['review_date'] ) && ! empty( $_POST['review_date'] ) ) {
-		$timestamp                 = strtotime( wp_strip_all_tags( $_POST['review_date'] ) );
+		$timestamp                   = strtotime( wp_strip_all_tags( $_POST['review_date'] ) );
 		$review_data['date_written'] = date( 'Y-m-d H:i:s', $timestamp );
+	}
+
+	// Format the date published.
+	if ( isset( $_POST['review_date_published'] ) && ! empty( $_POST['review_date_published'] ) ) {
+		$timestamp                     = strtotime( wp_strip_all_tags( $_POST['review_date_published'] ) );
+		$review_data['date_published'] = date( 'Y-m-d H:i:s', $timestamp );
 	}
 
 	$new_review_id = bdb_insert_review( apply_filters( 'book-database/review/save/review-data', $review_data, $review_id, $_POST ) );

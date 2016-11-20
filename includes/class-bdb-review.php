@@ -72,13 +72,22 @@ class BDB_Review {
 	public $rating;
 
 	/**
-	 * Review's publication date
+	 * Date the review was written
 	 *
 	 * @var string
 	 * @access public
 	 * @since  1.0.0
 	 */
 	public $date_written;
+
+	/**
+	 * Review's publication date
+	 *
+	 * @var string
+	 * @access public
+	 * @since  1.0.0
+	 */
+	public $date_published;
 
 	/**
 	 * The database abstraction
@@ -582,7 +591,7 @@ class BDB_Review {
 	}
 
 	/**
-	 * Get Date Added
+	 * Get Date Written
 	 *
 	 * Returned in MySQL date format.
 	 *
@@ -591,7 +600,7 @@ class BDB_Review {
 	 * @return string
 	 */
 	public function get_date() {
-		return apply_filters( 'book-database/review/get/date', $this->date_written, $this->ID, $this );
+		return apply_filters( 'book-database/review/get/date_written', $this->date_written, $this->ID, $this );
 	}
 
 	/**
@@ -605,14 +614,45 @@ class BDB_Review {
 	 */
 	public function get_formatted_date( $format = false ) {
 
-		if ( ! $format ) {
+		$raw_date = $this->get_date();
+		$date     = $this->format_date( $raw_date, $format );
+
+		return apply_filters( 'book-database/review/get/formatted_date', $date, $format, $raw_date, $this->ID, $this );
+
+	}
+
+	/**
+	 * Get Date Published
+	 *
+	 * Returned in MySQL date format.
+	 *
+	 * @access public
+	 * @since  1.0.0
+	 * @return string
+	 */
+	public function get_date_published() {
+		return apply_filters( 'book-database/review/get/date_published', $this->date_published, $this->ID, $this );
+	}
+
+	/**
+	 * Format Date
+	 *
+	 * @param string      $raw_date MySQL date format.
+	 * @param string|bool $format   Format to use for the date. Leave as false to use format specified in settings.
+	 *
+	 * @access public
+	 * @since  1.0.0
+	 * @return mixed|void
+	 */
+	public function format_date( $raw_date, $format = false ) {
+
+		if ( false == $format ) {
 			$format = get_option( 'date_format' );
 		}
 
-		$raw_date = $this->get_date();
-		$date     = $raw_date ? mysql2date( $format, $raw_date ) : false;
+		$date = $raw_date ? mysql2date( $format, $raw_date ) : false;
 
-		return apply_filters( 'book-database/review/get/formatted_date', $date, $format, $raw_date, $this->ID, $this );
+		return apply_filters( 'book-database/review/format_date', $date, $format, $raw_date, $this->ID, $this );
 
 	}
 

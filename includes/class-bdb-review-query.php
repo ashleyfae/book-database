@@ -49,6 +49,13 @@ class BDB_Review_Query {
 	 */
 	protected $per_page;
 
+	/**
+	 * Current page number
+	 *
+	 * @var int
+	 * @access protected
+	 * @since  1.0.0
+	 */
 	protected $current_page;
 
 	/**
@@ -141,6 +148,7 @@ class BDB_Review_Query {
 			'orderby'     => 'date',
 			'order'       => 'DESC',
 			'offset'      => false,
+			'hide_future' => false,
 			'per_page'    => 20
 		);
 		$args     = wp_parse_args( $args, $defaults );
@@ -375,9 +383,15 @@ class BDB_Review_Query {
 			$where .= $wpdb->prepare( " AND %d = DAY ( date_written )", absint( $this->query_vars['day'] ) );
 		}
 
-		// Pub date -- year
+		// Book pub date -- year
 		if ( $this->query_vars['pub_year'] ) {
 			$where .= $wpdb->prepare( " AND %d = YEAR ( book.pub_date )", absint( $this->query_vars['pub_year'] ) );
+		}
+
+		// Only show reviews that have been published.
+		if ( true == $this->query_vars['hide_future'] ) {
+			$current = date( 'Y-m-d 00:00:00', time() );
+			$where .= $wpdb->prepare( " AND `date_published` <= %s", $current );
 		}
 
 		// Filter by genre

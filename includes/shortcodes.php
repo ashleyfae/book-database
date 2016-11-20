@@ -114,7 +114,7 @@ add_shortcode( 'review-index', 'bdb_review_index_shortcode' );
  */
 function bdb_book_reviews_shortcode( $atts, $content = '' ) {
 
-	$query = new BDB_Review_Query();
+	$query = new BDB_Review_Query( array( 'hide_future' => true ) );
 	$vars  = $query->parse_query_args();
 	$query->query();
 	$template = bdb_get_template_part( 'shortcode-book-reviews-entry', '', false );

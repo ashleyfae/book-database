@@ -32,5 +32,4 @@ I'm not sure if I'll ever officially release this. I'm mostly building this for 
 * Remove menu from book modal.
 * Remove "Misc" settings tab.
 * Better search on Reviews table page in admin area.
-* Hide future reviews from archive.
 * Add reading list.

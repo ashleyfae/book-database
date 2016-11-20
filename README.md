@@ -29,7 +29,6 @@ I'm not sure if I'll ever officially release this. I'm mostly building this for 
 * Front-end shortcode statistics. Or maybe not.
 * Possibly add something for tropes. Or this could just be a book term.
 * Remove menu from book modal.
-* Add reading list.
 
 ## Fun Queries:
 

@@ -31,7 +31,7 @@ function bdb_book_reading_list_table( $book ) {
 	) );
 	?>
 	<div id="bdb-book-reading-list" class="postbox">
-		<h2><?php esc_html_e( 'Reading List', 'book-database' ) ?></h2>
+		<h2><?php esc_html_e( 'Reading Log', 'book-database' ) ?></h2>
 		<div class="inside">
 			<table class="wp-list-table widefat fixed posts">
 				<thead>
@@ -118,7 +118,18 @@ function bdb_book_reading_list_table( $book ) {
 
 add_action( 'book-database/book-edit/after-information-fields', 'bdb_book_reading_list_table' );
 
+/**
+ * Format Reading Entry `<tr>`
+ *
+ * @param object $entry
+ *
+ * @since 1.1.0
+ * @return void
+ */
 function bdb_reading_entry_tr( $entry ) {
+	if ( ! is_object( $entry ) ) {
+		return;
+	}
 	?>
 	<tr data-entry-id="<?php echo esc_attr( $entry->ID ); ?>">
 		<td class="bookdb-reading-list-date-started">

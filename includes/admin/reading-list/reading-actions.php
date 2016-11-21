@@ -26,7 +26,7 @@ function bdb_book_reading_list_table( $book ) {
 	}
 
 	$entries = bdb_get_book_reading_list( $book->ID, array(
-		'orderby' => 'date_finished',
+		'orderby' => 'date_started',
 		'order'   => 'ASC'
 	) );
 	?>

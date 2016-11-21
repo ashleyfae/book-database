@@ -222,6 +222,7 @@ class BDB_Analytics {
 		);
 
 		$reading_list = book_database()->reading_list->get_entries( array(
+			'number'        => - 1,
 			'date_finished' => array(
 				'start' => self::$startstr,
 				'end'   => self::$endstr
@@ -231,26 +232,23 @@ class BDB_Analytics {
 		$read['total'] = is_array( $reading_list ) ? count( $reading_list ) : 0;
 
 		if ( is_array( $reading_list ) ) {
-			// Get rereads.
-			$book_ids       = wp_list_pluck( $reading_list, 'book_id' );
-			$book_id_string = implode( ',', array_map( 'absint', $book_ids ) );
-
-			$reading_ids       = wp_list_pluck( $reading_list, 'ID' );
-			$reading_id_string = implode( ',', array_map( 'absint', $reading_ids ) );
-
 			$query = $wpdb->prepare(
-				"SELECT COUNT(list.ID)
+				"SELECT (COUNT(*) - 1) AS count
 					FROM $reading_table list
-					INNER JOIN $book_table book ON book.ID = list.book_id
-					WHERE book.ID IN ($book_id_string)
-					AND list.ID NOT IN ($reading_id_string)
-					AND `date_finished` < %s",
+					INNER JOIN $book_table book on book.ID = list.book_ID
+					WHERE `date_finished` < %s
+					GROUP BY book_id",
 				date( 'Y-m-d 00:00:00', self::$end )
 			);
 
-			//print_r($query);wp_die();
+			$books_read = $wpdb->get_results( $query );
+			$rereads    = 0;
 
-			$rereads = $wpdb->get_var( $query );
+			if ( is_array( $books_read ) ) {
+				foreach ( $books_read as $number ) {
+					$rereads += absint( $number->count );
+				}
+			}
 
 			$read['rereads'] = absint( $rereads );
 		}

@@ -146,7 +146,7 @@ function bdb_reading_entry_tr( $entry ) {
 	<tr data-entry-id="<?php echo esc_attr( $entry->ID ); ?>">
 		<td class="bookdb-reading-list-date-started">
 			<div class="bookdb-reading-list-display-value">
-				<?php echo bdb_format_mysql_date( $entry->date_started ); ?>
+				<?php echo $entry->date_started ? bdb_format_mysql_date( $entry->date_started ) : '&ndash;'; ?>
 			</div>
 
 			<div class="bookdb-reading-list-edit-value">
@@ -155,7 +155,7 @@ function bdb_reading_entry_tr( $entry ) {
 		</td>
 		<td class="bookdb-reading-list-date-finished">
 			<div class="bookdb-reading-list-display-value">
-				<?php echo bdb_format_mysql_date( $entry->date_finished ); ?>
+				<?php echo $entry->date_finished ? bdb_format_mysql_date( $entry->date_finished ) : '&ndash;' ?>
 			</div>
 
 			<div class="bookdb-reading-list-edit-value">

@@ -352,12 +352,12 @@ class BDB_Review_Query {
 
 				if ( ! empty( $this->query_vars['date']['start'] ) ) {
 					$start = date( 'Y-m-d 00:00:00', strtotime( $this->query_vars['date']['start'] ) );
-					$where .= " AND `date_written` >= '{$start}'";
+					$where .= $wpdb->prepare( " AND `date_written` >= %s", $start );
 				}
 
 				if ( ! empty( $this->query_vars['date']['end'] ) ) {
 					$end = date( 'Y-m-d 23:59:59', strtotime( $this->query_vars['date']['end'] ) );
-					$where .= " AND `date_written` <= '{$end}'";
+					$where .= $wpdb->prepare( " AND `date_written` <= %s", $end );
 				}
 
 			} else {
@@ -365,7 +365,7 @@ class BDB_Review_Query {
 				$year  = date( 'Y', strtotime( $this->query_vars['date'] ) );
 				$month = date( 'm', strtotime( $this->query_vars['date'] ) );
 				$day   = date( 'd', strtotime( $this->query_vars['date'] ) );
-				$where .= " AND $year = YEAR ( date_written ) AND $month = MONTH ( date_written ) AND $day = DAY ( date_written )";
+				$where .= $wpdb->prepare( " AND %d = YEAR ( date_written ) AND %d = MONTH ( date_written ) AND %d = DAY ( date_written )", $year, $month, $day );
 
 			}
 

@@ -50,47 +50,47 @@ function bdb_analytics_page() {
 							<p class="top-text"><?php _e( 'Total Books Read', 'book-database' ); ?></p>
 							<div class="bookdb-loading"></div>
 							<h2 id="number-books" class="bookdb-result"></h2>
+							<p class="bottom-text" id="number-books-compare"><span></span></p>
 						</div>
 
 						<div>
 							<p class="top-text"><?php _e( 'New Books', 'book-database' ); ?></p>
 							<div class="bookdb-loading"></div>
 							<h2 id="number-new" class="bookdb-result"></h2>
+							<p class="bottom-text" id="number-new-compare"><span></span></p>
 						</div>
 
 						<div>
 							<p class="top-text"><?php _e( 'Re-Reads', 'book-database' ); ?></p>
 							<div class="bookdb-loading"></div>
 							<h2 id="number-rereads" class="bookdb-result"></h2>
+							<p class="bottom-text" id="number-rereads-compare"><span></span></p>
 						</div>
-						<p class="bottom-text" id="number-books-compare"><span></span></p>
+
+						<div>
+							<p class="top-text"><?php _e( 'Pages Read', 'book-database' ); ?></p>
+							<div class="bookdb-loading"></div>
+							<h2 id="pages" class="bookdb-result"></h2>
+							<p class="bottom-text" id="pages-compare"><span></span></p>
+						</div>
 					</div>
 				</div>
 
 				<div class="bookdb-metric">
-					<div class="bookdb-metric-inner">
-						<p class="top-text"><?php _e( 'Reviews Written', 'book-database' ); ?></p>
-						<div class="bookdb-loading"></div>
-						<h2 id="number-reviews" class="bookdb-result"></h2>
-						<p class="bottom-text" id="number-reviews-compare"><span></span></p>
-					</div>
-				</div>
+					<div class="bookdb-metric-inner bookdb-metric-multi-col">
+						<div>
+							<p class="top-text"><?php _e( 'Reviews Written', 'book-database' ); ?></p>
+							<div class="bookdb-loading"></div>
+							<h2 id="number-reviews" class="bookdb-result"></h2>
+							<p class="bottom-text" id="number-reviews-compare"><span></span></p>
+						</div>
 
-				<div class="bookdb-metric">
-					<div class="bookdb-metric-inner">
-						<p class="top-text"><?php _e( 'Pages Read', 'book-database' ); ?></p>
-						<div class="bookdb-loading"></div>
-						<h2 id="pages" class="bookdb-result"></h2>
-						<p class="bottom-text" id="pages-compare"><span></span></p>
-					</div>
-				</div>
-
-				<div class="bookdb-metric">
-					<div class="bookdb-metric-inner">
-						<p class="top-text"><?php _e( 'Average Rating', 'book-database' ); ?></p>
-						<div class="bookdb-loading"></div>
-						<h2 id="avg-rating" class="bookdb-result"></h2>
-						<p class="bottom-text" id="avg-rating-compare"><span></span></p>
+						<div>
+							<p class="top-text"><?php _e( 'Average Rating', 'book-database' ); ?></p>
+							<div class="bookdb-loading"></div>
+							<h2 id="avg-rating" class="bookdb-result"></h2>
+							<p class="bottom-text" id="avg-rating-compare"><span></span></p>
+						</div>
 					</div>
 				</div>
 

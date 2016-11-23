@@ -31,7 +31,13 @@
 
   .bookdb-analytics-column {
     padding: 0 20px;
-    width: 33.3%; } }
+    width: 33.3%; }
+
+  .bookdb-metric-multi-col {
+    display: flex;
+    padding-bottom: 30px; }
+    .bookdb-metric-multi-col > div {
+      flex: 1; } }
 #book-list a {
   color: #444;
   text-decoration: none; }

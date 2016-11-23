@@ -45,26 +45,28 @@ function bdb_analytics_page() {
 
 			<div class="bookdb-analytics-column">
 				<div class="bookdb-metric">
-					<div class="bookdb-metric-inner">
-						<p class="top-text"><?php _e( 'Books Read', 'book-database' ); ?></p>
-						<div class="bookdb-loading"></div>
-						<h2 id="number-books" class="bookdb-result"></h2>
-						<table>
-							<tbody>
-							<tr>
-								<td><?php _e('New Books', 'book-database'); ?></td>
-								<td id="number-new" class="bookdb-result"></td>
-							</tr>
-							<tr>
-								<td><?php _e('Re-Reads', 'book-database'); ?></td>
-								<td id="number-rereads" class="bookdb-result"></td>
-							</tr>
-							</tbody>
-						</table>
+					<div class="bookdb-metric-inner bookdb-metric-multi-col">
+						<div>
+							<p class="top-text"><?php _e( 'Total Books Read', 'book-database' ); ?></p>
+							<div class="bookdb-loading"></div>
+							<h2 id="number-books" class="bookdb-result"></h2>
+						</div>
+
+						<div>
+							<p class="top-text"><?php _e( 'New Books', 'book-database' ); ?></p>
+							<div class="bookdb-loading"></div>
+							<h2 id="number-new" class="bookdb-result"></h2>
+						</div>
+
+						<div>
+							<p class="top-text"><?php _e( 'Re-Reads', 'book-database' ); ?></p>
+							<div class="bookdb-loading"></div>
+							<h2 id="number-rereads" class="bookdb-result"></h2>
+						</div>
 						<p class="bottom-text" id="number-books-compare"><span></span></p>
 					</div>
 				</div>
-				
+
 				<div class="bookdb-metric">
 					<div class="bookdb-metric-inner">
 						<p class="top-text"><?php _e( 'Reviews Written', 'book-database' ); ?></p>

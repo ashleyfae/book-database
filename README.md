@@ -23,13 +23,6 @@ I'm not sure if I'll ever officially release this. I'm mostly building this for 
 * Maintain a front-end archive of all your book reviews.
 * See analytics about the books you've reviewed during a specific date range.
 
-## Todo:
-
-* Analytics: datepicker for custom range.
-* Front-end shortcode statistics. Or maybe not.
-* Possibly add something for tropes. Or this could just be a book term.
-* Remove menu from book modal.
-
 ## Fun Queries:
 
 Most read books:

@@ -100,24 +100,6 @@ function bdb_review_user_id_field( $review ) {
 add_action( 'book-database/review-edit/fields', 'bdb_review_user_id_field' );
 
 /**
- * Field: Rating
- *
- * @param BDB_Review $review
- *
- * @since 1.0.0
- * @return void
- */
-function bdb_review_rating_field( $review ) {
-	book_database()->html->meta_row( 'rating_dropdown', array( 'label' => __( 'Rating', 'book-database' ) ), array(
-		'id'       => 'book_rating',
-		'name'     => 'book_rating',
-		'selected' => $review->get_rating()
-	) );
-}
-
-add_action( 'book-database/review-edit/fields', 'bdb_review_rating_field' );
-
-/**
  * Field: Date Written
  *
  * @param BDB_Review $review
@@ -231,8 +213,7 @@ function bdb_save_review() {
 		'book_id' => 'associated_book',
 		'post_id' => 'associated_post',
 		'url'     => 'external_url',
-		'user_id' => 'review_user_id',
-		'rating'  => 'book_rating'
+		'user_id' => 'review_user_id'
 	);
 
 	foreach ( $fields as $db_field => $post_field ) {

@@ -92,7 +92,6 @@ function bdb_count_reviews( $args ) {
  *                      `post_id` - Post associated with the review (optional).
  *                      `url` - URL to an external book review (optional).
  *                      `user_id` - User who the review is for. If omitted, current user is used.
- *                      `rating` - Rating for the book (optional).
  *                      `date_written` - Timestamp for when the review was added. If omitted, current time is used.
  *                      `date_published` - Tiemstamp for when the review was published.
  *
@@ -124,15 +123,6 @@ function bdb_insert_review( $data = array() ) {
 	} else {
 		$current_user              = wp_get_current_user();
 		$review_db_data['user_id'] = absint( $current_user->ID );
-	}
-
-	// Rating
-	if ( array_key_exists( 'rating', $data ) ) {
-		$allowed_ratings = bdb_get_available_ratings();
-
-		if ( array_key_exists( $data['rating'], $allowed_ratings ) ) {
-			$review_db_data['rating'] = sanitize_text_field( $data['rating'] );
-		}
 	}
 
 	// Date Written

@@ -68,6 +68,8 @@
          *      + Pages read
          *      + Average rating
          *      + Rating breakdown
+         *      + List of reviews written
+         *      + List of books read but not reviewed
          *
          * These are super quick to retrieve so we do them first.
          *

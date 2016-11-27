@@ -153,11 +153,16 @@ class BDB_Rating {
 	 */
 	public function format_text() {
 
-		$text    = $this->rating;
-		$allowed = bdb_get_available_ratings();
+		$text = $this->rating;
 
-		if ( array_key_exists( $text, $allowed ) ) {
-			$text = $allowed[ $text ];
+		if ( null === $this->rating ) {
+			$text = '&ndash;';
+		} else {
+			$allowed = bdb_get_available_ratings();
+
+			if ( array_key_exists( $text, $allowed ) ) {
+				$text = $allowed[ $text ];
+			}
 		}
 
 		return apply_filters( 'book-database/rating/format/text', $text, $this->rating, $this );
@@ -170,7 +175,7 @@ class BDB_Rating {
 	 * For use in class attributes.
 	 *
 	 * @access public
-	 * @since 1.0.0
+	 * @since  1.0.0
 	 * @return string
 	 */
 	public function format_html_class() {

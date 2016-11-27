@@ -206,13 +206,9 @@ function bdb_reading_entry_tr( $entry ) {
         <td class="bookdb-reading-list-rating">
             <div class="bookdb-reading-list-display-value">
 				<?php
-				if ( $entry->rating ) {
-					$rating = new BDB_Rating( $entry->rating );
-					echo $rating->format( 'text' );
-				} else {
-					echo '&ndash';
-				}
-                ?>
+				$rating = new BDB_Rating( $entry->rating );
+				echo $rating->format( 'text' );
+				?>
             </div>
 
             <div class="bookdb-reading-list-edit-value">

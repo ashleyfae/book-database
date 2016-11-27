@@ -58,16 +58,8 @@
 }
 
 // Book List
-#book-list {
-    a {
-        color: #444;
-        text-decoration: none;
-
-        &:hover {
-            color: #222;
-        }
-    }
-
+#book-list,
+#read-not-reviewed {
     .book-rating {
         display: inline-block;
         min-width: 60px;
@@ -92,10 +84,6 @@
         &.dnf {
             color: #c00;
         }
-    }
-
-    .review-date {
-        color: #999;
     }
 }
 

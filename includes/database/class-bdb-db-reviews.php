@@ -330,7 +330,7 @@ class BDB_DB_Reviews extends BDB_DB {
 			} else {
 				$ids = intval( $args['book_id'] );
 			}
-			$where .= " AND `book_id` IN( {$ids} ) ";
+			$where .= " AND review.book_id IN( {$ids} ) ";
 		}
 
 		// Specific reviews for a given post.
@@ -367,9 +367,14 @@ class BDB_DB_Reviews extends BDB_DB {
 			}
 		}
 
+		// Always join on reading log to get rating.
+		$reading_table = book_database()->reading_list->table_name;
+		$select .= ", log.rating";
+		$join .= " LEFT JOIN {$reading_table} as log on log.review_id = review.ID";
+
 		// Reviews with a specific rating.
 		if ( ! empty( $args['rating'] ) ) {
-			$where .= $wpdb->prepare( " AND `rating` LIKE '" . '%s' . "' ", wp_strip_all_tags( $args['rating'] ) );
+			$where .= $wpdb->prepare( " AND `log.rating` LIKE '" . '%s' . "' ", wp_strip_all_tags( $args['rating'] ) );
 		}
 
 		// Reviews created for a specific date or in a date range.

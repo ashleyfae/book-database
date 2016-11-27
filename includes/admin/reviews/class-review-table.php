@@ -457,7 +457,7 @@ class BDB_Reviews_Table extends WP_List_Table {
 
 			foreach ( $reviews as $review ) {
 
-				$review_obj = new BDB_Review( $review->ID );
+				$review_obj = new BDB_Review( $review );
 				$user_id    = ! empty( $review->user_id ) ? intval( $review->user_id ) : 0;
 
 				$data[] = array(

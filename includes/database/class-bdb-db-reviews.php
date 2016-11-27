@@ -499,7 +499,9 @@ class BDB_DB_Reviews extends BDB_DB {
 
 		// Reviews with a specific rating.
 		if ( ! empty( $args['rating'] ) ) {
-			$where .= $wpdb->prepare( " AND `rating` = %s ", $args['rating'] );
+			$reading_table = book_database()->reading_list->table_name;
+			$join .= " LEFT JOIN {$reading_table} as log on log.review_id = review.ID";
+			$where .= $wpdb->prepare( " AND `log.rating` LIKE '" . '%s' . "' ", wp_strip_all_tags( $args['rating'] ) );
 		}
 
 		// Reviews created for a specific date or in a date range.
@@ -533,7 +535,7 @@ class BDB_DB_Reviews extends BDB_DB {
 		$count = wp_cache_get( $cache_key, 'reviews' );
 
 		if ( $count === false ) {
-			$query = "SELECT COUNT($this->primary_key) FROM " . $this->table_name . "{$join} {$where};";
+			$query = "SELECT COUNT($this->primary_key) FROM $this->table_name AS review {$join} {$where};";
 			$count = $wpdb->get_var( $query );
 			wp_cache_set( $cache_key, $count, 'reviews', 3600 );
 		}

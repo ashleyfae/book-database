@@ -93,7 +93,8 @@ function bdb_count_reviews( $args ) {
  *                      `url` - URL to an external book review (optional).
  *                      `user_id` - User who the review is for. If omitted, current user is used.
  *                      `date_written` - Timestamp for when the review was added. If omitted, current time is used.
- *                      `date_published` - Tiemstamp for when the review was published.
+ *                      `date_published` - Timestamp for when the review was published.
+ *                      `rating` - If a rating is provided then a reading log is added.
  *
  * @since 1.0.0
  * @return int|WP_Error ID of the review inserted or updated, or WP_Error on failure.
@@ -144,6 +145,24 @@ function bdb_insert_review( $data = array() ) {
 
 	if ( ! $review_id ) {
 		return new WP_Error( 'error-inserting-review', __( 'Error inserting review into database.', 'book-database' ) );
+	}
+
+	if ( array_key_exists( 'rating', $data ) ) {
+		$reading_data    = array(
+			'book_id'   => $review_db_data['book_id'],
+			'review_id' => absint( $review_id )
+		);
+		$allowed_ratings = bdb_get_available_ratings();
+
+		if ( array_key_exists( $data['rating'], $allowed_ratings ) ) {
+			$reading_data['rating'] = sanitize_text_field( $data['rating'] );
+		}
+
+		$result = bdb_insert_reading_entry( $reading_data );
+
+		if ( ! $result ) {
+			return new WP_Error( 'error-inserting-reading-log', __( 'Error inserting reading log into database.', 'book-database' ) );
+		}
 	}
 
 	return $review_id;

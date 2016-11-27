@@ -47,7 +47,6 @@ class BDB_DB_Reviews extends BDB_DB {
 			'post_id'        => '%d',
 			'url'            => '%s',
 			'user_id'        => '%d',
-			'rating'         => '%s',
 			'date_written'   => '%s',
 			'date_published' => '%s'
 		);
@@ -66,7 +65,6 @@ class BDB_DB_Reviews extends BDB_DB {
 			'post_id'        => 0,
 			'url'            => '',
 			'user_id'        => 0,
-			'rating'         => '',
 			'date_written'   => date( 'Y-m-d H:i:s' ),
 			'date_published' => date( 'Y-m-d H:i:s' ),
 		);
@@ -563,7 +561,6 @@ class BDB_DB_Reviews extends BDB_DB {
 		post_id bigint(20) NOT NULL,
 		url mediumtext NOT NULL,
 		user_id bigint(20) NOT NULL,
-		rating varchar(32) NOT NULL,
 		date_written datetime NOT NULL,
 		date_published datetime NOT NULL,
 		PRIMARY KEY  (ID),

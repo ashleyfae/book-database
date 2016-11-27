@@ -105,7 +105,7 @@ class BDB_Review {
 	 *
 	 * @access public
 	 * @since  1.0.0
-	 * @return void|false False if set up failed.
+	 * @return bool False if set up failed.
 	 */
 	public function __construct( $id ) {
 

@@ -47,6 +47,7 @@ function bdb_get_book_reading_list( $book_id, $args = array() ) {
  *                    `date_started` - Date the book was started.
  *                    `date_finished` - Date the book was finished.
  *                    `complete` - Percentage complete.
+ *                    `rating` - Rating value.
  *
  * @since 1.1.0
  * @return bool|false Entry ID on success or false on failure.
@@ -100,6 +101,15 @@ function bdb_insert_reading_entry( $data = array() ) {
 
 	if ( array_key_exists( 'complete', $data ) ) {
 		$sanitized_data['complete'] = absint( $data['complete'] );
+	}
+
+	// Rating
+	if ( array_key_exists( 'rating', $data ) ) {
+		$allowed_ratings = bdb_get_available_ratings();
+
+		if ( array_key_exists( $data['rating'], $allowed_ratings ) ) {
+			$sanitized_data['rating'] = sanitize_text_field( $data['rating'] );
+		}
 	}
 
 	$result = book_database()->reading_list->add( $sanitized_data );

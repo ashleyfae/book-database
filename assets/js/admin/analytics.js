@@ -68,6 +68,8 @@
          *      + Pages read
          *      + Average rating
          *      + Rating breakdown
+         *      + List of reviews written
+         *      + List of books read but not reviewed
          *
          * These are super quick to retrieve so we do them first.
          *
@@ -95,11 +97,11 @@
 
                     } else if ('read-not-reviewed' == id) {
 
-                        element.html('<table><thead><tr><th>' + bookdb_analytics.l10n.book + '</th><th>' + bookdb_analytics.l10n.date + '</th></tr></thead><tbody></tbody></table>');
+                        element.html('<table><thead><tr><th>' + bookdb_analytics.l10n.rating + '</th><th>' + bookdb_analytics.l10n.book + '</th><th>' + bookdb_analytics.l10n.date + '</th></tr></thead><tbody></tbody></table>');
                         var list = element.find('tbody');
 
                         $.each(val, function (book_key, book_val) {
-                            list.append('<tr><td><a href="' + book_val.edit_book_link + '" title="' + bookdb_analytics.l10n.edit_book + '">' + book_val.book + '</a></td><td class="review-date">[' + book_val.date + ']</td></tr>');
+                            list.append('<tr><td class="book-rating ' + book_val.rating_class + '">' + book_val.rating + '</td><td><a href="' + book_val.edit_book_link + '" title="' + bookdb_analytics.l10n.edit_book + '">' + book_val.book + '</a></td><td class="review-date">[' + book_val.date + ']</td></tr>');
                         });
 
                     } else if ('rating-breakdown' == id) {

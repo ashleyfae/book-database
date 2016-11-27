@@ -38,22 +38,28 @@
     padding-bottom: 30px; }
     .bookdb-metric-multi-col > div {
       flex: 1; } }
-#book-list a {
-  color: #444;
-  text-decoration: none; }
-  #book-list a:hover {
-    color: #222; }
-#book-list .book-rating {
+#book-list .book-rating,
+#read-not-reviewed .book-rating {
   display: inline-block;
   min-width: 60px; }
-  #book-list .book-rating.five-stars, #book-list .book-rating.four-half-stars, #book-list .book-rating.four-stars {
+  #book-list .book-rating.five-stars, #book-list .book-rating.four-half-stars, #book-list .book-rating.four-stars,
+  #read-not-reviewed .book-rating.five-stars,
+  #read-not-reviewed .book-rating.four-half-stars,
+  #read-not-reviewed .book-rating.four-stars {
     color: #090; }
-  #book-list .book-rating.three-half-stars, #book-list .book-rating.three-stars, #book-list .book-rating.two-half-stars {
+  #book-list .book-rating.three-half-stars, #book-list .book-rating.three-stars, #book-list .book-rating.two-half-stars,
+  #read-not-reviewed .book-rating.three-half-stars,
+  #read-not-reviewed .book-rating.three-stars,
+  #read-not-reviewed .book-rating.two-half-stars {
     color: #da9d1c; }
-  #book-list .book-rating.two-stars, #book-list .book-rating.one-half-stars, #book-list .book-rating.one-star, #book-list .book-rating.half-star, #book-list .book-rating.zero-stars, #book-list .book-rating.dnf {
+  #book-list .book-rating.two-stars, #book-list .book-rating.one-half-stars, #book-list .book-rating.one-star, #book-list .book-rating.half-star, #book-list .book-rating.zero-stars, #book-list .book-rating.dnf,
+  #read-not-reviewed .book-rating.two-stars,
+  #read-not-reviewed .book-rating.one-half-stars,
+  #read-not-reviewed .book-rating.one-star,
+  #read-not-reviewed .book-rating.half-star,
+  #read-not-reviewed .book-rating.zero-stars,
+  #read-not-reviewed .book-rating.dnf {
     color: #c00; }
-#book-list .review-date {
-  color: #999; }
 
 .bookdb-metric table {
   margin: 1em auto;
@@ -171,6 +177,9 @@
 
 .book-library_page_bdb-reviews #ID {
   width: 100px; }
+
+#bookdb-review-reading-log-fields {
+  display: none; }
 
 #bookdb-book-page-wrapper .postbox > h2,
 #bookdb-review-page-wrapper .postbox > h2 {

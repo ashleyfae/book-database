@@ -92,9 +92,9 @@ function bdb_count_reviews( $args ) {
  *                      `post_id` - Post associated with the review (optional).
  *                      `url` - URL to an external book review (optional).
  *                      `user_id` - User who the review is for. If omitted, current user is used.
- *                      `rating` - Rating for the book (optional).
  *                      `date_written` - Timestamp for when the review was added. If omitted, current time is used.
- *                      `date_published` - Tiemstamp for when the review was published.
+ *                      `date_published` - Timestamp for when the review was published.
+ *                      `rating` - If a rating is provided then a reading log is added.
  *
  * @since 1.0.0
  * @return int|WP_Error ID of the review inserted or updated, or WP_Error on failure.
@@ -126,15 +126,6 @@ function bdb_insert_review( $data = array() ) {
 		$review_db_data['user_id'] = absint( $current_user->ID );
 	}
 
-	// Rating
-	if ( array_key_exists( 'rating', $data ) ) {
-		$allowed_ratings = bdb_get_available_ratings();
-
-		if ( array_key_exists( $data['rating'], $allowed_ratings ) ) {
-			$review_db_data['rating'] = sanitize_text_field( $data['rating'] );
-		}
-	}
-
 	// Date Written
 	if ( array_key_exists( 'date_written', $data ) ) {
 		$review_db_data['date_written'] = sanitize_text_field( $data['date_written'] );
@@ -154,6 +145,24 @@ function bdb_insert_review( $data = array() ) {
 
 	if ( ! $review_id ) {
 		return new WP_Error( 'error-inserting-review', __( 'Error inserting review into database.', 'book-database' ) );
+	}
+
+	if ( array_key_exists( 'rating', $data ) ) {
+		$reading_data    = array(
+			'book_id'   => $review_db_data['book_id'],
+			'review_id' => absint( $review_id )
+		);
+		$allowed_ratings = bdb_get_available_ratings();
+
+		if ( array_key_exists( $data['rating'], $allowed_ratings ) ) {
+			$reading_data['rating'] = sanitize_text_field( $data['rating'] );
+		}
+
+		$result = bdb_insert_reading_entry( $reading_data );
+
+		if ( ! $result ) {
+			return new WP_Error( 'error-inserting-reading-log', __( 'Error inserting reading log into database.', 'book-database' ) );
+		}
 	}
 
 	return $review_id;
@@ -286,3 +295,19 @@ function bdb_run_sync_review_publish_date_on_transition( $new_status, $old_statu
 }
 
 add_action( 'transition_post_status', 'bdb_run_sync_review_publish_date_on_transition', 10, 3 );
+
+/**
+ * Get Review's Reading Entry
+ *
+ * Returns the reading entry associated with a given review.
+ *
+ * @param int $review_id Review ID.
+ *
+ * @since 1.2.0
+ * @return false|object
+ */
+function bdb_get_review_reading_entry( $review_id ) {
+	$log = book_database()->reading_list->get_entry_by( 'review_id', $review_id );
+
+	return $log;
+}

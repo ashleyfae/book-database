@@ -47,7 +47,6 @@ class BDB_DB_Reviews extends BDB_DB {
 			'post_id'        => '%d',
 			'url'            => '%s',
 			'user_id'        => '%d',
-			'rating'         => '%s',
 			'date_written'   => '%s',
 			'date_published' => '%s'
 		);
@@ -66,7 +65,6 @@ class BDB_DB_Reviews extends BDB_DB {
 			'post_id'        => 0,
 			'url'            => '',
 			'user_id'        => 0,
-			'rating'         => '',
 			'date_written'   => date( 'Y-m-d H:i:s' ),
 			'date_published' => date( 'Y-m-d H:i:s' ),
 		);
@@ -330,7 +328,7 @@ class BDB_DB_Reviews extends BDB_DB {
 			} else {
 				$ids = intval( $args['book_id'] );
 			}
-			$where .= " AND `book_id` IN( {$ids} ) ";
+			$where .= " AND review.book_id IN( {$ids} ) ";
 		}
 
 		// Specific reviews for a given post.
@@ -367,9 +365,14 @@ class BDB_DB_Reviews extends BDB_DB {
 			}
 		}
 
+		// Always join on reading log to get rating.
+		$reading_table = book_database()->reading_list->table_name;
+		$select .= ", log.rating";
+		$join .= " LEFT JOIN {$reading_table} as log on log.review_id = review.ID";
+
 		// Reviews with a specific rating.
 		if ( ! empty( $args['rating'] ) ) {
-			$where .= $wpdb->prepare( " AND `rating` LIKE '" . '%s' . "' ", wp_strip_all_tags( $args['rating'] ) );
+			$where .= $wpdb->prepare( " AND `log.rating` LIKE '" . '%s' . "' ", wp_strip_all_tags( $args['rating'] ) );
 		}
 
 		// Reviews created for a specific date or in a date range.
@@ -494,7 +497,9 @@ class BDB_DB_Reviews extends BDB_DB {
 
 		// Reviews with a specific rating.
 		if ( ! empty( $args['rating'] ) ) {
-			$where .= $wpdb->prepare( " AND `rating` = %s ", $args['rating'] );
+			$reading_table = book_database()->reading_list->table_name;
+			$join .= " LEFT JOIN {$reading_table} as log on log.review_id = review.ID";
+			$where .= $wpdb->prepare( " AND `log.rating` LIKE '" . '%s' . "' ", wp_strip_all_tags( $args['rating'] ) );
 		}
 
 		// Reviews created for a specific date or in a date range.
@@ -528,7 +533,7 @@ class BDB_DB_Reviews extends BDB_DB {
 		$count = wp_cache_get( $cache_key, 'reviews' );
 
 		if ( $count === false ) {
-			$query = "SELECT COUNT($this->primary_key) FROM " . $this->table_name . "{$join} {$where};";
+			$query = "SELECT COUNT($this->primary_key) FROM $this->table_name AS review {$join} {$where};";
 			$count = $wpdb->get_var( $query );
 			wp_cache_set( $cache_key, $count, 'reviews', 3600 );
 		}
@@ -556,7 +561,6 @@ class BDB_DB_Reviews extends BDB_DB {
 		post_id bigint(20) NOT NULL,
 		url mediumtext NOT NULL,
 		user_id bigint(20) NOT NULL,
-		rating varchar(32) NOT NULL,
 		date_written datetime NOT NULL,
 		date_published datetime NOT NULL,
 		PRIMARY KEY  (ID),

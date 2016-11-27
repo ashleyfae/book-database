@@ -100,24 +100,6 @@ function bdb_review_user_id_field( $review ) {
 add_action( 'book-database/review-edit/fields', 'bdb_review_user_id_field' );
 
 /**
- * Field: Rating
- *
- * @param BDB_Review $review
- *
- * @since 1.0.0
- * @return void
- */
-function bdb_review_rating_field( $review ) {
-	book_database()->html->meta_row( 'rating_dropdown', array( 'label' => __( 'Rating', 'book-database' ) ), array(
-		'id'       => 'book_rating',
-		'name'     => 'book_rating',
-		'selected' => $review->get_rating()
-	) );
-}
-
-add_action( 'book-database/review-edit/fields', 'bdb_review_rating_field' );
-
-/**
  * Field: Date Written
  *
  * @param BDB_Review $review
@@ -158,6 +140,93 @@ function bdb_review_date_published_field( $review ) {
 add_action( 'book-database/review-edit/fields', 'bdb_review_date_published_field' );
 
 /**
+ * Field: Insert Reading Log
+ *
+ * @param BDB_Review $review
+ *
+ * @since 1.0.0
+ * @return void
+ */
+function bdb_review_insert_reading_log_field( $review ) {
+	$reading_entry = bdb_get_review_reading_entry( $review->ID );
+
+	book_database()->html->meta_row( 'checkbox', array( 'label' => __( 'Insert Reading Log', 'book-database' ) ), array(
+		'id'      => 'insert_reading_log',
+		'name'    => 'insert_reading_log',
+		'current' => $reading_entry ? 1 : false
+	) );
+	?>
+    <div id="bookdb-review-reading-log-fields">
+		<?php
+		// Start Date
+		book_database()->html->meta_row( 'text', array(
+			'label' => __( 'Start Date', 'book-database' )
+		), array(
+			'id'    => 'reading_start_date',
+			'name'  => 'reading_start_date',
+			'value' => $reading_entry ? bdb_format_mysql_date( $reading_entry->date_started ) : date( 'j F Y', current_time( 'timestamp' ) ),
+			'desc'  => esc_html__( 'Date you started reading the book.', 'book-database' )
+		) );
+
+		// End Date
+		book_database()->html->meta_row( 'text', array(
+			'label' => __( 'Finish Date', 'book-database' )
+		), array(
+			'id'    => 'reading_end_date',
+			'name'  => 'reading_end_date',
+			'value' => $reading_entry ? bdb_format_mysql_date( $reading_entry->date_finished ) : date( 'j F Y', current_time( 'timestamp' ) ),
+			'desc'  => esc_html__( 'Date you finished reading the book.', 'book-database' )
+		) );
+
+		// User ID
+		$current_user = wp_get_current_user();
+		book_database()->html->meta_row( 'text', array(
+			'label' => __( 'User ID', 'book-database' )
+		), array(
+			'id'    => 'reading_user_id',
+			'name'  => 'reading_user_id',
+			'value' => $reading_entry ? $reading_entry->user_id : $current_user->ID,
+			'type'  => 'number',
+			'desc'  => __( 'Default is your user ID.', 'book-database' )
+		) );
+
+		// Review ID
+		book_database()->html->meta_row( 'text', array(
+			'label' => __( 'Review ID', 'book-database' )
+		), array(
+			'id'    => 'review_id',
+			'name'  => 'review_id',
+			'value' => $review->ID,
+			'type'  => 'number',
+			'desc'  => __( 'If there\'s a review connected to this read, enter the ID here. Or you can add it later.', 'book-database' )
+		) );
+
+		// % Complete
+		book_database()->html->meta_row( 'text', array(
+			'label' => __( '% Complete', 'book-database' )
+		), array(
+			'id'    => 'percent_complete',
+			'name'  => 'percent_complete',
+			'value' => $reading_entry ? $reading_entry->complete : 100,
+			'type'  => 'number',
+			'desc'  => __( 'Percentage of the book you\'ve read.', 'book-database' )
+		) );
+
+		// Rating
+		book_database()->html->meta_row( 'rating_dropdown', array( 'label' => __( 'Rating', 'book-database' ) ), array(
+			'id'               => 'book_rating',
+			'name'             => 'book_rating',
+			'selected'         => $reading_entry ? $reading_entry->rating : '-1',
+			'show_option_none' => _x( 'None', 'no dropdown items', 'book-database' )
+		) );
+		?>
+    </div>
+	<?php
+}
+
+add_action( 'book-database/review-edit/fields', 'bdb_review_insert_reading_log_field' );
+
+/**
  * Box: Associated Book Information
  *
  * Displays information about the associated book.
@@ -179,17 +248,17 @@ function bdb_review_show_associated_book( $review ) {
 	}
 
 	?>
-	<div class="postbox">
-		<h2><?php _e( 'Associated Book', 'book-database' ); ?></h2>
-		<div class="inside">
+    <div class="postbox">
+        <h2><?php _e( 'Associated Book', 'book-database' ); ?></h2>
+        <div class="inside">
 			<?php do_action( 'book-database/review-edit/associated-book/before', $review, $book ); ?>
-			<div id="bookdb-book-associated-with-review">
+            <div id="bookdb-book-associated-with-review">
 				<?php echo $book->get_formatted_info(); ?>
-				<a href="<?php echo esc_url( bdb_get_admin_page_edit_book( $book->ID ) ); ?>" class="button"><?php _e( 'Edit book in admin panel', 'book-database' ); ?></a>
-			</div>
+                <a href="<?php echo esc_url( bdb_get_admin_page_edit_book( $book->ID ) ); ?>" class="button"><?php _e( 'Edit book in admin panel', 'book-database' ); ?></a>
+            </div>
 			<?php do_action( 'book-database/review-edit/associated-book/after', $review, $book ); ?>
-		</div>
-	</div>
+        </div>
+    </div>
 	<?php
 }
 
@@ -231,8 +300,7 @@ function bdb_save_review() {
 		'book_id' => 'associated_book',
 		'post_id' => 'associated_post',
 		'url'     => 'external_url',
-		'user_id' => 'review_user_id',
-		'rating'  => 'book_rating'
+		'user_id' => 'review_user_id'
 	);
 
 	foreach ( $fields as $db_field => $post_field ) {
@@ -259,6 +327,35 @@ function bdb_save_review() {
 
 	if ( ! $new_review_id || is_wp_error( $new_review_id ) ) {
 		wp_die( __( 'An error occurred while inserting the review.', 'book-database' ) );
+	}
+
+	/*
+	 * Maybe save reading log.
+	 */
+	if ( isset( $_POST['insert_reading_log'] ) ) {
+
+		$reading_data = array(
+			'book_id'       => $review_data['book_id'],
+			'review_id'     => $new_review_id,
+			'user_id'       => absint( $_POST['reading_user_id'] ),
+			'date_started'  => $_POST['reading_start_date'],
+			'date_finished' => $_POST['reading_end_date'],
+			'complete'      => $_POST['percent_complete'],
+			'rating'        => $_POST['book_rating']
+		);
+
+		$existing_log = bdb_get_review_reading_entry( $new_review_id );
+
+		if ( $existing_log ) {
+			$reading_data['ID'] = $existing_log->ID;
+		}
+
+		$result = bdb_insert_reading_entry( $reading_data );
+
+		if ( ! $result || is_wp_error( $result ) ) {
+			wp_die( __( 'An error ocurred while inserting the reading data.', 'book-database' ) );
+		}
+
 	}
 
 	$edit_url = add_query_arg( array(

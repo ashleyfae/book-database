@@ -51,7 +51,7 @@ function bdb_ajax_save_review() {
 	$new_review_id = bdb_insert_review( $review_data );
 	$review        = new BDB_Review( $new_review_id );
 	$book          = new BDB_Book( $review->book_id );
-	$rating        = new BDB_Rating( $review->rating );
+	$rating        = new BDB_Rating( $review->get_rating() );
 
 	$data = array(
 		'ID'        => $new_review_id . ' <a href="' . esc_url( bdb_get_admin_page_edit_review( $new_review_id ) ) . '" target="_blank">' . __( '(Edit)', 'book-database' ) . '</a>',

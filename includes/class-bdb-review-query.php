@@ -321,6 +321,10 @@ class BDB_Review_Query {
 		$join  = '';
 		$where = ' WHERE 1=1 ';
 
+		// Always join on reading log to get rating.
+		$reading_table = book_database()->reading_list->table_name;
+		$join .= " LEFT JOIN {$reading_table} as log on log.review_id = review.ID";
+
 		// Filter by book title.
 		if ( $this->query_vars['book_title'] ) {
 			$where .= $wpdb->prepare( " AND book.title LIKE '%%%%" . '%s' . "%%%%'", sanitize_text_field( wp_strip_all_tags( $this->query_vars['book_title'] ) ) );
@@ -342,7 +346,7 @@ class BDB_Review_Query {
 
 		// Filter by rating.
 		if ( $this->query_vars['rating'] ) {
-			$where .= $wpdb->prepare( " AND rating LIKE '" . '%s' . "'", sanitize_text_field( wp_strip_all_tags( $this->query_vars['rating'] ) ) );
+			$where .= $wpdb->prepare( " AND log.rating LIKE '" . '%s' . "'", sanitize_text_field( wp_strip_all_tags( $this->query_vars['rating'] ) ) );
 		}
 
 		// Review date parameters
@@ -453,7 +457,8 @@ class BDB_Review_Query {
 			$this->orderby = $this->orderby . " * 1";
 		}
 
-		$query = "SELECT DISTINCT review.ID, review.post_id, review.url, review.rating, review.date_written, review.date_published,
+		$query = "SELECT DISTINCT review.ID, review.post_id, review.url, review.date_written, review.date_published,
+						log.rating as rating,
 				        book.ID as book_id, book.cover as book_cover_id, book.title as book_title, book.index_title as book_index_title, book.series_position,
 				        series.ID as series_id, series.name as series_name,
 				        author.term_id as author_id, GROUP_CONCAT(author.name SEPARATOR ', ') as author_name

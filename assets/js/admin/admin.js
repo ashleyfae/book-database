@@ -34,6 +34,8 @@
             $('#bookdb-submit-reading-entry').on('click', this.submitReadingEntry);
             $('.bookdb-edit-reading-entry').on('click', this.editReadingEntry);
             $('.bookdb-delete-reading-entry').on('click', this.deleteReadingEntry);
+            $(document).ready(this.toggleReviewReadingLog);
+            $('#insert_reading_log').on('change', this.toggleReviewReadingLog);
         },
 
         /**
@@ -426,7 +428,8 @@
                 date_finished: $('#reading_end_date').val(),
                 user_id: $('#reading_user_id').val(),
                 review_id: $('#review_id').val(),
-                complete: $('#percent_complete').val()
+                complete: $('#percent_complete').val(),
+                rating: $('#book_rating').val()
             };
 
             var data = {
@@ -452,6 +455,10 @@
 
                         $('#bookdb-read-book-fields').slideUp();
 
+                        Book_Database.init();
+
+                    } else {
+                        console.log(response);
                     }
 
                 }
@@ -499,7 +506,8 @@
                     date_finished: tr.find('.bookdb-reading-list-date-finished input').val(),
                     user_id: tr.find('.bookdb-reading-list-user-id input').val(),
                     review_id: tr.find('.bookdb-reading-list-review-id input').val(),
-                    complete: tr.find('.bookdb-reading-list-complete input').val()
+                    complete: tr.find('.bookdb-reading-list-complete input').val(),
+                    rating: tr.find('.bookdb-reading-list-rating select').val()
                 };
 
                 var data = {
@@ -574,6 +582,22 @@
                     console.log(response);
                 }
             });
+        },
+
+        /**
+         * Toggle Review Reading Log
+         *
+         * @param e
+         */
+        toggleReviewReadingLog: function (e) {
+            var isChecked = $('#insert_reading_log:checked').length > 0,
+                wrapper = $('#bookdb-review-reading-log-fields');
+
+            if (isChecked) {
+                wrapper.show();
+            } else {
+                wrapper.hide();
+            }
         }
 
     };

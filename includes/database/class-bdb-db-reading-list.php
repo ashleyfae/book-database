@@ -48,7 +48,8 @@ class BDB_DB_Reading_List extends BDB_DB {
 			'user_id'       => '%d',
 			'date_started'  => '%s',
 			'date_finished' => '%s',
-			'complete'      => '%d'
+			'complete'      => '%d',
+			'rating'        => '%s'
 		);
 	}
 
@@ -66,7 +67,8 @@ class BDB_DB_Reading_List extends BDB_DB {
 			'user_id'       => 0,
 			'date_started'  => null,
 			'date_finished' => null,
-			'complete'      => 0
+			'complete'      => 0,
+			'rating'        => null
 		);
 	}
 
@@ -237,7 +239,8 @@ class BDB_DB_Reading_List extends BDB_DB {
 			'orderby'       => 'ID',
 			'order'         => 'DESC',
 			'date_started'  => false,
-			'date_finished' => false
+			'date_finished' => false,
+			'rating'        => false
 		);
 
 		$args = wp_parse_args( $args, $defaults );
@@ -340,6 +343,11 @@ class BDB_DB_Reading_List extends BDB_DB {
 
 			}
 
+		}
+
+		// By specific rating.
+		if ( ! empty( $args['rating'] ) ) {
+			$where .= $wpdb->prepare( " AND `rating` LIKE '" . '%s' . "' ", wp_strip_all_tags( $args['rating'] ) );
 		}
 
 		$args['orderby'] = ! array_key_exists( $args['orderby'], $this->get_columns() ) ? 'ID' : $args['orderby'];
@@ -382,7 +390,8 @@ class BDB_DB_Reading_List extends BDB_DB {
 			'review_id'     => false,
 			'user_id'       => false,
 			'date_started'  => false,
-			'date_finished' => false
+			'date_finished' => false,
+			'rating'        => false
 		);
 
 		$args = wp_parse_args( $args, $defaults );
@@ -487,6 +496,11 @@ class BDB_DB_Reading_List extends BDB_DB {
 
 		}
 
+		// Specific rating.
+		if ( ! empty( $args['rating'] ) ) {
+			$where .= $wpdb->prepare( " AND `rating` LIKE '" . '%s' . "' ", wp_strip_all_tags( $args['rating'] ) );
+		}
+
 		$cache_key = md5( 'bdb_reading_list_' . serialize( $args ) );
 
 		$count = wp_cache_get( $cache_key, 'reading_list' );
@@ -522,13 +536,17 @@ class BDB_DB_Reading_List extends BDB_DB {
 		date_started datetime,
 		date_finished datetime,
 		complete bigint(3) NOT NULL,
+		rating varchar(32),
 		PRIMARY KEY (ID),
+		KEY rating_book_id (rating, book_id),
+		KEY rating_review_id (rating, review_id),
 		INDEX book_id (book_id),
 		INDEX review_id (review_id),
 		INDEX user_id (user_id),
 		INDEX date_started (date_started),
 		INDEX date_finished (date_finished),
 		INDEX complete (complete),
+		INDEX rating (rating),
 		INDEX date_finished_complete (date_finished, complete)
 		) CHARACTER SET utf8 COLLATE utf8_general_ci;";
 

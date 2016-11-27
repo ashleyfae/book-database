@@ -30,21 +30,22 @@ function bdb_book_reading_list_table( $book ) {
 		'order'   => 'ASC'
 	) );
 	?>
-	<div id="bdb-book-reading-list" class="postbox">
-		<h2><?php esc_html_e( 'Reading Log', 'book-database' ) ?></h2>
-		<div class="inside">
-			<table class="wp-list-table widefat fixed posts">
-				<thead>
-				<tr>
-					<th><?php _e( 'Date Started', 'book-database' ); ?></th>
-					<th><?php _e( 'Date Finished', 'book-database' ); ?></th>
-					<th><?php _e( 'Review ID', 'book-database' ); ?></th>
-					<th><?php _e( 'User ID', 'book-database' ); ?></th>
-					<th><?php _e( '% Complete', 'book-database' ); ?></th>
-					<th><?php _e( 'Actions', 'book-database' ); ?></th>
-				</tr>
-				</thead>
-				<tbody>
+    <div id="bdb-book-reading-list" class="postbox">
+        <h2><?php esc_html_e( 'Reading Log', 'book-database' ) ?></h2>
+        <div class="inside">
+            <table class="wp-list-table widefat fixed posts">
+                <thead>
+                <tr>
+                    <th><?php _e( 'Date Started', 'book-database' ); ?></th>
+                    <th><?php _e( 'Date Finished', 'book-database' ); ?></th>
+                    <th><?php _e( 'Review ID', 'book-database' ); ?></th>
+                    <th><?php _e( 'User ID', 'book-database' ); ?></th>
+                    <th><?php _e( '% Complete', 'book-database' ); ?></th>
+                    <th><?php _e( 'Rating', 'book-database' ); ?></th>
+                    <th><?php _e( 'Actions', 'book-database' ); ?></th>
+                </tr>
+                </thead>
+                <tbody>
 				<?php
 				if ( $entries ) {
 					foreach ( $entries as $entry ) {
@@ -53,18 +54,18 @@ function bdb_book_reading_list_table( $book ) {
 
 				} else {
 					?>
-					<tr id="bookdb-no-reading-list-entries">
-						<td colspan="5"><?php _e( 'You haven\'t read this book yet!', 'book-database' ); ?></td>
-					</tr>
+                    <tr id="bookdb-no-reading-list-entries">
+                        <td colspan="5"><?php _e( 'You haven\'t read this book yet!', 'book-database' ); ?></td>
+                    </tr>
 					<?php
 				}
 				?>
-				</tbody>
-			</table>
+                </tbody>
+            </table>
 
-			<button type="button" id="bookdb-read-book" class="button"><?php esc_html_e( 'Read Book', 'book-database' ); ?></button>
+            <button type="button" id="bookdb-read-book" class="button"><?php esc_html_e( 'Read Book', 'book-database' ); ?></button>
 
-			<div id="bookdb-read-book-fields" data-book-id="<?php echo esc_attr( $book->ID ); ?>">
+            <div id="bookdb-read-book-fields" data-book-id="<?php echo esc_attr( $book->ID ); ?>">
 				<?php
 				// Start Date
 				book_database()->html->meta_row( 'text', array(
@@ -119,12 +120,20 @@ function bdb_book_reading_list_table( $book ) {
 					'type'  => 'number',
 					'desc'  => __( 'Percentage of the book you\'ve read.', 'book-database' )
 				) );
+
+				// Rating
+				book_database()->html->meta_row( 'rating_dropdown', array( 'label' => __( 'Rating', 'book-database' ) ), array(
+					'id'               => 'book_rating',
+					'name'             => 'book_rating',
+					'selected'         => '-1',
+					'show_option_none' => _x( 'None', 'no dropdown items', 'book-database' )
+				) );
 				?>
 
-				<button type="button" id="bookdb-submit-reading-entry" class="button"><?php esc_html_e( 'Submit', 'book-database' ); ?></button>
-			</div>
-		</div>
-	</div>
+                <button type="button" id="bookdb-submit-reading-entry" class="button"><?php esc_html_e( 'Submit', 'book-database' ); ?></button>
+            </div>
+        </div>
+    </div>
 	<?php
 }
 
@@ -143,62 +152,81 @@ function bdb_reading_entry_tr( $entry ) {
 		return;
 	}
 	?>
-	<tr data-entry-id="<?php echo esc_attr( $entry->ID ); ?>">
-		<td class="bookdb-reading-list-date-started">
-			<div class="bookdb-reading-list-display-value">
+    <tr data-entry-id="<?php echo esc_attr( $entry->ID ); ?>">
+        <td class="bookdb-reading-list-date-started">
+            <div class="bookdb-reading-list-display-value">
 				<?php echo $entry->date_started ? bdb_format_mysql_date( $entry->date_started ) : '&ndash;'; ?>
-			</div>
+            </div>
 
-			<div class="bookdb-reading-list-edit-value">
-				<input type="text" value="<?php echo esc_attr( bdb_format_mysql_date( $entry->date_started ) ); ?>">
-			</div>
-		</td>
-		<td class="bookdb-reading-list-date-finished">
-			<div class="bookdb-reading-list-display-value">
+            <div class="bookdb-reading-list-edit-value">
+                <input type="text" value="<?php echo esc_attr( bdb_format_mysql_date( $entry->date_started ) ); ?>">
+            </div>
+        </td>
+        <td class="bookdb-reading-list-date-finished">
+            <div class="bookdb-reading-list-display-value">
 				<?php echo $entry->date_finished ? bdb_format_mysql_date( $entry->date_finished ) : '&ndash;' ?>
-			</div>
+            </div>
 
-			<div class="bookdb-reading-list-edit-value">
-				<input type="text" value="<?php echo esc_attr( bdb_format_mysql_date( $entry->date_finished ) ); ?>">
-			</div>
-		</td>
-		<td class="bookdb-reading-list-review-id">
-			<div class="bookdb-reading-list-display-value">
+            <div class="bookdb-reading-list-edit-value">
+                <input type="text" value="<?php echo esc_attr( bdb_format_mysql_date( $entry->date_finished ) ); ?>">
+            </div>
+        </td>
+        <td class="bookdb-reading-list-review-id">
+            <div class="bookdb-reading-list-display-value">
 				<?php
 				if ( $entry->review_id ) {
 					echo '<a href="' . esc_url( bdb_get_admin_page_edit_review( absint( $entry->review_id ) ) ) . '">' . sprintf( __( '%d (Edit)', 'book-database' ), absint( $entry->review_id ) ) . '</a>';
 				}
 				?>
-			</div>
+            </div>
 
-			<div class="bookdb-reading-list-edit-value">
+            <div class="bookdb-reading-list-edit-value">
 				<?php $review_id = ! empty( $entry->review_id ) ? absint( $entry->review_id ) : ''; ?>
-				<input type="number" value="<?php echo esc_attr( $review_id ); ?>">
-			</div>
-		</td>
-		<td class="bookdb-reading-list-user-id">
-			<div class="bookdb-reading-list-display-value">
+                <input type="number" value="<?php echo esc_attr( $review_id ); ?>">
+            </div>
+        </td>
+        <td class="bookdb-reading-list-user-id">
+            <div class="bookdb-reading-list-display-value">
 				<?php echo absint( $entry->user_id ); ?>
-			</div>
+            </div>
 
-			<div class="bookdb-reading-list-edit-value">
-				<input type="number" value="<?php echo esc_attr( $entry->user_id ); ?>">
-			</div>
-		</td>
-		<td class="bookdb-reading-list-complete">
-			<div class="bookdb-reading-list-display-value">
+            <div class="bookdb-reading-list-edit-value">
+                <input type="number" value="<?php echo esc_attr( $entry->user_id ); ?>">
+            </div>
+        </td>
+        <td class="bookdb-reading-list-complete">
+            <div class="bookdb-reading-list-display-value">
 				<?php echo absint( $entry->complete ); ?>%
-			</div>
+            </div>
 
-			<div class="bookdb-reading-list-edit-value">
-				<input type="number" value="<?php echo esc_attr( $entry->complete ); ?>">
-			</div>
-		</td>
-		<td>
-			<button type="button" class="button bookdb-edit-reading-entry"><?php _e( 'Edit', 'book-database' ); ?></button>
-			<button type="button" class="button bookdb-delete-reading-entry"><?php _e( 'Remove', 'book-database' ); ?></button>
-		</td>
-	</tr>
+            <div class="bookdb-reading-list-edit-value">
+                <input type="number" value="<?php echo esc_attr( $entry->complete ); ?>">
+            </div>
+        </td>
+        <td class="bookdb-reading-list-rating">
+            <div class="bookdb-reading-list-display-value">
+				<?php
+				$rating = new BDB_Rating( $entry->rating );
+				echo $rating->format( 'text' );
+				?>
+            </div>
+
+            <div class="bookdb-reading-list-edit-value">
+				<?php
+				echo book_database()->html->rating_dropdown( array(
+					'id'               => 'book_rating_' . $entry->ID,
+					'name'             => 'book_rating_' . $entry->ID,
+					'selected'         => $entry->rating ? $entry->rating : '-1',
+					'show_option_none' => _x( 'None', 'no dropdown items', 'book-database' )
+				) );
+				?>
+            </div>
+        </td>
+        <td>
+            <button type="button" class="button bookdb-edit-reading-entry"><?php _e( 'Edit', 'book-database' ); ?></button>
+            <button type="button" class="button bookdb-delete-reading-entry"><?php _e( 'Remove', 'book-database' ); ?></button>
+        </td>
+    </tr>
 	<?php
 }
 

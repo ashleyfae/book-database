@@ -143,11 +143,14 @@ class BDB_Analytics {
 			$book_table         = book_database()->books->table_name;
 			$relationship_table = book_database()->book_term_relationships->table_name;
 			$term_table         = book_database()->book_terms->table_name;
+			$reading_table      = book_database()->reading_list->table_name;
 
-			$query = $wpdb->prepare( "SELECT DISTINCT review.ID, review.rating, review.date_written,
+			$query = $wpdb->prepare( "SELECT DISTINCT review.ID, review.date_written,
+										log.rating as rating,
 										book.ID as book_id, book.title as book_title,
 										GROUP_CONCAT(author.name SEPARATOR ', ') as author_name
 									FROM {$review_table} as review
+									LEFT JOIN {$reading_table} as log on review.ID = log.review_id
 									INNER JOIN {$book_table} as book ON review.book_id = book.ID
 									LEFT JOIN {$relationship_table} as r ON book.ID = r.book_id
 									INNER JOIN {$term_table} as author ON (r.term_id = author.term_id AND author.type = 'author')
@@ -322,6 +325,10 @@ class BDB_Analytics {
 			foreach ( $reviews as $review ) {
 				$rating = $review->rating;
 
+				if ( null === $rating ) {
+					continue; // Skip null ratings.
+				}
+
 				if ( ! is_numeric( $rating ) ) {
 					$rating = 0; // DNF is counted as 0.
 				}
@@ -331,7 +338,7 @@ class BDB_Analytics {
 			}
 		}
 
-		$average = round( $total_count / $number_ratings, 1 );
+		$average = ( $number_ratings > 0 ) ? round( $total_count / $number_ratings, 1 ) : 0;
 
 		return $average;
 
@@ -348,9 +355,8 @@ class BDB_Analytics {
 	 */
 	public function get_book_list() {
 
-		$reviews     = self::$instance->query_reviews();
-		$list        = array();
-		$date_format = get_option( 'date_format' );
+		$reviews = self::$instance->query_reviews();
+		$list    = array();
 
 		if ( is_array( $reviews ) ) {
 			// Maybe slice array.
@@ -392,7 +398,7 @@ class BDB_Analytics {
 		$relationship_table = book_database()->book_term_relationships->table_name;
 		$term_table         = book_database()->book_terms->table_name;
 
-		$query = $wpdb->prepare( "SELECT DISTINCT list.ID, list.date_started, list.date_finished,
+		$query = $wpdb->prepare( "SELECT DISTINCT list.ID, list.date_started, list.date_finished, list.rating,
 										book.ID as book_id, book.title as book_title,
 										GROUP_CONCAT(author.name SEPARATOR ', ') as author_name
 									FROM {$reading_table} as list
@@ -413,10 +419,13 @@ class BDB_Analytics {
 
 		if ( is_array( $books ) ) {
 			foreach ( $books as $book ) {
+				$rating = new BDB_Rating( $book->rating );
 				$list[] = array(
 					'book'           => sprintf( _x( '%s by %s', 'book title by author', 'book-database' ), $book->book_title, $book->author_name ),
 					'edit_book_link' => bdb_get_admin_page_edit_book( absint( $book->book_id ) ),
-					'date'           => bdb_format_mysql_date( $book->date_finished )
+					'date'           => bdb_format_mysql_date( $book->date_finished ),
+					'rating'         => $rating->format( 'html_stars' ),
+					'rating_class'   => sanitize_html_class( $rating->format( 'html_class' ) ),
 				);
 			}
 		}
@@ -438,9 +447,9 @@ class BDB_Analytics {
 	public function get_rating_breakdown() {
 
 		global $wpdb;
-		$reviews_table = book_database()->reviews->table_name;
+		$reading_table = book_database()->reading_list->table_name;
 
-		$query   = $wpdb->prepare( "SELECT rating, COUNT(rating) AS count FROM {$reviews_table} WHERE `date_written` >= %s AND `date_written` <= %s GROUP BY rating ORDER BY rating + 0 DESC", date( 'Y-m-d 00:00:00', self::$start ), date( 'Y-m-d 00:00:00', self::$end ) );
+		$query   = $wpdb->prepare( "SELECT rating, COUNT(rating) AS count FROM {$reading_table} WHERE `rating` IS NOT NULL AND `date_finished` >= %s AND `date_finished` <= %s GROUP BY rating ORDER BY rating + 0 DESC", date( 'Y-m-d 00:00:00', self::$start ), date( 'Y-m-d 00:00:00', self::$end ) );
 		$results = $wpdb->get_results( $query );
 		//file_put_contents( BDB_DIR . 'log.txt', $query . "\n\n", FILE_APPEND );
 
@@ -485,6 +494,7 @@ class BDB_Analytics {
 		$review_table       = book_database()->reviews->table_name;
 		$relationship_table = book_database()->book_term_relationships->table_name;
 		$term_table         = book_database()->book_terms->table_name;
+		$reading_table      = book_database()->reading_list->table_name;
 
 		$where = '';
 
@@ -494,6 +504,7 @@ class BDB_Analytics {
 
 		$query = $wpdb->prepare( "SELECT COUNT(rating) as number_reviews, ROUND(AVG(IF(rating = 'dnf', 0, rating)), 2) as avg_rating, term.name, term.type
 									FROM {$review_table} reviews
+									INNER JOIN {$reading_table} log on log.review_id = reviews.ID
 									INNER JOIN {$relationship_table} r on r.book_id = reviews.book_id
 									INNER JOIN {$term_table} term on term.term_id = r.term_id
 									WHERE `date_written` >= %s

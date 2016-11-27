@@ -99,7 +99,7 @@ function bdb_analytics_batch_2() {
 
 	$date_hash = hash( 'md5', $analytics::$startstr . $analytics::$endstr );
 	$results   = get_transient( 'bdb_analytics_2_' . $date_hash );
-	//$results   = false; // uncomment to debug
+	$results   = false; // uncomment to debug
 
 	if ( false == $results ) {
 

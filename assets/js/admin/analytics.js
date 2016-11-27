@@ -142,6 +142,8 @@
          */
         secondBatchResponse: function (response) {
 
+            console.log(response);
+
             $.each(response.data, function (type, html) {
                 var wrap = $('#' + type + '-breakdown');
 

@@ -502,7 +502,7 @@ class BDB_Analytics {
 			$where .= $wpdb->prepare( " AND term.type = %s", wp_strip_all_tags( sanitize_text_field( $term_type ) ) );
 		}
 
-		$query = $wpdb->prepare( "SELECT COUNT(rating) as number_reviews, ROUND(AVG(IF(rating = 'dnf', 0, rating)), 2) as avg_rating, term.name, term.type
+		$query = $wpdb->prepare( "SELECT COUNT(log.rating) as number_reviews, ROUND(AVG(IF(log.rating = 'dnf', 0, log.rating)), 2) as avg_rating, term.name, term.type
 									FROM {$review_table} reviews
 									INNER JOIN {$reading_table} log on log.review_id = reviews.ID
 									INNER JOIN {$relationship_table} r on r.book_id = reviews.book_id

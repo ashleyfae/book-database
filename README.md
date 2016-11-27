@@ -41,5 +41,5 @@ SELECT book_id, book.title, COUNT(*) AS count FROM `wp_bdb_reading_list` list IN
 Get all the books and their ratings from a specific term name ("Fantasy") and within a specific time period (the year 2016):
 
 ```
-SELECT book.title, review.rating FROM `wp_bdb_reviews` review INNER JOIN `wp_bdb_books` book on book.ID = review.book_id INNER JOIN `wp_bdb_book_term_relationships` r on r.book_id = review.book_id INNER JOIN `wp_bdb_book_terms` term on (term.term_id = r.term_id AND term.name = 'Fantasy') WHERE `date_written` >= '2016-01-01 00:00:00' AND `date_written` <= '2016-12-31 00:00:00' ORDER BY book.title ASC
+SELECT book.title, log.rating FROM `wp_bdb_reviews` review RIGHT JOIN `wp_bdb_reading_list` log on log.review_id = review.ID INNER JOIN `wp_bdb_books` book on book.ID = review.book_id INNER JOIN `wp_bdb_book_term_relationships` r on r.book_id = review.book_id INNER JOIN `wp_bdb_book_terms` term on (term.term_id = r.term_id AND term.name = 'Fantasy') WHERE `date_written` >= '2016-01-01 00:00:00' AND `date_written` <= '2016-12-31 00:00:00' ORDER BY book.title ASC
 ```

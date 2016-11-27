@@ -102,6 +102,15 @@ function bdb_insert_reading_entry( $data = array() ) {
 		$sanitized_data['complete'] = absint( $data['complete'] );
 	}
 
+	// Rating
+	if ( array_key_exists( 'rating', $data ) ) {
+		$allowed_ratings = bdb_get_available_ratings();
+
+		if ( array_key_exists( $data['rating'], $allowed_ratings ) ) {
+			$sanitized_data['rating'] = sanitize_text_field( $data['rating'] );
+		}
+	}
+
 	$result = book_database()->reading_list->add( $sanitized_data );
 
 	return $result;

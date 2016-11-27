@@ -276,3 +276,19 @@ function bdb_run_sync_review_publish_date_on_transition( $new_status, $old_statu
 }
 
 add_action( 'transition_post_status', 'bdb_run_sync_review_publish_date_on_transition', 10, 3 );
+
+/**
+ * Get Review's Reading Entry
+ *
+ * Returns the reading entry associated with a given review.
+ *
+ * @param int $review_id Review ID.
+ *
+ * @since 1.2.0
+ * @return false|object
+ */
+function bdb_get_review_reading_entry( $review_id ) {
+	$log = book_database()->reading_list->get_entry_by( 'review_id', $review_id );
+
+	return $log;
+}

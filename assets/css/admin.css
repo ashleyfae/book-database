@@ -172,6 +172,9 @@
 .book-library_page_bdb-reviews #ID {
   width: 100px; }
 
+#bookdb-review-reading-log-fields {
+  display: none; }
+
 #bookdb-book-page-wrapper .postbox > h2,
 #bookdb-review-page-wrapper .postbox > h2 {
   border-bottom: 1px solid #eee;

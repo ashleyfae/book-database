@@ -47,6 +47,7 @@ function bdb_get_book_reading_list( $book_id, $args = array() ) {
  *                    `date_started` - Date the book was started.
  *                    `date_finished` - Date the book was finished.
  *                    `complete` - Percentage complete.
+ *                    `rating` - Rating value.
  *
  * @since 1.1.0
  * @return bool|false Entry ID on success or false on failure.

@@ -34,6 +34,8 @@
             $('#bookdb-submit-reading-entry').on('click', this.submitReadingEntry);
             $('.bookdb-edit-reading-entry').on('click', this.editReadingEntry);
             $('.bookdb-delete-reading-entry').on('click', this.deleteReadingEntry);
+            $(document).ready(this.toggleReviewReadingLog);
+            $('#insert_reading_log').on('change', this.toggleReviewReadingLog);
         },
 
         /**
@@ -580,6 +582,22 @@
                     console.log(response);
                 }
             });
+        },
+
+        /**
+         * Toggle Review Reading Log
+         *
+         * @param e
+         */
+        toggleReviewReadingLog: function (e) {
+            var isChecked = $('#insert_reading_log:checked').length > 0,
+                wrapper = $('#bookdb-review-reading-log-fields');
+
+            if (isChecked) {
+                wrapper.show();
+            } else {
+                wrapper.hide();
+            }
         }
 
     };

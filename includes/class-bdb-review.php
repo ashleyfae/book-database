@@ -587,6 +587,14 @@ class BDB_Review {
 	 * @return string
 	 */
 	public function get_rating() {
+		if ( ! isset( $this->rating ) ) {
+			$log = bdb_get_review_reading_entry( $this->ID );
+
+			if ( $log ) {
+				$this->rating = $log->rating;
+			}
+		}
+
 		return apply_filters( 'book-database/review/get/rating', $this->rating, $this->ID, $this );
 	}
 

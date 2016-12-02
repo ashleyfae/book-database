@@ -328,6 +328,65 @@ class BDB_Analytics {
 	}
 
 	/**
+	 * Get Number of Different Series
+	 *
+	 * @access public
+	 * @since  1.2.1
+	 * @return int
+	 */
+	public function get_number_different_series() {
+
+		global $wpdb;
+
+		$reading_table = book_database()->reading_list->table_name;
+		$book_table    = book_database()->books->table_name;
+
+		$query = $wpdb->prepare(
+			"SELECT COUNT(*)
+				FROM $reading_table as log 
+				INNER JOIN $book_table as book on book.ID = log.book_id
+				WHERE `date_finished` >= %s 
+				AND `date_finished` <= %s
+				AND `series_id` IS NOT NULL
+				GROUP BY series_id",
+			date( 'Y-m-d 00:00:00', self::$start ),
+			date( 'Y-m-d 00:00:00', self::$end )
+		);
+
+		return absint( $wpdb->get_var( $query ) );
+
+	}
+
+	/**
+	 * Get Number of Standalones
+	 *
+	 * @access public
+	 * @since 1.2.1
+	 * @return int
+	 */
+	public function get_number_standalones() {
+
+		global $wpdb;
+
+		$reading_table = book_database()->reading_list->table_name;
+		$book_table    = book_database()->books->table_name;
+
+		$query = $wpdb->prepare(
+			"SELECT COUNT(*)
+				FROM $reading_table as log 
+				INNER JOIN $book_table as book on book.ID = log.book_id
+				WHERE `date_finished` >= %s 
+				AND `date_finished` <= %s
+				AND `series_id` IS NULL",
+			date( 'Y-m-d 00:00:00', self::$start ),
+			date( 'Y-m-d 00:00:00', self::$end )
+		);
+
+		return absint( $wpdb->get_var( $query ) );
+
+	}
+
+	/**
 	 * Get Average Rating
 	 *
 	 * @access public

@@ -94,6 +94,24 @@ function bdb_analytics_page() {
 					</div>
 				</div>
 
+                <div class="bookdb-metric">
+                    <div class="bookdb-metric-inner bookdb-metric-multi-col">
+                        <div>
+                            <p class="top-text"><?php _e( 'Different Series', 'book-database' ); ?></p>
+                            <div class="bookdb-loading"></div>
+                            <h2 id="number-different-series" class="bookdb-result"></h2>
+                            <p class="bottom-text" id="number-reviews-compare"><span></span></p>
+                        </div>
+
+                        <div>
+                            <p class="top-text"><?php _e( 'Standalones', 'book-database' ); ?></p>
+                            <div class="bookdb-loading"></div>
+                            <h2 id="number-standalones" class="bookdb-result"></h2>
+                            <p class="bottom-text" id="avg-rating-compare"><span></span></p>
+                        </div>
+                    </div>
+                </div>
+
 				<div class="bookdb-metric">
 					<div class="bookdb-metric-inner">
 						<p class="top-text"><?php _e( 'Rating Breakdown', 'book-database' ); ?></p>

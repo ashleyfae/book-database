@@ -73,8 +73,7 @@ class BDB_Rating {
 	public function set_rating( $rating ) {
 
 		$allowed_ratings = bdb_get_available_ratings();
-
-		if ( array_key_exists( $rating, $allowed_ratings ) ) {
+		if ( array_key_exists( (string) $rating, $allowed_ratings ) ) {
 			$this->rating = $rating;
 
 			return true;

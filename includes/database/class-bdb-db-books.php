@@ -291,7 +291,8 @@ class BDB_DB_Books extends BDB_DB {
 			'pub_date'        => false,
 			'orderby'         => 'ID',
 			'order'           => 'DESC',
-			'include_author'  => false
+			'include_author'  => false,
+			'include_rating'  => false
 		);
 
 		$args = wp_parse_args( $args, $defaults );
@@ -398,6 +399,12 @@ class BDB_DB_Books extends BDB_DB {
 
 		}
 
+		// Get average rating.
+		if ( ! empty( $args['include_rating'] ) ) {
+			$reading_table = book_database()->reading_list->table_name;
+			$join .= " LEFT JOIN {$reading_table} as log on (books.ID = log.book_id AND log.rating IS NOT NULL)";
+		}
+
 		switch ( $args['orderby'] ) {
 			case 'series' :
 				$orderby = 'series.name';
@@ -426,6 +433,9 @@ class BDB_DB_Books extends BDB_DB {
 		}
 		if ( $args['include_author'] ) {
 			$select_this .= ", GROUP_CONCAT(author.name SEPARATOR ',') as author_name, GROUP_CONCAT(author.term_id SEPARATOR ',') as author_id";
+		}
+		if ( $args['include_rating'] ) {
+			$select_this .= ", ROUND(AVG(IF(log.rating = 'dnf', 0, log.rating)), 2) as avg_rating";
 		}
 
 		if ( $books === false ) {

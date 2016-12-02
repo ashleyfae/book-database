@@ -119,18 +119,18 @@ class BDB_Books_Table extends WP_List_Table {
 		$series = isset( $_REQUEST['series_name'] ) ? wp_unslash( $_REQUEST['series_name'] ) : '';
 
 		?>
-		<p class="search-box">
-			<label class="screen-reader-text" for="<?php echo esc_attr( $input_id ); ?>-title"><?php esc_html_e( 'Search by book title', 'book-database' ); ?></label>
-			<input type="search" id="<?php echo esc_attr( $input_id ); ?>-title" name="book_title" value="<?php echo esc_attr( $title ); ?>" placeholder="<?php esc_attr_e( 'Book title', 'book-database' ); ?>">
+        <p class="search-box">
+            <label class="screen-reader-text" for="<?php echo esc_attr( $input_id ); ?>-title"><?php esc_html_e( 'Search by book title', 'book-database' ); ?></label>
+            <input type="search" id="<?php echo esc_attr( $input_id ); ?>-title" name="book_title" value="<?php echo esc_attr( $title ); ?>" placeholder="<?php esc_attr_e( 'Book title', 'book-database' ); ?>">
 
-			<label class="screen-reader-text" for="<?php echo esc_attr( $input_id ); ?>-author"><?php esc_html_e( 'Search by author name', 'book-database' ); ?></label>
-			<input type="search" id="<?php echo esc_attr( $input_id ); ?>-author" name="book_author" value="<?php echo esc_attr( $author ); ?>" placeholder="<?php esc_attr_e( 'Author name', 'book-database' ); ?>">
+            <label class="screen-reader-text" for="<?php echo esc_attr( $input_id ); ?>-author"><?php esc_html_e( 'Search by author name', 'book-database' ); ?></label>
+            <input type="search" id="<?php echo esc_attr( $input_id ); ?>-author" name="book_author" value="<?php echo esc_attr( $author ); ?>" placeholder="<?php esc_attr_e( 'Author name', 'book-database' ); ?>">
 
-			<label class="screen-reader-text" for="<?php echo esc_attr( $input_id ); ?>-series"><?php esc_html_e( 'Search by series name', 'book-database' ); ?></label>
-			<input type="search" id="<?php echo esc_attr( $input_id ); ?>-series" name="series_name" value="<?php echo esc_attr( $series ); ?>" placeholder="<?php esc_attr_e( 'Series name', 'book-database' ); ?>">
+            <label class="screen-reader-text" for="<?php echo esc_attr( $input_id ); ?>-series"><?php esc_html_e( 'Search by series name', 'book-database' ); ?></label>
+            <input type="search" id="<?php echo esc_attr( $input_id ); ?>-series" name="series_name" value="<?php echo esc_attr( $series ); ?>" placeholder="<?php esc_attr_e( 'Series name', 'book-database' ); ?>">
 
 			<?php submit_button( $text, 'button', false, false, array( 'ID' => 'search-submit' ) ); ?>
-		</p>
+        </p>
 		<?php
 	}
 
@@ -202,6 +202,17 @@ class BDB_Books_Table extends WP_List_Table {
 				$value = $item['pub_date'] ? date_i18n( get_option( 'date_format' ), strtotime( $item['pub_date'] ) ) : false;
 				break;
 
+			case 'rating' :
+				if ( $item['rating'] ) {
+					$rounded    = round( $item['rating'] * 2 ) / 2;
+					$rating_obj = new BDB_Rating( $rounded );
+					$url        = add_query_arg( array( 'rating' => urlencode( $item['rating'] ) ), bdb_get_admin_page_books() );
+					$value      = '<a href="' . esc_url( $url ) . '">' . $rating_obj->format( 'html_stars' ) . '</a>';
+				} else {
+					$value = '&ndash;';
+				}
+				break;
+
 			default :
 				$value = isset( $item[ $column_name ] ) ? $item[ $column_name ] : null;
 				break;
@@ -228,10 +239,10 @@ class BDB_Books_Table extends WP_List_Table {
 		}
 
 		?>
-		<label class="screen-reader-text" for="cb-select-<?php echo esc_attr( $item['ID'] ); ?>">
+        <label class="screen-reader-text" for="cb-select-<?php echo esc_attr( $item['ID'] ); ?>">
 			<?php _e( 'Select this book', 'book-database' ) ?>
-		</label>
-		<input id="cb-select-<?php echo esc_attr( $item['ID'] ); ?>" type="checkbox" name="books[]" value="<?php echo esc_attr( $item['ID'] ); ?>">
+        </label>
+        <input id="cb-select-<?php echo esc_attr( $item['ID'] ); ?>" type="checkbox" name="books[]" value="<?php echo esc_attr( $item['ID'] ); ?>">
 		<?php
 
 	}
@@ -272,7 +283,8 @@ class BDB_Books_Table extends WP_List_Table {
 			'title'    => __( 'Title', 'book-database' ),
 			'author'   => __( 'Author', 'book-database' ),
 			'series'   => __( 'Series', 'book-database' ),
-			'pub_date' => __( 'Publication Date', 'book-database' )
+			'pub_date' => __( 'Publication Date', 'book-database' ),
+			'rating'   => __( 'Rating', 'book-database' )
 		);
 
 		return apply_filters( 'book-database/books-table/book-columns', $columns );
@@ -289,7 +301,8 @@ class BDB_Books_Table extends WP_List_Table {
 		return array(
 			'title'    => array( 'title', true ),
 			'series'   => array( 'series', true ),
-			'pub_date' => array( 'pub_date', true )
+			'pub_date' => array( 'pub_date', true ),
+			'rating'   => array( 'rating', true )
 		);
 	}
 
@@ -313,26 +326,26 @@ class BDB_Books_Table extends WP_List_Table {
 		// Display 'delete' success message.
 		if ( 'top' == $which && true === $this->display_delete_message ) {
 			?>
-			<div id="message" class="updated notice notice-success">
-				<p><?php _e( 'books successfully deleted.', 'book-database' ); ?></p>
-			</div>
+            <div id="message" class="updated notice notice-success">
+                <p><?php _e( 'books successfully deleted.', 'book-database' ); ?></p>
+            </div>
 			<?php
 		}
 
 		?>
-		<div class="tablenav <?php echo esc_attr( $which ); ?>">
+        <div class="tablenav <?php echo esc_attr( $which ); ?>">
 
 			<?php if ( $this->has_items() ): ?>
-				<div class="alignleft actions bulkactions">
+                <div class="alignleft actions bulkactions">
 					<?php $this->bulk_actions( $which ); ?>
-				</div>
+                </div>
 			<?php endif;
 			$this->extra_tablenav( $which );
 			$this->pagination( $which );
 			?>
 
-			<br class="clear"/>
-		</div>
+            <br class="clear"/>
+        </div>
 		<?php
 
 	}
@@ -428,7 +441,8 @@ class BDB_Books_Table extends WP_List_Table {
 			'offset'         => $offset,
 			'order'          => $order,
 			'orderby'        => $orderby,
-			'include_author' => true
+			'include_author' => true,
+			'include_rating' => true
 		);
 
 		// Filter by author.
@@ -471,7 +485,8 @@ class BDB_Books_Table extends WP_List_Table {
 					'series_position' => $book->series_position,
 					'pub_date'        => $book->pub_date,
 					'author_name'     => $book->author_name,
-					'author_id'       => $book->author_id
+					'author_id'       => $book->author_id,
+					'rating'          => $book->avg_rating
 				);
 			}
 		}

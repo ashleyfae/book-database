@@ -63,6 +63,7 @@ function bdb_analytics_batch_1() {
 			'number-reviews'          => $analytics->get_number_reviews(),
 			'number-different-series' => $analytics->get_number_different_series(),
 			'number-standalones'      => $analytics->get_number_standalones(),
+			'number-authors'          => $analytics->get_number_different_authors(),
 			'pages'                   => $analytics->get_pages_read(),
 			'avg-rating'              => ( ! empty( $average_rating ) ) ? sprintf( _n( '%s Star', '%s Stars', $average_rating, 'book-database' ), $average_rating ) : '&ndash;',
 			'book-list'               => $analytics->get_book_list(),

@@ -100,14 +100,21 @@ function bdb_analytics_page() {
                             <p class="top-text"><?php _e( 'Different Series', 'book-database' ); ?></p>
                             <div class="bookdb-loading"></div>
                             <h2 id="number-different-series" class="bookdb-result"></h2>
-                            <p class="bottom-text" id="number-reviews-compare"><span></span></p>
+                            <p class="bottom-text" id="number-different-series-compare"><span></span></p>
                         </div>
 
                         <div>
                             <p class="top-text"><?php _e( 'Standalones', 'book-database' ); ?></p>
                             <div class="bookdb-loading"></div>
                             <h2 id="number-standalones" class="bookdb-result"></h2>
-                            <p class="bottom-text" id="avg-rating-compare"><span></span></p>
+                            <p class="bottom-text" id="number-standalones-compare"><span></span></p>
+                        </div>
+
+                        <div>
+                            <p class="top-text"><?php _e( 'Different Authors', 'book-database' ); ?></p>
+                            <div class="bookdb-loading"></div>
+                            <h2 id="number-authors" class="bookdb-result"></h2>
+                            <p class="bottom-text" id="number-authors-compare"><span></span></p>
                         </div>
                     </div>
                 </div>

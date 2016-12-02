@@ -353,7 +353,9 @@ class BDB_Analytics {
 			date( 'Y-m-d 00:00:00', self::$end )
 		);
 
-		return absint( $wpdb->get_var( $query ) );
+		$results = $wpdb->get_results( $query );
+
+		return is_array( $results ) ? absint( count( $results ) ) : 0;
 
 	}
 
@@ -361,7 +363,7 @@ class BDB_Analytics {
 	 * Get Number of Standalones
 	 *
 	 * @access public
-	 * @since 1.2.1
+	 * @since  1.2.1
 	 * @return int
 	 */
 	public function get_number_standalones() {
@@ -383,6 +385,39 @@ class BDB_Analytics {
 		);
 
 		return absint( $wpdb->get_var( $query ) );
+
+	}
+
+	/**
+	 * Get Number of Different Authors
+	 *
+	 * @access public
+	 * @since  1.2.1
+	 * @return int
+	 */
+	public function get_number_different_authors() {
+
+		global $wpdb;
+
+		$reading_table      = book_database()->reading_list->table_name;
+		$relationship_table = book_database()->book_term_relationships->table_name;
+		$term_table         = book_database()->book_terms->table_name;
+
+		$query = $wpdb->prepare(
+			"SELECT COUNT(*)
+				FROM $reading_table as log 
+				INNER JOIN $relationship_table as r on r.book_id = log.book_id
+				INNER JOIN $term_table as author on (author.term_id = r.term_id AND author.type = 'author')
+				WHERE `date_finished` >= %s 
+				AND `date_finished` <= %s
+				GROUP BY author.term_id",
+			date( 'Y-m-d 00:00:00', self::$start ),
+			date( 'Y-m-d 00:00:00', self::$end )
+		);
+
+		$results = $wpdb->get_results( $query );
+
+		return is_array( $results ) ? absint( count( $results ) ) : 0;
 
 	}
 

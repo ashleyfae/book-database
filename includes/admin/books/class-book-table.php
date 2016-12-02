@@ -206,7 +206,7 @@ class BDB_Books_Table extends WP_List_Table {
 				if ( $item['rating'] ) {
 					$rounded    = round( $item['rating'] * 2 ) / 2;
 					$rating_obj = new BDB_Rating( $rounded );
-					$url        = add_query_arg( array( 'rating' => urlencode( $item['rating'] ) ), bdb_get_admin_page_books() );
+					$url        = add_query_arg( array( 'rating' => urlencode( $rounded ) ), bdb_get_admin_page_books() );
 					$value      = '<a href="' . esc_url( $url ) . '">' . $rating_obj->format( 'html_stars' ) . '</a>';
 				} else {
 					$value = '&ndash;';
@@ -469,6 +469,11 @@ class BDB_Books_Table extends WP_List_Table {
 		// Filter by series name
 		if ( isset( $_GET['series_name'] ) ) {
 			$args['series_name'] = wp_strip_all_tags( $_GET['series_name'] );
+		}
+
+		// Filter by rating
+		if ( isset( $_GET['rating'] ) ) {
+			$args['rating'] = wp_strip_all_tags( $_GET['rating'] );
 		}
 
 		$this->args = $args;

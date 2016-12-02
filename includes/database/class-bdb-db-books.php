@@ -289,6 +289,7 @@ class BDB_DB_Books extends BDB_DB {
 			'series_id'       => false,
 			'series_position' => false,
 			'pub_date'        => false,
+			'rating'          => false,
 			'orderby'         => 'ID',
 			'order'           => 'DESC',
 			'include_author'  => false,
@@ -304,6 +305,11 @@ class BDB_DB_Books extends BDB_DB {
 
 		$join  = '';
 		$where = ' WHERE 1=1 ';
+
+		// Forcibly include rating.
+		if ( false !== $args['rating'] ) {
+			$args['include_rating'] = true;
+		}
 
 		$series_table = book_database()->series->table_name;
 
@@ -403,6 +409,10 @@ class BDB_DB_Books extends BDB_DB {
 		if ( ! empty( $args['include_rating'] ) ) {
 			$reading_table = book_database()->reading_list->table_name;
 			$join .= " LEFT JOIN {$reading_table} as log on (books.ID = log.book_id AND log.rating IS NOT NULL)";
+
+			if ( false !== $args['rating'] ) {
+				$where .= $wpdb->prepare( " AND log.rating = %s", wp_strip_all_tags( $args['rating'] ) );
+			}
 		}
 
 		switch ( $args['orderby'] ) {
@@ -477,7 +487,8 @@ class BDB_DB_Books extends BDB_DB {
 			'series_name'     => false,
 			'series_id'       => false,
 			'series_position' => false,
-			'pub_date'        => false
+			'pub_date'        => false,
+			'rating'          => false,
 		);
 
 		$args = wp_parse_args( $args, $defaults );
@@ -565,6 +576,12 @@ class BDB_DB_Books extends BDB_DB {
 
 			}
 
+		}
+
+		// Books with a specific rating.
+		if ( false !== $args['rating'] ) {
+			$reading_table = book_database()->reading_list->table_name;
+			$join .= $wpdb->prepare( " INNER JOIN {$reading_table} as log on (book.ID = log.book_id AND log.rating = %s)", wp_strip_all_tags( $args['rating'] ) );
 		}
 
 		$cache_key = md5( 'bdb_books_count' . serialize( $args ) );

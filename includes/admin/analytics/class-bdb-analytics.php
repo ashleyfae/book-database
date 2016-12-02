@@ -312,37 +312,29 @@ class BDB_Analytics {
 	/**
 	 * Get Average Rating
 	 *
-	 * @todo Fix for new reading column.
-	 *
 	 * @access public
 	 * @since  1.0.0
 	 * @return int|float
 	 */
 	public function get_average_rating() {
 
-		$total_count = $number_ratings = 0;
-		$reviews     = self::$instance->query_reviews();
+		global $wpdb;
 
-		if ( is_array( $reviews ) ) {
-			foreach ( $reviews as $review ) {
-				$rating = $review->rating;
+		$reading_table = book_database()->reading_list->table_name;
 
-				if ( null === $rating ) {
-					continue; // Skip null ratings.
-				}
+		$query = $wpdb->prepare(
+			"SELECT ROUND(AVG(IF(rating = 'dnf', 0, rating)), 2)
+				FROM $reading_table
+				WHERE `rating` IS NOT NULL
+				AND `date_finished` >= %s 
+				AND `date_finished` <= %s",
+			date( 'Y-m-d 00:00:00', self::$start ),
+			date( 'Y-m-d 00:00:00', self::$end )
+		);
 
-				if ( ! is_numeric( $rating ) ) {
-					$rating = 0; // DNF is counted as 0.
-				}
+		$average = $wpdb->get_var( $query );
 
-				$total_count = $total_count + $rating;
-				$number_ratings ++;
-			}
-		}
-
-		$average = ( $number_ratings > 0 ) ? round( $total_count / $number_ratings, 1 ) : 0;
-
-		return $average;
+		return str_replace( '.00', '', $average );
 
 	}
 

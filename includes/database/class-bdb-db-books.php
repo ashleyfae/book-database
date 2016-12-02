@@ -414,6 +414,14 @@ class BDB_DB_Books extends BDB_DB {
 				$orderby = 'books.pub_date';
 				break;
 
+			case 'rating' :
+				if ( $args['include_rating'] ) {
+					$orderby = 'avg_rating';
+				} else {
+					$orderby = 'books.ID';
+				}
+				break;
+
 			default :
 				$orderby = 'books.ID';
 		}

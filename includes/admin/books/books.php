@@ -13,9 +13,9 @@ if ( ! defined( 'ABSPATH' ) ) {
 }
 
 /**
- * Reviews Page
+ * Books Page
  *
- * Render the reviews page contents.
+ * Render the books page contents.
  *
  * @since 1.0.0
  * @return void
@@ -32,7 +32,7 @@ function bdb_books_page() {
 }
 
 /**
- * Register the views for review management.
+ * Register the views for book management.
  *
  * @since 1.0.0
  * @return array
@@ -44,7 +44,7 @@ function bdb_book_views() {
 }
 
 /**
- * Display List of Reviews
+ * Display List of Books
  *
  * @since 1.0.0
  * @return void
@@ -81,7 +81,7 @@ function bdb_books_list() {
  * Render Book View
  *
  * @param string $view      The view being requested.
- * @param array  $callbacks The registered viewas and their callback functions.
+ * @param array  $callbacks The registered views and their callback functions.
  *
  * @since 1.0.0
  * @return void

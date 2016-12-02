@@ -108,7 +108,7 @@ function bdb_analytics_page() {
 				$taxes = bdb_get_taxonomies( false );
 				ksort( $taxes );
 				foreach ( $taxes as $type => $options ) : ?>
-					<div class="bookdb-metric">
+					<div class="bookdb-metric bookdb-term-breakdown">
 						<div class="bookdb-metric-inner">
 							<p class="top-text"><?php printf( __( '%s Breakdown', 'book-database' ), esc_html( $options['name'] ) ); ?></p>
 							<div class="bookdb-loading"></div>

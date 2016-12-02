@@ -79,7 +79,7 @@
 
             console.log(response);
 
-            if (true != !response.success) {
+            if (true == response.success) {
                 $.each(response.data, function (id, val) {
                     var element = $('#' + id);
 
@@ -142,7 +142,14 @@
          */
         secondBatchResponse: function (response) {
 
-            console.log(response);
+            if (response.data.length == 0) {
+
+                $('.bookdb-term-breakdown').each(function() {
+                    $(this).find('.bookdb-loading').empty().hide();
+                    $(this).find('.bookdb-result').empty().append('&ndash;');
+                });
+
+            }
 
             $.each(response.data, function (type, html) {
                 var wrap = $('#' + type + '-breakdown');

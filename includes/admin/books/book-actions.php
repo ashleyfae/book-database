@@ -63,12 +63,12 @@ function bdb_book_cover_field( $book ) {
 	echo '<img src="' . esc_url( $url ) . '" alt="' . esc_attr( sprintf( __( 'Book cover for %s', 'book-database' ), $book->get_title() ) ) . '" id="bookdb-cover-image" style="' . esc_attr( $style ) . '">';
 
 	?>
-	<div class="bookdb-cover-image-fields" data-image="#bookdb-cover-image" data-image-id="#book_cover_id">
-		<button class="button bookdb-upload-image"><?php esc_html_e( 'Upload Image', 'book-database' ); ?></button>
-		<button class="button bookdb-remove-image" style="<?php echo ! $cover_id ? 'display: none;' : ''; ?>"><?php esc_html_e( 'Remove Image', 'book-database' ); ?></button>
-	</div>
+    <div class="bookdb-cover-image-fields" data-image="#bookdb-cover-image" data-image-id="#book_cover_id">
+        <button class="button bookdb-upload-image"><?php esc_html_e( 'Upload Image', 'book-database' ); ?></button>
+        <button class="button bookdb-remove-image" style="<?php echo ! $cover_id ? 'display: none;' : ''; ?>"><?php esc_html_e( 'Remove Image', 'book-database' ); ?></button>
+    </div>
 
-	<input type="hidden" id="book_cover_id" name="cover" value="<?php echo esc_attr( absint( $cover_id ) ); ?>">
+    <input type="hidden" id="book_cover_id" name="cover" value="<?php echo esc_attr( absint( $cover_id ) ); ?>">
 	<?php
 
 	$field = ob_get_clean();
@@ -159,21 +159,21 @@ function bdb_book_author_field( $book ) {
 	ob_start();
 
 	?>
-	<div id="bookdb-tags-author" class="bookdb-tags-wrap" data-type="author">
-		<div class="jaxtag">
-			<div class="nojs-tags hide-if-js">
-				<label for="bookdb-input-tag"><?php echo apply_filters( 'book-database/book-edit/authors/tags-desc', __( 'Enter the name of the author', 'easy-content-upgrades' ) ); ?></label>
-				<textarea name="book_terms[author]" data-type="author" rows="3" cols="20" id="bookdb-input-tag-author"><?php echo esc_textarea( $authors ); ?></textarea>
-			</div>
-			<div class="bookdb-ajaxtag hide-if-no-js">
-				<p>
-					<input type="text" name="bookdb-new-authors" class="form-input-tip regular-text bookdb-new-tag" size="16" autocomplete="off" value="">
-					<input type="button" class="button" value="<?php esc_attr_e( 'Add' ); ?>" tabindex="3">
-				</p>
-			</div>
-		</div>
-		<div class="bookdb-tags-checklist"></div>
-	</div>
+    <div id="bookdb-tags-author" class="bookdb-tags-wrap" data-type="author">
+        <div class="jaxtag">
+            <div class="nojs-tags hide-if-js">
+                <label for="bookdb-input-tag"><?php echo apply_filters( 'book-database/book-edit/authors/tags-desc', __( 'Enter the name of the author', 'easy-content-upgrades' ) ); ?></label>
+                <textarea name="book_terms[author]" data-type="author" rows="3" cols="20" id="bookdb-input-tag-author"><?php echo esc_textarea( $authors ); ?></textarea>
+            </div>
+            <div class="bookdb-ajaxtag hide-if-no-js">
+                <p>
+                    <input type="text" name="bookdb-new-authors" class="form-input-tip regular-text bookdb-new-tag" size="16" autocomplete="off" value="">
+                    <input type="button" class="button" value="<?php esc_attr_e( 'Add' ); ?>" tabindex="3">
+                </p>
+            </div>
+        </div>
+        <div class="bookdb-tags-checklist"></div>
+    </div>
 	<?php
 
 	$field = ob_get_clean();
@@ -206,21 +206,21 @@ function bdb_book_series_field( $book ) {
 		'desc'  => esc_html__( 'Position in the series', 'book-database' )
 	);
 	?>
-	<div id="bookdb-book-series-wrap" class="bookdb-box-row">
-		<label><?php _e( 'Series', 'book-database' ); ?></label>
-		<div class="bookdb-input-wrapper">
-			<div id="bookdb-book-series-name-wrap">
+    <div id="bookdb-book-series-wrap" class="bookdb-box-row">
+        <label><?php _e( 'Series', 'book-database' ); ?></label>
+        <div class="bookdb-input-wrapper">
+            <div id="bookdb-book-series-name-wrap">
 				<?php echo book_database()->html->text( $series_args ); ?>
 				<?php if ( $book->get_series_id() ) : ?>
-					<input type="hidden" name="series_id" value="<?php echo esc_attr( $book->get_series_id() ); ?>">
+                    <input type="hidden" name="series_id" value="<?php echo esc_attr( $book->get_series_id() ); ?>">
 				<?php endif; ?>
-			</div>
+            </div>
 
-			<div id="bookdb-book-series-position-wrap">
+            <div id="bookdb-book-series-position-wrap">
 				<?php echo book_database()->html->text( $series_position_args ); ?>
-			</div>
-		</div>
-	</div>
+            </div>
+        </div>
+    </div>
 	<?php
 }
 
@@ -362,16 +362,16 @@ function bdb_book_taxonomy_fields( $book ) {
 			) );
 
 			?>
-			<div id="dbd-checkboxes-<?php echo esc_attr( $taxonomy_options['id'] ); ?>" class="bookdb-taxonomy-checkboxes" data-type="<?php echo esc_attr( $taxonomy_options['id'] ); ?>" data-name="<?php echo esc_attr( 'book_terms[' . $taxonomy_options['id'] . '][]' ); ?>">
-				<div class="bookdb-checkbox-wrap">
+            <div id="dbd-checkboxes-<?php echo esc_attr( $taxonomy_options['id'] ); ?>" class="bookdb-taxonomy-checkboxes" data-type="<?php echo esc_attr( $taxonomy_options['id'] ); ?>" data-name="<?php echo esc_attr( 'book_terms[' . $taxonomy_options['id'] . '][]' ); ?>">
+                <div class="bookdb-checkbox-wrap">
 					<?php echo $checks; ?>
-				</div>
-				<div class="bookdb-new-checkbox-term">
-					<label for="bookdb-new-checkbox-term-<?php echo esc_attr( $taxonomy_options['id'] ); ?>" class="screen-reader-text"><?php printf( esc_html__( 'Enter the name of a new %s', 'book-database' ), $taxonomy_options['name'] ); ?></label>
-					<input type="text" id="bookdb-new-checkbox-term-<?php echo esc_attr( $taxonomy_options['id'] ); ?>" name="bookdb-new-term" class="regular-text bookdb-new-checkbox-term-value">
-					<input type="button" class="button" value="<?php esc_attr_e( 'Add', 'book-database' ); ?>">
-				</div>
-			</div>
+                </div>
+                <div class="bookdb-new-checkbox-term">
+                    <label for="bookdb-new-checkbox-term-<?php echo esc_attr( $taxonomy_options['id'] ); ?>" class="screen-reader-text"><?php printf( esc_html__( 'Enter the name of a new %s', 'book-database' ), $taxonomy_options['name'] ); ?></label>
+                    <input type="text" id="bookdb-new-checkbox-term-<?php echo esc_attr( $taxonomy_options['id'] ); ?>" name="bookdb-new-term" class="regular-text bookdb-new-checkbox-term-value">
+                    <input type="button" class="button" value="<?php esc_attr_e( 'Add', 'book-database' ); ?>">
+                </div>
+            </div>
 			<?php
 
 		} else {
@@ -379,21 +379,21 @@ function bdb_book_taxonomy_fields( $book ) {
 			// "Tags"
 			ob_start();
 			?>
-			<div id="bookdb-tags-<?php echo esc_attr( $taxonomy_options['id'] ); ?>" class="bookdb-tags-wrap" data-type="<?php echo esc_attr( $taxonomy_options['id'] ); ?>">
-				<div class="jaxtag">
-					<div class="nojs-tags hide-if-js">
-						<label for="bookdb-input-tag-<?php echo esc_attr( $taxonomy_options['id'] ); ?>"><?php echo apply_filters( 'book-database/book-edit/authors/tags-desc', __( 'Enter the name of the author', 'easy-content-upgrades' ) ); ?></label>
-						<textarea name="book_terms[<?php echo esc_attr( $taxonomy_options['id'] ); ?>]" rows="3" cols="20" id="bookdb-input-tag-<?php echo esc_attr( $taxonomy_options['id'] ); ?>" data-type="<?php echo esc_attr( $taxonomy_options['id'] ); ?>"><?php echo esc_textarea( implode( ', ', $book_terms ) ); ?></textarea>
-					</div>
-					<div class="bookdb-ajaxtag hide-if-no-js">
-						<p>
-							<input type="text" name="bookdb-new-term" class="form-input-tip regular-text bookdb-new-tag" size="16" autocomplete="off" value="">
-							<input type="button" class="button" value="<?php esc_attr_e( 'Add', 'book-database' ); ?>" tabindex="3">
-						</p>
-					</div>
-				</div>
-				<div class="bookdb-tags-checklist"></div>
-			</div>
+            <div id="bookdb-tags-<?php echo esc_attr( $taxonomy_options['id'] ); ?>" class="bookdb-tags-wrap" data-type="<?php echo esc_attr( $taxonomy_options['id'] ); ?>">
+                <div class="jaxtag">
+                    <div class="nojs-tags hide-if-js">
+                        <label for="bookdb-input-tag-<?php echo esc_attr( $taxonomy_options['id'] ); ?>"><?php echo apply_filters( 'book-database/book-edit/authors/tags-desc', __( 'Enter the name of the author', 'easy-content-upgrades' ) ); ?></label>
+                        <textarea name="book_terms[<?php echo esc_attr( $taxonomy_options['id'] ); ?>]" rows="3" cols="20" id="bookdb-input-tag-<?php echo esc_attr( $taxonomy_options['id'] ); ?>" data-type="<?php echo esc_attr( $taxonomy_options['id'] ); ?>"><?php echo esc_textarea( implode( ', ', $book_terms ) ); ?></textarea>
+                    </div>
+                    <div class="bookdb-ajaxtag hide-if-no-js">
+                        <p>
+                            <input type="text" name="bookdb-new-term" class="form-input-tip regular-text bookdb-new-tag" size="16" autocomplete="off" value="">
+                            <input type="button" class="button" value="<?php esc_attr_e( 'Add', 'book-database' ); ?>" tabindex="3">
+                        </p>
+                    </div>
+                </div>
+                <div class="bookdb-tags-checklist"></div>
+            </div>
 			<?php
 
 		}
@@ -587,6 +587,33 @@ function bdb_suggest_tags() {
 
 add_action( 'wp_ajax_bdb_suggest_tags', 'bdb_suggest_tags' );
 
+/**
+ * Suggest Series
+ *
+ * Used in series name autocomplete.
+ *
+ * @since 1.2.1
+ * @return void
+ */
+function bdb_suggest_series() {
+	$search = strtolower( wp_strip_all_tags( $_REQUEST['q'] ) );
+	$series = book_database()->series->get_series( array(
+		'name'   => $search,
+		'fields' => 'names',
+		'number' => - 1
+	) );
+
+	if ( $series ) {
+		foreach ( $series as $name ) {
+			echo $name . "\n";
+		}
+	}
+
+	exit;
+}
+
+add_action( 'wp_ajax_bdb_suggest_series', 'bdb_suggest_series' );
+
 /*
  * Below: Other Meta Boxes
  */
@@ -606,32 +633,32 @@ function bdb_book_review_meta_table( $book ) {
 
 	$reviews = bdb_get_book_reviews( $book->ID );
 	?>
-	<div id="bdb-book-review-list" class="postbox">
-		<h2><?php printf( __( '%s Reviews', 'book-database' ), bdb_get_label_singular() ); ?></h2>
-		<div class="inside">
+    <div id="bdb-book-review-list" class="postbox">
+        <h2><?php printf( __( '%s Reviews', 'book-database' ), bdb_get_label_singular() ); ?></h2>
+        <div class="inside">
 			<?php if ( $reviews ) : ?>
-				<table class="wp-list-table widefat fixed posts">
-					<thead>
-					<tr>
-						<th><?php _e( 'ID', 'book-database' ); ?></th>
-						<th><?php _e( 'Date', 'book-database' ); ?></th>
-						<th><?php _e( 'Rating', 'book-database' ); ?></th>
-						<th><?php _e( 'Reviewer', 'book-database' ); ?></th>
-					</tr>
-					</thead>
-					<tbody>
+                <table class="wp-list-table widefat fixed posts">
+                    <thead>
+                    <tr>
+                        <th><?php _e( 'ID', 'book-database' ); ?></th>
+                        <th><?php _e( 'Date', 'book-database' ); ?></th>
+                        <th><?php _e( 'Rating', 'book-database' ); ?></th>
+                        <th><?php _e( 'Reviewer', 'book-database' ); ?></th>
+                    </tr>
+                    </thead>
+                    <tbody>
 					<?php foreach ( $reviews as $review ) :
 						$obj = new BDB_Review( $review->ID );
 						?>
-						<tr>
-							<td>
+                        <tr>
+                            <td>
 								<?php echo $review->ID; ?>
-								<a href="<?php echo esc_url( bdb_get_admin_page_edit_review( $review->ID ) ); ?>" target="_blank"><?php _e( '(Edit)', 'book-database' ); ?></a>
-							</td>
-							<td>
+                                <a href="<?php echo esc_url( bdb_get_admin_page_edit_review( $review->ID ) ); ?>" target="_blank"><?php _e( '(Edit)', 'book-database' ); ?></a>
+                            </td>
+                            <td>
 								<?php echo $obj->get_formatted_date(); ?>
-							</td>
-							<td>
+                            </td>
+                            <td>
 								<?php
 								if ( $review->rating ) {
 									$rating = new BDB_Rating( $review->rating );
@@ -640,21 +667,21 @@ function bdb_book_review_meta_table( $book ) {
 									echo '&ndash';
 								}
 								?>
-							</td>
-							<td>
+                            </td>
+                            <td>
 								<?php echo $obj->get_reviewer_name(); ?>
-							</td>
-						</tr>
+                            </td>
+                        </tr>
 					<?php endforeach; ?>
-					</tbody>
-				</table>
+                    </tbody>
+                </table>
 
-				<a href="<?php echo esc_url( bdb_get_admin_page_add_review( $book->ID ) ); ?>" class="button"><?php _e( 'Add Review', 'book-database' ); ?></a>
+                <a href="<?php echo esc_url( bdb_get_admin_page_add_review( $book->ID ) ); ?>" class="button"><?php _e( 'Add Review', 'book-database' ); ?></a>
 			<?php else : ?>
-				<p><?php printf( __( 'No reviews for this book. Would you like to <a href="%s">add one</a>?', 'book-database' ), esc_url( bdb_get_admin_page_add_review( $book->ID ) ) ); ?></p>
+                <p><?php printf( __( 'No reviews for this book. Would you like to <a href="%s">add one</a>?', 'book-database' ), esc_url( bdb_get_admin_page_add_review( $book->ID ) ) ); ?></p>
 			<?php endif; ?>
-		</div>
-	</div>
+        </div>
+    </div>
 	<?php
 }
 

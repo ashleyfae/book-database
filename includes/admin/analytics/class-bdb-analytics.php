@@ -234,9 +234,9 @@ class BDB_Analytics {
 
 		$read['total'] = is_array( $reading_list ) ? count( $reading_list ) : 0;
 
-		if ( is_array( $reading_list ) ) {
+		if ( is_array( $reading_list ) && ! empty( $reading_list ) ) {
 			$query = $wpdb->prepare(
-				"SELECT (COUNT(*) - 1) AS count
+				"SELECT (COUNT(*) - 1) AS count, GROUP_CONCAT(date_finished SEPARATOR ',') as date_finished
 					FROM $reading_table list
 					INNER JOIN $book_table book on book.ID = list.book_ID
 					WHERE `date_finished` < %s
@@ -249,7 +249,25 @@ class BDB_Analytics {
 
 			if ( is_array( $books_read ) ) {
 				foreach ( $books_read as $number ) {
-					$rereads += absint( $number->count );
+					if ( $number->count < 1 ) {
+						continue;
+					}
+
+					$dates_finished = explode( ',', $number->date_finished );
+
+					$this_book_rereads = 0;
+
+					foreach ( $dates_finished as $date ) {
+						if ( $date >= date( 'Y-m-d 00:00:00', self::$start ) && $date <= date( 'Y-m-d 00:00:00', self::$end ) ) {
+							$this_book_rereads ++;
+						}
+
+						if ( $this_book_rereads >= $number->count ) {
+							break;
+						}
+					}
+
+					$rereads = $rereads + $this_book_rereads;
 				}
 			}
 

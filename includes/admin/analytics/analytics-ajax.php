@@ -68,7 +68,8 @@ function bdb_analytics_batch_1() {
 			'avg-rating'              => ( ! empty( $average_rating ) ) ? sprintf( _n( '%s Star', '%s Stars', $average_rating, 'book-database' ), $average_rating ) : '&ndash;',
 			'book-list'               => $analytics->get_book_list(),
 			'read-not-reviewed'       => $analytics->get_read_not_reviewed(),
-			'rating-breakdown'        => $rating_breakdown_final
+			'rating-breakdown'        => $rating_breakdown_final,
+			'pages-breakdown'         => $analytics->get_pages_breakdown()
 		);
 
 		set_transient( 'bdb_analytics_1_' . $date_hash, $results, HOUR_IN_SECONDS );

@@ -114,6 +114,16 @@
                             table.append('<tr><td>' + rating.rating + '</td><td>' + rating.count + '</td></tr>');
                         });
 
+                    } else if ('pages-breakdown' == id) {
+
+                        // Pages breakdown.
+                        element.html('<table><thead><tr><th>' + bookdb_analytics.l10n.pages + '</th><th>' + bookdb_analytics.l10n.number_books + '</th></tr></thead><tbody></tbody></table>');
+                        var table = element.find('tbody');
+
+                        $.each(val, function (key, result) {
+                            table.append('<tr><td>' + result.page_range + '</td><td>' + result.count + '</td></tr>');
+                        });
+
                     } else {
 
                         element.html(val);

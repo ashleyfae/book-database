@@ -126,6 +126,14 @@ function bdb_analytics_page() {
 						<div id="rating-breakdown" class="bookdb-result"></div>
 					</div>
 				</div>
+
+                <div class="bookdb-metric">
+                    <div class="bookdb-metric-inner">
+                        <p class="top-text"><?php _e( 'Pages Breakdown', 'book-database' ); ?></p>
+                        <div class="bookdb-loading"></div>
+                        <div id="pages-breakdown" class="bookdb-result"></div>
+                    </div>
+                </div>
 			</div>
 
 			<div class="bookdb-analytics-column">

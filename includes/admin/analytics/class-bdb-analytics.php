@@ -579,6 +579,59 @@ class BDB_Analytics {
 	}
 
 	/**
+	 * Get Pages Breakdown
+	 *
+	 * Returns a table containing page ranges, along with how many books fell into that range.
+	 * Example:
+	 *
+	 * +------------+-----------------+
+	 * | page_range | number of books |
+	 * +------------+-----------------+
+	 * | 0-199      |               2 |
+	 * | 200-399    |               6 |
+	 * | 400-599    |               1 |
+	 * +------------+-----------------+
+	 *
+	 * @param int $number_range Number of pages in each range.
+	 *
+	 * @access public
+	 * @since 1.2.1
+	 * @return array
+	 */
+	public function get_pages_breakdown( $number_range = 200 ) {
+
+		global $wpdb;
+		$reading_table = book_database()->reading_list->table_name;
+		$book_table    = book_database()->books->table_name;
+
+		$query = $wpdb->prepare(
+			"SELECT CONCAT(%d * FLOOR(pages/%d), '-', %d * FLOOR(pages/%d) + %d) as page_range, COUNT(*) as count
+				FROM $reading_table as log 
+				INNER JOIN $book_table as book on book.ID = log.book_id
+				WHERE `date_finished` >= %s 
+				AND `date_finished` <= %s
+				GROUP BY 1
+				ORDER BY pages",
+			absint( $number_range ),
+			absint( $number_range ),
+			absint( $number_range ),
+			absint( $number_range ),
+			absint( $number_range - 1 ),
+			date( 'Y-m-d 00:00:00', self::$start ),
+			date( 'Y-m-d 00:00:00', self::$end )
+		);
+
+		$breakdown = $wpdb->get_results( $query, ARRAY_A );
+
+		if ( ! is_array( $breakdown ) ) {
+			$breakdown = array();
+		}
+
+		return $breakdown;
+
+	}
+
+	/**
 	 * Terms Breakdown
 	 *
 	 * Returns an array of all terms used in the book reviews in this period with

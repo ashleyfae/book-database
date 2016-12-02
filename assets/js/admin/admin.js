@@ -644,6 +644,8 @@
                 }).suggest(ajaxurl + '?action=bdb_suggest_tags&type=' + type);
             });
 
+            $('#book_series_name').suggest(ajaxurl + '?action=bdb_suggest_series');
+
             // Save tags on save/publish.
             $('#post, #bookdb-book-page-wrapper > form').submit(function (e) {
                 $('.bookdb-tags-wrap').each(function () {

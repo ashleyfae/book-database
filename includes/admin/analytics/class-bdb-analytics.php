@@ -312,6 +312,8 @@ class BDB_Analytics {
 	/**
 	 * Get Average Rating
 	 *
+	 * @todo Fix for new reading column.
+	 *
 	 * @access public
 	 * @since  1.0.0
 	 * @return int|float

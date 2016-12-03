@@ -273,3 +273,22 @@ function bdb_format_mysql_date( $mysql_date, $format = false ) {
 	return $date;
 
 }
+
+/**
+ * Get Available Image Sizes
+ *
+ * @since 1.2.1
+ * @return array
+ */
+function bdb_get_image_sizes() {
+	$sizes       = get_intermediate_image_sizes();
+	$final_sizes = array( 'full' => esc_html__( 'full', 'book-database' ) );
+
+	if ( is_array( $sizes ) ) {
+		foreach ( $sizes as $size ) {
+			$final_sizes[ $size ] = $size;
+		}
+	}
+
+	return apply_filters( 'book-database/image-sizes', $final_sizes );
+}

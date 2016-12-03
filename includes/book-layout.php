@@ -32,7 +32,8 @@ function bdb_get_book_fields() {
 			'name'        => __( 'Cover Image', 'book-database' ),
 			'placeholder' => '[cover]',
 			'label'       => '[cover]',
-			'alignment'   => 'left' // left, center, right
+			'alignment'   => 'left', // left, center, right
+			'size'        => 'full' // thumbnail, medium, large, full
 		),
 		'title'         => array(
 			'name'        => __( 'Book Title', 'book-database' ),

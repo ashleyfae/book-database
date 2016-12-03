@@ -211,8 +211,15 @@ function bdb_get_default_book_field_values( $all_fields = null ) {
 function bdb_book_layout_cover( $value, $enabled_fields, $book_id, $book ) {
 	if ( $book->get_cover_id() ) {
 		$alignment = $enabled_fields['cover']['alignment'];
-		$class     = 'align' . sanitize_html_class( $alignment );
-		$value     = '<img src="' . esc_url( $book->get_cover_url() ) . '" alt="' . esc_attr( wp_strip_all_tags( $book->get_title() ) ) . '" class="' . esc_attr( $class ) . '" itemprop="image">';
+		$size      = $enabled_fields['cover']['size'];
+
+		// Sanitize size.
+		if ( ! array_key_exists( $size, bdb_get_image_sizes() ) ) {
+			$size = 'full';
+		}
+
+		$class = 'align' . sanitize_html_class( $alignment );
+		$value = '<img src="' . esc_url( $book->get_cover_url( $size ) ) . '" alt="' . esc_attr( wp_strip_all_tags( $book->get_title() ) ) . '" class="' . esc_attr( $class ) . '" itemprop="image">';
 	}
 
 	return $value;

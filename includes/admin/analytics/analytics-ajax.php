@@ -57,15 +57,19 @@ function bdb_analytics_batch_1() {
 		}
 
 		$results = array(
-			'number-books'      => $books_read['total'],
-			'number-rereads'    => $books_read['rereads'],
-			'number-new'        => $books_read['new'],
-			'number-reviews'    => $analytics->get_number_reviews(),
-			'pages'             => $analytics->get_pages_read(),
-			'avg-rating'        => ( ! empty( $average_rating ) ) ? sprintf( _n( '%s Star', '%s Stars', $average_rating, 'book-database' ), $average_rating ) : '&ndash;',
-			'book-list'         => $analytics->get_book_list(),
-			'read-not-reviewed' => $analytics->get_read_not_reviewed(),
-			'rating-breakdown'  => $rating_breakdown_final
+			'number-books'            => $books_read['total'],
+			'number-rereads'          => $books_read['rereads'],
+			'number-new'              => $books_read['new'],
+			'number-reviews'          => $analytics->get_number_reviews(),
+			'number-different-series' => $analytics->get_number_different_series(),
+			'number-standalones'      => $analytics->get_number_standalones(),
+			'number-authors'          => $analytics->get_number_different_authors(),
+			'pages'                   => $analytics->get_pages_read(),
+			'avg-rating'              => ( ! empty( $average_rating ) ) ? sprintf( _n( '%s Star', '%s Stars', $average_rating, 'book-database' ), $average_rating ) : '&ndash;',
+			'book-list'               => $analytics->get_book_list(),
+			'read-not-reviewed'       => $analytics->get_read_not_reviewed(),
+			'rating-breakdown'        => $rating_breakdown_final,
+			'pages-breakdown'         => $analytics->get_pages_breakdown()
 		);
 
 		set_transient( 'bdb_analytics_1_' . $date_hash, $results, HOUR_IN_SECONDS );

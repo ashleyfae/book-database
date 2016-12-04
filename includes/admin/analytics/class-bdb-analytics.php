@@ -328,6 +328,100 @@ class BDB_Analytics {
 	}
 
 	/**
+	 * Get Number of Different Series
+	 *
+	 * @access public
+	 * @since  1.2.1
+	 * @return int
+	 */
+	public function get_number_different_series() {
+
+		global $wpdb;
+
+		$reading_table = book_database()->reading_list->table_name;
+		$book_table    = book_database()->books->table_name;
+
+		$query = $wpdb->prepare(
+			"SELECT COUNT(*)
+				FROM $reading_table as log 
+				INNER JOIN $book_table as book on book.ID = log.book_id
+				WHERE `date_finished` >= %s 
+				AND `date_finished` <= %s
+				AND `series_id` IS NOT NULL
+				GROUP BY series_id",
+			date( 'Y-m-d 00:00:00', self::$start ),
+			date( 'Y-m-d 00:00:00', self::$end )
+		);
+
+		$results = $wpdb->get_results( $query );
+
+		return is_array( $results ) ? absint( count( $results ) ) : 0;
+
+	}
+
+	/**
+	 * Get Number of Standalones
+	 *
+	 * @access public
+	 * @since  1.2.1
+	 * @return int
+	 */
+	public function get_number_standalones() {
+
+		global $wpdb;
+
+		$reading_table = book_database()->reading_list->table_name;
+		$book_table    = book_database()->books->table_name;
+
+		$query = $wpdb->prepare(
+			"SELECT COUNT(*)
+				FROM $reading_table as log 
+				INNER JOIN $book_table as book on book.ID = log.book_id
+				WHERE `date_finished` >= %s 
+				AND `date_finished` <= %s
+				AND `series_id` IS NULL",
+			date( 'Y-m-d 00:00:00', self::$start ),
+			date( 'Y-m-d 00:00:00', self::$end )
+		);
+
+		return absint( $wpdb->get_var( $query ) );
+
+	}
+
+	/**
+	 * Get Number of Different Authors
+	 *
+	 * @access public
+	 * @since  1.2.1
+	 * @return int
+	 */
+	public function get_number_different_authors() {
+
+		global $wpdb;
+
+		$reading_table      = book_database()->reading_list->table_name;
+		$relationship_table = book_database()->book_term_relationships->table_name;
+		$term_table         = book_database()->book_terms->table_name;
+
+		$query = $wpdb->prepare(
+			"SELECT COUNT(*)
+				FROM $reading_table as log 
+				INNER JOIN $relationship_table as r on r.book_id = log.book_id
+				INNER JOIN $term_table as author on (author.term_id = r.term_id AND author.type = 'author')
+				WHERE `date_finished` >= %s 
+				AND `date_finished` <= %s
+				GROUP BY author.term_id",
+			date( 'Y-m-d 00:00:00', self::$start ),
+			date( 'Y-m-d 00:00:00', self::$end )
+		);
+
+		$results = $wpdb->get_results( $query );
+
+		return is_array( $results ) ? absint( count( $results ) ) : 0;
+
+	}
+
+	/**
 	 * Get Average Rating
 	 *
 	 * @access public
@@ -481,6 +575,59 @@ class BDB_Analytics {
 		}
 
 		return $final_array;
+
+	}
+
+	/**
+	 * Get Pages Breakdown
+	 *
+	 * Returns a table containing page ranges, along with how many books fell into that range.
+	 * Example:
+	 *
+	 * +------------+-----------------+
+	 * | page_range | number of books |
+	 * +------------+-----------------+
+	 * | 0-199      |               2 |
+	 * | 200-399    |               6 |
+	 * | 400-599    |               1 |
+	 * +------------+-----------------+
+	 *
+	 * @param int $number_range Number of pages in each range.
+	 *
+	 * @access public
+	 * @since 1.2.1
+	 * @return array
+	 */
+	public function get_pages_breakdown( $number_range = 200 ) {
+
+		global $wpdb;
+		$reading_table = book_database()->reading_list->table_name;
+		$book_table    = book_database()->books->table_name;
+
+		$query = $wpdb->prepare(
+			"SELECT CONCAT(%d * FLOOR(pages/%d), '-', %d * FLOOR(pages/%d) + %d) as page_range, COUNT(*) as count
+				FROM $reading_table as log 
+				INNER JOIN $book_table as book on book.ID = log.book_id
+				WHERE `date_finished` >= %s 
+				AND `date_finished` <= %s
+				GROUP BY 1
+				ORDER BY pages",
+			absint( $number_range ),
+			absint( $number_range ),
+			absint( $number_range ),
+			absint( $number_range ),
+			absint( $number_range - 1 ),
+			date( 'Y-m-d 00:00:00', self::$start ),
+			date( 'Y-m-d 00:00:00', self::$end )
+		);
+
+		$breakdown = $wpdb->get_results( $query, ARRAY_A );
+
+		if ( ! is_array( $breakdown ) ) {
+			$breakdown = array();
+		}
+
+		return $breakdown;
 
 	}
 

@@ -61,6 +61,7 @@ function bdb_load_admin_scripts( $hook ) {
 				'name'           => esc_html__( 'Name', 'book-database' ),
 				'number_books'   => esc_html__( 'Number of Books', 'book-database' ),
 				'number_reviews' => esc_html__( 'Number of Reviews', 'book-database' ),
+				'pages'          => esc_html__( 'Pages', 'book-database' ),
 				'rating'         => esc_html__( 'Rating', 'book-database' )
 			)
 		) );

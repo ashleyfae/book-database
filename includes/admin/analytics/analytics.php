@@ -94,6 +94,31 @@ function bdb_analytics_page() {
 					</div>
 				</div>
 
+                <div class="bookdb-metric">
+                    <div class="bookdb-metric-inner bookdb-metric-multi-col">
+                        <div>
+                            <p class="top-text"><?php _e( 'Different Series', 'book-database' ); ?></p>
+                            <div class="bookdb-loading"></div>
+                            <h2 id="number-different-series" class="bookdb-result"></h2>
+                            <p class="bottom-text" id="number-different-series-compare"><span></span></p>
+                        </div>
+
+                        <div>
+                            <p class="top-text"><?php _e( 'Standalones', 'book-database' ); ?></p>
+                            <div class="bookdb-loading"></div>
+                            <h2 id="number-standalones" class="bookdb-result"></h2>
+                            <p class="bottom-text" id="number-standalones-compare"><span></span></p>
+                        </div>
+
+                        <div>
+                            <p class="top-text"><?php _e( 'Different Authors', 'book-database' ); ?></p>
+                            <div class="bookdb-loading"></div>
+                            <h2 id="number-authors" class="bookdb-result"></h2>
+                            <p class="bottom-text" id="number-authors-compare"><span></span></p>
+                        </div>
+                    </div>
+                </div>
+
 				<div class="bookdb-metric">
 					<div class="bookdb-metric-inner">
 						<p class="top-text"><?php _e( 'Rating Breakdown', 'book-database' ); ?></p>
@@ -101,6 +126,14 @@ function bdb_analytics_page() {
 						<div id="rating-breakdown" class="bookdb-result"></div>
 					</div>
 				</div>
+
+                <div class="bookdb-metric">
+                    <div class="bookdb-metric-inner">
+                        <p class="top-text"><?php _e( 'Pages Breakdown', 'book-database' ); ?></p>
+                        <div class="bookdb-loading"></div>
+                        <div id="pages-breakdown" class="bookdb-result"></div>
+                    </div>
+                </div>
 			</div>
 
 			<div class="bookdb-analytics-column">

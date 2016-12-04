@@ -22,30 +22,9 @@ $menu = bdb_get_modal_menu();
 
 		<div class="bookdb-modal-content">
 			<div class="bookdb-frame wp-core-ui">
-				<div class="bookdb-frame-menu">
-					<div class="bookdb-menu">
-						<?php
-						$active_menu = '';
-
-						foreach ( $menu as $menu_item => $options ) {
-							$active       = isset( $options['default'] ) && $options['default'];
-							$active_class = $active ? ' active' : '';
-							$label        = isset( $options['label'] ) ? $options['label'] : '';
-							$default_tab  = isset( $options['default_tab'] ) ? $options['default_tab'] : '';
-
-							if ( $active ) {
-								$active_menu = $label;
-							}
-
-							echo '<a href="#" class="bookdb-menu-item' . esc_attr( $active_class ) . '" data-menu="' . esc_attr( $menu_item ) . '" data-tab="' . esc_attr( $menu_item ) . '-' . esc_attr( $default_tab ) . '">' . esc_html( $label ) . '</a>';
-						}
-						?>
-					</div>
-				</div>
-
 				<div class="bookdb-frame-title">
 					<h1>
-						<?php echo esc_html( $active_menu ); ?><span class="dashicons dashicons-arrow-down"></span>
+						<?php esc_html_e( 'Insert Book Information', 'book-database' ); ?>
 					</h1>
 				</div>
 

@@ -162,7 +162,7 @@ class BDB_DB_Book_Term_Relationships extends BDB_DB {
 		switch ( $field ) {
 
 			case 'ID' :
-				$db_field = 'term_id';
+				$db_field = 'ID';
 				break;
 
 			default :

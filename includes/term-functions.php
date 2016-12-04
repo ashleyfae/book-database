@@ -301,10 +301,14 @@ function bdb_set_book_terms( $book_id, $terms, $type, $append = false ) {
 		if ( $delete_term_relationships ) {
 			foreach ( $delete_term_relationships as $term_id ) {
 				// Delete the relationship.
-				book_database()->book_term_relationships->delete( absint( $term_id ) ); // @todo do this without a foreach
+				$relationship = bdb_get_relationship( array( 'book_id' => $book_id, 'term_id' => $term_id ) );
 
-				// Reduce the count.
-				bdb_update_term_count( $term_id );
+				if ( $relationship ) {
+					book_database()->book_term_relationships->delete( absint( $relationship->ID ) ); // @todo do this without a foreach
+
+					// Reduce the count.
+					bdb_update_term_count( $term_id );
+				}
 			}
 		}
 
@@ -337,6 +341,33 @@ function bdb_relationship_exists( $book_id, $term_id ) {
 	$result = book_database()->book_term_relationships->get_relationships( apply_filters( 'book-database/relationship-exists-args', $args, $book_id, $term_id ) );
 
 	return ( is_array( $result ) && count( $result ) ) ? true : false;
+}
+
+/**
+ * Get Relationship
+ *
+ * Always returns one result.
+ *
+ * @param int $book_id
+ * @param int $term_id
+ *
+ * @since 1.2.2
+ * @return object|bool Relationship object or false if none is found.
+ */
+function bdb_get_relationship( $args = array() ) {
+	$defaults = array(
+		'number' => 1
+	);
+
+	$args = wp_parse_args( $args, $defaults );
+
+	$result = book_database()->book_term_relationships->get_relationships( $args );
+
+	if ( is_array( $result ) && ! empty( $result ) && array_key_exists( 0, $result ) ) {
+		return $result[0];
+	}
+
+	return false;
 }
 
 /**

@@ -18,8 +18,8 @@
 
             if ('custom' == $(this).val()) {
 
-                $('#bookdb-start').val('').attr('type', 'text');
-                $('#bookdb-end').val('').attr('type', 'text');
+                $('#bookdb-start').val('').attr('type', 'date');
+                $('#bookdb-end').val('').attr('type', 'date');
 
             } else {
 

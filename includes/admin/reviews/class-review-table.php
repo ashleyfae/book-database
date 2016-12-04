@@ -120,23 +120,23 @@ class BDB_Reviews_Table extends WP_List_Table {
 		$rating          = isset( $_REQUEST['rating'] ) ? wp_unslash( $_REQUEST['rating'] ) : 'any';
 		$allowed_ratings = bdb_get_available_ratings();
 		?>
-		<p class="search-box">
-			<label class="screen-reader-text" for="book_title"><?php _e( 'Search by book title', 'book-database' ); ?></label>
-			<input type="search" id="book_title" name="book_title" value="<?php echo esc_attr( $book_title ); ?>" placeholder="<?php esc_attr_e( 'Book title', 'book-database' ); ?>">
+        <p class="search-box">
+            <label class="screen-reader-text" for="book_title"><?php _e( 'Search by book title', 'book-database' ); ?></label>
+            <input type="search" id="book_title" name="book_title" value="<?php echo esc_attr( $book_title ); ?>" placeholder="<?php esc_attr_e( 'Book title', 'book-database' ); ?>">
 
-			<label class="screen-reader-text" for="book_author"><?php _e( 'Search by author name', 'book-database' ); ?></label>
-			<input type="search" id="book_author" name="book_author" value="<?php echo esc_attr( $author ); ?>" placeholder="<?php esc_attr_e( 'Author name', 'book-database' ); ?>">
+            <label class="screen-reader-text" for="book_author"><?php _e( 'Search by author name', 'book-database' ); ?></label>
+            <input type="search" id="book_author" name="book_author" value="<?php echo esc_attr( $author ); ?>" placeholder="<?php esc_attr_e( 'Author name', 'book-database' ); ?>">
 
-			<label class="screen-reader-text" for="book_rating"><?php _e( 'Filter by rating', 'book-database' ); ?></label>
-			<select id="book_rating" name="rating">
-				<option value="any" <?php selected( 'any', $rating ); ?>><?php esc_html_e( 'Rating', 'book-database' ); ?></option>
+            <label class="screen-reader-text" for="book_rating"><?php _e( 'Filter by rating', 'book-database' ); ?></label>
+            <select id="book_rating" name="rating">
+                <option value="any" <?php selected( 'any', $rating ); ?>><?php esc_html_e( 'Rating', 'book-database' ); ?></option>
 				<?php foreach ( $allowed_ratings as $value => $name ) : ?>
-					<option value="<?php echo esc_attr( $value ); ?>" <?php selected( $value, $rating ); ?>><?php echo esc_html( $name ); ?></option>
+                    <option value="<?php echo esc_attr( $value ); ?>" <?php selected( $value, $rating ); ?>><?php echo esc_html( $name ); ?></option>
 				<?php endforeach; ?>
-			</select>
+            </select>
 
 			<?php submit_button( $text, 'button', false, false, array( 'ID' => 'search-submit' ) ); ?>
-		</p>
+        </p>
 		<?php
 	}
 
@@ -187,6 +187,14 @@ class BDB_Reviews_Table extends WP_List_Table {
 				}
 				break;
 
+			case 'author' :
+				$value = $author = $item['author'];
+				if ( $author && $item['book_id'] ) {
+					$url   = add_query_arg( array( 'book_author' => urlencode( $item['author'] ) ), bdb_get_admin_page_reviews() );
+					$value = '<a href="' . esc_url( $url ) . '">' . esc_html( $author ) . '</a>';
+				}
+				break;
+
 			case 'rating' :
 				$value = $rating = $item['rating'];
 				if ( $rating ) {
@@ -226,10 +234,10 @@ class BDB_Reviews_Table extends WP_List_Table {
 		}
 
 		?>
-		<label class="screen-reader-text" for="cb-select-<?php echo esc_attr( $item['ID'] ); ?>">
+        <label class="screen-reader-text" for="cb-select-<?php echo esc_attr( $item['ID'] ); ?>">
 			<?php _e( 'Select this review', 'book-database' ) ?>
-		</label>
-		<input id="cb-select-<?php echo esc_attr( $item['ID'] ); ?>" type="checkbox" name="reviews[]" value="<?php echo esc_attr( $item['ID'] ); ?>">
+        </label>
+        <input id="cb-select-<?php echo esc_attr( $item['ID'] ); ?>" type="checkbox" name="reviews[]" value="<?php echo esc_attr( $item['ID'] ); ?>">
 		<?php
 
 	}
@@ -310,26 +318,26 @@ class BDB_Reviews_Table extends WP_List_Table {
 		// Display 'delete' success message.
 		if ( 'top' == $which && true === $this->display_delete_message ) {
 			?>
-			<div id="message" class="updated notice notice-success">
-				<p><?php _e( 'Reviews successfully deleted.', 'book-database' ); ?></p>
-			</div>
+            <div id="message" class="updated notice notice-success">
+                <p><?php _e( 'Reviews successfully deleted.', 'book-database' ); ?></p>
+            </div>
 			<?php
 		}
 
 		?>
-		<div class="tablenav <?php echo esc_attr( $which ); ?>">
+        <div class="tablenav <?php echo esc_attr( $which ); ?>">
 
 			<?php if ( $this->has_items() ): ?>
-				<div class="alignleft actions bulkactions">
+                <div class="alignleft actions bulkactions">
 					<?php $this->bulk_actions( $which ); ?>
-				</div>
+                </div>
 			<?php endif;
 			$this->extra_tablenav( $which );
 			$this->pagination( $which );
 			?>
 
-			<br class="clear"/>
-		</div>
+            <br class="clear"/>
+        </div>
 		<?php
 
 	}

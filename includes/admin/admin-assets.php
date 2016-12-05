@@ -55,6 +55,7 @@ function bdb_load_admin_scripts( $hook ) {
 			'l10n' => array(
 				'average_rating' => esc_html__( 'Average Rating', 'book-database' ),
 				'book'           => esc_html__( 'Book', 'book-database' ),
+				'books_read'     => esc_html__( 'Books Read', 'book-database' ),
 				'date'           => esc_html__( 'Date', 'book-database' ),
 				'edit_book'      => esc_attr__( 'Edit Book', 'book-database' ),
 				'edit_review'    => esc_attr__( 'Edit Review', 'book-database' ),
@@ -62,7 +63,7 @@ function bdb_load_admin_scripts( $hook ) {
 				'number_books'   => esc_html__( 'Number of Books', 'book-database' ),
 				'number_reviews' => esc_html__( 'Number of Reviews', 'book-database' ),
 				'pages'          => esc_html__( 'Pages', 'book-database' ),
-				'rating'         => esc_html__( 'Rating', 'book-database' )
+				'rating'         => esc_html__( 'Rating', 'book-database' ),
 			)
 		) );
 	}

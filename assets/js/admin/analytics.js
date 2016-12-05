@@ -172,7 +172,7 @@
                 // Stop loader.
                 wrap.parents('.bookdb-metric-inner').find('.bookdb-loading').empty().hide();
 
-                wrap.empty().html('<table><thead><tr><th>' + bookdb_analytics.l10n.name + '</th><th>' + bookdb_analytics.l10n.number_books + '</th><th>' + bookdb_analytics.l10n.number_reviews + '</th><th>' + bookdb_analytics.l10n.average_rating + '</th></tr></thead><tbody>' + html + '</tbody></table>')
+                wrap.empty().html('<table><thead><tr><th>' + bookdb_analytics.l10n.name + '</th><th>' + bookdb_analytics.l10n.books_read + '</th><th>' + bookdb_analytics.l10n.number_reviews + '</th><th>' + bookdb_analytics.l10n.average_rating + '</th></tr></thead><tbody>' + html + '</tbody></table>')
             });
 
         }

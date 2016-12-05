@@ -114,7 +114,8 @@ function bdb_analytics_batch_2() {
 			foreach ( $breakdown as $term_info ) {
 				$type             = $term_info->type;
 				$existing_html    = array_key_exists( $type, $results ) ? $results[ $type ] : '';
-				$results[ $type ] = $existing_html . '<tr><td>' . esc_html( $term_info->name ) . '</td><td>' . sprintf( _n( '%s Review', '%s Reviews', $term_info->number_reviews ), $term_info->number_reviews ) . '</td><td>' . sprintf( _n( '%s Star', '%s Stars', $term_info->avg_rating ), str_replace( '.00', '', $term_info->avg_rating ) ) . '</td></tr>';
+				$average_rating   = ( null !== $term_info->avg_rating ) ? sprintf( _n( '%s Star', '%s Stars', $term_info->avg_rating ), floatval( $term_info->avg_rating ) ) : '&ndash;';
+				$results[ $type ] = $existing_html . '<tr><td>' . esc_html( $term_info->name ) . '</td><td>' . sprintf( _n( '%s Book', '%s Books', $term_info->number_books ), $term_info->number_books ) . '</td><td>' . sprintf( _n( '%s Review', '%s Reviews', $term_info->number_reviews ), $term_info->number_reviews ) . '</td><td>' . $average_rating . '</td></tr>';
 			}
 		}
 

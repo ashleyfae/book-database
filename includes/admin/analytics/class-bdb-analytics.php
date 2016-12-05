@@ -661,13 +661,13 @@ class BDB_Analytics {
 			$where .= $wpdb->prepare( " AND term.type = %s", wp_strip_all_tags( sanitize_text_field( $term_type ) ) );
 		}
 
-		$query = $wpdb->prepare( "SELECT COUNT(log.rating) as number_reviews, ROUND(AVG(IF(log.rating = 'dnf', 0, log.rating)), 2) as avg_rating, term.name, term.type
-									FROM {$review_table} reviews
-									INNER JOIN {$reading_table} log on log.review_id = reviews.ID
-									INNER JOIN {$relationship_table} r on r.book_id = reviews.book_id
+		$query = $wpdb->prepare( "SELECT COUNT(log.ID) as number_books, ROUND(AVG(IF(log.rating = 'dnf', 0, log.rating)), 2) as avg_rating, COUNT(review.ID) as number_reviews, term.name, term.type
+									FROM {$reading_table} log
+									LEFT JOIN {$review_table} review on review.ID = log.review_id
+									INNER JOIN {$relationship_table} r on r.book_id = log.book_id
 									INNER JOIN {$term_table} term on term.term_id = r.term_id
-									WHERE `date_written` >= %s
-									AND `date_written` <= %s
+									WHERE `date_finished` >= %s
+									AND `date_finished` <= %s
 									{$where}
 									GROUP BY term.type, term.name
 									ORDER BY term.name ASC",

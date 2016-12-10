@@ -96,6 +96,7 @@ function bdb_count_reviews( $args ) {
  *                      `date_written` - Timestamp for when the review was added. If omitted, current time is used.
  *                      `date_published` - Timestamp for when the review was published.
  *                      `rating` - If a rating is provided then a reading log is added.
+ *                      `reading_log` - ID of an existing rating log to associated with review.
  *
  * @since 1.0.0
  * @return int|WP_Error ID of the review inserted or updated, or WP_Error on failure.
@@ -153,6 +154,7 @@ function bdb_insert_review( $data = array() ) {
 		return new WP_Error( 'error-inserting-review', __( 'Error inserting review into database.', 'book-database' ) );
 	}
 
+	// Create new reading entry.
 	if ( array_key_exists( 'rating', $data ) ) {
 		$reading_data    = array(
 			'book_id'   => $review_db_data['book_id'],
@@ -169,6 +171,14 @@ function bdb_insert_review( $data = array() ) {
 		if ( ! $result ) {
 			return new WP_Error( 'error-inserting-reading-log', __( 'Error inserting reading log into database.', 'book-database' ) );
 		}
+	}
+
+	// Update existing reading entry to be associated with this review.
+	if ( array_key_exists( 'reading_log', $data ) && ! empty( $data['reading_log'] ) ) {
+		book_database()->reading_list->add( array(
+			'ID'        => absint( $data['reading_log'] ),
+			'review_id' => absint( $review_id )
+		) );
 	}
 
 	return $review_id;

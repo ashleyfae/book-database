@@ -56,7 +56,7 @@ function bdb_ajax_save_review() {
 	$data = array(
 		'ID'        => $new_review_id . ' <a href="' . esc_url( bdb_get_admin_page_edit_review( $new_review_id ) ) . '" target="_blank">' . __( '(Edit)', 'book-database' ) . '</a>',
 		'book'      => esc_html( sprintf( _x( '%s by %s', 'book title by author name', 'book-database' ), $book->get_title(), $book->get_author_names() ) ),
-		'rating'    => $review->rating ? $rating->format( 'text' ) : '&ndash',
+		'rating'    => $review->rating ? $rating->format( 'text' ) : '&ndash;',
 		'shortcode' => '[book id="' . esc_attr( $book->ID ) . '" rating="' . esc_attr( $review->get_rating() ) . '"]',
 		'remove'    => '<button class="button secondary bookdb-remove-book-review">' . __( 'Remove', 'book-database' ) . '</button>'
 	);

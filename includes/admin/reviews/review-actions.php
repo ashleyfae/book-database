@@ -140,6 +140,25 @@ function bdb_review_date_published_field( $review ) {
 add_action( 'book-database/review-edit/fields', 'bdb_review_date_published_field' );
 
 /**
+ * Field: Review Content
+ *
+ * @param BDB_Review $review
+ *
+ * @since 1.2.2
+ * @return void
+ */
+function bdb_review_text_field( $review ) {
+	book_database()->html->meta_row( 'textarea', array( 'label' => __( 'Review Text', 'book-database' ) ), array(
+		'id'    => 'review_text',
+		'name'  => 'review_text',
+		'value' => $review->get_review(),
+		'desc'  => __( 'Review content. For your records only.', 'book-database' )
+	) );
+}
+
+add_action( 'book-database/review-edit/fields', 'bdb_review_text_field' );
+
+/**
  * Field: Insert Reading Log
  *
  * @param BDB_Review $review
@@ -300,7 +319,8 @@ function bdb_save_review() {
 		'book_id' => 'associated_book',
 		'post_id' => 'associated_post',
 		'url'     => 'external_url',
-		'user_id' => 'review_user_id'
+		'user_id' => 'review_user_id',
+		'review'  => 'review_text'
 	);
 
 	foreach ( $fields as $db_field => $post_field ) {
@@ -308,7 +328,7 @@ function bdb_save_review() {
 			continue;
 		}
 
-		$review_data[ $db_field ] = $_POST[ $post_field ];
+		$review_data[ $db_field ] = stripslashes( $_POST[ $post_field ] );
 	}
 
 	// Format the date written.

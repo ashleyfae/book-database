@@ -565,7 +565,7 @@ class BDB_DB_Reviews extends BDB_DB {
 		user_id bigint(20) NOT NULL,
 		review longtext NOT NULL,
 		date_written datetime NOT NULL,
-		date_published datetime NOT NULL,
+		date_published datetime,
 		PRIMARY KEY  (ID),
 		INDEX date_written_ID (date_written, ID),
 		INDEX date_written_book_id (date_written, book_id),

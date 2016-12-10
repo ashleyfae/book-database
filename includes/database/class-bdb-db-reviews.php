@@ -68,7 +68,7 @@ class BDB_DB_Reviews extends BDB_DB {
 			'user_id'        => 0,
 			'review'         => '',
 			'date_written'   => date( 'Y-m-d H:i:s' ),
-			'date_published' => date( 'Y-m-d H:i:s' ),
+			'date_published' => null,
 		);
 	}
 

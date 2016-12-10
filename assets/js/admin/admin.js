@@ -182,11 +182,49 @@
                             // Set book ID.
                             bookID.val($(this).data('id'));
 
-                            // Hide results.
-                            resultsWrap.hide();
+                            var data = {
+                                action: 'bdb_get_book_reading_logs',
+                                nonce: book_database.nonce,
+                                book_id: $(this).data('id')
+                            };
 
-                            // Show review fields.
-                            $('#bookdb-add-review-fields-wrap').show();
+                            $.ajax({
+                                type: 'POST',
+                                url: ajaxurl,
+                                data: data,
+                                dataType: "json",
+                                success: function (response) {
+                                    console.log(response);
+
+                                    if (response.success) {
+
+                                        var readingLog = $('#reading_log');
+                                        readingLog.empty().append('<option value="">None</option>');
+
+                                        $.each(response.data, function (key, value) {
+                                            readingLog.append('<option value="' + key + '">' + value + '</option>');
+                                        });
+
+                                    } else {
+
+                                        if (window.console && window.console.log) {
+                                            console.log(response);
+                                        }
+
+                                    }
+
+                                    // Hide results.
+                                    resultsWrap.hide();
+
+                                    // Show review fields.
+                                    $('#bookdb-add-review-fields-wrap').show();
+
+                                }
+                            }).fail(function (response) {
+                                if (window.console && window.console.log) {
+                                    console.log(response);
+                                }
+                            });
                         });
 
                     } else {
@@ -215,8 +253,8 @@
 
             var button = $(this),
                 wrap = $('#bookdb-add-review-fields-wrap'),
-                rating = $('#book_rating'),
                 book_id = $('#bookdb-book-to-add-review'),
+                reading_log = $('#reading_log'),
                 user_id = $('#review_user_id'),
                 table = $('#bdb_book_reviews').find('table');
 
@@ -225,7 +263,7 @@
 
             var review = {
                 book_id: book_id.val(),
-                rating: rating.val(),
+                reading_log: reading_log.val(),
                 user_id: user_id.val(),
                 post_id: $('#post_ID').val()
             };
@@ -248,7 +286,6 @@
 
                     if (response.success) {
 
-                        rating.val('');
                         user_id.val(user_id.data('current'));
 
                         // Update table.

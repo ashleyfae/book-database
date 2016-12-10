@@ -41,32 +41,32 @@ function bdb_render_post_book_reviews_meta_box( $post ) {
 
 	$reviews = bdb_get_post_reviews( $post->ID );
 	?>
-	<p id="bookdb-book-reviews-message"><?php _e( 'Below is a list of book reviews connected to this post. Deleting a review will delete it from your review archive and disassociate it with this post.', 'book-database' ); ?></p>
+    <p id="bookdb-book-reviews-message"><?php _e( 'Below is a list of book reviews connected to this post. Deleting a review will delete it from your review archive and disassociate it with this post.', 'book-database' ); ?></p>
 
-	<table class="wp-list-table widefat fixed posts">
-		<thead>
-		<tr>
-			<th><?php _e( 'ID', 'book-database' ); ?></th>
-			<th><?php _e( 'Book', 'book-database' ); ?></th>
-			<th><?php _e( 'Rating', 'book-database' ); ?></th>
-			<th><?php _e( 'Shortcode', 'book-database' ); ?></th>
-			<th><?php _e( 'Remove', 'book-database' ); ?></th>
-		</tr>
-		</thead>
-		<tbody>
+    <table class="wp-list-table widefat fixed posts">
+        <thead>
+        <tr>
+            <th><?php _e( 'ID', 'book-database' ); ?></th>
+            <th><?php _e( 'Book', 'book-database' ); ?></th>
+            <th><?php _e( 'Rating', 'book-database' ); ?></th>
+            <th><?php _e( 'Shortcode', 'book-database' ); ?></th>
+            <th><?php _e( 'Remove', 'book-database' ); ?></th>
+        </tr>
+        </thead>
+        <tbody>
 		<?php if ( $reviews && is_array( $reviews ) ) : ?>
 			<?php foreach ( $reviews as $review_details ) :
 				$book = new BDB_Book( $review_details->book_id );
 				?>
-				<tr data-id="<?php echo esc_attr( $review_details->ID ); ?>">
-					<td>
+                <tr data-id="<?php echo esc_attr( $review_details->ID ); ?>">
+                    <td>
 						<?php echo $review_details->ID; ?>
-						<a href="<?php echo esc_url( bdb_get_admin_page_edit_review( $review_details->ID ) ); ?>" target="_blank"><?php _e( '(Edit)', 'book-database' ); ?></a>
-					</td>
-					<td>
+                        <a href="<?php echo esc_url( bdb_get_admin_page_edit_review( $review_details->ID ) ); ?>" target="_blank"><?php _e( '(Edit)', 'book-database' ); ?></a>
+                    </td>
+                    <td>
 						<?php echo esc_html( sprintf( _x( '%s by %s', 'book title by author name', 'book-database' ), $book->get_title(), $book->get_author_names() ) ); ?>
-					</td>
-					<td>
+                    </td>
+                    <td>
 						<?php
 						if ( $review_details->rating ) {
 							$rating = new BDB_Rating( $review_details->rating );
@@ -75,56 +75,58 @@ function bdb_render_post_book_reviews_meta_box( $post ) {
 							echo '&ndash';
 						}
 						?>
-					</td>
-					<td>
+                    </td>
+                    <td>
 						<?php
 						if ( $review_details->book_id ) {
-							echo '<code>[book id="' . esc_attr( $review_details->book_id ) . '"]</code>';
+							echo '<code>[book id="' . esc_attr( $review_details->book_id ) . '" rating="' . esc_attr( $review_details->rating ) . '"]</code>';
 						}
 						?>
-					</td>
-					<td>
-						<button class="button secondary bookdb-remove-book-review"><?php _e( 'Remove', 'book-database' ); ?></button>
-					</td>
-				</tr>
+                    </td>
+                    <td>
+                        <button class="button secondary bookdb-remove-book-review"><?php _e( 'Remove', 'book-database' ); ?></button>
+                    </td>
+                </tr>
 			<?php endforeach; ?>
 		<?php else : ?>
-			<tr id="bookdb-no-book-reviews-message" <?php echo ( empty( $reviews ) ) ? '' : 'style="display: none"'; ?>>
-				<td colspan="4"><?php _e( 'No book reviews yet! Click the button below to add a review to this post. This will also add a new entry in your review archive.', 'book-database' ); ?></td>
-			</tr>
+            <tr id="bookdb-no-book-reviews-message" <?php echo ( empty( $reviews ) ) ? '' : 'style="display: none"'; ?>>
+                <td colspan="4"><?php _e( 'No book reviews yet! Click the button below to add a review to this post. This will also add a new entry in your review archive.', 'book-database' ); ?></td>
+            </tr>
 		<?php endif; ?>
-		</tbody>
-	</table>
-	<div id="bookdb-add-review-buttons">
-		<button id="bookdb-add-review" class="button button-secondary"><?php esc_html_e( 'Add Review', 'book-database' ); ?></button>
-	</div>
+        </tbody>
+    </table>
+    <div id="bookdb-add-review-buttons">
+        <button id="bookdb-add-review" class="button button-secondary"><?php esc_html_e( 'Add Review', 'book-database' ); ?></button>
+    </div>
 
-	<div id="bookdb-add-review-fields">
-		<p><?php _e( 'Search for a book to review.', 'book-database' ); ?></p>
-		<div id="bookdb-add-review-search-for-book">
-			<label for="bookdb-add-review-search-book-input" class="screen-reader-text"><?php _e( 'Search for a book by title or author', 'book-database' ); ?></label>
-			<input type="text" id="bookdb-add-review-search-book-input" class="regular-text" placeholder="<?php esc_attr_e( 'Title or author name', 'book-database' ); ?>">
+    <div id="bookdb-add-review-fields">
+        <p><?php _e( 'Search for a book to review.', 'book-database' ); ?></p>
+        <div id="bookdb-add-review-search-for-book">
+            <label for="bookdb-add-review-search-book-input" class="screen-reader-text"><?php _e( 'Search for a book by title or author', 'book-database' ); ?></label>
+            <input type="text" id="bookdb-add-review-search-book-input" class="regular-text" placeholder="<?php esc_attr_e( 'Title or author name', 'book-database' ); ?>">
 
-			<label for="book-db-add-review-search-type" class="screen-reader-text"><?php _e( 'Choose a field to search by', 'book-database' ); ?></label>
-			<select id="book-db-add-review-search-type">
-				<option value="title" selected><?php esc_html_e( 'Title', 'book-database' ); ?></option>
-				<option value="author"><?php esc_html_e( 'Author', 'book-database' ); ?></option>
-			</select>
+            <label for="book-db-add-review-search-type" class="screen-reader-text"><?php _e( 'Choose a field to search by', 'book-database' ); ?></label>
+            <select id="book-db-add-review-search-type">
+                <option value="title" selected><?php esc_html_e( 'Title', 'book-database' ); ?></option>
+                <option value="author"><?php esc_html_e( 'Author', 'book-database' ); ?></option>
+            </select>
 
-			<button type="button" class="button"><?php esc_html_e( 'Search for Book', 'book-database' ); ?></button>
-		</div>
+            <button type="button" class="button"><?php esc_html_e( 'Search for Book', 'book-database' ); ?></button>
+        </div>
 
-		<div id="bookdb-book-search-results"></div>
+        <div id="bookdb-book-search-results"></div>
 
-		<div id="bookdb-add-review-fields-wrap">
-			<input type="hidden" id="bookdb-book-to-add-review" value="0">
+        <div id="bookdb-add-review-fields-wrap">
+            <input type="hidden" id="bookdb-book-to-add-review" value="0">
 
 			<?php
-			// Rating
-			book_database()->html->meta_row( 'rating_dropdown', array( 'label' => __( 'Rating', 'book-database' ) ), array(
-				'id'       => 'book_rating',
-				'name'     => 'book_rating',
-				'selected' => false
+			// Reading Log
+			book_database()->html->meta_row( 'select', array( 'label' => __( 'Associated Reading Entry', 'book-database' ) ), array(
+				'id'               => 'reading_log',
+				'name'             => 'reading_log',
+				'show_option_all'  => false,
+				'show_option_none' => false,
+				'selected'         => false
 			) );
 
 			// User ID
@@ -142,9 +144,9 @@ function bdb_render_post_book_reviews_meta_box( $post ) {
 			) );
 			?>
 
-			<button type="button" class="button"><?php esc_html_e( 'Associate review with post', 'book-database' ); ?></button>
-		</div>
-	</div>
+            <button type="button" class="button"><?php esc_html_e( 'Associate review with post', 'book-database' ); ?></button>
+        </div>
+    </div>
 	<?php
 
 	do_action( 'book-database/meta-box/post/book-reviews/after', $post );

@@ -72,6 +72,14 @@ class BDB_Review {
 	public $rating;
 
 	/**
+	 * Review Content
+	 *
+	 * @var string
+	 * @access public
+	 */
+	public $review;
+
+	/**
 	 * Date the review was written
 	 *
 	 * @var string
@@ -596,6 +604,17 @@ class BDB_Review {
 		}
 
 		return apply_filters( 'book-database/review/get/rating', $this->rating, $this->ID, $this );
+	}
+
+	/**
+	 * Get Review
+	 *
+	 * @access public
+	 * @since  1.2.2
+	 * @return string
+	 */
+	public function get_review() {
+		return apply_filters( 'book-database/review/get/review', $this->review, $this->ID, $this );
 	}
 
 	/**

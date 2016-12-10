@@ -664,7 +664,7 @@ function bdb_book_review_meta_table( $book ) {
 									$rating = new BDB_Rating( $review->rating );
 									echo $rating->format( 'text' );
 								} else {
-									echo '&ndash';
+									echo '&ndash;';
 								}
 								?>
                             </td>

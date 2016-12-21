@@ -327,7 +327,7 @@ class BDB_Analytics {
 			}
 		}
 
-		return number_format( absint( $pages_read ) );
+		return number_format_i18n( absint( $pages_read ) );
 
 	}
 

@@ -473,16 +473,24 @@ class BDB_Review_Query {
 				ORDER BY {$this->orderby}
 				{$this->order}";
 
-		// Get the total number of results.
-		$total_query         = "SELECT COUNT(1) FROM ({$query}) AS combined_table";
-		$this->total_reviews = $wpdb->get_var( $total_query );
+		if ( $this->query_vars['per_page'] > 0 ) {
+			// Get the total number of results.
+			$total_query         = "SELECT COUNT(1) FROM ({$query}) AS combined_table";
+			$this->total_reviews = $wpdb->get_var( $total_query );
 
-		// Add pagination parameters.
-		$offset     = ( false !== $this->query_vars['offset'] ) ? $this->query_vars['offset'] : ( $this->current_page * $this->per_page ) - $this->per_page;
-		$pagination = $wpdb->prepare( " LIMIT %d, %d", $offset, $this->per_page );
+			// Add pagination parameters.
+			$offset     = ( false !== $this->query_vars['offset'] ) ? $this->query_vars['offset'] : ( $this->current_page * $this->per_page ) - $this->per_page;
+			$pagination = $wpdb->prepare( " LIMIT %d, %d", $offset, $this->per_page );
+		} else {
+			$pagination = '';
+		}
 
 		// Get the final results.
 		$reviews = $wpdb->get_results( $query . $pagination );
+
+		if ( - 1 == $this->query_vars['per_page'] ) {
+			$this->total_reviews = count( $reviews );
+		}
 
 		$this->reviews = wp_unslash( $reviews );
 

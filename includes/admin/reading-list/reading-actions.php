@@ -176,6 +176,9 @@ function bdb_reading_entry_tr( $entry ) {
 				<?php
 				if ( $entry->review_id ) {
 					echo '<a href="' . esc_url( bdb_get_admin_page_edit_review( absint( $entry->review_id ) ) ) . '">' . sprintf( __( '%d (Edit)', 'book-database' ), absint( $entry->review_id ) ) . '</a>';
+				} else {
+					$url = add_query_arg( array( 'reading-log' => absint( $entry->ID ) ), bdb_get_admin_page_add_review( $entry->book_id ) );
+					echo '<a href="' . esc_url( $url ) . '">' . esc_html__( 'Add Review', 'book-database' ) . '</a>';
 				}
 				?>
             </div>

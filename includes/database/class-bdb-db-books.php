@@ -436,7 +436,9 @@ class BDB_DB_Books extends BDB_DB {
 				$orderby = 'books.ID';
 		}
 
-		$order = ( 'ASC' == strtoupper( $args['order'] ) ) ? 'ASC' : 'DESC';
+		$order   = ( 'ASC' == strtoupper( $args['order'] ) ) ? 'ASC' : 'DESC';
+		$orderby = esc_sql( $orderby );
+		$order   = esc_sql( $order );
 
 		$cache_key = md5( 'bdb_books_' . serialize( $args ) );
 
@@ -454,7 +456,7 @@ class BDB_DB_Books extends BDB_DB {
 		}
 
 		if ( $books === false ) {
-			$query = $wpdb->prepare( "SELECT $select_this FROM  $this->table_name as books $join $where GROUP BY books.$this->primary_key ORDER BY %s %s LIMIT %d,%d;", $orderby, $order, absint( $args['offset'] ), absint( $args['number'] ) );
+			$query = $wpdb->prepare( "SELECT $select_this FROM  $this->table_name as books $join $where GROUP BY books.$this->primary_key ORDER BY $orderby $order LIMIT %d,%d;", absint( $args['offset'] ), absint( $args['number'] ) );
 			$books = $wpdb->get_results( $query );
 			wp_cache_set( $cache_key, $books, 'books', 3600 );
 		}

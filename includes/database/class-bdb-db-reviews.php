@@ -420,9 +420,11 @@ class BDB_DB_Reviews extends BDB_DB {
 
 		$orderby = ! array_key_exists( $args['orderby'], $this->get_columns() ) ? 'ID' : wp_strip_all_tags( $args['orderby'] );
 		$order   = ( 'ASC' == strtoupper( $args['order'] ) ) ? 'ASC' : 'DESC';
+		$orderby = esc_sql( $orderby );
+		$order   = esc_sql( $order );
 
 		if ( $reviews === false ) {
-			$query   = $wpdb->prepare( "SELECT review.*$select FROM  $this->table_name AS review $join $where GROUP BY $this->primary_key ORDER BY %s %s LIMIT %d,%d;", $orderby, $order, absint( $args['offset'] ), absint( $args['number'] ) );
+			$query   = $wpdb->prepare( "SELECT review.*$select FROM  $this->table_name AS review $join $where GROUP BY $this->primary_key ORDER BY $orderby $order LIMIT %d,%d;", absint( $args['offset'] ), absint( $args['number'] ) );
 			$reviews = $wpdb->get_results( $query );
 			wp_cache_set( $cache_key, $reviews, 'reviews', 3600 );
 		}

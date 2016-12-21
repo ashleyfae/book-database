@@ -221,8 +221,9 @@ function bdb_get_default_book_field_values( $all_fields = null ) {
  */
 function bdb_book_layout_cover( $value, $enabled_fields, $book_id, $book ) {
 	if ( $book->get_cover_id() ) {
-		$alignment = $enabled_fields['cover']['alignment'];
-		$size      = $enabled_fields['cover']['size'];
+		$default_fields = bdb_get_book_fields();
+		$alignment      = isset( $enabled_fields['cover']['alignment'] ) ? $enabled_fields['cover']['alignment'] : $default_fields['cover']['alignment'];
+		$size           = isset( $enabled_fields['cover']['size'] ) ? $enabled_fields['cover']['size'] : $default_fields['cover']['size'];
 
 		// Sanitize size.
 		if ( ! array_key_exists( $size, bdb_get_image_sizes() ) ) {

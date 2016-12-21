@@ -237,6 +237,7 @@ if ( ! class_exists( 'Book_Database' ) ) :
 			require_once BDB_DIR . 'includes/assets.php';
 			require_once BDB_DIR . 'includes/book-functions.php';
 			require_once BDB_DIR . 'includes/book-layout.php';
+			require_once BDB_DIR . 'includes/class-bdb-analytics.php';
 			require_once BDB_DIR . 'includes/class-bdb-book.php';
 			require_once BDB_DIR . 'includes/class-bdb-html.php';
 			require_once BDB_DIR . 'includes/class-bdb-rating.php';
@@ -258,7 +259,6 @@ if ( ! class_exists( 'Book_Database' ) ) :
 				require_once BDB_DIR . 'includes/admin/class-bdb-notices.php';
 				require_once BDB_DIR . 'includes/admin/analytics/analytics.php';
 				require_once BDB_DIR . 'includes/admin/analytics/analytics-ajax.php';
-				require_once BDB_DIR . 'includes/admin/analytics/class-bdb-analytics.php';
 				require_once BDB_DIR . 'includes/admin/books/book-actions.php';
 				require_once BDB_DIR . 'includes/admin/books/book-functions.php';
 				require_once BDB_DIR . 'includes/admin/books/books.php';

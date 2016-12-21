@@ -333,12 +333,12 @@ function bdb_save_review() {
 
 	// Format the date written.
 	if ( isset( $_POST['review_date'] ) && ! empty( $_POST['review_date'] ) ) {
-		$review_data['date_written'] = get_gmt_from_date( wp_strip_all_tags( $_POST['review_date'] ) );
+		$review_data['date_written'] = $_POST['review_date'];
 	}
 
 	// Format the date published.
 	if ( isset( $_POST['review_date_published'] ) && ! empty( $_POST['review_date_published'] ) ) {
-		$review_data['date_published'] = get_gmt_from_date( wp_strip_all_tags( $_POST['review_date_published'] ) );
+		$review_data['date_published'] = $_POST['review_date_published'];
 	}
 
 	$new_review_id = bdb_insert_review( apply_filters( 'book-database/review/save/review-data', $review_data, $review_id, $_POST ) );

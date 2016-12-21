@@ -183,7 +183,7 @@ function bdb_review_insert_reading_log_field( $review ) {
 		), array(
 			'id'    => 'reading_start_date',
 			'name'  => 'reading_start_date',
-			'value' => $reading_entry ? bdb_format_mysql_date( $reading_entry->date_started ) : date( 'j F Y', current_time( 'timestamp' ) ),
+			'value' => $reading_entry ? bdb_format_mysql_date( $reading_entry->date_started ) : date_i18n( 'j F Y' ),
 			'desc'  => esc_html__( 'Date you started reading the book.', 'book-database' )
 		) );
 
@@ -193,7 +193,7 @@ function bdb_review_insert_reading_log_field( $review ) {
 		), array(
 			'id'    => 'reading_end_date',
 			'name'  => 'reading_end_date',
-			'value' => $reading_entry ? bdb_format_mysql_date( $reading_entry->date_finished ) : date( 'j F Y', current_time( 'timestamp' ) ),
+			'value' => $reading_entry ? bdb_format_mysql_date( $reading_entry->date_finished ) : date_i18n( 'j F Y' ),
 			'desc'  => esc_html__( 'Date you finished reading the book.', 'book-database' )
 		) );
 

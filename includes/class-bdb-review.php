@@ -699,7 +699,7 @@ class BDB_Review {
 			return true;
 		}
 
-		return ( strtotime( $this->get_date_published() ) <= time() );
+		return ( bdb_format_mysql_date( $this->get_date_published(), 'U' ) <= current_time( 'timestamp' ) );
 
 	}
 

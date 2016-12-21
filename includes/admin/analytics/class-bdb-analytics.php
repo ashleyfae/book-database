@@ -120,8 +120,8 @@ class BDB_Analytics {
 
 		self::$startstr = $start;
 		self::$endstr   = $end;
-		self::$start    = strtotime( self::$startstr );
-		self::$end      = strtotime( self::$endstr );
+		self::$start    = get_gmt_from_date( self::$startstr, 'Y-m-d 00:00:00' );
+		self::$end      = get_gmt_from_date( self::$endstr, 'Y-m-d 23:59:59' );
 
 	}
 
@@ -158,8 +158,8 @@ class BDB_Analytics {
 									AND `date_written` <= %s
 									GROUP BY book.ID
 									ORDER BY review.date_written DESC",
-				date( 'Y-m-d 00:00:00', self::$start ),
-				date( 'Y-m-d 00:00:00', self::$end )
+				self::$start,
+				self::$end
 			);
 
 			self::$reviews = $wpdb->get_results( $query );
@@ -241,7 +241,7 @@ class BDB_Analytics {
 					INNER JOIN $book_table book on book.ID = list.book_ID
 					WHERE `date_finished` < %s
 					GROUP BY book_id",
-				date( 'Y-m-d 00:00:00', self::$end )
+				self::$end
 			);
 
 			$books_read = $wpdb->get_results( $query );
@@ -258,7 +258,7 @@ class BDB_Analytics {
 					$this_book_rereads = 0;
 
 					foreach ( $dates_finished as $date ) {
-						if ( $date >= date( 'Y-m-d 00:00:00', self::$start ) && $date <= date( 'Y-m-d 00:00:00', self::$end ) ) {
+						if ( $date >= self::$start && $date <= self::$end ) {
 							$this_book_rereads ++;
 						}
 
@@ -311,8 +311,8 @@ class BDB_Analytics {
 
 		$query   = $wpdb->prepare(
 			"SELECT pages,complete from $book_table book INNER JOIN $reading_table list ON (list.book_id = book.ID AND `date_finished` >= %s AND `date_finished` <= %s)",
-			date( 'Y-m-d 00:00:00', self::$start ),
-			date( 'Y-m-d 00:00:00', self::$end )
+			self::$start,
+			self::$end
 		);
 		$results = $wpdb->get_results( $query );
 
@@ -349,8 +349,8 @@ class BDB_Analytics {
 				AND `date_finished` <= %s
 				AND `series_id` IS NOT NULL
 				GROUP BY series_id",
-			date( 'Y-m-d 00:00:00', self::$start ),
-			date( 'Y-m-d 00:00:00', self::$end )
+			self::$start,
+			self::$end
 		);
 
 		$results = $wpdb->get_results( $query );
@@ -380,8 +380,8 @@ class BDB_Analytics {
 				WHERE `date_finished` >= %s 
 				AND `date_finished` <= %s
 				AND `series_id` IS NULL",
-			date( 'Y-m-d 00:00:00', self::$start ),
-			date( 'Y-m-d 00:00:00', self::$end )
+			self::$start,
+			self::$end
 		);
 
 		return absint( $wpdb->get_var( $query ) );
@@ -411,8 +411,8 @@ class BDB_Analytics {
 				WHERE `date_finished` >= %s 
 				AND `date_finished` <= %s
 				GROUP BY author.term_id",
-			date( 'Y-m-d 00:00:00', self::$start ),
-			date( 'Y-m-d 00:00:00', self::$end )
+			self::$start,
+			self::$end
 		);
 
 		$results = $wpdb->get_results( $query );
@@ -440,8 +440,8 @@ class BDB_Analytics {
 				WHERE `rating` IS NOT NULL
 				AND `date_finished` >= %s 
 				AND `date_finished` <= %s",
-			date( 'Y-m-d 00:00:00', self::$start ),
-			date( 'Y-m-d 00:00:00', self::$end )
+			self::$start,
+			self::$end
 		);
 
 		$average = $wpdb->get_var( $query );
@@ -517,8 +517,8 @@ class BDB_Analytics {
 									GROUP BY book.ID
 									ORDER BY list.date_finished DESC
 									LIMIT 20",
-			date( 'Y-m-d 00:00:00', self::$start ),
-			date( 'Y-m-d 00:00:00', self::$end )
+			self::$start,
+			self::$end
 		);
 
 		$books = $wpdb->get_results( $query );
@@ -555,7 +555,7 @@ class BDB_Analytics {
 		global $wpdb;
 		$reading_table = book_database()->reading_list->table_name;
 
-		$query   = $wpdb->prepare( "SELECT rating, COUNT(rating) AS count FROM {$reading_table} WHERE `rating` IS NOT NULL AND `date_finished` >= %s AND `date_finished` <= %s GROUP BY rating ORDER BY rating + 0 DESC", date( 'Y-m-d 00:00:00', self::$start ), date( 'Y-m-d 00:00:00', self::$end ) );
+		$query   = $wpdb->prepare( "SELECT rating, COUNT(rating) AS count FROM {$reading_table} WHERE `rating` IS NOT NULL AND `date_finished` >= %s AND `date_finished` <= %s GROUP BY rating ORDER BY rating + 0 DESC", self::$start, self::$end );
 		$results = $wpdb->get_results( $query );
 		//file_put_contents( BDB_DIR . 'log.txt', $query . "\n\n", FILE_APPEND );
 
@@ -595,7 +595,7 @@ class BDB_Analytics {
 	 * @param int $number_range Number of pages in each range.
 	 *
 	 * @access public
-	 * @since 1.2.1
+	 * @since  1.2.1
 	 * @return array
 	 */
 	public function get_pages_breakdown( $number_range = 200 ) {
@@ -617,8 +617,8 @@ class BDB_Analytics {
 			absint( $number_range ),
 			absint( $number_range ),
 			absint( $number_range - 1 ),
-			date( 'Y-m-d 00:00:00', self::$start ),
-			date( 'Y-m-d 00:00:00', self::$end )
+			self::$start,
+			self::$end
 		);
 
 		$breakdown = $wpdb->get_results( $query, ARRAY_A );
@@ -671,8 +671,8 @@ class BDB_Analytics {
 									{$where}
 									GROUP BY term.type, term.name
 									ORDER BY term.name ASC",
-			date( 'Y-m-d 00:00:00', self::$start ),
-			date( 'Y-m-d 00:00:00', self::$end )
+			self::$start,
+			self::$end
 		);
 
 		//file_put_contents( BDB_DIR . 'log.txt', $query . "\n\n", FILE_APPEND );

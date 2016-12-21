@@ -32,10 +32,10 @@ function bdb_analytics_page() {
 			<input type="hidden" id="bookdb-end" value="now">
 			<select id="bookdb-range">
 				<option value="30-days" data-start="-30 days" data-end="now"><?php _e( 'Last 30 days', 'book-database' ); ?></option>
-				<option value="this-month" data-start="<?php echo esc_attr( date( 'Y-m-1 00:00:00', $time ) ); ?>" data-end="now"><?php _e( 'This month', 'book-database' ); ?></option>
-				<option value="last-month" data-start="<?php echo esc_attr( date( 'd-m-Y', strtotime( '-1 month', strtotime( date( 'Y-m-1 00:00:00', $time ) ) ) ) ); ?>" data-end="last day of last month"><?php _e( 'Last month', 'book-database' ); ?></option>
-				<option value="this-year" data-start="<?php echo esc_attr( date( 'Y-1-1 00:00:00', $time ) ); ?>" data-end="now"><?php _e( 'This year', 'book-database' ); ?></option>
-				<option value="last-year" data-start="<?php echo esc_attr( date( 'd-m-Y', strtotime( '-1 year', strtotime( date( 'Y-1-1 00:00:00', $time ) ) ) ) ); ?>" data-end="<?php echo esc_attr( date( 'd-m-Y', strtotime( '-1 year', strtotime( date( 'Y-12-31 00:00:00', $time ) ) ) ) ); ?>"><?php _e( 'Last year', 'book-database' ); ?></option>
+				<option value="this-month" data-start="<?php echo esc_attr( date_i18n( 'Y-m-1', $time ) ); ?>" data-end="now"><?php _e( 'This month', 'book-database' ); ?></option>
+				<option value="last-month" data-start="<?php echo esc_attr( date_i18n( 'Y-m-d', strtotime( '-1 month', strtotime( date_i18n( 'Y-m-1', $time ) ) ) ) ); ?>" data-end="last day of last month"><?php _e( 'Last month', 'book-database' ); ?></option>
+				<option value="this-year" data-start="<?php echo esc_attr( date_i18n( 'Y-1-1', $time ) ); ?>" data-end="now"><?php _e( 'This year', 'book-database' ); ?></option>
+				<option value="last-year" data-start="<?php echo esc_attr( date_i18n( 'Y-m-d', strtotime( '-1 year', strtotime( date_i18n( 'Y-1-1', $time ) ) ) ) ); ?>" data-end="<?php echo esc_attr( date_i18n( 'Y-m-d', strtotime( '-1 year', strtotime( date_i18n( 'Y-12-31', $time ) ) ) ) ); ?>"><?php _e( 'Last year', 'book-database' ); ?></option>
 				<option value="custom"><?php _e( 'Custom', 'book-database' ); ?></option>
 			</select>
 			<button type="button" class="button"><?php _e( 'Update', 'book-database' ); ?></button>

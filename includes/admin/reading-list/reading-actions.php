@@ -73,7 +73,7 @@ function bdb_book_reading_list_table( $book ) {
 				), array(
 					'id'    => 'reading_start_date',
 					'name'  => 'reading_start_date',
-					'value' => date( 'j F Y', current_time( 'timestamp' ) ),
+					'value' => date_i18n( 'j F Y' ),
 					'desc'  => esc_html__( 'Date you started reading the book.', 'book-database' )
 				) );
 
@@ -83,7 +83,7 @@ function bdb_book_reading_list_table( $book ) {
 				), array(
 					'id'    => 'reading_end_date',
 					'name'  => 'reading_end_date',
-					'value' => date( 'j F Y', current_time( 'timestamp' ) ),
+					'value' => date_i18n( 'j F Y', current_time( 'timestamp' ) ),
 					'desc'  => esc_html__( 'Date you finished reading the book.', 'book-database' )
 				) );
 

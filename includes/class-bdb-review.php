@@ -669,7 +669,7 @@ class BDB_Review {
 	 *
 	 * @access public
 	 * @since  1.0.0
-	 * @return mixed|void
+	 * @return mixed|false
 	 */
 	public function format_date( $raw_date, $format = false ) {
 
@@ -677,7 +677,7 @@ class BDB_Review {
 			$format = get_option( 'date_format' );
 		}
 
-		$date = $raw_date ? mysql2date( $format, $raw_date ) : false;
+		$date = $raw_date ? get_date_from_gmt( $raw_date, $format ) : false;
 
 		return apply_filters( 'book-database/review/format_date', $date, $format, $raw_date, $this->ID, $this );
 
@@ -699,7 +699,7 @@ class BDB_Review {
 			return true;
 		}
 
-		return ( strtotime( $this->get_date_published() ) <= time() );
+		return ( bdb_format_mysql_date( $this->get_date_published(), 'U' ) <= current_time( 'timestamp' ) );
 
 	}
 

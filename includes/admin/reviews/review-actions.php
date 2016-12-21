@@ -111,7 +111,7 @@ function bdb_review_date_written_field( $review ) {
 	book_database()->html->meta_row( 'text', array( 'label' => __( 'Date Written', 'book-database' ) ), array(
 		'id'    => 'review_date',
 		'name'  => 'review_date',
-		'value' => false !== $review->get_date() ? $review->get_formatted_date() : '',
+		'value' => false !== $review->get_date() ? bdb_format_mysql_date( $review->get_date() ) : '',
 		'type'  => 'text',
 		'desc'  => __( 'Date the review was written. Leave blank to use today\'s date.', 'book-database' )
 	) );
@@ -131,7 +131,7 @@ function bdb_review_date_published_field( $review ) {
 	book_database()->html->meta_row( 'text', array( 'label' => __( 'Date Published', 'book-database' ) ), array(
 		'id'    => 'review_date_published',
 		'name'  => 'review_date_published',
-		'value' => false !== $review->get_date_published() ? $review->format_date( $review->get_date_published() ) : '',
+		'value' => false !== $review->get_date_published() ? bdb_format_mysql_date( $review->get_date_published() ) : '',
 		'type'  => 'text',
 		'desc'  => __( 'Date the review was published on the blog. Leave blank to hide from archive.', 'book-database' )
 	) );
@@ -193,7 +193,7 @@ function bdb_review_insert_reading_log_field( $review ) {
 		), array(
 			'id'    => 'reading_start_date',
 			'name'  => 'reading_start_date',
-			'value' => $reading_entry ? bdb_format_mysql_date( $reading_entry->date_started ) : date( 'j F Y', current_time( 'timestamp' ) ),
+			'value' => $reading_entry ? bdb_format_mysql_date( $reading_entry->date_started ) : date_i18n( 'j F Y' ),
 			'desc'  => esc_html__( 'Date you started reading the book.', 'book-database' )
 		) );
 
@@ -203,7 +203,7 @@ function bdb_review_insert_reading_log_field( $review ) {
 		), array(
 			'id'    => 'reading_end_date',
 			'name'  => 'reading_end_date',
-			'value' => $reading_entry ? bdb_format_mysql_date( $reading_entry->date_finished ) : date( 'j F Y', current_time( 'timestamp' ) ),
+			'value' => $reading_entry ? bdb_format_mysql_date( $reading_entry->date_finished ) : date_i18n( 'j F Y' ),
 			'desc'  => esc_html__( 'Date you finished reading the book.', 'book-database' )
 		) );
 
@@ -343,17 +343,15 @@ function bdb_save_review() {
 
 	// Format the date written.
 	if ( isset( $_POST['review_date'] ) && ! empty( $_POST['review_date'] ) ) {
-		$timestamp                   = strtotime( wp_strip_all_tags( $_POST['review_date'] ) );
-		$review_data['date_written'] = date( 'Y-m-d H:i:s', $timestamp );
+		$review_data['date_written'] = $_POST['review_date'];
 	}
 
 	// Format the date published.
 	if ( isset( $_POST['review_date_published'] ) && ! empty( $_POST['review_date_published'] ) ) {
-		$timestamp                     = strtotime( wp_strip_all_tags( $_POST['review_date_published'] ) );
-		$review_data['date_published'] = date( 'Y-m-d H:i:s', $timestamp );
+		$review_data['date_published'] = $_POST['review_date_published'];
 	} else {
 		$review_data['date_published'] = null;
-    }
+  }
 
 	$new_review_id = bdb_insert_review( apply_filters( 'book-database/review/save/review-data', $review_data, $review_id, $_POST ) );
 

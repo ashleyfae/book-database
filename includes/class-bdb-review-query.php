@@ -474,15 +474,31 @@ class BDB_Review_Query {
 				{$this->order}";
 
 		// Get the total number of results.
-		$total_query         = "SELECT COUNT(1) FROM ({$query}) AS combined_table";
-		$this->total_reviews = $wpdb->get_var( $total_query );
+		$total_cache_key = md5( 'bdb_review_query_count_' . serialize( $this->query_vars ) );
+		$total           = wp_cache_get( $total_cache_key, 'review_query' );
+
+		if ( $total === false ) {
+			$total_query         = "SELECT COUNT(1) FROM ({$query}) AS combined_table";
+			$this->total_reviews = $wpdb->get_var( $total_query );
+
+			wp_cache_set( $total_cache_key, $this->total_reviews, 'review_query', 3600 );
+		} else {
+			$this->total_reviews = $total;
+		}
 
 		// Add pagination parameters.
 		$offset     = ( false !== $this->query_vars['offset'] ) ? $this->query_vars['offset'] : ( $this->current_page * $this->per_page ) - $this->per_page;
 		$pagination = $wpdb->prepare( " LIMIT %d, %d", $offset, $this->per_page );
 
 		// Get the final results.
-		$reviews = $wpdb->get_results( $query . $pagination );
+		$cache_key = md5( 'bdb_review_query_' . serialize( $this->query_vars ) );
+		$reviews   = wp_cache_get( $cache_key, 'review_query' );
+
+		if ( $reviews === false ) {
+			$reviews = $wpdb->get_results( $query . $pagination );
+
+			wp_cache_set( $cache_key, $reviews, 'review_query', 3600 );
+		}
 
 		$this->reviews = wp_unslash( $reviews );
 

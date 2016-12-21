@@ -133,7 +133,7 @@ function bdb_review_date_published_field( $review ) {
 		'name'  => 'review_date_published',
 		'value' => false !== $review->get_date_published() ? $review->format_date( $review->get_date_published() ) : '',
 		'type'  => 'text',
-		'desc'  => __( 'Date the review was published on the blog. Leave blank to use today\'s date.', 'book-database' )
+		'desc'  => __( 'Date the review was published on the blog. Leave blank to hide from archive.', 'book-database' )
 	) );
 }
 
@@ -351,7 +351,9 @@ function bdb_save_review() {
 	if ( isset( $_POST['review_date_published'] ) && ! empty( $_POST['review_date_published'] ) ) {
 		$timestamp                     = strtotime( wp_strip_all_tags( $_POST['review_date_published'] ) );
 		$review_data['date_published'] = date( 'Y-m-d H:i:s', $timestamp );
-	}
+	} else {
+		$review_data['date_published'] = null;
+    }
 
 	$new_review_id = bdb_insert_review( apply_filters( 'book-database/review/save/review-data', $review_data, $review_id, $_POST ) );
 

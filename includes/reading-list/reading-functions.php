@@ -85,16 +85,14 @@ function bdb_insert_reading_entry( $data = array() ) {
 
 	// Format start date.
 	if ( array_key_exists( 'date_started', $data ) && ! empty( $data['date_started'] ) ) {
-		$timestamp                      = strtotime( wp_strip_all_tags( $data['date_started'] ) );
-		$sanitized_data['date_started'] = date( 'Y-m-d H:i:s', $timestamp );
+		$sanitized_data['date_started'] = get_gmt_from_date( wp_strip_all_tags( $data['date_started'] ) );
 	} else {
 		$sanitized_data['date_started'] = null;
 	}
 
 	// Format end date.
 	if ( array_key_exists( 'date_finished', $data ) && ! empty( $data['date_finished'] ) ) {
-		$timestamp                       = strtotime( wp_strip_all_tags( $data['date_finished'] ) );
-		$sanitized_data['date_finished'] = date( 'Y-m-d H:i:s', $timestamp );
+		$sanitized_data['date_finished'] = get_gmt_from_date( wp_strip_all_tags( $data['date_finished'] ) );
 	} else {
 		$sanitized_data['date_finished'] = null;
 	}

@@ -355,20 +355,20 @@ class BDB_Review_Query {
 			if ( is_array( $this->query_vars['date'] ) ) {
 
 				if ( ! empty( $this->query_vars['date']['start'] ) ) {
-					$start = date( 'Y-m-d 00:00:00', strtotime( $this->query_vars['date']['start'] ) );
+					$start = get_gmt_from_date( wp_strip_all_tags( $this->query_vars['date']['start'] ), 'Y-m-d 00:00:00' );
 					$where .= $wpdb->prepare( " AND `date_written` >= %s", $start );
 				}
 
 				if ( ! empty( $this->query_vars['date']['end'] ) ) {
-					$end = date( 'Y-m-d 23:59:59', strtotime( $this->query_vars['date']['end'] ) );
+					$end = get_gmt_from_date( wp_strip_all_tags( $this->query_vars['date']['end'] ), 'Y-m-d 23:59:59' );
 					$where .= $wpdb->prepare( " AND `date_written` <= %s", $end );
 				}
 
 			} else {
 
-				$year  = date( 'Y', strtotime( $this->query_vars['date'] ) );
-				$month = date( 'm', strtotime( $this->query_vars['date'] ) );
-				$day   = date( 'd', strtotime( $this->query_vars['date'] ) );
+				$year  = get_gmt_from_date( wp_strip_all_tags( $this->query_vars['date'] ), 'Y' );
+				$month = get_gmt_from_date( wp_strip_all_tags( $this->query_vars['date'] ), 'm' );
+				$day   = get_gmt_from_date( wp_strip_all_tags( $this->query_vars['date'] ), 'd' );
 				$where .= $wpdb->prepare( " AND %d = YEAR ( date_written ) AND %d = MONTH ( date_written ) AND %d = DAY ( date_written )", $year, $month, $day );
 
 			}
@@ -395,7 +395,7 @@ class BDB_Review_Query {
 
 		// Only show reviews that have been published.
 		if ( true == $this->query_vars['hide_future'] ) {
-			$current = date( 'Y-m-d 00:00:00', time() );
+			$current = get_gmt_from_date( 'now', 'Y-m-d 00:00:00' );
 			$where .= $wpdb->prepare( " AND `date_published` <= %s", $current );
 		}
 

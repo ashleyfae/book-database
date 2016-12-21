@@ -252,11 +252,11 @@ function bdb_get_allowed_orderby() {
 /**
  * Format MySQL Date
  *
- * @param string      $mysql_date MySQL date.
+ * @param string      $mysql_date MySQL date in GMT timezone.
  * @param bool|string $format     Date format or leave false to use WP date setting.
  *
  * @since 1.1.0
- * @return bool|int|string Formatted date.
+ * @return bool|int|string Formatted date in blog's timezone.
  */
 function bdb_format_mysql_date( $mysql_date, $format = false ) {
 
@@ -268,7 +268,7 @@ function bdb_format_mysql_date( $mysql_date, $format = false ) {
 		$format = get_option( 'date_format' );
 	}
 
-	$date = $mysql_date ? mysql2date( $format, $mysql_date ) : false;
+	$date = $mysql_date ? get_date_from_gmt( $mysql_date, $format ) : false;
 
 	return $date;
 

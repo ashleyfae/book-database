@@ -383,20 +383,20 @@ class BDB_DB_Reviews extends BDB_DB {
 			if ( is_array( $args['date_written'] ) ) {
 
 				if ( ! empty( $args['date_written']['start'] ) ) {
-					$start = date( 'Y-m-d 00:00:00', strtotime( $args['date_written']['start'] ) );
+					$start = get_gmt_from_date( wp_strip_all_tags( $args['date_written']['start'] ), 'Y-m-d 00:00:00' );
 					$where .= " AND `date_written` >= '{$start}'";
 				}
 
 				if ( ! empty( $args['date_written']['end'] ) ) {
-					$end = date( 'Y-m-d 23:59:59', strtotime( $args['date_written']['end'] ) );
+					$end = get_gmt_from_date( wp_strip_all_tags( $args['date_written']['end'] ), 'Y-m-d 23:59:59' );
 					$where .= " AND `date_written` <= '{$end}'";
 				}
 
 			} else {
 
-				$year  = date( 'Y', strtotime( $args['date_written'] ) );
-				$month = date( 'm', strtotime( $args['date_written'] ) );
-				$day   = date( 'd', strtotime( $args['date_written'] ) );
+				$year  = get_gmt_from_date( wp_strip_all_tags( $args['date_written'] ), 'Y' );
+				$month = get_gmt_from_date( wp_strip_all_tags( $args['date_written'] ), 'm' );
+				$day   = get_gmt_from_date( wp_strip_all_tags( $args['date_written'] ), 'd' );
 				$where .= " AND $year = YEAR ( date_written ) AND $month = MONTH ( date_written ) AND $day = DAY ( date_written )";
 
 			}
@@ -510,20 +510,20 @@ class BDB_DB_Reviews extends BDB_DB {
 			if ( is_array( $args['date_written'] ) ) {
 
 				if ( ! empty( $args['date_written']['start'] ) ) {
-					$start = date( 'Y-m-d 00:00:00', strtotime( $args['date_written']['start'] ) );
+					$start = get_gmt_from_date( wp_strip_all_tags( $args['date_written']['start'] ), 'Y-m-d 00:00:00' );
 					$where .= " AND `date_written` >= '{$start}'";
 				}
 
 				if ( ! empty( $args['date_written']['end'] ) ) {
-					$end = date( 'Y-m-d 23:59:59', strtotime( $args['date_written']['end'] ) );
+					$end = get_gmt_from_date( wp_strip_all_tags( $args['date_written']['end'] ), 'Y-m-d 23:59:59' );
 					$where .= " AND `date_written` <= '{$end}'";
 				}
 
 			} else {
 
-				$year  = date( 'Y', strtotime( $args['date_written'] ) );
-				$month = date( 'm', strtotime( $args['date_written'] ) );
-				$day   = date( 'd', strtotime( $args['date_written'] ) );
+				$year  = get_gmt_from_date( wp_strip_all_tags( $args['date_written'] ), 'Y' );
+				$month = get_gmt_from_date( wp_strip_all_tags( $args['date_written'] ), 'm' );
+				$day   = get_gmt_from_date( wp_strip_all_tags( $args['date_written'] ), 'd' );
 				$where .= " AND $year = YEAR ( date_written ) AND $month = MONTH ( date_written ) AND $day = DAY ( date_written )";
 
 			}

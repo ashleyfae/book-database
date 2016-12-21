@@ -385,21 +385,21 @@ class BDB_DB_Books extends BDB_DB {
 			if ( is_array( $args['pub_date'] ) ) {
 
 				if ( ! empty( $args['pub_date']['start'] ) ) {
-					$start = date( 'Y-m-d 00:00:00', strtotime( $args['pub_date']['start'] ) );
-					$where .= " AND `pub_date` >= '{$start}'";
+					$start = get_gmt_from_date( wp_strip_all_tags( $args['pub_date']['start'] ), 'Y-m-d 00:00:00' );
+					$where .= $wpdb->prepare( " AND `pub_date` >= %s", $start );
 				}
 
 				if ( ! empty( $args['pub_date']['end'] ) ) {
-					$end = date( 'Y-m-d 23:59:59', strtotime( $args['pub_date']['end'] ) );
-					$where .= " AND `pub_date` <= '{$end}'";
+					$end = get_gmt_from_date( wp_strip_all_tags( $args['pub_date']['end'] ), 'Y-m-d 23:59:59' );
+					$where .= $wpdb->prepare( " AND `pub_date` <= %s", $end );
 				}
 
 			} else {
 
-				$year  = date( 'Y', strtotime( $args['pub_date'] ) );
-				$month = date( 'm', strtotime( $args['pub_date'] ) );
-				$day   = date( 'd', strtotime( $args['pub_date'] ) );
-				$where .= " AND $year = YEAR ( pub_date ) AND $month = MONTH ( pub_date ) AND $day = DAY ( pub_date )";
+				$year  = get_gmt_from_date( wp_strip_all_tags( $args['pub_date'] ), 'Y' );
+				$month = get_gmt_from_date( wp_strip_all_tags( $args['pub_date'] ), 'm' );
+				$day   = get_gmt_from_date( wp_strip_all_tags( $args['pub_date'] ), 'd' );
+				$where .= $wpdb->prepare( " AND %d = YEAR ( pub_date ) AND %d = MONTH ( pub_date ) AND %d = DAY ( pub_date )", $year, $month, $day );
 
 			}
 
@@ -558,21 +558,21 @@ class BDB_DB_Books extends BDB_DB {
 			if ( is_array( $args['pub_date'] ) ) {
 
 				if ( ! empty( $args['pub_date']['start'] ) ) {
-					$start = date( 'Y-m-d 00:00:00', strtotime( $args['pub_date']['start'] ) );
-					$where .= " AND `pub_date` >= '{$start}'";
+					$start = get_gmt_from_date( wp_strip_all_tags( $args['pub_date']['start'] ), 'Y-m-d 00:00:00' );
+					$where .= $wpdb->prepare( " AND `pub_date` >= %s", $start );
 				}
 
 				if ( ! empty( $args['pub_date']['end'] ) ) {
-					$end = date( 'Y-m-d 23:59:59', strtotime( $args['pub_date']['end'] ) );
-					$where .= " AND `pub_date` <= '{$end}'";
+					$end = get_gmt_from_date( wp_strip_all_tags( $args['pub_date']['end'] ), 'Y-m-d 23:59:59' );
+					$where .= $wpdb->prepare( " AND `pub_date` <= %s", $end );
 				}
 
 			} else {
 
-				$year  = date( 'Y', strtotime( $args['pub_date'] ) );
-				$month = date( 'm', strtotime( $args['pub_date'] ) );
-				$day   = date( 'd', strtotime( $args['pub_date'] ) );
-				$where .= " AND $year = YEAR ( pub_date ) AND $month = MONTH ( pub_date ) AND $day = DAY ( pub_date )";
+				$year  = get_gmt_from_date( wp_strip_all_tags( $args['pub_date'] ), 'Y' );
+				$month = get_gmt_from_date( wp_strip_all_tags( $args['pub_date'] ), 'm' );
+				$day   = get_gmt_from_date( wp_strip_all_tags( $args['pub_date'] ), 'd' );
+				$where .= $wpdb->prepare( " AND %d = YEAR ( pub_date ) AND %d = MONTH ( pub_date ) AND %d = DAY ( pub_date )", $year, $month, $day );
 
 			}
 

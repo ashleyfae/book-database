@@ -133,7 +133,7 @@ function bdb_review_date_published_field( $review ) {
 		'name'  => 'review_date_published',
 		'value' => false !== $review->get_date_published() ? bdb_format_mysql_date( $review->get_date_published() ) : '',
 		'type'  => 'text',
-		'desc'  => __( 'Date the review was published on the blog. Leave blank to use today\'s date.', 'book-database' )
+		'desc'  => __( 'Date the review was published on the blog. Leave blank to hide from archive.', 'book-database' )
 	) );
 }
 
@@ -167,7 +167,17 @@ add_action( 'book-database/review-edit/fields', 'bdb_review_text_field' );
  * @return void
  */
 function bdb_review_insert_reading_log_field( $review ) {
-	$reading_entry = bdb_get_review_reading_entry( $review->ID );
+	$reading_entry = false;
+
+	// Fetch by GET.
+	if ( isset( $_GET['reading-log'] ) ) {
+		$reading_entry = book_database()->reading_list->get_entry( absint( $_GET['reading-log'] ) );
+	}
+
+	// Fetch via database.
+	if ( empty( $reading_entry ) ) {
+		$reading_entry = bdb_get_review_reading_entry( $review->ID );
+	}
 
 	book_database()->html->meta_row( 'checkbox', array( 'label' => __( 'Insert Reading Log', 'book-database' ) ), array(
 		'id'      => 'insert_reading_log',
@@ -339,7 +349,9 @@ function bdb_save_review() {
 	// Format the date published.
 	if ( isset( $_POST['review_date_published'] ) && ! empty( $_POST['review_date_published'] ) ) {
 		$review_data['date_published'] = $_POST['review_date_published'];
-	}
+	} else {
+		$review_data['date_published'] = null;
+  }
 
 	$new_review_id = bdb_insert_review( apply_filters( 'book-database/review/save/review-data', $review_data, $review_id, $_POST ) );
 

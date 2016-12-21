@@ -52,33 +52,16 @@ function bdb_get_book_fields() {
 			'label'       => sprintf( __( '<strong>Series:</strong> %s', 'book-database' ), '[series]' ),
 			'linebreak'   => 'on'
 		),
-		'publisher'     => array(
-			'name'        => __( 'Publisher', 'book-database' ),
-			'placeholder' => '[publisher]',
-			'label'       => sprintf( __( '<strong>Published by:</strong> %s', 'book-database' ), '[publisher]' ),
-		),
 		'pub_date'      => array(
 			'name'        => __( 'Pub Date', 'book-database' ),
 			'placeholder' => '[pub_date]',
 			'label'       => sprintf( __( ' on %s', 'book-database' ), '[pub_date]' ),
 			'linebreak'   => 'on'
 		),
-		'genre'         => array(
-			'name'        => __( 'Genre', 'book-database' ),
-			'placeholder' => '[genre]',
-			'label'       => sprintf( __( '<strong>Genre:</strong> %s', 'book-database' ), '[genre]' ),
-			'linebreak'   => 'on'
-		),
 		'pages'         => array(
 			'name'        => __( 'Pages', 'book-database' ),
 			'placeholder' => '[pages]',
 			'label'       => sprintf( __( '<strong>Pages:</strong> %s', 'book-database' ), '[pages]' ),
-			'linebreak'   => 'on'
-		),
-		'source'        => array(
-			'name'        => __( 'Source', 'book-database' ),
-			'placeholder' => '[source]',
-			'label'       => sprintf( __( '<strong>Source:</strong> %s', 'book-database' ), '[source]' ),
 			'linebreak'   => 'on'
 		),
 		'goodreads_url' => array(
@@ -108,6 +91,37 @@ function bdb_get_book_fields() {
 
 	return apply_filters( 'book-database/book/available-fields', $fields );
 }
+
+/**
+ * Add Taxonomies to Book Layout Fields
+ *
+ * @param array $fields
+ *
+ * @since 1.2.1
+ * @return array
+ */
+function bdb_book_layout_taxonomy_fields( $fields ) {
+	$taxonomies = bdb_get_taxonomies();
+
+	if ( is_array( $taxonomies ) ) {
+		foreach ( $taxonomies as $id => $tax ) {
+			if ( array_key_exists( $id, $fields ) ) {
+				continue;
+			}
+
+			$fields[ $id ] = array(
+				'name'        => $tax['name'],
+				'placeholder' => '[' . bdb_sanitize_key( $id ) . ']',
+				'label'       => sprintf( '<strong>%1$s:</strong> [%2$s]', $tax['name'], $tax['id'] ),
+				'linebreak'   => 'on'
+			);
+		}
+	}
+
+	return $fields;
+}
+
+add_filter( 'book-database/book/available-fields', 'bdb_book_layout_taxonomy_fields' );
 
 /**
  * Book Cover Alignment Options
@@ -141,11 +155,8 @@ function bdb_get_default_book_layout_keys() {
 		'title',
 		'author',
 		'series',
-		'publisher',
 		'pub_date',
-		'genre',
 		'pages',
-		'source',
 		'goodreads_url',
 		'buy_link',
 		'rating',
@@ -210,8 +221,9 @@ function bdb_get_default_book_field_values( $all_fields = null ) {
  */
 function bdb_book_layout_cover( $value, $enabled_fields, $book_id, $book ) {
 	if ( $book->get_cover_id() ) {
-		$alignment = $enabled_fields['cover']['alignment'];
-		$size      = $enabled_fields['cover']['size'];
+		$default_fields = bdb_get_book_fields();
+		$alignment      = isset( $enabled_fields['cover']['alignment'] ) ? $enabled_fields['cover']['alignment'] : $default_fields['cover']['alignment'];
+		$size           = isset( $enabled_fields['cover']['size'] ) ? $enabled_fields['cover']['size'] : $default_fields['cover']['size'];
 
 		// Sanitize size.
 		if ( ! array_key_exists( $size, bdb_get_image_sizes() ) ) {

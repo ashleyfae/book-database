@@ -436,14 +436,11 @@ class BDB_DB_Books extends BDB_DB {
 				$orderby = 'books.ID';
 		}
 
-		//$args['orderby'] = ! array_key_exists( $args['orderby'], $this->get_columns() ) ? 'ID' : $args['orderby'];
+		$order = ( 'ASC' == strtoupper( $args['order'] ) ) ? 'ASC' : 'DESC';
 
 		$cache_key = md5( 'bdb_books_' . serialize( $args ) );
 
 		$books = wp_cache_get( $cache_key, 'books' );
-
-		$orderby       = esc_sql( $orderby );
-		$args['order'] = esc_sql( $args['order'] );
 
 		$select_this = 'books.*, series.name as series_name';
 		if ( $args['author_id'] || $args['author_name'] ) {
@@ -457,7 +454,7 @@ class BDB_DB_Books extends BDB_DB {
 		}
 
 		if ( $books === false ) {
-			$query = $wpdb->prepare( "SELECT $select_this FROM  $this->table_name as books $join $where GROUP BY books.$this->primary_key ORDER BY {$orderby} {$args['order']} LIMIT %d,%d;", absint( $args['offset'] ), absint( $args['number'] ) );
+			$query = $wpdb->prepare( "SELECT $select_this FROM  $this->table_name as books $join $where GROUP BY books.$this->primary_key ORDER BY %s %s LIMIT %d,%d;", $orderby, $order, absint( $args['offset'] ), absint( $args['number'] ) );
 			$books = $wpdb->get_results( $query );
 			wp_cache_set( $cache_key, $books, 'books', 3600 );
 		}

@@ -350,7 +350,8 @@ class BDB_DB_Reading_List extends BDB_DB {
 			$where .= $wpdb->prepare( " AND `rating` LIKE '" . '%s' . "' ", wp_strip_all_tags( $args['rating'] ) );
 		}
 
-		$args['orderby'] = ! array_key_exists( $args['orderby'], $this->get_columns() ) ? 'ID' : $args['orderby'];
+		$orderby = ! array_key_exists( $args['orderby'], $this->get_columns() ) ? 'ID' : wp_strip_all_tags( $args['orderby'] );
+		$order   = ( 'ASC' == strtoupper( $args['order'] ) ) ? 'ASC' : 'DESC';
 
 		$cache_key = md5( 'bdb_reading_list_' . serialize( $args ) );
 
@@ -360,7 +361,7 @@ class BDB_DB_Reading_List extends BDB_DB {
 		$args['order']   = esc_sql( $args['order'] );
 
 		if ( $entries === false ) {
-			$query   = $wpdb->prepare( "SELECT * FROM  $this->table_name AS reading_list $join $where GROUP BY $this->primary_key ORDER BY {$args['orderby']} {$args['order']} LIMIT %d,%d;", absint( $args['offset'] ), absint( $args['number'] ) );
+			$query   = $wpdb->prepare( "SELECT * FROM  $this->table_name AS reading_list $join $where GROUP BY $this->primary_key ORDER BY %s %s LIMIT %d,%d;", $orderby, $order, absint( $args['offset'] ), absint( $args['number'] ) );
 			$entries = $wpdb->get_results( $query );
 			wp_cache_set( $cache_key, $entries, 'reading_list', 3600 );
 		}

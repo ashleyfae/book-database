@@ -243,17 +243,15 @@ class BDB_DB_Book_Term_Relationships extends BDB_DB {
 			$where .= " AND `book_id` IN( {$ids} ) ";
 		}
 
-		$args['orderby'] = ! array_key_exists( $args['orderby'], $this->get_columns() ) ? 'term_id' : $args['orderby'];
+		$orderby = ! array_key_exists( $args['orderby'], $this->get_columns() ) ? 'term_id' : wp_strip_all_tags( $args['orderby'] );
+		$order   = ( 'ASC' == strtoupper( $args['order'] ) ) ? 'ASC' : 'DESC';
 
 		$cache_key = md5( 'bdb_book_term_relationships_' . serialize( $args ) );
 
 		$relationships = wp_cache_get( $cache_key, 'book_term_relationships' );
 
-		$args['orderby'] = esc_sql( $args['orderby'] );
-		$args['order']   = esc_sql( $args['order'] );
-
 		if ( $relationships === false ) {
-			$query         = $wpdb->prepare( "SELECT * FROM  $this->table_name $join $where GROUP BY $this->primary_key ORDER BY {$args['orderby']} {$args['order']} LIMIT %d,%d;", absint( $args['offset'] ), absint( $args['number'] ) );
+			$query         = $wpdb->prepare( "SELECT * FROM  $this->table_name $join $where GROUP BY $this->primary_key ORDER BY %s %s LIMIT %d,%d;", $orderby, $order, absint( $args['offset'] ), absint( $args['number'] ) );
 			$relationships = $wpdb->get_results( $query );
 			wp_cache_set( $cache_key, $relationships, 'book_term_relationships', 3600 );
 		}

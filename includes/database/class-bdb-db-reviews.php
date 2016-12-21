@@ -384,12 +384,12 @@ class BDB_DB_Reviews extends BDB_DB {
 
 				if ( ! empty( $args['date_written']['start'] ) ) {
 					$start = get_gmt_from_date( wp_strip_all_tags( $args['date_written']['start'] ), 'Y-m-d 00:00:00' );
-					$where .= " AND `date_written` >= '{$start}'";
+					$where .= $wpdb->prepare( " AND `date_written` >= %s", $start );
 				}
 
 				if ( ! empty( $args['date_written']['end'] ) ) {
 					$end = get_gmt_from_date( wp_strip_all_tags( $args['date_written']['end'] ), 'Y-m-d 23:59:59' );
-					$where .= " AND `date_written` <= '{$end}'";
+					$wpdb->prepare( " AND `date_written` <= %s", $end );
 				}
 
 			} else {
@@ -397,7 +397,7 @@ class BDB_DB_Reviews extends BDB_DB {
 				$year  = get_gmt_from_date( wp_strip_all_tags( $args['date_written'] ), 'Y' );
 				$month = get_gmt_from_date( wp_strip_all_tags( $args['date_written'] ), 'm' );
 				$day   = get_gmt_from_date( wp_strip_all_tags( $args['date_written'] ), 'd' );
-				$where .= " AND $year = YEAR ( date_written ) AND $month = MONTH ( date_written ) AND $day = DAY ( date_written )";
+				$where .= $wpdb->prepare( " AND %d = YEAR ( date_written ) AND %d = MONTH ( date_written ) AND %d = DAY ( date_written )", $year, $month, $day );
 
 			}
 
@@ -413,15 +413,16 @@ class BDB_DB_Reviews extends BDB_DB {
 
 		$reviews = wp_cache_get( $cache_key, 'reviews' );
 
-		if ( 'rating' == $args['orderby'] ) {
+		// This is no longer relevant since ditching the 'rating' column.
+		/*if ( 'rating' == $args['orderby'] ) {
 			$args['orderby'] = $args['orderby'] . " * 1";
-		}
+		}*/
 
-		$args['orderby'] = esc_sql( $args['orderby'] );
-		$args['order']   = esc_sql( $args['order'] );
+		$orderby = ! array_key_exists( $args['orderby'], $this->get_columns() ) ? 'ID' : wp_strip_all_tags( $args['orderby'] );
+		$order   = ( 'ASC' == strtoupper( $args['order'] ) ) ? 'ASC' : 'DESC';
 
 		if ( $reviews === false ) {
-			$query   = $wpdb->prepare( "SELECT review.*$select FROM  $this->table_name AS review $join $where GROUP BY $this->primary_key ORDER BY {$args['orderby']} {$args['order']} LIMIT %d,%d;", absint( $args['offset'] ), absint( $args['number'] ) );
+			$query   = $wpdb->prepare( "SELECT review.*$select FROM  $this->table_name AS review $join $where GROUP BY $this->primary_key ORDER BY %s %s LIMIT %d,%d;", $orderby, $order, absint( $args['offset'] ), absint( $args['number'] ) );
 			$reviews = $wpdb->get_results( $query );
 			wp_cache_set( $cache_key, $reviews, 'reviews', 3600 );
 		}
@@ -511,12 +512,12 @@ class BDB_DB_Reviews extends BDB_DB {
 
 				if ( ! empty( $args['date_written']['start'] ) ) {
 					$start = get_gmt_from_date( wp_strip_all_tags( $args['date_written']['start'] ), 'Y-m-d 00:00:00' );
-					$where .= " AND `date_written` >= '{$start}'";
+					$where .= $wpdb->prepare( " AND `date_written` >= %s", $start );
 				}
 
 				if ( ! empty( $args['date_written']['end'] ) ) {
 					$end = get_gmt_from_date( wp_strip_all_tags( $args['date_written']['end'] ), 'Y-m-d 23:59:59' );
-					$where .= " AND `date_written` <= '{$end}'";
+					$wpdb->prepare( " AND `date_written` <= %s", $end );
 				}
 
 			} else {
@@ -524,7 +525,7 @@ class BDB_DB_Reviews extends BDB_DB {
 				$year  = get_gmt_from_date( wp_strip_all_tags( $args['date_written'] ), 'Y' );
 				$month = get_gmt_from_date( wp_strip_all_tags( $args['date_written'] ), 'm' );
 				$day   = get_gmt_from_date( wp_strip_all_tags( $args['date_written'] ), 'd' );
-				$where .= " AND $year = YEAR ( date_written ) AND $month = MONTH ( date_written ) AND $day = DAY ( date_written )";
+				$where .= $wpdb->prepare( " AND %d = YEAR ( date_written ) AND %d = MONTH ( date_written ) AND %d = DAY ( date_written )", $year, $month, $day );
 
 			}
 

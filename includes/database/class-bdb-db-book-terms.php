@@ -305,14 +305,12 @@ class BDB_DB_Book_Terms extends BDB_DB {
 			}
 		}
 
-		$args['orderby'] = ! array_key_exists( $args['orderby'], $this->get_columns() ) ? 'term_id' : $args['orderby'];
+		$orderby = ! array_key_exists( $args['orderby'], $this->get_columns() ) ? 'term_id' : wp_strip_all_tags( $args['orderby'] );
+		$order   = ( 'ASC' == strtoupper( $args['order'] ) ) ? 'ASC' : 'DESC';
 
 		$cache_key = md5( 'bdb_book_terms_' . serialize( $args ) );
 
 		$terms = wp_cache_get( $cache_key, 'book_terms' );
-
-		$args['orderby'] = esc_sql( $args['orderby'] );
-		$args['order']   = esc_sql( $args['order'] );
 
 		$select_this = '*';
 		if ( 'names' == $args['fields'] ) {
@@ -322,7 +320,7 @@ class BDB_DB_Book_Terms extends BDB_DB {
 		}
 
 		if ( $terms === false ) {
-			$query = $wpdb->prepare( "SELECT $select_this FROM  $this->table_name as terms $join $where GROUP BY $this->primary_key ORDER BY {$args['orderby']} {$args['order']} LIMIT %d,%d;", absint( $args['offset'] ), absint( $args['number'] ) );
+			$query = $wpdb->prepare( "SELECT $select_this FROM  $this->table_name as terms $join $where GROUP BY $this->primary_key ORDER BY %s %s LIMIT %d,%d;", $orderby, $order, absint( $args['offset'] ), absint( $args['number'] ) );
 			if ( 'names' == $args['fields'] || 'ids' == $args['fields'] ) {
 				$terms = $wpdb->get_col( $query );
 			} else {

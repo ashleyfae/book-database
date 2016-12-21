@@ -30,7 +30,9 @@ class BDB_Analytics {
 	public static $instance;
 
 	/**
-	 * Start - Timestamp
+	 * Start - GMT Date
+	 *
+	 * Start date converted to GMT.
 	 *
 	 * @var int
 	 * @access public
@@ -39,7 +41,9 @@ class BDB_Analytics {
 	public static $start = null;
 
 	/**
-	 * End - Timestamp
+	 * End - GMT Date
+	 *
+	 * End date converted to GMT.
 	 *
 	 * @var int
 	 * @access public

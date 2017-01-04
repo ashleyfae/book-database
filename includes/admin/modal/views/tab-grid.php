@@ -85,6 +85,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 	<?php book_database()->html->meta_row( 'select', array( 'label' => esc_html__( 'Order By', 'book-database' ) ), array(
 		'options'          => array(
 			'author'          => esc_html__( 'Author', 'book-database' ),
+			'id'              => esc_html__( 'Book ID Number', 'book-database' ),
 			'title'           => esc_html__( 'Book Title', 'book-database' ),
 			'pub_date'        => esc_html__( 'Publication Date', 'book-database' ),
 			'series_position' => esc_html__( 'Series Position', 'book-database' )

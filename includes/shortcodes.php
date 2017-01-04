@@ -150,10 +150,10 @@ function bdb_book_reviews_shortcode( $atts, $content = '' ) {
 add_shortcode( 'book-reviews', 'bdb_book_reviews_shortcode' );
 
 /**
- * Review Grid
+ * Book Grid
  *
  * Similar to `[book-reviews]` but filtering is done via shortcode attributes
- * instead of a front-end form.
+ * instead of a front-end form. It can also show books that have not been reviewed.
  *
  * @param array  $atts    Shortcode attributes.
  * @param string $content Shortcode content.
@@ -161,37 +161,45 @@ add_shortcode( 'book-reviews', 'bdb_book_reviews_shortcode' );
  * @since 1.2.2
  * @return string
  */
-function bdb_review_grid_shortcode( $atts, $content = '' ) {
+function bdb_book_grid_shortcode( $atts, $content = '' ) {
 
 	$atts = shortcode_atts( array(
-		'author'      => false,
-		'series'      => false,
-		'rating'      => false,
-		'year'        => false, // review written year
-		'month'       => false, // review written month
-		'day'         => false, // review written day
-		'start-date'  => false,
-		'end-date'    => false,
-		'pub-year'    => false,
-		'show-future' => false,
-		'orderby'     => 'date',
-		'order'       => 'DESC',
-		'number'      => 20
+		'author'              => false,
+		'series'              => false,
+		'rating'              => false,
+		'year'                => false, // review written year
+		'month'               => false, // review written month
+		'day'                 => false, // review written day
+		'start-date'          => false,
+		'end-date'            => false,
+		'pub-year'            => false,
+		'show-future'         => false,
+		'show-ratings'        => false,
+		'show-review-link'    => false,
+		'show-goodreads-link' => false,
+		'reviews-only'        => false,
+		'orderby'             => 'pub_date',
+		'order'               => 'DESC',
+		'number'              => 20
 	), $atts, 'review-grid' );
 
 	$query_args = $term_args = array();
 
-	$query_args['author_name'] = $atts['author'];
-	$query_args['series_name'] = $atts['series'];
-	$query_args['rating']      = $atts['rating'];
-	$query_args['year']        = $atts['year'];
-	$query_args['month']       = $atts['month'];
-	$query_args['day']         = $atts['day'];
-	$query_args['pub_year']    = $atts['pub-year'];
-	$query_args['orderby']     = $atts['orderby'];
-	$query_args['order']       = $atts['order'];
-	$query_args['per_page']    = $atts['number'];
-	$query_args['hide_future'] = ( false == $atts['show-future'] ) ? true : false;
+	$query_args['author_name']         = $atts['author'];
+	$query_args['series_name']         = $atts['series'];
+	$query_args['rating']              = $atts['rating'];
+	$query_args['year']                = $atts['year'];
+	$query_args['month']               = $atts['month'];
+	$query_args['day']                 = $atts['day'];
+	$query_args['pub_year']            = $atts['pub-year'];
+	$query_args['orderby']             = $atts['orderby'];
+	$query_args['order']               = $atts['order'];
+	$query_args['per_page']            = $atts['number'];
+	$query_args['hide_future']         = ( false == $atts['show-future'] ) ? true : false;
+	$query_args['show-ratings']        = ( $atts['show-ratings'] ) ? true : false;
+	$query_args['show-review-link']    = ( $atts['show-review-link'] ) ? true : false;
+	$query_args['show-goodreads-link'] = ( $atts['show-goodreads-link'] ) ? true : false;
+	$query_args['reviews-only']        = ( $atts['reviews-only'] ) ? true : false;
 
 	// Setup date
 	if ( $atts['start-date'] ) {
@@ -232,7 +240,7 @@ function bdb_review_grid_shortcode( $atts, $content = '' ) {
 
 }
 
-add_shortcode( 'review-grid', 'bdb_review_grid_shortcode' );
+add_shortcode( 'book-grid', 'bdb_book_grid_shortcode' );
 
 /**
  * Filter: Title

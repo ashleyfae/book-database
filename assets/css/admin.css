@@ -204,6 +204,10 @@
         float: left;
         margin: 0;
         width: 18%; } }
+    .bookdb-box-row label.bookdb-description {
+      float: none !important;
+      font-weight: normal !important;
+      width: auto !important; }
   .bookdb-box-row textarea,
   .bookdb-box-row input[type="text"]:not(.bookdb-color-picker):not(.text-small),
   .bookdb-box-row input[type="url"] {

@@ -33,6 +33,14 @@
             margin: 0;
             width: 18%;
         }
+
+        &.bookdb-description {
+            float: none !important;
+            font: {
+                weight: normal !important;
+            }
+            width: auto !important;
+        }
     }
 
     textarea,

@@ -438,6 +438,92 @@ var BookDB_Modal_Admin = {
             }
         });
 
+    },
+
+    /**
+     * Insert or Update Book Grid
+     *
+     * @param button
+     */
+    insert_update_grid: function (button) {
+
+        var params = '';
+
+        // Author Name
+        var authorName = jQuery('#grid_book_author').val();
+        if (authorName != '') {
+            params = params + ' author="' + authorName + '"';
+        }
+
+        // Series Name
+        var seriesName = jQuery('#grid_book_series').val();
+        if (seriesName != '') {
+            params = params + ' series="' + seriesName + '"';
+        }
+
+        // Start Date
+        var startDate = jQuery('#grid_pub_date_start').val();
+        if (startDate != '') {
+            params = params + ' start-date="' + startDate + '"';
+        }
+
+        // End Date
+        var endDate = jQuery('#grid_pub_date_end').val();
+        if (endDate != '') {
+            params = params + ' end-date="' + endDate + '"';
+        }
+
+        // Rating
+        var rating = jQuery('#grid_book_rating').val();
+        if (rating != 'all') {
+            params = params + ' rating="' + rating + '"';
+        }
+
+        // @todo terms
+
+        // Show Ratings
+        if (jQuery('#grid_show_ratings').is(':checked')) {
+            params = params + ' show-ratings="true"';
+        }
+
+        // Show Review Link
+        if (jQuery('#grid_show_review_link').is(':checked')) {
+            params = params + ' show-review-link="true"';
+        }
+
+        // Show Goodreads Link
+        if (jQuery('#grid_show_goodreads_link').is(':checked')) {
+            params = params + ' show-goodreads-link="true"';
+        }
+
+        // Reviews Only
+        if (jQuery('#grid_reviews').is(':checked')) {
+            params = params + ' reviews-only="true"';
+        }
+
+        // Orderby
+        var orderBy = jQuery('#grid_order_by').val();
+        if (orderBy != 'pub_date') {
+            params = params + ' orderby="' + orderBy + '"';
+        }
+
+        // Order
+        var order = jQuery('#grid_order').val();
+        if (order != 'DESC') {
+            params = params + ' order="ASC"';
+        }
+
+        // Max Results
+        var number = jQuery('#grid_number').val();
+        if (number != '20') {
+            params = params + ' number="' + number + '"';
+        }
+
+        jQuery(document).trigger('bdb_modal_before_insert_update_grid', params);
+
+        BookDB_Modal_Admin.addToEditor('[book-grid' + params + ']');
+        BookDB_Modal_Admin.closeModal();
+
     }
 
 };

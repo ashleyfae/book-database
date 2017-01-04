@@ -179,7 +179,7 @@ function bdb_review_grid_shortcode( $atts, $content = '' ) {
 		'number'      => 20
 	), $atts, 'review-grid' );
 
-	$query_args = array();
+	$query_args = $term_args = array();
 
 	$query_args['author_name'] = $atts['author'];
 	$query_args['series_name'] = $atts['series'];
@@ -199,6 +199,17 @@ function bdb_review_grid_shortcode( $atts, $content = '' ) {
 	}
 	if ( $atts['end-date'] ) {
 		$query_args['date']['end'] = $atts['end-date'];
+	}
+
+	// Setup terms.
+	foreach ( bdb_get_taxonomies() as $id => $options ) {
+		if ( array_key_exists( $id, $atts ) && is_numeric( $atts[ $id ] ) ) {
+			$term_args[ $id ] = absint( $atts[ $id ] );
+		}
+	}
+
+	if ( ! empty( $term_args ) ) {
+		$query_args['terms'] = $term_args;
 	}
 
 	$query = new BDB_Review_Query( $query_args );

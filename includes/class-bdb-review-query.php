@@ -211,7 +211,7 @@ class BDB_Review_Query {
 		}
 
 		// Rating
-		if ( isset( $_GET['rating'] ) && 'any' != $_GET['rating'] ) {
+		if ( isset( $_GET['rating'] ) && 'any' != $_GET['rating'] && 'all' != $_GET['rating'] ) {
 			$allowed_ratings = bdb_get_available_ratings();
 
 			if ( array_key_exists( $_GET['rating'], $allowed_ratings ) ) {
@@ -345,7 +345,7 @@ class BDB_Review_Query {
 		}
 
 		// Filter by rating.
-		if ( $this->query_vars['rating'] ) {
+		if ( $this->query_vars['rating'] && 'any' != $this->query_vars['rating'] && 'all' != $this->query_vars['rating'] ) {
 			$where .= $wpdb->prepare( " AND log.rating LIKE '" . '%s' . "'", sanitize_text_field( wp_strip_all_tags( $this->query_vars['rating'] ) ) );
 		}
 

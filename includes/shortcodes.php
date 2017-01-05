@@ -158,7 +158,7 @@ add_shortcode( 'book-reviews', 'bdb_book_reviews_shortcode' );
  * @param array  $atts    Shortcode attributes.
  * @param string $content Shortcode content.
  *
- * @since 1.2.2
+ * @since 1.3.0
  * @return string
  */
 function bdb_book_grid_shortcode( $atts, $content = '' ) {
@@ -194,19 +194,19 @@ function bdb_book_grid_shortcode( $atts, $content = '' ) {
 	$query_args['pub_year']            = $atts['pub-year'];
 	$query_args['orderby']             = $atts['orderby'];
 	$query_args['order']               = $atts['order'];
-	$query_args['per_page']            = $atts['number'];
+	$query_args['number']              = $atts['number'];
 	$query_args['hide_future']         = ( false == $atts['show-future'] ) ? true : false;
-	$query_args['show-ratings']        = ( $atts['show-ratings'] ) ? true : false;
-	$query_args['show-review-link']    = ( $atts['show-review-link'] ) ? true : false;
-	$query_args['show-goodreads-link'] = ( $atts['show-goodreads-link'] ) ? true : false;
-	$query_args['reviews-only']        = ( $atts['reviews-only'] ) ? true : false;
+	$query_args['show_ratings']        = ( $atts['show-ratings'] ) ? true : false;
+	$query_args['show_review_link']    = ( $atts['show-review-link'] ) ? true : false;
+	$query_args['show_goodreads_link'] = ( $atts['show-goodreads-link'] ) ? true : false;
+	$query_args['reviews_only']        = ( $atts['reviews-only'] ) ? true : false;
 
 	// Setup date
 	if ( $atts['start-date'] ) {
-		$query_args['date']['start'] = $atts['start-date'];
+		$query_args['pub_date']['start'] = $atts['start-date'];
 	}
 	if ( $atts['end-date'] ) {
-		$query_args['date']['end'] = $atts['end-date'];
+		$query_args['pub_date']['end'] = $atts['end-date'];
 	}
 
 	// Setup terms.

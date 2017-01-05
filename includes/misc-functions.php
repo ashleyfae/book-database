@@ -238,12 +238,13 @@ function bdb_link_terms() {
  */
 function bdb_get_allowed_orderby() {
 	$allowed_orderby = array(
-		'date'     => esc_html__( 'Review Date', 'book-database' ),
-		'title'    => esc_html__( 'Book Title', 'book-database' ),
-		'author'   => esc_html__( 'Author Name', 'book-database' ),
-		'rating'   => esc_html__( 'Rating', 'book-database' ),
-		'pub_date' => esc_html__( 'Publication Date', 'book-database' ),
-		'pages'    => esc_html__( 'Number of Pages', 'book-database' )
+		'author'        => esc_html__( 'Author Name', 'book-database' ),
+		'title'         => esc_html__( 'Book Title', 'book-database' ),
+		'date_finished' => esc_html__( 'Date Read', 'book-database' ),
+		'date'          => esc_html__( 'Date Reviewed', 'book-database' ),
+		'pages'         => esc_html__( 'Number of Pages', 'book-database' ),
+		'pub_date'      => esc_html__( 'Publication Date', 'book-database' ),
+		'rating'        => esc_html__( 'Rating', 'book-database' ),
 	);
 
 	return apply_filters( 'book-database/allowed-orderby-for-reviews', $allowed_orderby );

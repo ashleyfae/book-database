@@ -353,7 +353,7 @@ var BookDB_Modal_Admin = {
                 if (typeof terms === 'string') {
 
                     // Tags
-                    $('#bookdb-input-tag-' + type).val(terms);
+                    jQuery('#bookdb-input-tag-' + type).val(terms);
 
                 } else {
 

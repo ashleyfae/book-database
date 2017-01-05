@@ -174,6 +174,8 @@ class BDB_Review_Query {
 			'author'          => 'author.name',
 			'date'            => 'date_published',
 			'date_written'    => 'date_written',
+			'date_started'    => 'date_started',
+			'date_finished'   => 'date_finished',
 			'pub_date'        => 'book.pub_date',
 			'series_position' => 'book.series_position',
 			'pages'           => 'book.pages',

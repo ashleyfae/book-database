@@ -449,7 +449,7 @@ class BDB_DB_Books extends BDB_DB {
 			$select_this .= ', t.term_id as author_id, t.name as author_name';
 		}
 		if ( $args['include_author'] ) {
-			$select_this .= ", GROUP_CONCAT(author.name SEPARATOR ',') as author_name, GROUP_CONCAT(author.term_id SEPARATOR ',') as author_id";
+			$select_this .= ", GROUP_CONCAT(DISTINCT author.name SEPARATOR ',') as author_name, GROUP_CONCAT(DISTINCT author.term_id SEPARATOR ',') as author_id";
 		}
 		if ( $args['include_rating'] ) {
 			$select_this .= ", ROUND(AVG(IF(log.rating = 'dnf', 0, log.rating)), 2) as avg_rating";

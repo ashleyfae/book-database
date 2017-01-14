@@ -97,7 +97,7 @@
 .bookdb-frame-router,
 .bookdb-frame-title {
   position: absolute;
-  left: 0;
+  left: 200px;
   right: 0;
   z-index: 200; }
 
@@ -203,7 +203,7 @@
   overflow: auto;
   position: absolute;
   top: 84px;
-  left: 0;
+  left: 200px;
   right: 0;
   bottom: 61px;
   height: auto;
@@ -217,7 +217,7 @@
 .bookdb-frame-toolbar {
   height: 60px;
   position: absolute;
-  left: 0;
+  left: 200px;
   right: 0;
   bottom: 0;
   z-index: 100; }
@@ -235,6 +235,62 @@
 
 .bookdb-modal-content .bookdb-toolbar-primary.search-form {
   width: 33%; }
+
+.bookdb-toolbar-secondary {
+  float: left;
+  height: 100%; }
+
+.bookdb-media-selection {
+  overflow: hidden;
+  padding: 0 0 0 16px;
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 350px;
+  height: 60px;
+  white-space: nowrap; }
+  .bookdb-media-selection.empty {
+    display: none; }
+  .bookdb-media-selection .bookdb-selection-info {
+    display: inline-block;
+    font-size: 12px;
+    height: 60px;
+    margin-right: 10px;
+    vertical-align: top; }
+  .bookdb-media-selection .count {
+    display: block;
+    font-size: 14px;
+    font-weight: 600;
+    line-height: 20px;
+    padding-top: 12px; }
+  .bookdb-media-selection .button-link {
+    border-right: 1px solid #ddd;
+    color: #0073aa;
+    float: left;
+    line-height: 16px;
+    margin: 1px 8px 1px -8px;
+    padding: 1px 8px; }
+    .bookdb-media-selection .button-link:last-child {
+      border-right: 0;
+      margin-right: 0; }
+    .bookdb-media-selection .button-link.clear-selection {
+      color: #bc0b0b; }
+      .bookdb-media-selection .button-link.clear-selection:hover {
+        color: red; }
+  .bookdb-media-selection .bookdb-selection-view {
+    display: inline-block;
+    vertical-align: top; }
+  .bookdb-media-selection .attachments {
+    height: 48px;
+    margin: 6px;
+    padding: 0;
+    overflow: hidden; }
+    .bookdb-media-selection .attachments li {
+      float: left;
+      margin: 4px; }
+    .bookdb-media-selection .attachments img {
+      height: 40px;
+      width: auto; }
 
 .bookdb-toolbar-primary {
   float: right;
@@ -339,6 +395,19 @@
 
 #bookdb-search-field {
   margin: 0 5px; }
+
+.bookdb-book-gallery ul {
+  display: flex;
+  flex-flow: row wrap;
+  margin-right: 300px; }
+  .bookdb-book-gallery ul:focus {
+    outline: 0; }
+  .bookdb-book-gallery ul > li {
+    cursor: pointer;
+    flex: 1 0 0;
+    padding: 8px; }
+.bookdb-book-gallery .bookdb-selected-book {
+  box-shadow: inset 0 0 0 3px #fff, inset 0 0 0 7px #0073aa; }
 
 .bookdb-modal-button span {
   display: inline-block;

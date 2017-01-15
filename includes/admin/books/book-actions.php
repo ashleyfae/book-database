@@ -211,9 +211,6 @@ function bdb_book_series_field( $book ) {
         <div class="bookdb-input-wrapper">
             <div id="bookdb-book-series-name-wrap">
 				<?php echo book_database()->html->text( $series_args ); ?>
-				<?php if ( $book->get_series_id() ) : ?>
-                    <input type="hidden" name="series_id" value="<?php echo esc_attr( $book->get_series_id() ); ?>">
-				<?php endif; ?>
             </div>
 
             <div id="bookdb-book-series-position-wrap">
@@ -480,11 +477,6 @@ function bdb_save_book() {
 	// Series Name
 	if ( isset( $_POST['series_name'] ) ) {
 		$book_data['series_name'] = $_POST['series_name'];
-	}
-
-	// Series ID
-	if ( isset( $_POST['series_id'] ) ) {
-		$book_data['series_id'] = $_POST['series_id'];
 	}
 
 	// Series Position

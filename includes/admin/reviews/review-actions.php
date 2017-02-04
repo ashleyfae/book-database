@@ -185,8 +185,13 @@ function bdb_review_insert_reading_log_field( $review ) {
 		'current' => $reading_entry ? 1 : false
 	) );
 	?>
-    <div id="bookdb-review-reading-log-fields">
+	<div id="bookdb-review-reading-log-fields">
 		<?php
+		// For updating an existing entry.
+		if ( isset( $_GET['reading-log'] ) ) {
+			echo '<input type="hidden" name="existing_reading_log" value="' . esc_attr( absint( $_GET['reading-log'] ) ) . '">';
+		}
+
 		// Start Date
 		book_database()->html->meta_row( 'text', array(
 			'label' => __( 'Start Date', 'book-database' )
@@ -249,7 +254,7 @@ function bdb_review_insert_reading_log_field( $review ) {
 			'show_option_none' => _x( 'None', 'no dropdown items', 'book-database' )
 		) );
 		?>
-    </div>
+	</div>
 	<?php
 }
 
@@ -277,17 +282,17 @@ function bdb_review_show_associated_book( $review ) {
 	}
 
 	?>
-    <div class="postbox">
-        <h2><?php _e( 'Associated Book', 'book-database' ); ?></h2>
-        <div class="inside">
+	<div class="postbox">
+		<h2><?php _e( 'Associated Book', 'book-database' ); ?></h2>
+		<div class="inside">
 			<?php do_action( 'book-database/review-edit/associated-book/before', $review, $book ); ?>
-            <div id="bookdb-book-associated-with-review">
+			<div id="bookdb-book-associated-with-review">
 				<?php echo $book->get_formatted_info(); ?>
-                <a href="<?php echo esc_url( bdb_get_admin_page_edit_book( $book->ID ) ); ?>" class="button"><?php _e( 'Edit book in admin panel', 'book-database' ); ?></a>
-            </div>
+				<a href="<?php echo esc_url( bdb_get_admin_page_edit_book( $book->ID ) ); ?>" class="button"><?php _e( 'Edit book in admin panel', 'book-database' ); ?></a>
+			</div>
 			<?php do_action( 'book-database/review-edit/associated-book/after', $review, $book ); ?>
-        </div>
-    </div>
+		</div>
+	</div>
 	<?php
 }
 
@@ -351,7 +356,7 @@ function bdb_save_review() {
 		$review_data['date_published'] = $_POST['review_date_published'];
 	} else {
 		$review_data['date_published'] = null;
-  }
+	}
 
 	$new_review_id = bdb_insert_review( apply_filters( 'book-database/review/save/review-data', $review_data, $review_id, $_POST ) );
 
@@ -378,6 +383,8 @@ function bdb_save_review() {
 
 		if ( $existing_log ) {
 			$reading_data['ID'] = $existing_log->ID;
+		} elseif ( isset( $_POST['existing_reading_log'] ) ) {
+			$reading_data['ID'] = absint( $_POST['existing_reading_log'] );
 		}
 
 		$result = bdb_insert_reading_entry( $reading_data );

@@ -34,8 +34,8 @@
             $('#bookdb-submit-reading-entry').on('click', this.submitReadingEntry);
             $('.bookdb-edit-reading-entry').on('click', this.editReadingEntry);
             $('.bookdb-delete-reading-entry').on('click', this.deleteReadingEntry);
-            $(document).ready(this.toggleReviewReadingLog);
-            $('#insert_reading_log').on('change', this.toggleReviewReadingLog);
+            $(document).ready(this.associateReadingLog);
+            $('#insert_reading_log').on('change', this.associateReadingLog);
         },
 
         /**
@@ -622,18 +622,30 @@
         },
 
         /**
-         * Toggle Review Reading Log
+         * Associate reading log with review
+         *
+         * This shows/hides certain fields depending on which option was selected.
          *
          * @param e
          */
-        toggleReviewReadingLog: function (e) {
-            var isChecked = $('#insert_reading_log:checked').length > 0,
-                wrapper = $('#bookdb-review-reading-log-fields');
+        associateReadingLog: function (e) {
+            var selected = $('#insert_reading_log').val();
 
-            if (isChecked) {
-                wrapper.show();
-            } else {
-                wrapper.hide();
+            switch(selected) {
+                case 'existing' :
+                    $('#bookdb-review-existing-reading-log-fields').show();
+                    $('#bookdb-review-new-reading-log-fields').hide();
+                    break;
+
+                case 'create' :
+                    $('#bookdb-review-existing-reading-log-fields').hide();
+                    $('#bookdb-review-new-reading-log-fields').show();
+                    break;
+
+                default :
+                    $('#bookdb-review-existing-reading-log-fields').hide();
+                    $('#bookdb-review-new-reading-log-fields').hide();
+                    break;
             }
         }
 

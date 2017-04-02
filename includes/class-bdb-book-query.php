@@ -160,6 +160,15 @@ class BDB_Book_Query {
 	public $select = array();
 
 	/**
+	 * What to group the query results by
+	 *
+	 * @var string
+	 * @access public
+	 * @since  1.0
+	 */
+	public $group_by;
+
+	/**
 	 * Primary type of query ('books' or 'reviews'). This determines whether we select
 	 * distinct book IDs or distinct review IDs (the latter of which may result in
 	 * the same book appearing multiple times with different reviews).
@@ -231,8 +240,15 @@ class BDB_Book_Query {
 		$this->query_type   = ( 'reviews' == $query_type ) ? 'reviews' : 'books';
 		$this->current_page = ( isset( $_GET['bdbpage'] ) ) ? absint( $_GET['bdbpage'] ) : 1;
 
-		$primary_select = ( 'reviews' == $this->query_type ) ? 'DISTINCT review.ID as review_id, book.ID as book_id' : 'DISTINCT book.ID as book_id';
-		$this->select   = array(
+		if ( 'reviews' == $this->query_type ) {
+			$primary_select = 'DISTINCT review.ID as review_id, book.ID as book_id';
+			$this->group_by = 'review.ID';
+		} else {
+			$primary_select = 'DISTINCT book.ID as book_id';
+			$this->group_by = 'book.ID';
+		}
+
+		$this->select = array(
 			$primary_select,
 			'book.cover as book_cover_id',
 			'book.title as book_title',
@@ -480,6 +496,7 @@ class BDB_Book_Query {
 
 		$join  = '';
 		$where = ' WHERE 1=1 ';
+		$group = '';
 
 		/*
 		 * Table joins
@@ -664,7 +681,9 @@ class BDB_Book_Query {
 			}
 		}
 
-		// Set up extra select params.
+		/*
+		 * Set up extra select params.
+		 */
 		if ( 'rating' == $this->orderby || $this->table_log_join ) {
 			$this->add_select( 'ROUND(AVG(IF(log.rating = \'dnf\', 0, log.rating)), 2) as rating' );
 		}
@@ -687,11 +706,16 @@ class BDB_Book_Query {
 			$this->orderby = $this->orderby . " * 1";
 		}
 
+		// Grouping
+		if ( ! empty( $this->group_by ) ) {
+			$group = 'GROUP BY ' . esc_sql( $this->group_by );
+		}
+
 		$query = "SELECT $select
 			FROM {$this->tables['books']} AS book
 			{$join}
 			{$where}
-			GROUP BY book.ID 
+			{$group} 
 			ORDER BY {$this->orderby} 
 			{$this->order}";
 

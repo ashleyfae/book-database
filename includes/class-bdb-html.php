@@ -107,7 +107,7 @@ class BDB_HTML {
 			'name'             => null,
 			'class'            => '',
 			'id'               => '',
-			'selected'         => array(),
+			'selected'         => false,
 			'chosen'           => false,
 			'placeholder'      => null,
 			'multiple'         => false,

@@ -44,6 +44,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 		'id'              => 'grid_book_rating',
 		'name'            => 'grid_book_rating',
 		'show_option_all' => esc_html__( 'Any', 'book-database' ),
+		'selected'        => 'Any'
 	) ); ?>
 
 	<?php foreach ( bdb_get_taxonomies() as $id => $options ) : ?>

@@ -123,6 +123,7 @@ class BDB_Book_Query {
 
 		// Default args.
 		$defaults = array(
+			'ids'                 => false,
 			'book_title'          => false,
 			'author_name'         => false,
 			'author_slug'         => false,
@@ -137,7 +138,6 @@ class BDB_Book_Query {
 			'orderby'             => 'date',
 			'order'               => 'DESC',
 			'offset'              => false,
-			'hide_future'         => false,
 			'show_ratings'        => false,
 			'show_review_link'    => false,
 			'show_goodreads_link' => false,
@@ -147,7 +147,7 @@ class BDB_Book_Query {
 		$args     = wp_parse_args( $args, $defaults );
 
 		// Set up query vars.
-		$this->number     = absint( $args['number'] );
+		$this->number     = ( $args['number'] > 0 ) ? absint( $args['number'] ) : 999999999999;
 		$this->query_vars = $args;
 
 	}
@@ -170,13 +170,21 @@ class BDB_Book_Query {
 			'pub_date'        => 'book.pub_date',
 			'series_position' => 'book.series_position',
 			'pages'           => 'book.pages',
-			'rating'          => 'rating'
+			'rating'          => 'rating',
+			'id'              => 'book.ID'
 		);
 
 		$this->orderby = array_key_exists( $this->query_vars['orderby'], $allowed_orderby ) ? $allowed_orderby[ $this->query_vars['orderby'] ] : $allowed_orderby['title'];
 		$this->order   = strtoupper( $this->query_vars['order'] ) == 'ASC' ? 'ASC' : 'DESC';
 	}
 
+	/**
+	 * Setup table joins
+	 *
+	 * @access protected
+	 * @since  1.0
+	 * @return void
+	 */
 	protected function setup_joins() {
 
 		// Ratings - join on logs.
@@ -211,9 +219,27 @@ class BDB_Book_Query {
 		$join  = '';
 		$where = ' WHERE 1=1 ';
 
-		// Always join on reading log to get rating.
-		$reading_table = book_database()->reading_list->table_name;
-		$join .= " LEFT JOIN {$reading_table} as log on log.book_id = book.ID";
+		// Join on reading log to get rating.
+		if ( $this->query_vars['show_ratings'] ) {
+			$reading_table = book_database()->reading_list->table_name;
+			$join          .= " LEFT JOIN {$reading_table} as log on (book.ID = log.book_id AND log.rating IS NOT NULL)";
+		}
+
+		// Join on review table to get review link.
+		if ( $this->query_vars['show_review_link'] ) {
+			$review_table = book_database()->reviews->table_name;
+			$join         .= " LEFT JOIN {$review_table} as review on (book.ID = review.book_id) ";
+		}
+
+		// Specific books.
+		if ( $this->query_vars['ids'] ) {
+			if ( is_array( $this->query_vars['ids'] ) ) {
+				$ids = implode( ',', array_map( 'intval', $this->query_vars['ids'] ) );
+			} else {
+				$ids = intval( $this->query_vars['ids'] );
+			}
+			$where .= " AND book.ID IN( {$ids} ) ";
+		}
 
 		// Filter by book title.
 		if ( $this->query_vars['book_title'] ) {
@@ -250,7 +276,7 @@ class BDB_Book_Query {
 				}
 
 				if ( ! empty( $this->query_vars['pub_date']['end'] ) ) {
-					$end = get_gmt_from_date( wp_strip_all_tags( $this->query_vars['pub_date']['end'] ), 'Y-m-d 23:59:59' );
+					$end   = get_gmt_from_date( wp_strip_all_tags( $this->query_vars['pub_date']['end'] ), 'Y-m-d 23:59:59' );
 					$where .= $wpdb->prepare( " AND `pub_date` <= %s", $end );
 				}
 
@@ -276,7 +302,7 @@ class BDB_Book_Query {
 				}
 
 				if ( ! empty( $this->query_vars['review_date']['end'] ) ) {
-					$end = get_gmt_from_date( wp_strip_all_tags( $this->query_vars['review_date']['end'] ), 'Y-m-d 23:59:59' );
+					$end   = get_gmt_from_date( wp_strip_all_tags( $this->query_vars['review_date']['end'] ), 'Y-m-d 23:59:59' );
 					$where .= $wpdb->prepare( " AND `date_written` <= %s", $end );
 				}
 
@@ -338,12 +364,20 @@ class BDB_Book_Query {
 		$select = '';
 
 		if ( 'rating' == $this->orderby || true == $this->query_vars['show_ratings'] ) {
-			$select .= ', log.rating as rating';
+			$select .= ', ROUND(AVG(IF(log.rating = \'dnf\', 0, log.rating)), 2) as rating';
+		}
+
+		if ( true === $this->query_vars['show_goodreads_link'] ) {
+			$select .= ', book.goodreads_url';
+		}
+
+		if ( true === $this->query_vars['show_review_link'] ) {
+			$select .= ', review.post_id, review.url';
 		}
 
 		$query = $wpdb->prepare(
 			"SELECT DISTINCT book.ID as book_id, book.cover as book_cover_id, book.title as book_title $select
-			FROM {$this->tables['books']}
+			FROM {$this->tables['books']} as book
 			{$join}
 			{$where}
 			GROUP BY book.ID 
@@ -356,6 +390,66 @@ class BDB_Book_Query {
 		$books = $wpdb->get_results( $query );
 
 		$this->books = wp_unslash( $books );
+
+	}
+
+	/**
+	 * Whether or not we have books to cycle through
+	 *
+	 * @access public
+	 * @since  1.0
+	 * @return bool
+	 */
+	public function have_books() {
+		return ( is_array( $this->books ) && count( $this->books ) );
+	}
+
+	/**
+	 * Get Books
+	 *
+	 * Sets up BDB_Book and BDB_Review objects for everything.
+	 *
+	 * @access public
+	 * @since  1.0
+	 * @return array|false
+	 */
+	public function get_books() {
+
+		if ( ! $this->have_books() ) {
+			return false;
+		}
+
+		$final = array();
+
+		foreach ( $this->books as $entry ) {
+			// Set up book class.
+			$book_tmp                  = new stdClass();
+			$book_tmp->ID              = $entry->book_id;
+			$book_tmp->cover           = $entry->book_cover_id;
+			$book_tmp->title           = $entry->book_title;
+			$book_tmp->series_id       = isset( $entry->series_id ) ? $entry->series_id : false;
+			$book_tmp->series_position = isset( $entry->series_position ) ? $entry->series_position : false;
+			$book_tmp->goodreads_url   = isset( $entry->goodreads_url ) ? $entry->goodreads_url : false;
+			$book                      = new BDB_Book( $book_tmp );
+
+			// Set up review class.
+			$review_tmp                 = new stdClass();
+			$review_tmp->ID             = isset( $entry->review_id ) ? $entry->review_id : false;
+			$review_tmp->book_id        = $entry->book_id;
+			$review_tmp->post_id        = isset( $entry->post_id ) ? $entry->post_id : false;
+			$review_tmp->url            = isset( $entry->url ) ? $entry->url : false;
+			$review_tmp->rating         = isset( $entry->rating ) ? $entry->rating : false;
+			$review_tmp->date_written   = isset( $entry->date_written ) ? $entry->date_written : false;
+			$review_tmp->date_published = isset( $entry->date_published ) ? $entry->date_published : false;
+			$review                     = new BDB_Review( $review_tmp );
+
+			$final[] = array(
+				'book'   => $book,
+				'review' => $review
+			);
+		}
+
+		return $final;
 
 	}
 

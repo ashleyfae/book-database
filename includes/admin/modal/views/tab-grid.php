@@ -26,19 +26,19 @@ if ( ! defined( 'ABSPATH' ) ) {
 		'name' => 'grid_book_series'
 	) ); ?>
 
-    <div class="bookdb-box-row">
-        <label><?php _e( 'Book Published Between', 'book-database' ); ?></label>
-        <div class="bookdb-input-wrapper">
-            <div class="bookdb-grid-pub-date-start-wrap">
-                <input type="text" id="grid_pub_date_start" name="grid_pub_date_start" placeholder="<?php echo esc_attr( date_i18n( 'F jS, Y', strtotime( '1 month ago' ) ) ); ?>">
-                <label for="grid_pub_date_start" class="bookdb-description"><?php _e( 'Start date', 'book-database' ); ?></label>
-            </div>
-            <div class="bookdb-grid-pub-date-end-wrap">
-                <input type="text" id="grid_pub_date_end" name="grid_pub_date_end" placeholder="<?php echo esc_attr( date_i18n( 'F jS, Y' ) ); ?>">
-                <label for="grid_pub_date_end" class="bookdb-description"><?php _e( 'End date', 'book-database' ); ?></label>
-            </div>
-        </div>
-    </div>
+	<div class="bookdb-box-row">
+		<label><?php _e( 'Book Published Between', 'book-database' ); ?></label>
+		<div class="bookdb-input-wrapper">
+			<div class="bookdb-grid-pub-date-start-wrap">
+				<input type="text" id="grid_pub_date_start" name="grid_pub_date_start" placeholder="<?php echo esc_attr( date_i18n( 'F jS, Y', strtotime( '1 month ago' ) ) ); ?>">
+				<label for="grid_pub_date_start" class="bookdb-description"><?php _e( 'Start date', 'book-database' ); ?></label>
+			</div>
+			<div class="bookdb-grid-pub-date-end-wrap">
+				<input type="text" id="grid_pub_date_end" name="grid_pub_date_end" placeholder="<?php echo esc_attr( date_i18n( 'F jS, Y' ) ); ?>">
+				<label for="grid_pub_date_end" class="bookdb-description"><?php _e( 'End date', 'book-database' ); ?></label>
+			</div>
+		</div>
+	</div>
 
 	<?php book_database()->html->meta_row( 'rating_dropdown', array( 'label' => esc_html__( 'Rating', 'book-database' ) ), array(
 		'id'              => 'grid_book_rating',
@@ -47,15 +47,17 @@ if ( ! defined( 'ABSPATH' ) ) {
 	) ); ?>
 
 	<?php foreach ( bdb_get_taxonomies() as $id => $options ) : ?>
-        <div class="bookdb-box-row">
-            <label><?php echo esc_html( $options['name'] ) ?></label>
-            <div class="bookdb-input-wrapper">
+		<div class="bookdb-box-row">
+			<label><?php echo esc_html( $options['name'] ) ?></label>
+			<div class="bookdb-input-wrapper">
 				<?php echo book_database()->html->term_dropdown( $id, array(
-					'id'   => 'grid_book_' . $id,
-					'name' => 'grid_book_' . $id
+					'id'    => 'grid_book_' . $id,
+					'name'  => 'grid_book_' . $id,
+					'data'  => array( 'term-type' => $id ),
+					'class' => 'book-grid-term'
 				) ); ?>
-            </div>
-        </div>
+			</div>
+		</div>
 	<?php endforeach; ?>
 
 	<?php book_database()->html->meta_row( 'checkbox', array( 'label' => esc_html__( 'Show Ratings', 'book-database' ) ), array(
@@ -106,7 +108,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 	<?php book_database()->html->meta_row( 'text', array( 'label' => esc_html__( 'Maximum Results', 'book-database' ) ), array(
 		'id'    => 'grid_number',
 		'name'  => 'grid_number',
-		'value' => 20,
+		'value' => '20',
 		'type'  => 'number'
 	) ); ?>
 </div>

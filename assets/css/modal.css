@@ -97,7 +97,7 @@
 .bookdb-frame-router,
 .bookdb-frame-title {
   position: absolute;
-  left: 0;
+  left: 200px;
   right: 0;
   z-index: 200; }
 
@@ -203,7 +203,7 @@
   overflow: auto;
   position: absolute;
   top: 84px;
-  left: 0;
+  left: 200px;
   right: 0;
   bottom: 61px;
   height: auto;
@@ -217,7 +217,7 @@
 .bookdb-frame-toolbar {
   height: 60px;
   position: absolute;
-  left: 0;
+  left: 200px;
   right: 0;
   bottom: 0;
   z-index: 100; }
@@ -339,6 +339,10 @@
 
 #bookdb-search-field {
   margin: 0 5px; }
+
+.bookdb-grid-pub-date-start-wrap, .bookdb-grid-pub-date-end-wrap {
+  float: left;
+  max-width: 225px; }
 
 .bookdb-modal-button span {
   display: inline-block;

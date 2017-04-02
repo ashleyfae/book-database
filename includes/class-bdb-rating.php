@@ -6,7 +6,7 @@
  * Used for formatting ratings.
  *
  * @package   book-database
- * @copyright Copyright (c) 2016, Ashley Gibson
+ * @copyright Copyright (c) 2017, Ashley Gibson
  * @license   GPL2+
  */
 
@@ -72,6 +72,7 @@ class BDB_Rating {
 	 */
 	public function set_rating( $rating ) {
 
+		$rating          = (float) $rating; // to remove trailing 0
 		$allowed_ratings = bdb_get_available_ratings();
 		if ( array_key_exists( (string) $rating, $allowed_ratings ) ) {
 			$this->rating = $rating;

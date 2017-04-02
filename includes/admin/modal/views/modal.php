@@ -3,7 +3,7 @@
  * Modal Template: Modal Content
  *
  * @package   book-database
- * @copyright Copyright (c) 2016, Ashley Gibson
+ * @copyright Copyright (c) 2017, Ashley Gibson
  * @license   GPL2+
  */
 
@@ -15,20 +15,41 @@ if ( ! defined( 'ABSPATH' ) ) {
 $menu = bdb_get_modal_menu();
 ?>
 <div class="bookdb-modal-container">
-	<div class="bookdb-modal wp-core-ui">
-		<button type="button" class="button-link bookdb-modal-close">
-			<span class="bookdb-modal-icon"><span class="screen-reader-text"><?php esc_html_e( 'Close Modal', 'book-database' ); ?></span></span>
-		</button>
+    <div class="bookdb-modal wp-core-ui">
+        <button type="button" class="button-link bookdb-modal-close">
+            <span class="bookdb-modal-icon"><span class="screen-reader-text"><?php esc_html_e( 'Close Modal', 'book-database' ); ?></span></span>
+        </button>
 
-		<div class="bookdb-modal-content">
-			<div class="bookdb-frame wp-core-ui">
-				<div class="bookdb-frame-title">
-					<h1>
-						<?php esc_html_e( 'Insert Book Information', 'book-database' ); ?>
-					</h1>
-				</div>
+        <div class="bookdb-modal-content">
+            <div class="bookdb-frame wp-core-ui">
+                <div class="bookdb-frame-menu">
+                    <div class="bookdb-menu">
+						<?php
+						$active_menu = '';
 
-				<div class="bookdb-frame-router">
+						foreach ( $menu as $menu_item => $options ) {
+							$active       = isset( $options['default'] ) && $options['default'];
+							$active_class = $active ? ' active' : '';
+							$label        = isset( $options['label'] ) ? $options['label'] : '';
+							$default_tab  = isset( $options['default_tab'] ) ? $options['default_tab'] : '';
+
+							if ( $active ) {
+								$active_menu = $label;
+							}
+
+							echo '<a href="#" class="bookdb-menu-item' . esc_attr( $active_class ) . '" data-menu="' . esc_attr( $menu_item ) . '" data-tab="' . esc_attr( $menu_item ) . '-' . esc_attr( $default_tab ) . '">' . esc_html( $label ) . '</a>';
+						}
+						?>
+                    </div>
+                </div>
+
+                <div class="bookdb-frame-title">
+                    <h1>
+						<?php echo esc_html( $active_menu ); ?><span class="dashicons dashicons-arrow-down"></span>
+                    </h1>
+                </div>
+
+                <div class="bookdb-frame-router">
 					<?php
 					foreach ( $menu as $menu_item => $options ) {
 						$active       = isset( $options['default'] ) && $options['default'];
@@ -50,10 +71,10 @@ $menu = bdb_get_modal_menu();
 						echo '</div>';
 					}
 					?>
-				</div>
+                </div>
 
-				<div class="bookdb-frame-content">
-					<form id="bookdb-modal-form" method="POST">
+                <div class="bookdb-frame-content">
+                    <form id="bookdb-modal-form" method="POST">
 						<?php
 						foreach ( $menu as $menu_item => $options ) {
 							$active      = isset( $options['default'] ) && $options['default'];
@@ -75,19 +96,19 @@ $menu = bdb_get_modal_menu();
 							}
 						}
 						?>
-					</form>
-				</div>
+                    </form>
+                </div>
 
-				<div class="bookdb-frame-toolbar">
-					<div class="bookdb-toolbar">
-						<div class="bookdb-toolbar-primary search-form">
-							<button type="button" class="button bookdb-button button-primary button-large bookdb-button-action"><?php esc_html_e( 'Insert', 'book-database' ); ?></button>
-						</div>
-					</div>
-				</div>
-			</div>
-		</div>
-	</div>
+                <div class="bookdb-frame-toolbar">
+                    <div class="bookdb-toolbar">
+                        <div class="bookdb-toolbar-primary search-form">
+                            <button type="button" class="button bookdb-button button-primary button-large bookdb-button-action"><?php esc_html_e( 'Insert', 'book-database' ); ?></button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
 
-	<div class="bookdb-modal-backdrop"></div>
+    <div class="bookdb-modal-backdrop"></div>
 </div>

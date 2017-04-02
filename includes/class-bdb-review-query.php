@@ -4,7 +4,7 @@
  * Review Query
  *
  * @package   book-database
- * @copyright Copyright (c) 2016, Ashley Gibson
+ * @copyright Copyright (c) 2017, Ashley Gibson
  * @license   GPL2+
  */
 
@@ -213,7 +213,7 @@ class BDB_Review_Query {
 		}
 
 		// Rating
-		if ( isset( $_GET['rating'] ) && 'any' != $_GET['rating'] ) {
+		if ( isset( $_GET['rating'] ) && 'any' != $_GET['rating'] && 'all' != $_GET['rating'] ) {
 			$allowed_ratings = bdb_get_available_ratings();
 
 			if ( array_key_exists( $_GET['rating'], $allowed_ratings ) ) {
@@ -325,7 +325,7 @@ class BDB_Review_Query {
 
 		// Always join on reading log to get rating.
 		$reading_table = book_database()->reading_list->table_name;
-		$join .= " LEFT JOIN {$reading_table} as log on log.review_id = review.ID";
+		$join          .= " LEFT JOIN {$reading_table} as log on log.review_id = review.ID";
 
 		// Filter by book title.
 		if ( $this->query_vars['book_title'] ) {
@@ -347,7 +347,7 @@ class BDB_Review_Query {
 		}
 
 		// Filter by rating.
-		if ( $this->query_vars['rating'] ) {
+		if ( $this->query_vars['rating'] && 'any' != $this->query_vars['rating'] && 'all' != $this->query_vars['rating'] ) {
 			$where .= $wpdb->prepare( " AND log.rating LIKE '" . '%s' . "'", sanitize_text_field( wp_strip_all_tags( $this->query_vars['rating'] ) ) );
 		}
 
@@ -362,7 +362,7 @@ class BDB_Review_Query {
 				}
 
 				if ( ! empty( $this->query_vars['date']['end'] ) ) {
-					$end = get_gmt_from_date( wp_strip_all_tags( $this->query_vars['date']['end'] ), 'Y-m-d 23:59:59' );
+					$end   = get_gmt_from_date( wp_strip_all_tags( $this->query_vars['date']['end'] ), 'Y-m-d 23:59:59' );
 					$where .= $wpdb->prepare( " AND `date_written` <= %s", $end );
 				}
 
@@ -397,14 +397,14 @@ class BDB_Review_Query {
 
 		// Only show reviews that have been published.
 		if ( true == $this->query_vars['hide_future'] ) {
-			$current = get_gmt_from_date( 'now', 'Y-m-d 00:00:00' );
-			$where .= $wpdb->prepare( " AND `date_published` <= %s", $current );
+			$current = get_gmt_from_date( 'now', 'Y-m-d H:i:s' );
+			$where   .= $wpdb->prepare( " AND `date_published` <= %s", $current );
 		}
 
 		// Filter by genre
 		if ( $this->query_vars['genre'] ) {
 			$inner_join = is_numeric( $this->query_vars['genre'] ) ? "INNER JOIN {$this->tables['terms']} terms ON r.term_id = terms.term_id AND terms.type = %s AND terms.term_id = %d" : "INNER JOIN {$this->tables['terms']} terms ON r.term_id = terms.term_id AND terms.type = %s AND terms.slug = %s";
-			$where .= $wpdb->prepare(
+			$where      .= $wpdb->prepare(
 				"AND book.ID IN (
 					SELECT DISTINCT (book.ID) FROM {$this->tables['books']} book
 					INNER JOIN {$this->tables['relationships']} r ON book.ID = r.book_id
@@ -418,7 +418,7 @@ class BDB_Review_Query {
 		// Filter by publisher
 		if ( $this->query_vars['publisher'] ) {
 			$inner_join = is_numeric( $this->query_vars['publisher'] ) ? "INNER JOIN {$this->tables['terms']} terms ON r.term_id = terms.term_id AND terms.type = %s AND terms.term_id = %d" : "INNER JOIN {$this->tables['terms']} terms ON r.term_id = terms.term_id AND terms.type = %s AND terms.slug = %s";
-			$where .= $wpdb->prepare(
+			$where      .= $wpdb->prepare(
 				"AND book.ID IN (
 					SELECT DISTINCT (book.ID) FROM {$this->tables['books']} book
 					INNER JOIN {$this->tables['relationships']} r ON book.ID = r.book_id
@@ -488,9 +488,13 @@ class BDB_Review_Query {
 			$this->total_reviews = $total;
 		}
 
-		// Add pagination parameters.
-		$offset     = ( false !== $this->query_vars['offset'] ) ? $this->query_vars['offset'] : ( $this->current_page * $this->per_page ) - $this->per_page;
-		$pagination = $wpdb->prepare( " LIMIT %d, %d", $offset, $this->per_page );
+		if ( $this->per_page > 0 ) {
+			// Add pagination parameters.
+			$offset     = ( false !== $this->query_vars['offset'] ) ? $this->query_vars['offset'] : ( $this->current_page * $this->per_page ) - $this->per_page;
+			$pagination = $wpdb->prepare( " LIMIT %d, %d", $offset, $this->per_page );
+		} else {
+			$pagination = $wpdb->prepare( " LIMIT %d", 999999999999 );
+		}
 
 		// Get the final results.
 		$cache_key = md5( 'bdb_review_query_' . serialize( $this->query_vars ) );
@@ -500,6 +504,10 @@ class BDB_Review_Query {
 			$reviews = $wpdb->get_results( $query . $pagination );
 
 			wp_cache_set( $cache_key, $reviews, 'review_query', 3600 );
+		}
+
+		if ( - 1 == $this->query_vars['per_page'] ) {
+			$this->total_reviews = count( $reviews );
 		}
 
 		$this->reviews = wp_unslash( $reviews );
@@ -565,6 +573,13 @@ class BDB_Review_Query {
 
 	}
 
+	/**
+	 * Get pagination links
+	 *
+	 * @access public
+	 * @since  1.0
+	 * @return string
+	 */
 	public function get_pagination() {
 
 		return paginate_links( array(

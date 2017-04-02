@@ -6,7 +6,7 @@
  * Class for easily creating HTML form fields.
  *
  * @package   book-database
- * @copyright Copyright (c) 2016, Ashley Gibson
+ * @copyright Copyright (c) 2017, Ashley Gibson
  * @license   GPL2+
  */
 
@@ -217,6 +217,7 @@ class BDB_HTML {
 			'id'      => null,
 			'name'    => null,
 			'current' => null,
+			'desc'    => '',
 			'class'   => 'bookdb-checkbox',
 			'options' => array(
 				'disabled' => false,
@@ -235,7 +236,17 @@ class BDB_HTML {
 			$options .= ' readonly';
 		}
 
-		$output = '<input type="checkbox"' . $options . ' name="' . esc_attr( $args['name'] ) . '" id="' . esc_attr( $args['id'] ) . '" class="' . $class . ' ' . esc_attr( $args['name'] ) . '" value="' . esc_attr( $args['value'] ) . '" ' . checked( 1, $args['current'], false ) . '>';
+		$output = '';
+
+		if ( ! empty( $args['desc'] ) ) {
+			$output .= '<label class="bookdb-description">';
+		}
+
+		$output .= '<input type="checkbox"' . $options . ' name="' . esc_attr( $args['name'] ) . '" id="' . esc_attr( $args['id'] ) . '" class="' . $class . ' ' . esc_attr( $args['name'] ) . '" value="' . esc_attr( $args['value'] ) . '" ' . checked( 1, $args['current'], false ) . '>';
+
+		if ( ! empty( $args['desc'] ) ) {
+			$output .= esc_html( $args['desc'] ) . '</label>';
+		}
 
 		return $output;
 
@@ -428,9 +439,9 @@ class BDB_HTML {
 
 		$args = wp_parse_args( $meta_args, $defaults );
 		?>
-		<div class="bookdb-box-row">
-			<label for="<?php echo array_key_exists( 'id', $field_args ) ? esc_attr( $field_args['id'] ) : ''; ?>"><?php echo esc_html( $args['label'] ); ?></label>
-			<div class="bookdb-input-wrapper">
+        <div class="bookdb-box-row">
+            <label for="<?php echo array_key_exists( 'id', $field_args ) ? esc_attr( $field_args['id'] ) : ''; ?>"><?php echo esc_html( $args['label'] ); ?></label>
+            <div class="bookdb-input-wrapper">
 				<?php
 				if ( method_exists( $this, $type ) ) {
 					echo $this->$type( $field_args );
@@ -438,8 +449,8 @@ class BDB_HTML {
 
 				echo $args['field'];
 				?>
-			</div>
-		</div>
+            </div>
+        </div>
 		<?php
 
 	}

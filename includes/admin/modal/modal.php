@@ -5,7 +5,7 @@
  * Lovingly borrowed from WP Recipe Maker.
  *
  * @package   book-database
- * @copyright Copyright (c) 2016, Ashley Gibson
+ * @copyright Copyright (c) 2017, Ashley Gibson
  * @license   GPL2+
  */
 
@@ -41,17 +41,32 @@ function bdb_get_modal_menu() {
 		'book' => array(
 			'order'       => 100,
 			'default'     => true,
-			'label'       => esc_html__( 'Book', 'book-database' ),
+			'label'       => esc_html__( 'Single Book', 'book-database' ),
 			'tabs'        => array(
 				'book-information' => array(
 					'order'    => 100,
-					'label'    => esc_html__( 'Book Information', 'book-database' ),
+					'label'    => esc_html__( 'Insert Single Book', 'book-database' ),
 					'template' => BDB_DIR . 'includes/admin/modal/views/tab-book-information.php',
 					'callback' => 'insert_update_book',
 					'init'     => 'setBook'
 				)
 			),
 			'default_tab' => 'book-information'
+		),
+		'grid' => array(
+			'order'       => 200,
+			'default'     => true,
+			'label'       => esc_html__( 'Book Grid', 'book-database' ),
+			'tabs'        => array(
+				'book-grid' => array(
+					'order'    => 100,
+					'label'    => esc_html__( 'Book Grid', 'book-database' ),
+					'template' => BDB_DIR . 'includes/admin/modal/views/tab-grid.php',
+					'callback' => 'insert_update_grid',
+					'init'     => 'setGrid'
+				)
+			),
+			'default_tab' => 'book-grid'
 		)
 	);
 

@@ -30,7 +30,7 @@
  * under GPL2+.
  *
  * @package   book-database
- * @copyright Copyright (c) 2016, Ashley Gibson
+ * @copyright Copyright (c) 2017, Ashley Gibson
  * @license   GPL2+
  */
 
@@ -239,6 +239,7 @@ if ( ! class_exists( 'Book_Database' ) ) :
 			require_once BDB_DIR . 'includes/book-layout.php';
 			require_once BDB_DIR . 'includes/class-bdb-analytics.php';
 			require_once BDB_DIR . 'includes/class-bdb-book.php';
+			require_once BDB_DIR . 'includes/class-bdb-book-query.php';
 			require_once BDB_DIR . 'includes/class-bdb-html.php';
 			require_once BDB_DIR . 'includes/class-bdb-rating.php';
 			require_once BDB_DIR . 'includes/class-bdb-review.php';

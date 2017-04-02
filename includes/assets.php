@@ -20,10 +20,12 @@ if ( ! defined( 'ABSPATH' ) ) {
  */
 function bdb_load_assets() {
 
-	// Only load assets on the review page.
+	global $post;
+
+	// Only load assets on the review page and when using the `[book-grid]` shortcode.
 	$review_page_id = bdb_get_option( 'reviews_page' );
-	if ( ! $review_page_id || get_the_ID() != $review_page_id ) {
-		//return;
+	if ( ( ! $review_page_id || get_the_ID() != $review_page_id ) && ( ! has_shortcode( $post->post_content, 'book-grid' ) ) ) {
+		return;
 	}
 
 	$js_dir  = BDB_URL . 'assets/js/';

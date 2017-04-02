@@ -811,6 +811,25 @@ class BDB_Book {
 	}
 
 	/**
+	 * Get the average rating of all reading logs associated with this book
+	 *
+	 * @access public
+	 * @since  1.0
+	 * @return float|int
+	 */
+	public function get_average_rating() {
+
+		global $wpdb;
+		$log_table  = book_database()->reading_list->table_name;
+		$book_table = book_database()->books->table_name;
+		$query      = $wpdb->prepare( "SELECT ROUND(AVG(IF(log.rating = 'dnf', 0, log.rating)), 2) FROM {$log_table} AS log LEFT JOIN {$book_table} AS book on log.book_id = book.ID WHERE book.ID = %d", $this->ID );
+		$average    = $wpdb->get_var( $query );
+
+		return apply_filters( 'book-database/book/get/average-rating', $average, $this->ID, $this );
+
+	}
+
+	/**
 	 * Get Terms
 	 *
 	 * Returns all terms associated with the book, grouped by type.

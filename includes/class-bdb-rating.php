@@ -72,7 +72,7 @@ class BDB_Rating {
 	 */
 	public function set_rating( $rating ) {
 
-		$rating          = (float) $rating; // to remove trailing 0
+		$rating          = is_numeric( $rating ) ? (float) $rating : $rating; // to remove trailing 0
 		$allowed_ratings = bdb_get_available_ratings();
 		if ( array_key_exists( (string) $rating, $allowed_ratings ) ) {
 			$this->rating = $rating;

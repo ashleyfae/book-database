@@ -151,13 +151,24 @@ class BDB_Book_Query {
 	public $table_series_join = false;
 
 	/**
-	 * Columns to select from the database
+	 * Array of columns to select from the database
 	 *
 	 * @var string
-	 * @access public
+	 * @access array
 	 * @since  1.0
 	 */
-	public $select = 'DISTINCT book.ID as book_id, book.cover as book_cover_id, book.title as book_title, series_position, pub_date, goodreads_url';
+	public $select = array();
+
+	/**
+	 * Primary type of query ('books' or 'reviews'). This determines whether we select
+	 * distinct book IDs or distinct review IDs (the latter of which may result in
+	 * the same book appearing multiple times with different reviews).
+	 *
+	 * @var string
+	 * @access protected
+	 * @since  1.0
+	 */
+	protected $query_type = 'books';
 
 	/**
 	 * Results from the query
@@ -171,13 +182,14 @@ class BDB_Book_Query {
 	/**
 	 * BDB_Book_Query constructor.
 	 *
-	 * @param array $args Query arguments.
+	 * @param array  $args       Query arguments.
+	 * @param string $query_type Primary query type ('books' or 'reviews').
 	 *
 	 * @access public
 	 * @since  1.0
 	 * @return void
 	 */
-	public function __construct( $args = array() ) {
+	public function __construct( $args = array(), $query_type = 'books' ) {
 
 		// Set up table names.
 		$this->tables['reviews']       = book_database()->reviews->table_name;
@@ -207,7 +219,6 @@ class BDB_Book_Query {
 			'orderby'             => 'date', // order results by
 			'order'               => 'DESC', // order
 			'offset'              => false,
-			'reviews'             => 'include', // options: 'include', 'exclude', 'only'
 			'hide_future_reviews' => false, // whether to hide reviews not yet published
 			'per_page'            => 20,
 			'nopaging'            => false
@@ -215,10 +226,20 @@ class BDB_Book_Query {
 		$args     = wp_parse_args( $args, $defaults );
 
 		// Set up query vars.
-		$this->per_page   = $args['per_page'];
-		$this->query_vars = $args;
-
+		$this->per_page     = $args['per_page'];
+		$this->query_vars   = $args;
+		$this->query_type   = ( 'reviews' == $query_type ) ? 'reviews' : 'books';
 		$this->current_page = ( isset( $_GET['bdbpage'] ) ) ? absint( $_GET['bdbpage'] ) : 1;
+
+		$primary_select = ( 'reviews' == $this->query_type ) ? 'DISTINCT review.ID as review_id, book.ID as book_id' : 'DISTINCT book.ID as book_id';
+		$this->select   = array(
+			$primary_select,
+			'book.cover as book_cover_id',
+			'book.title as book_title',
+			'series_position',
+			'pub_date',
+			'goodreads_url'
+		);
 
 	}
 
@@ -246,6 +267,37 @@ class BDB_Book_Query {
 
 		$this->orderby = array_key_exists( $this->query_vars['orderby'], $allowed_orderby ) ? $allowed_orderby[ $this->query_vars['orderby'] ] : $allowed_orderby['title'];
 		$this->order   = strtoupper( $this->query_vars['order'] ) == 'ASC' ? 'ASC' : 'DESC';
+	}
+
+	/**
+	 * Add new column to select in query
+	 *
+	 * @param string $column ID of the column to add.
+	 *
+	 * @access public
+	 * @since  1.0
+	 * @return void
+	 */
+	public function add_select( $column ) {
+		if ( ! in_array( $column, $this->select ) ) {
+			$this->select[] = $column;
+		}
+	}
+
+	/**
+	 * Remove column ID from the selection
+	 *
+	 * @param string $column ID of the column to remove.
+	 *
+	 * @access public
+	 * @since  1.0
+	 * @return void
+	 */
+	public function remove_select( $column ) {
+		$key = array_search( $column, $this->select );
+		if ( false !== $key ) {
+			unset( $this->select[ $key ] );
+		}
 	}
 
 	/**
@@ -614,18 +666,21 @@ class BDB_Book_Query {
 
 		// Set up extra select params.
 		if ( 'rating' == $this->orderby || $this->table_log_join ) {
-			$this->select .= ', ROUND(AVG(IF(log.rating = \'dnf\', 0, log.rating)), 2) as rating';
+			$this->add_select( 'ROUND(AVG(IF(log.rating = \'dnf\', 0, log.rating)), 2) as rating' );
 		}
 		if ( $this->table_reviews_join ) {
-			$this->select .= ', review.post_id, review.url';
+			$this->add_select( 'review.post_id' );
+			$this->add_select( 'review.url' );
 		}
 		if ( $this->table_series_join ) {
-			$this->select .= ', book.series_id, series.name as series_name';
+			$this->add_select( 'book.series_id' );
+			$this->add_select( 'series.name as series_name' );
 		}
 		if ( $this->table_authors_join ) {
-			$this->select .= ', author.term_id as author_id, GROUP_CONCAT(author.name SEPARATOR \', \') as author_name';
+			$this->add_select( 'author.term_id as author_id' );
+			$this->add_select( 'GROUP_CONCAT(author.name SEPARATOR \', \') as author_name' );
 		}
-		$select = $this->select;
+		$select = implode( ', ', array_unique( $this->select ) );
 
 		// Tweak order by rating.
 		if ( 'rating' == $this->orderby ) {

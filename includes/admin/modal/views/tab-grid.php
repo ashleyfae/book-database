@@ -84,6 +84,13 @@ if ( ! defined( 'ABSPATH' ) ) {
 		'desc' => __( 'Check to only include book that have been reviewed.', 'book-database' )
 	) ); ?>
 
+	<?php book_database()->html->meta_row( 'text', array( 'label' => esc_html__( 'Specific Book IDs', 'book-database' ) ), array(
+		'id'    => 'grid_book_ids',
+		'name'  => 'grid_book_ids',
+		'desc'  => __( 'Separate ID numbers with commas.', 'book-database' ),
+		'value' => ''
+	) ); ?>
+
 	<?php book_database()->html->meta_row( 'select', array( 'label' => esc_html__( 'Order By', 'book-database' ) ), array(
 		'options'          => bdb_get_allowed_orderby(),
 		'id'               => 'grid_order_by',

@@ -507,6 +507,12 @@ var BookDB_Modal_Admin = {
 			params = params + ' reviews-only="true"';
 		}
 
+		// Book IDs
+		var bookIDs = jQuery('#grid_book_ids').val();
+		if (bookIDs !== '') {
+			params = params + ' ids="' + bookIDs + '"';
+		}
+
 		// Orderby
 		var orderBy = jQuery('#grid_order_by').val();
 		if (orderBy != 'pub_date') {

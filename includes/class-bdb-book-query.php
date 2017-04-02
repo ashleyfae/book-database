@@ -229,7 +229,7 @@ class BDB_Book_Query {
 		}
 
 		// Join on review table to get review link.
-		if ( $this->table_reviews_join ) {
+		if ( $this->table_reviews_join || $this->query_vars['review_date'] ) {
 			$review_table = book_database()->reviews->table_name;
 			$join         .= " {$this->table_reviews_join} JOIN {$review_table} as review on (book.ID = review.book_id) ";
 		}
@@ -314,12 +314,12 @@ class BDB_Book_Query {
 
 				if ( ! empty( $this->query_vars['review_date']['start'] ) ) {
 					$start = get_gmt_from_date( wp_strip_all_tags( $this->query_vars['review_date']['start'] ), 'Y-m-d 00:00:00' );
-					$where .= $wpdb->prepare( " AND `date_written` >= %s", $start );
+					$where .= $wpdb->prepare( " AND `date_published` >= %s", $start );
 				}
 
 				if ( ! empty( $this->query_vars['review_date']['end'] ) ) {
 					$end   = get_gmt_from_date( wp_strip_all_tags( $this->query_vars['review_date']['end'] ), 'Y-m-d 23:59:59' );
-					$where .= $wpdb->prepare( " AND `date_written` <= %s", $end );
+					$where .= $wpdb->prepare( " AND `date_published` <= %s", $end );
 				}
 
 			} else {
@@ -327,7 +327,7 @@ class BDB_Book_Query {
 				$year  = get_gmt_from_date( wp_strip_all_tags( $this->query_vars['review_date'] ), 'Y' );
 				$month = get_gmt_from_date( wp_strip_all_tags( $this->query_vars['review_date'] ), 'm' );
 				$day   = get_gmt_from_date( wp_strip_all_tags( $this->query_vars['review_date'] ), 'd' );
-				$where .= $wpdb->prepare( " AND %d = YEAR ( date_written ) AND %d = MONTH ( date_written ) AND %d = DAY ( date_written )", $year, $month, $day );
+				$where .= $wpdb->prepare( " AND %d = YEAR ( date_published ) AND %d = MONTH ( date_published ) AND %d = DAY ( date_published )", $year, $month, $day );
 
 			}
 

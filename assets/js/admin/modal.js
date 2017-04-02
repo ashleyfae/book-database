@@ -461,16 +461,28 @@ var BookDB_Modal_Admin = {
 			params = params + ' series="' + seriesName + '"';
 		}
 
-		// Start Date
+		// Pub Start Date
 		var startDate = jQuery('#grid_pub_date_start').val();
 		if (startDate != '') {
 			params = params + ' start-date="' + startDate + '"';
 		}
 
-		// End Date
+		// Pub End Date
 		var endDate = jQuery('#grid_pub_date_end').val();
 		if (endDate != '') {
 			params = params + ' end-date="' + endDate + '"';
+		}
+
+		// Review Start Date
+		var startDate = jQuery('#grid_review_date_start').val();
+		if (startDate != '') {
+			params = params + ' review-start-date="' + startDate + '"';
+		}
+
+		// Review End Date
+		var endDate = jQuery('#grid_review_date_end').val();
+		if (endDate != '') {
+			params = params + ' review-end-date="' + endDate + '"';
 		}
 
 		// Rating

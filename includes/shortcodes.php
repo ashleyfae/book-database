@@ -171,8 +171,10 @@ function bdb_book_grid_shortcode( $atts, $content = '' ) {
 		'year'                => false, // review written year
 		'month'               => false, // review written month
 		'day'                 => false, // review written day
-		'start-date'          => false,
-		'end-date'            => false,
+		'start-date'          => false, // pub start date
+		'end-date'            => false, // pub end date
+		'review-start-date'   => false, // review pub start date
+		'review-end-date'     => false, // review pub end date
 		'pub-year'            => false,
 		'show-ratings'        => false,
 		'show-review-link'    => false,
@@ -208,12 +210,20 @@ function bdb_book_grid_shortcode( $atts, $content = '' ) {
 	$query_args['show_goodreads_link'] = ( $atts['show-goodreads-link'] ) ? true : false;
 	$query_args['reviews_only']        = ( $atts['reviews-only'] ) ? true : false;
 
-	// Setup date
+	// Setup book publish date
 	if ( $atts['start-date'] ) {
 		$query_args['pub_date']['start'] = $atts['start-date'];
 	}
 	if ( $atts['end-date'] ) {
 		$query_args['pub_date']['end'] = $atts['end-date'];
+	}
+
+	// Setup review publish date
+	if ( $atts['review-start-date'] ) {
+		$query_args['review_date']['start'] = $atts['review-start-date'];
+	}
+	if ( $atts['review-end-date'] ) {
+		$query_args['review_date']['end'] = $atts['review-end-date'];
 	}
 
 	// Setup terms.

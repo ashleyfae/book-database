@@ -40,6 +40,20 @@ if ( ! defined( 'ABSPATH' ) ) {
 		</div>
 	</div>
 
+	<div class="bookdb-box-row">
+		<label><?php _e( 'Book Reviewed Between', 'book-database' ); ?></label>
+		<div class="bookdb-input-wrapper">
+			<div class="bookdb-grid-pub-date-start-wrap">
+				<input type="text" id="grid_review_date_start" name="grid_review_date_start" placeholder="<?php echo esc_attr( date_i18n( 'F jS, Y', strtotime( '1 month ago' ) ) ); ?>">
+				<label for="grid_review_date_start" class="bookdb-description"><?php _e( 'Start date', 'book-database' ); ?></label>
+			</div>
+			<div class="bookdb-grid-pub-date-end-wrap">
+				<input type="text" id="grid_review_date_end" name="grid_review_date_end" placeholder="<?php echo esc_attr( date_i18n( 'F jS, Y' ) ); ?>">
+				<label for="grid_review_date_end" class="bookdb-description"><?php _e( 'End date', 'book-database' ); ?></label>
+			</div>
+		</div>
+	</div>
+
 	<?php book_database()->html->meta_row( 'rating_dropdown', array( 'label' => esc_html__( 'Rating', 'book-database' ) ), array(
 		'id'              => 'grid_book_rating',
 		'name'            => 'grid_book_rating',

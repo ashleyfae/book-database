@@ -218,8 +218,9 @@ class BDB_Book_Query {
 
 		global $wpdb;
 
-		$join  = '';
-		$where = ' WHERE 1=1 ';
+		$join   = '';
+		$where  = ' WHERE 1=1 ';
+		$select = 'DISTINCT book.ID as book_id, book.cover as book_cover_id, book.title as book_title';
 
 		// Join on reading log to get rating.
 		if ( $this->query_vars['show_ratings'] ) {
@@ -265,7 +266,10 @@ class BDB_Book_Query {
 
 		// Filter by series name.
 		if ( $this->query_vars['series_name'] ) {
-			$where .= $wpdb->prepare( " AND series.name LIKE '%%%%" . '%s' . "%%%%'", sanitize_text_field( wp_strip_all_tags( $this->query_vars['series_name'] ) ) );
+			$series_table = book_database()->series->table_name;
+			$join         .= " INNER JOIN {$series_table} as series on book.series_id = series.ID ";
+			$where        .= $wpdb->prepare( " AND series.name LIKE '%%%%" . '%s' . "%%%%' ", sanitize_text_field( wp_strip_all_tags( $this->query_vars['series_name'] ) ) );
+			$select       .= ', series.name';
 		}
 
 		// Filter by rating.
@@ -369,8 +373,6 @@ class BDB_Book_Query {
 		}
 
 		// Set up extra select params.
-		$select = '';
-
 		if ( 'rating' == $this->orderby || true == $this->query_vars['show_ratings'] ) {
 			$select .= ', ROUND(AVG(IF(log.rating = \'dnf\', 0, log.rating)), 2) as rating';
 		}
@@ -384,7 +386,7 @@ class BDB_Book_Query {
 		}
 
 		$query = $wpdb->prepare(
-			"SELECT DISTINCT book.ID as book_id, book.cover as book_cover_id, book.title as book_title $select
+			"SELECT $select
 			FROM {$this->tables['books']} as book
 			{$join}
 			{$where}
@@ -394,8 +396,6 @@ class BDB_Book_Query {
 			LIMIT %d",
 			$this->number
 		);
-
-		var_dump( $query );
 
 		$books = $wpdb->get_results( $query );
 

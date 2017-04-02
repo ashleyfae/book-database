@@ -240,7 +240,7 @@ function bdb_book_grid_shortcode( $atts, $content = '' ) {
 		}
 		echo '</div>';
 	} else {
-		echo '<p>' . __( 'No reviews found.', 'book-database' ) . '</p>';
+		echo '<p>' . __( 'No books found.', 'book-database' ) . '</p>';
 	}
 
 	return ob_get_clean();

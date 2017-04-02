@@ -1,194 +1,203 @@
 (function (window, document, $) {
 
-    var BDB_Analytics = {
+	var BDB_Analytics = {
 
-        /**
-         * Initialize
-         */
-        init: function () {
-            BDB_Analytics.getStats();
-        },
+		/**
+		 * Initialize
+		 */
+		init: function () {
+			BDB_Analytics.getStats();
+		},
 
-        /**
-         * Set Date Range Values
-         *
-         * @param e
-         */
-        setRanges: function (e) {
+		/**
+		 * Set Date Range Values
+		 *
+		 * @param e
+		 */
+		setRanges: function (e) {
 
-            if ('custom' == $(this).val()) {
+			if ('custom' == $(this).val()) {
 
-                $('#bookdb-start').val('').attr('type', 'text');
-                $('#bookdb-end').val('').attr('type', 'text');
+				$('#bookdb-start').val('').attr('type', 'text');
+				$('#bookdb-end').val('').attr('type', 'text');
 
-            } else {
+			} else {
 
-                var selected = $(this).find('option:selected');
-                $('#bookdb-start').val(selected.data('start')).attr('type', 'hidden');
-                $('#bookdb-end').val(selected.data('end')).attr('type', 'hidden');
+				var selected = $(this).find('option:selected');
+				$('#bookdb-start').val(selected.data('start')).attr('type', 'hidden');
+				$('#bookdb-end').val(selected.data('end')).attr('type', 'hidden');
 
-            }
+			}
 
-        },
+		},
 
-        /**
-         * Get Stats
-         */
-        getStats: function () {
+		/**
+		 * Get Stats
+		 */
+		getStats: function () {
 
-            var loading = '<div id="circleG"><div id="circleG_1" class="circleG"></div><div id="circleG_2" class="circleG"></div><div id="circleG_3" class="circleG"></div></div>';
+			var loading = '<div id="circleG"><div id="circleG_1" class="circleG"></div><div id="circleG_2" class="circleG"></div><div id="circleG_3" class="circleG"></div></div>';
 
-            $('.bookdb-result').empty();
-            $('.bookdb-loading').html(loading).show();
+			$('.bookdb-result').empty();
+			$('.bookdb-loading').html(loading).show();
 
-            var data = {
-                action: 'bdb_analytics_batch_1',
-                start: $('#bookdb-start').val(),
-                end: $('#bookdb-end').val()
-            };
+			var data = {
+				action: 'bdb_analytics_batch_1',
+				start: $('#bookdb-start').val(),
+				end: $('#bookdb-end').val(),
+				range: $('#bookdb-range').val()
+			};
 
-            $.post(window.ajaxurl, data, BDB_Analytics.firstBatchResponse).then(function () {
+			$.post(window.ajaxurl, data, BDB_Analytics.firstBatchResponse).then(function () {
 
-                data.action = 'bdb_analytics_batch_2';
-                $.post(window.ajaxurl, data, BDB_Analytics.secondBatchResponse);
+				data.action = 'bdb_analytics_batch_2';
+				$.post(window.ajaxurl, data, BDB_Analytics.secondBatchResponse);
 
-            }).fail(function () {
+			}).fail(function () {
 
-                console.warn("ajax error");
+				console.warn("ajax error");
 
-            });
+			});
 
-        },
+		},
 
-        /**
-         * Handle First Batch Response
-         *
-         * Includes:
-         *      + Number of reviews
-         *      + Pages read
-         *      + Average rating
-         *      + Rating breakdown
-         *      + List of reviews written
-         *      + List of books read but not reviewed
-         *
-         * These are super quick to retrieve so we do them first.
-         *
-         * @param response
-         */
-        firstBatchResponse: function (response) {
+		/**
+		 * Handle First Batch Response
+		 *
+		 * Includes:
+		 *      + Number of reviews
+		 *      + Pages read
+		 *      + Average rating
+		 *      + Rating breakdown
+		 *      + List of reviews written
+		 *      + List of books read but not reviewed
+		 *
+		 * These are super quick to retrieve so we do them first.
+		 *
+		 * @param response
+		 */
+		firstBatchResponse: function (response) {
 
-            console.log(response);
+			console.log(response);
 
-            if (true == response.success) {
-                $.each(response.data, function (id, val) {
-                    var element = $('#' + id);
+			if (true == response.success) {
+				$.each(response.data, function (id, val) {
+					var element = $('#' + id);
 
-                    element.empty();
+					element.empty();
 
-                    // Book list
-                    if ('book-list' == id) {
+					// Book list
+					if ('book-list' == id) {
 
-                        element.html('<table><thead><tr><th>' + bookdb_analytics.l10n.rating + '</th><th>' + bookdb_analytics.l10n.book + '</th><th>' + bookdb_analytics.l10n.date + '</th></tr></thead><tbody></tbody></table>');
-                        var list = element.find('tbody');
+						element.html('<table><thead><tr><th>' + bookdb_analytics.l10n.rating + '</th><th>' + bookdb_analytics.l10n.book + '</th><th>' + bookdb_analytics.l10n.date + '</th></tr></thead><tbody></tbody></table>');
+						var list = element.find('tbody');
 
-                        $.each(val, function (review_key, review_val) {
-                            list.append('<tr><td><a href="' + review_val.edit_review_link + '" class="book-rating ' + review_val.rating_class + '" title="' + bookdb_analytics.l10n.edit_review + '">' + review_val.rating + '</a></td><td><a href="' + review_val.edit_book_link + '" title="' + bookdb_analytics.l10n.edit_book + '">' + review_val.book + '</a></td><td class="review-date">[' + review_val.date + ']</td></tr>');
-                        });
+						$.each(val, function (review_key, review_val) {
+							list.append('<tr><td><a href="' + review_val.edit_review_link + '" class="book-rating ' + review_val.rating_class + '" title="' + bookdb_analytics.l10n.edit_review + '">' + review_val.rating + '</a></td><td><a href="' + review_val.edit_book_link + '" title="' + bookdb_analytics.l10n.edit_book + '">' + review_val.book + '</a></td><td class="review-date">[' + review_val.date + ']</td></tr>');
+						});
 
-                    } else if ('read-not-reviewed' == id) {
+					} else if ('read-not-reviewed' == id) {
 
-                        element.html('<table><thead><tr><th>' + bookdb_analytics.l10n.rating + '</th><th>' + bookdb_analytics.l10n.book + '</th><th>' + bookdb_analytics.l10n.date + '</th></tr></thead><tbody></tbody></table>');
-                        var list = element.find('tbody');
+						element.html('<table><thead><tr><th>' + bookdb_analytics.l10n.rating + '</th><th>' + bookdb_analytics.l10n.book + '</th><th>' + bookdb_analytics.l10n.date + '</th></tr></thead><tbody></tbody></table>');
+						var list = element.find('tbody');
 
-                        $.each(val, function (book_key, book_val) {
-                            list.append('<tr><td class="book-rating ' + book_val.rating_class + '">' + book_val.rating + '</td><td><a href="' + book_val.edit_book_link + '" title="' + bookdb_analytics.l10n.edit_book + '">' + book_val.book + '</a></td><td class="review-date">[' + book_val.date + ']</td></tr>');
-                        });
+						$.each(val, function (book_key, book_val) {
+							list.append('<tr><td class="book-rating ' + book_val.rating_class + '">' + book_val.rating + '</td><td><a href="' + book_val.edit_book_link + '" title="' + bookdb_analytics.l10n.edit_book + '">' + book_val.book + '</a></td><td class="review-date">[' + book_val.date + ']</td></tr>');
+						});
 
-                    } else if ('rating-breakdown' == id) {
+					} else if ('rating-breakdown' == id) {
 
-                        // Rating breakdown.
-                        element.html('<table><thead><tr><th>' + bookdb_analytics.l10n.rating + '</th><th>' + bookdb_analytics.l10n.number_books + '</th></tr></thead><tbody></tbody></table>');
-                        var table = element.find('tbody');
+						// Rating breakdown.
+						element.html('<table><thead><tr><th>' + bookdb_analytics.l10n.rating + '</th><th>' + bookdb_analytics.l10n.number_books + '</th></tr></thead><tbody></tbody></table>');
+						var table = element.find('tbody');
 
-                        $.each(val, function (key, rating) {
-                            table.append('<tr><td>' + rating.rating + '</td><td>' + rating.count + '</td></tr>');
-                        });
+						$.each(val, function (key, rating) {
+							table.append('<tr><td>' + rating.rating + '</td><td>' + rating.count + '</td></tr>');
+						});
 
-                    } else if ('pages-breakdown' == id) {
+					} else if ('pages-breakdown' == id) {
 
-                        // Pages breakdown.
-                        element.html('<table><thead><tr><th>' + bookdb_analytics.l10n.pages + '</th><th>' + bookdb_analytics.l10n.number_books + '</th></tr></thead><tbody></tbody></table>');
-                        var table = element.find('tbody');
+						// Pages breakdown.
+						element.html('<table><thead><tr><th>' + bookdb_analytics.l10n.pages + '</th><th>' + bookdb_analytics.l10n.number_books + '</th></tr></thead><tbody></tbody></table>');
+						var table = element.find('tbody');
 
-                        $.each(val, function (key, result) {
-                            table.append('<tr><td>' + result.page_range + '</td><td>' + result.count + '</td></tr>');
-                        });
+						$.each(val, function (key, result) {
+							table.append('<tr><td>' + result.page_range + '</td><td>' + result.count + '</td></tr>');
+						});
 
-                    } else {
+					} else if ('reading-track' == id) {
 
-                        element.html(val);
+						if ('' === val) {
+							element.hide();
+						} else {
+							element.html(val).show();
+						}
 
-                    }
+					} else {
 
-                    element.parents('.bookdb-metric-inner').find('.bookdb-loading').empty().hide();
-                });
-            }
+						element.html(val);
 
-        },
+					}
 
-        /**
-         * Handle Second Batch Response
-         *
-         * For taxonomies.
-         *
-         * Includes:
-         *      + Genre breakdown
-         *      + Publishers breakdown
-         *      + Source breakdown
-         *
-         * These operations are a tad more intensive so they'll take longer to load.
-         *
-         * @param response
-         */
-        secondBatchResponse: function (response) {
-            console.log(response);
+					element.parents('.bookdb-metric-inner').find('.bookdb-loading').empty().hide();
+				});
+			}
 
-            if (response.data.length == 0) {
+		},
 
-                $('.bookdb-term-breakdown').each(function() {
-                    $(this).find('.bookdb-loading').empty().hide();
-                    $(this).find('.bookdb-result').empty().append('&ndash;');
-                });
+		/**
+		 * Handle Second Batch Response
+		 *
+		 * For taxonomies.
+		 *
+		 * Includes:
+		 *      + Genre breakdown
+		 *      + Publishers breakdown
+		 *      + Source breakdown
+		 *
+		 * These operations are a tad more intensive so they'll take longer to load.
+		 *
+		 * @param response
+		 */
+		secondBatchResponse: function (response) {
+			console.log(response);
 
-            }
+			if (response.data.length == 0) {
 
-            $.each(response.data, function (type, html) {
-                var wrap = $('#' + type + '-breakdown');
+				$('.bookdb-term-breakdown').each(function () {
+					$(this).find('.bookdb-loading').empty().hide();
+					$(this).find('.bookdb-result').empty().append('&ndash;');
+				});
 
-                if (!wrap.length) {
-                    return true;
-                }
+			}
 
-                // Stop loader.
-                wrap.parents('.bookdb-metric-inner').find('.bookdb-loading').empty().hide();
+			$.each(response.data, function (type, html) {
+				var wrap = $('#' + type + '-breakdown');
 
-                wrap.empty().html('<table><thead><tr><th>' + bookdb_analytics.l10n.name + '</th><th>' + bookdb_analytics.l10n.books_read + '</th><th>' + bookdb_analytics.l10n.number_reviews + '</th><th>' + bookdb_analytics.l10n.average_rating + '</th></tr></thead><tbody>' + html + '</tbody></table>')
-            });
+				if (!wrap.length) {
+					return true;
+				}
 
-        }
+				// Stop loader.
+				wrap.parents('.bookdb-metric-inner').find('.bookdb-loading').empty().hide();
 
-    };
+				wrap.empty().html('<table><thead><tr><th>' + bookdb_analytics.l10n.name + '</th><th>' + bookdb_analytics.l10n.books_read + '</th><th>' + bookdb_analytics.l10n.number_reviews + '</th><th>' + bookdb_analytics.l10n.average_rating + '</th></tr></thead><tbody>' + html + '</tbody></table>')
+			});
 
-    jQuery(document).ready(BDB_Analytics.init);
+		}
 
-    // Set ranges.
-    $('#bookdb-range').on('change', BDB_Analytics.setRanges);
+	};
 
-    // Update results.
-    $('#bookdb-date-range').on('click', 'button', function (e) {
-        e.preventDefault();
+	jQuery(document).ready(BDB_Analytics.init);
 
-        BDB_Analytics.getStats();
-    });
+	// Set ranges.
+	$('#bookdb-range').on('change', BDB_Analytics.setRanges);
+
+	// Update results.
+	$('#bookdb-date-range').on('click', 'button', function (e) {
+		e.preventDefault();
+
+		BDB_Analytics.getStats();
+	});
 
 })(window, document, jQuery);

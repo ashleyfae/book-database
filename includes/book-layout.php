@@ -221,8 +221,9 @@ function bdb_get_default_book_field_values( $all_fields = null ) {
  */
 function bdb_book_layout_cover( $value, $enabled_fields, $book_id, $book ) {
 	if ( $book->get_cover_id() ) {
-		$alignment = $enabled_fields['cover']['alignment'];
-		$size      = $enabled_fields['cover']['size'];
+		$default_fields = bdb_get_book_fields();
+		$alignment      = isset( $enabled_fields['cover']['alignment'] ) ? $enabled_fields['cover']['alignment'] : $default_fields['cover']['alignment'];
+		$size           = isset( $enabled_fields['cover']['size'] ) ? $enabled_fields['cover']['size'] : $default_fields['cover']['size'];
 
 		// Sanitize size.
 		if ( ! array_key_exists( $size, bdb_get_image_sizes() ) ) {
@@ -523,7 +524,7 @@ add_filter( 'book-database/book/formatted-info/value/rating', 'bdb_book_layout_r
  * @return string
  */
 function bdb_book_layout_synopsis( $value, $enabled_fields, $book_id, $book ) {
-	return $book->get_synopsis();
+	return wpautop( $book->get_synopsis() );
 }
 
 add_filter( 'book-database/book/formatted-info/value/synopsis', 'bdb_book_layout_synopsis', 10, 4 );

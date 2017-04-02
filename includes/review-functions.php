@@ -93,8 +93,9 @@ function bdb_count_reviews( $args ) {
  *                      `url` - URL to an external book review (optional).
  *                      `user_id` - User who the review is for. If omitted, current user is used.
  *                      `review` - Actual review text. Optional.
- *                      `date_written` - Timestamp for when the review was added. If omitted, current time is used.
- *                      `date_published` - Timestamp for when the review was published.
+ *                      `date_written` - Date for when the review was added, in current blog time. If omitted, current
+ *                      time is used.
+ *                      `date_published` - Date for when the review was published, in current blog time.
  *                      `rating` - If a rating is provided then a reading log is added.
  *                      `reading_log` - ID of an existing rating log to associated with review.
  *
@@ -135,12 +136,14 @@ function bdb_insert_review( $data = array() ) {
 
 	// Date Written
 	if ( array_key_exists( 'date_written', $data ) ) {
-		$review_db_data['date_written'] = sanitize_text_field( $data['date_written'] );
+		$review_db_data['date_written'] = sanitize_text_field( get_gmt_from_date( wp_strip_all_tags( $data['date_written'] ) ) );
 	}
 
 	// Date Published
-	if ( array_key_exists( 'date_published', $data ) ) {
-		$review_db_data['date_published'] = sanitize_text_field( $data['date_published'] );
+	if ( array_key_exists( 'date_published', $data ) && ! empty( $data['date_published'] ) ) {
+		$review_db_data['date_published'] = sanitize_text_field( get_gmt_from_date( wp_strip_all_tags( $data['date_published'] ) ) );
+	} else {
+		$review_db_data['date_published'] = null;
 	}
 
 	// Review ID

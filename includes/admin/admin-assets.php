@@ -36,7 +36,7 @@ function bdb_load_admin_scripts( $hook ) {
 	$suffix = ( defined( 'SCRIPT_DEBUG' ) && SCRIPT_DEBUG ) ? '' : '.min';
 
 	// CSS
-	wp_enqueue_style( 'book-database', $css_dir . 'admin' . $suffix . '.css', array(), BDB_VERSION );
+	wp_enqueue_style( 'book-database', $css_dir . 'admin' . $suffix . '.css', array(), time() ); // @todo change to BDB_VERSION
 
 	// JS
 	$deps = array( 'jquery', 'jquery-ui-sortable', 'suggest' );
@@ -49,7 +49,7 @@ function bdb_load_admin_scripts( $hook ) {
 
 	// Only add analytics on analytics page.
 	if ( 'book-library_page_bdb-analytics' == $screen->id ) {
-		wp_enqueue_script( 'bookdb-analytics', $js_dir . 'admin/analytics' . $suffix . '.js', array( 'jquery' ), BDB_VERSION, true );
+		wp_enqueue_script( 'bookdb-analytics', $js_dir . 'admin/analytics' . $suffix . '.js', array( 'jquery' ), time(), true ); // @todo change to BDB_VERSION
 
 		wp_localize_script( 'bookdb-analytics', 'bookdb_analytics', array(
 			'l10n' => array(
@@ -68,7 +68,7 @@ function bdb_load_admin_scripts( $hook ) {
 		) );
 	}
 
-	wp_enqueue_script( 'book-database', $js_dir . 'admin/admin' . $suffix . '.js', $deps, BDB_VERSION, true );
+	wp_enqueue_script( 'book-database', $js_dir . 'admin/admin' . $suffix . '.js', $deps, time(), true ); // @todo change to BDB_VERSION
 
 	wp_localize_script( 'book-database', 'book_database', array(
 		'ajax_url' => admin_url( 'admin-ajax.php' ),

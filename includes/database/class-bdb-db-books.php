@@ -385,21 +385,21 @@ class BDB_DB_Books extends BDB_DB {
 			if ( is_array( $args['pub_date'] ) ) {
 
 				if ( ! empty( $args['pub_date']['start'] ) ) {
-					$start = date( 'Y-m-d 00:00:00', strtotime( $args['pub_date']['start'] ) );
-					$where .= " AND `pub_date` >= '{$start}'";
+					$start = get_gmt_from_date( wp_strip_all_tags( $args['pub_date']['start'] ), 'Y-m-d 00:00:00' );
+					$where .= $wpdb->prepare( " AND `pub_date` >= %s", $start );
 				}
 
 				if ( ! empty( $args['pub_date']['end'] ) ) {
-					$end = date( 'Y-m-d 23:59:59', strtotime( $args['pub_date']['end'] ) );
-					$where .= " AND `pub_date` <= '{$end}'";
+					$end = get_gmt_from_date( wp_strip_all_tags( $args['pub_date']['end'] ), 'Y-m-d 23:59:59' );
+					$where .= $wpdb->prepare( " AND `pub_date` <= %s", $end );
 				}
 
 			} else {
 
-				$year  = date( 'Y', strtotime( $args['pub_date'] ) );
-				$month = date( 'm', strtotime( $args['pub_date'] ) );
-				$day   = date( 'd', strtotime( $args['pub_date'] ) );
-				$where .= " AND $year = YEAR ( pub_date ) AND $month = MONTH ( pub_date ) AND $day = DAY ( pub_date )";
+				$year  = get_gmt_from_date( wp_strip_all_tags( $args['pub_date'] ), 'Y' );
+				$month = get_gmt_from_date( wp_strip_all_tags( $args['pub_date'] ), 'm' );
+				$day   = get_gmt_from_date( wp_strip_all_tags( $args['pub_date'] ), 'd' );
+				$where .= $wpdb->prepare( " AND %d = YEAR ( pub_date ) AND %d = MONTH ( pub_date ) AND %d = DAY ( pub_date )", $year, $month, $day );
 
 			}
 
@@ -436,28 +436,27 @@ class BDB_DB_Books extends BDB_DB {
 				$orderby = 'books.ID';
 		}
 
-		//$args['orderby'] = ! array_key_exists( $args['orderby'], $this->get_columns() ) ? 'ID' : $args['orderby'];
+		$order   = ( 'ASC' == strtoupper( $args['order'] ) ) ? 'ASC' : 'DESC';
+		$orderby = esc_sql( $orderby );
+		$order   = esc_sql( $order );
 
 		$cache_key = md5( 'bdb_books_' . serialize( $args ) );
 
 		$books = wp_cache_get( $cache_key, 'books' );
-
-		$orderby       = esc_sql( $orderby );
-		$args['order'] = esc_sql( $args['order'] );
 
 		$select_this = 'books.*, series.name as series_name';
 		if ( $args['author_id'] || $args['author_name'] ) {
 			$select_this .= ', t.term_id as author_id, t.name as author_name';
 		}
 		if ( $args['include_author'] ) {
-			$select_this .= ", GROUP_CONCAT(author.name SEPARATOR ',') as author_name, GROUP_CONCAT(author.term_id SEPARATOR ',') as author_id";
+			$select_this .= ", GROUP_CONCAT(DISTINCT author.name SEPARATOR ',') as author_name, GROUP_CONCAT(DISTINCT author.term_id SEPARATOR ',') as author_id";
 		}
 		if ( $args['include_rating'] ) {
 			$select_this .= ", ROUND(AVG(IF(log.rating = 'dnf', 0, log.rating)), 2) as avg_rating";
 		}
 
 		if ( $books === false ) {
-			$query = $wpdb->prepare( "SELECT $select_this FROM  $this->table_name as books $join $where GROUP BY books.$this->primary_key ORDER BY {$orderby} {$args['order']} LIMIT %d,%d;", absint( $args['offset'] ), absint( $args['number'] ) );
+			$query = $wpdb->prepare( "SELECT $select_this FROM  $this->table_name as books $join $where GROUP BY books.$this->primary_key ORDER BY $orderby $order LIMIT %d,%d;", absint( $args['offset'] ), absint( $args['number'] ) );
 			$books = $wpdb->get_results( $query );
 			wp_cache_set( $cache_key, $books, 'books', 3600 );
 		}
@@ -558,21 +557,21 @@ class BDB_DB_Books extends BDB_DB {
 			if ( is_array( $args['pub_date'] ) ) {
 
 				if ( ! empty( $args['pub_date']['start'] ) ) {
-					$start = date( 'Y-m-d 00:00:00', strtotime( $args['pub_date']['start'] ) );
-					$where .= " AND `pub_date` >= '{$start}'";
+					$start = get_gmt_from_date( wp_strip_all_tags( $args['pub_date']['start'] ), 'Y-m-d 00:00:00' );
+					$where .= $wpdb->prepare( " AND `pub_date` >= %s", $start );
 				}
 
 				if ( ! empty( $args['pub_date']['end'] ) ) {
-					$end = date( 'Y-m-d 23:59:59', strtotime( $args['pub_date']['end'] ) );
-					$where .= " AND `pub_date` <= '{$end}'";
+					$end = get_gmt_from_date( wp_strip_all_tags( $args['pub_date']['end'] ), 'Y-m-d 23:59:59' );
+					$where .= $wpdb->prepare( " AND `pub_date` <= %s", $end );
 				}
 
 			} else {
 
-				$year  = date( 'Y', strtotime( $args['pub_date'] ) );
-				$month = date( 'm', strtotime( $args['pub_date'] ) );
-				$day   = date( 'd', strtotime( $args['pub_date'] ) );
-				$where .= " AND $year = YEAR ( pub_date ) AND $month = MONTH ( pub_date ) AND $day = DAY ( pub_date )";
+				$year  = get_gmt_from_date( wp_strip_all_tags( $args['pub_date'] ), 'Y' );
+				$month = get_gmt_from_date( wp_strip_all_tags( $args['pub_date'] ), 'm' );
+				$day   = get_gmt_from_date( wp_strip_all_tags( $args['pub_date'] ), 'd' );
+				$where .= $wpdb->prepare( " AND %d = YEAR ( pub_date ) AND %d = MONTH ( pub_date ) AND %d = DAY ( pub_date )", $year, $month, $day );
 
 			}
 

@@ -26,8 +26,9 @@ if ( ! defined( 'ABSPATH' ) ) {
  */
 function bdb_analytics_batch_1() {
 
-	$start = ( isset( $_POST['start'] ) && ! empty( $_POST['start'] ) ) ? wp_strip_all_tags( $_POST['start'] ) : '-30 days';
+	$start = ( isset( $_POST['start'] ) && ! empty( $_POST['start'] ) ) ? wp_strip_all_tags( $_POST['start'] ) : date( 'Y-1-1', current_time( 'timestamp' ) );
 	$end   = ( isset( $_POST['end'] ) && ! empty( $_POST['end'] ) ) ? wp_strip_all_tags( $_POST['end'] ) : 'now';
+	$range = ( isset( $_POST['range'] ) && ! empty( $_POST['range'] ) ) ? wp_strip_all_tags( $_POST['range'] ) : 'this-year';
 
 	$analytics = BDB_Analytics::instance();
 	$analytics->set_dates( $start, $end );
@@ -69,8 +70,16 @@ function bdb_analytics_batch_1() {
 			'book-list'               => $analytics->get_book_list(),
 			'read-not-reviewed'       => $analytics->get_read_not_reviewed(),
 			'rating-breakdown'        => $rating_breakdown_final,
-			'pages-breakdown'         => $analytics->get_pages_breakdown()
+			'pages-breakdown'         => $analytics->get_pages_breakdown(),
+			'reading-track'           => ''
 		);
+
+		if ( in_array( $range, array( 'this-month', 'this-year' ) ) ) {
+			$range_label              = ( 'this-month' == $range ) ? __( 'this month', 'book-database' ) : __( 'this year', 'book-database' );
+			$period_end               = ( 'this-month' == $range ) ? 'last day of this month' : date( 'Y-12-31 23:59:59' );
+			$estimated_books          = bdb_get_books_on_track_to_read( $books_read['total'], $start, $period_end );
+			$results['reading-track'] = sprintf( __( 'On track to read %d books %s.', 'book-database' ), $estimated_books, $range_label );
+		}
 
 		set_transient( 'bdb_analytics_1_' . $date_hash, $results, HOUR_IN_SECONDS );
 

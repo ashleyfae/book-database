@@ -174,6 +174,8 @@ class BDB_Review_Query {
 			'author'          => 'author.name',
 			'date'            => 'date_published',
 			'date_written'    => 'date_written',
+			'date_started'    => 'date_started',
+			'date_finished'   => 'date_finished',
 			'pub_date'        => 'book.pub_date',
 			'series_position' => 'book.series_position',
 			'pages'           => 'book.pages',
@@ -355,20 +357,20 @@ class BDB_Review_Query {
 			if ( is_array( $this->query_vars['date'] ) ) {
 
 				if ( ! empty( $this->query_vars['date']['start'] ) ) {
-					$start = date( 'Y-m-d 00:00:00', strtotime( $this->query_vars['date']['start'] ) );
+					$start = get_gmt_from_date( wp_strip_all_tags( $this->query_vars['date']['start'] ), 'Y-m-d 00:00:00' );
 					$where .= $wpdb->prepare( " AND `date_written` >= %s", $start );
 				}
 
 				if ( ! empty( $this->query_vars['date']['end'] ) ) {
-					$end = date( 'Y-m-d 23:59:59', strtotime( $this->query_vars['date']['end'] ) );
+					$end = get_gmt_from_date( wp_strip_all_tags( $this->query_vars['date']['end'] ), 'Y-m-d 23:59:59' );
 					$where .= $wpdb->prepare( " AND `date_written` <= %s", $end );
 				}
 
 			} else {
 
-				$year  = date( 'Y', strtotime( $this->query_vars['date'] ) );
-				$month = date( 'm', strtotime( $this->query_vars['date'] ) );
-				$day   = date( 'd', strtotime( $this->query_vars['date'] ) );
+				$year  = get_gmt_from_date( wp_strip_all_tags( $this->query_vars['date'] ), 'Y' );
+				$month = get_gmt_from_date( wp_strip_all_tags( $this->query_vars['date'] ), 'm' );
+				$day   = get_gmt_from_date( wp_strip_all_tags( $this->query_vars['date'] ), 'd' );
 				$where .= $wpdb->prepare( " AND %d = YEAR ( date_written ) AND %d = MONTH ( date_written ) AND %d = DAY ( date_written )", $year, $month, $day );
 
 			}
@@ -395,7 +397,7 @@ class BDB_Review_Query {
 
 		// Only show reviews that have been published.
 		if ( true == $this->query_vars['hide_future'] ) {
-			$current = date( 'Y-m-d 00:00:00', time() );
+			$current = get_gmt_from_date( 'now', 'Y-m-d 00:00:00' );
 			$where .= $wpdb->prepare( " AND `date_published` <= %s", $current );
 		}
 
@@ -473,10 +475,18 @@ class BDB_Review_Query {
 				ORDER BY {$this->orderby}
 				{$this->order}";
 
-		if ( $this->query_vars['per_page'] > 0 ) {
-			// Get the total number of results.
+		// Get the total number of results.
+		$total_cache_key = md5( 'bdb_review_query_count_' . serialize( $this->query_vars ) );
+		$total           = wp_cache_get( $total_cache_key, 'review_query' );
+
+		if ( $total === false ) {
 			$total_query         = "SELECT COUNT(1) FROM ({$query}) AS combined_table";
 			$this->total_reviews = $wpdb->get_var( $total_query );
+
+			wp_cache_set( $total_cache_key, $this->total_reviews, 'review_query', 3600 );
+		} else {
+			$this->total_reviews = $total;
+		}
 
 			// Add pagination parameters.
 			$offset     = ( false !== $this->query_vars['offset'] ) ? $this->query_vars['offset'] : ( $this->current_page * $this->per_page ) - $this->per_page;
@@ -486,7 +496,14 @@ class BDB_Review_Query {
 		}
 
 		// Get the final results.
-		$reviews = $wpdb->get_results( $query . $pagination );
+		$cache_key = md5( 'bdb_review_query_' . serialize( $this->query_vars ) );
+		$reviews   = wp_cache_get( $cache_key, 'review_query' );
+
+		if ( $reviews === false ) {
+			$reviews = $wpdb->get_results( $query . $pagination );
+
+			wp_cache_set( $cache_key, $reviews, 'review_query', 3600 );
+		}
 
 		if ( - 1 == $this->query_vars['per_page'] ) {
 			$this->total_reviews = count( $reviews );

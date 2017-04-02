@@ -448,7 +448,7 @@ function bdb_reviews_filter_form_orderby( $vars, $query, $atts, $content ) {
 			'id'               => 'bookdb-orderby',
 			'name'             => 'orderby',
 			'selected'         => sanitize_text_field( $vars['orderby'] ),
-			'options'          => bdb_get_allowed_orderby(),
+			'options'          => apply_filters( 'book-database/shortcodes/book-reviews/orderby-options', bdb_get_allowed_orderby() ),
 			'show_option_all'  => false,
 			'show_option_none' => false
 		) ); ?>

@@ -160,7 +160,7 @@ class BDB_Rating {
 		} else {
 			$allowed = bdb_get_available_ratings();
 
-			if ( array_key_exists( $text, $allowed ) ) {
+			if ( array_key_exists( (string) $text, $allowed ) ) {
 				$text = $allowed[ $text ];
 			}
 		}

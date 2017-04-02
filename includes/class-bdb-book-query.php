@@ -455,7 +455,7 @@ class BDB_Book_Query {
 		}
 
 		// Join on reviews table.
-		if ( 'only' == $this->query_vars['reviews'] || $this->query_vars['review_date'] || $this->query_vars['hide_future_reviews'] || in_array( $this->orderby, array(
+		if ( 'reviews' == $this->query_type || $this->query_vars['review_date'] || $this->query_vars['hide_future_reviews'] || in_array( $this->orderby, array(
 				'date_written',
 				'date_published'
 			) )
@@ -511,7 +511,7 @@ class BDB_Book_Query {
 		if ( $this->table_reviews_join ) {
 			$reviews_join_dir = 'LEFT';
 
-			if ( 'only' == $this->query_vars['reviews'] ) {
+			if ( 'reviews' == $this->query_type ) {
 				$reviews_join_dir = 'INNER';
 			}
 
@@ -533,7 +533,7 @@ class BDB_Book_Query {
 		 */
 
 		// If reviews only, only show published ones.
-		if ( 'only' == $this->query_vars['reviews'] ) {
+		if ( 'reviews' == $this->query_type ) {
 			$current = get_gmt_from_date( 'now', 'Y-m-d H:i:s' );
 			$where   .= $wpdb->prepare( " AND `date_published` <= %s", $current );
 		}
@@ -684,7 +684,7 @@ class BDB_Book_Query {
 		/*
 		 * Set up extra select params.
 		 */
-		if ( 'rating' == $this->orderby || $this->table_log_join ) {
+		if ( 'rating' == $this->orderby || ( 'books' == $this->query_type && $this->table_log_join ) ) {
 			$this->add_select( 'ROUND(AVG(IF(log.rating = \'dnf\', 0, log.rating)), 2) as rating' );
 		}
 		if ( $this->table_reviews_join ) {
@@ -698,6 +698,9 @@ class BDB_Book_Query {
 		if ( $this->table_authors_join ) {
 			$this->add_select( 'author.term_id as author_id' );
 			$this->add_select( 'GROUP_CONCAT(author.name SEPARATOR \', \') as author_name' );
+		}
+		if ( 'reviews' == $this->query_type && $this->table_log_join ) {
+			$this->add_select( 'log.rating as rating' );
 		}
 		$select = implode( ', ', array_unique( $this->select ) );
 

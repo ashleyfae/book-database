@@ -178,7 +178,7 @@ function bdb_book_grid_shortcode( $atts, $content = '' ) {
 		'show-review-link'    => false,
 		'show-goodreads-link' => false,
 		'reviews-only'        => false,
-		'orderby'             => 'pub_date',
+		'orderby'             => 'id',
 		'order'               => 'DESC',
 		'image-size'          => 'large',
 		'number'              => 20
@@ -192,7 +192,7 @@ function bdb_book_grid_shortcode( $atts, $content = '' ) {
 
 	$query_args = $term_args = array();
 
-	$query_args['ids']                 = explode( ',', $atts['ids'] );
+	$query_args['ids']                 = ! empty( $atts['ids'] ) ? explode( ',', $atts['ids'] ) : null;
 	$query_args['author_name']         = $atts['author'];
 	$query_args['series_name']         = $atts['series'];
 	$query_args['rating']              = $atts['rating'];

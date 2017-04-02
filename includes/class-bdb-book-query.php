@@ -195,6 +195,8 @@ class BDB_Book_Query {
 		// Reviews -- required.
 		if ( true == $this->query_vars['reviews_only'] ) {
 			$this->table_reviews_join = 'INNER';
+		} elseif ( true === $this->query_vars['show_review_link'] ) {
+			$this->table_reviews_join = 'LEFT';
 		}
 
 	}
@@ -226,9 +228,15 @@ class BDB_Book_Query {
 		}
 
 		// Join on review table to get review link.
-		if ( $this->query_vars['show_review_link'] ) {
+		if ( $this->table_reviews_join ) {
 			$review_table = book_database()->reviews->table_name;
-			$join         .= " LEFT JOIN {$review_table} as review on (book.ID = review.book_id) ";
+			$join         .= " {$this->table_reviews_join} JOIN {$review_table} as review on (book.ID = review.book_id) ";
+		}
+
+		// If reviews only, only show published ones.
+		if ( $this->query_vars['reviews_only'] ) {
+			$current = get_gmt_from_date( 'now', 'Y-m-d H:i:s' );
+			$where   .= $wpdb->prepare( " AND `date_published` <= %s", $current );
 		}
 
 		// Specific books.
@@ -386,6 +394,8 @@ class BDB_Book_Query {
 			LIMIT %d",
 			$this->number
 		);
+
+		var_dump( $query );
 
 		$books = $wpdb->get_results( $query );
 

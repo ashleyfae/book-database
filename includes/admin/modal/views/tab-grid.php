@@ -92,10 +92,10 @@ if ( ! defined( 'ABSPATH' ) ) {
 	) ); ?>
 
 	<?php book_database()->html->meta_row( 'select', array( 'label' => esc_html__( 'Order By', 'book-database' ) ), array(
-		'options'          => bdb_get_allowed_orderby(),
+		'options'          => bdb_get_allowed_orderby() + array( 'id' => __( 'Book ID', 'book-database' ) ),
 		'id'               => 'grid_order_by',
 		'name'             => 'grid_order_by',
-		'selected'         => 'pub_date',
+		'selected'         => 'id',
 		'show_option_all'  => false,
 		'show_option_none' => false
 	) ); ?>

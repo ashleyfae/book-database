@@ -515,7 +515,7 @@ var BookDB_Modal_Admin = {
 
 		// Orderby
 		var orderBy = jQuery('#grid_order_by').val();
-		if (orderBy != 'pub_date') {
+		if (orderBy != 'id') {
 			params = params + ' orderby="' + orderBy + '"';
 		}
 

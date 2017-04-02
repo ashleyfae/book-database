@@ -397,7 +397,7 @@ class BDB_Review_Query {
 
 		// Only show reviews that have been published.
 		if ( true == $this->query_vars['hide_future'] ) {
-			$current = get_gmt_from_date( 'now', 'Y-m-d 00:00:00' );
+			$current = get_gmt_from_date( 'now', 'Y-m-d H:i:s' );
 			$where   .= $wpdb->prepare( " AND `date_published` <= %s", $current );
 		}
 

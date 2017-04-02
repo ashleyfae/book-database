@@ -75,6 +75,7 @@ function bdb_analytics_page() {
 							<p class="bottom-text" id="pages-compare"><span></span></p>
 						</div>
 					</div>
+					<div id="reading-track" class="bookdb-metric-inner bookdb-result"></div>
 				</div>
 
 				<div class="bookdb-metric">

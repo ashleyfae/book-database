@@ -114,8 +114,13 @@ add_shortcode( 'review-index', 'bdb_review_index_shortcode' );
  */
 function bdb_book_reviews_shortcode( $atts, $content = '' ) {
 
-	$query = new BDB_Review_Query( array( 'hide_future' => true ) );
-	$vars  = $query->parse_query_args();
+	$args                  = array(
+		'hide_future' => true,
+		'reviews'     => 'only'
+	);
+	$query                 = new BDB_Book_Query( apply_filters( 'book-database/shortcodes/book-reviews/query-args', $args, $atts ) );
+	$query->table_log_join = true;
+	$vars                  = $query->parse_query_args();
 	$query->query();
 	$template = bdb_get_template_part( 'shortcode-book-reviews-entry', '', false );
 
@@ -128,10 +133,10 @@ function bdb_book_reviews_shortcode( $atts, $content = '' ) {
 
 	echo '<div id="reviews">';
 
-	if ( $query->have_reviews() && ! empty( $template ) ) {
-		echo '<div class="bookdb-review-list-number-results">' . sprintf( _n( '%s review found', '%s reviews found', $query->total_reviews, 'book-database' ), $query->total_reviews ) . '</div>';
+	if ( $query->have_books() && ! empty( $template ) ) {
+		echo '<div class="bookdb-review-list-number-results">' . sprintf( _n( '%s review found', '%s reviews found', $query->total_books, 'book-database' ), $query->total_books ) . '</div>';
 		echo '<div class="book-reviews-list">';
-		foreach ( $query->get_reviews() as $entry ) {
+		foreach ( $query->get_books() as $entry ) {
 			include $template;
 		}
 		echo '</div>';

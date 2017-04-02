@@ -30,6 +30,7 @@ function bdb_analytics_page() {
 		<div id="bookdb-date-range">
 			<input type="hidden" id="bookdb-start" value="<?php echo esc_attr( date_i18n( 'Y-1-1', $time ) ); ?>">
 			<input type="hidden" id="bookdb-end" value="now">
+			<label for="bookdb-range" class="screen-reader-text"><?php _e( 'Select a data range', 'book-database' ); ?></label>
 			<select id="bookdb-range">
 				<option value="30-days" data-start="-30 days" data-end="now"><?php _e( 'Last 30 days', 'book-database' ); ?></option>
 				<option value="this-month" data-start="<?php echo esc_attr( date_i18n( 'Y-m-1', $time ) ); ?>" data-end="now"><?php _e( 'This month', 'book-database' ); ?></option>
@@ -94,30 +95,30 @@ function bdb_analytics_page() {
 					</div>
 				</div>
 
-                <div class="bookdb-metric">
-                    <div class="bookdb-metric-inner bookdb-metric-multi-col">
-                        <div>
-                            <p class="top-text"><?php _e( 'Different Series', 'book-database' ); ?></p>
-                            <div class="bookdb-loading"></div>
-                            <h2 id="number-different-series" class="bookdb-result"></h2>
-                            <p class="bottom-text" id="number-different-series-compare"><span></span></p>
-                        </div>
+				<div class="bookdb-metric">
+					<div class="bookdb-metric-inner bookdb-metric-multi-col">
+						<div>
+							<p class="top-text"><?php _e( 'Different Series', 'book-database' ); ?></p>
+							<div class="bookdb-loading"></div>
+							<h2 id="number-different-series" class="bookdb-result"></h2>
+							<p class="bottom-text" id="number-different-series-compare"><span></span></p>
+						</div>
 
-                        <div>
-                            <p class="top-text"><?php _e( 'Standalones', 'book-database' ); ?></p>
-                            <div class="bookdb-loading"></div>
-                            <h2 id="number-standalones" class="bookdb-result"></h2>
-                            <p class="bottom-text" id="number-standalones-compare"><span></span></p>
-                        </div>
+						<div>
+							<p class="top-text"><?php _e( 'Standalones', 'book-database' ); ?></p>
+							<div class="bookdb-loading"></div>
+							<h2 id="number-standalones" class="bookdb-result"></h2>
+							<p class="bottom-text" id="number-standalones-compare"><span></span></p>
+						</div>
 
-                        <div>
-                            <p class="top-text"><?php _e( 'Different Authors', 'book-database' ); ?></p>
-                            <div class="bookdb-loading"></div>
-                            <h2 id="number-authors" class="bookdb-result"></h2>
-                            <p class="bottom-text" id="number-authors-compare"><span></span></p>
-                        </div>
-                    </div>
-                </div>
+						<div>
+							<p class="top-text"><?php _e( 'Different Authors', 'book-database' ); ?></p>
+							<div class="bookdb-loading"></div>
+							<h2 id="number-authors" class="bookdb-result"></h2>
+							<p class="bottom-text" id="number-authors-compare"><span></span></p>
+						</div>
+					</div>
+				</div>
 
 				<div class="bookdb-metric">
 					<div class="bookdb-metric-inner">
@@ -127,13 +128,13 @@ function bdb_analytics_page() {
 					</div>
 				</div>
 
-                <div class="bookdb-metric">
-                    <div class="bookdb-metric-inner">
-                        <p class="top-text"><?php _e( 'Pages Breakdown', 'book-database' ); ?></p>
-                        <div class="bookdb-loading"></div>
-                        <div id="pages-breakdown" class="bookdb-result"></div>
-                    </div>
-                </div>
+				<div class="bookdb-metric">
+					<div class="bookdb-metric-inner">
+						<p class="top-text"><?php _e( 'Pages Breakdown', 'book-database' ); ?></p>
+						<div class="bookdb-loading"></div>
+						<div id="pages-breakdown" class="bookdb-result"></div>
+					</div>
+				</div>
 			</div>
 
 			<div class="bookdb-analytics-column">

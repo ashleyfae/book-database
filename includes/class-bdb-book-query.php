@@ -256,12 +256,16 @@ class BDB_Book_Query {
 		}
 
 		// Filter by author name.
-		if ( $this->query_vars['author_name'] ) {
-			$where .= $wpdb->prepare( " AND author.name LIKE '%%%%" . '%s' . "%%%%'", sanitize_text_field( wp_strip_all_tags( $this->query_vars['author_name'] ) ) );
-		}
-		// Filter by author slug.
-		if ( $this->query_vars['author_slug'] ) {
-			$where .= $wpdb->prepare( " AND author.slug = %s", sanitize_text_field( wp_strip_all_tags( $this->query_vars['author_slug'] ) ) );
+		if ( $this->query_vars['author_name'] || $this->query_vars['author_slug'] ) {
+			$join .= " INNER JOIN {$this->tables['relationships']} as ar ON book.ID = ar.book_ID INNER JOIN {$this->tables['terms']} as author ON (ar.term_id = author.term_id AND author.type = 'author') ";
+
+			if ( $this->query_vars['author_name'] ) {
+				$where .= $wpdb->prepare( " AND author.name LIKE '%%%%" . '%s' . "%%%%'", sanitize_text_field( wp_strip_all_tags( $this->query_vars['author_name'] ) ) );
+			}
+			// Filter by author slug.
+			if ( $this->query_vars['author_slug'] ) {
+				$where .= $wpdb->prepare( " AND author.slug = %s", sanitize_text_field( wp_strip_all_tags( $this->query_vars['author_slug'] ) ) );
+			}
 		}
 
 		// Filter by series name.

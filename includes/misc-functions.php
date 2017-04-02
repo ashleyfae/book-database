@@ -294,3 +294,36 @@ function bdb_get_image_sizes() {
 
 	return apply_filters( 'book-database/image-sizes', $final_sizes );
 }
+
+/**
+ * Calculate books on track to be read in given period.
+ *
+ * @param int    $books_read Number of books read in the given period.
+ * @param string $start_date Start date (any PHP format to use strtotime() on).
+ * @param string $end_date   End date (any PHP format to use strtotime() on).
+ *
+ * @since 1.2.4
+ * @return int
+ */
+function bdb_get_books_on_track_to_read( $books_read, $start_date, $end_date ) {
+
+	// If end date is in the past, return books read.
+	if ( time() > strtotime( $end_date ) ) {
+		return $books_read;
+	}
+
+	$now        = new DateTime();
+	$start_date = new DateTime( $start_date );
+	$end_date   = new DateTime( $end_date );
+
+	// Calculate books read per day so far
+	$days_in_period = $now->diff( $start_date )->days;
+	$books_per_day  = $books_read / $days_in_period;
+
+	// Based on books per day, calculate how many we'll read in remaining period.
+	$remaining_days = $end_date->diff( $now )->days;
+	$left_to_read   = $books_per_day * $remaining_days;
+
+	return apply_filters( 'book-database/books-on-track-to-read', round( $left_to_read + $books_read ), $books_read, $start_date, $end_date );
+
+}

@@ -24,3 +24,26 @@
         }
     }
 }
+
+.bdb-books-in-series-wrap {
+    display: flex;
+    flex-flow: row wrap;
+    margin: 0 -5px;
+
+    &, * {
+        -webkit-box-sizing: border-box;
+        -moz-box-sizing: border-box;
+        box-sizing: border-box;
+    }
+
+    > a {
+        flex: 0 50%;
+        padding: 0 5px 5px;
+
+        img {
+            display: block;
+            height: auto;
+            max-width: 100%;
+        }
+    }
+}

@@ -169,6 +169,15 @@ class BDB_Book_Query {
 	public $group_by;
 
 	/**
+	 * Whether or not to return books only
+	 *
+	 * @var bool
+	 * @access public
+	 * @since  1.0
+	 */
+	public $return_books_only = true;
+
+	/**
 	 * Primary type of query ('books' or 'reviews'). This determines whether we select
 	 * distinct book IDs or distinct review IDs (the latter of which may result in
 	 * the same book appearing multiple times with different reviews).
@@ -215,6 +224,7 @@ class BDB_Book_Query {
 			'author_name'         => false, // specific author name
 			'author_slug'         => false, // author slug
 			'series_name'         => false, // specific series name
+			'series_id'           => false, // specific series ID
 			'rating'              => false, // specific rating
 			'terms'               => array(), // specific term values
 			'review_date'         => false, // specific review date (value or array)
@@ -230,15 +240,17 @@ class BDB_Book_Query {
 			'offset'              => false,
 			'hide_future_reviews' => false, // whether to hide reviews not yet published
 			'per_page'            => 20,
-			'nopaging'            => false
+			'nopaging'            => false,
+			'return_books_only'   => true
 		);
 		$args     = wp_parse_args( $args, $defaults );
 
 		// Set up query vars.
-		$this->per_page     = $args['per_page'];
-		$this->query_vars   = $args;
-		$this->query_type   = ( 'reviews' == $query_type ) ? 'reviews' : 'books';
-		$this->current_page = ( isset( $_GET['bdbpage'] ) ) ? absint( $_GET['bdbpage'] ) : 1;
+		$this->per_page          = $args['per_page'];
+		$this->query_vars        = $args;
+		$this->query_type        = ( 'reviews' == $query_type ) ? 'reviews' : 'books';
+		$this->current_page      = ( isset( $_GET['bdbpage'] ) ) ? absint( $_GET['bdbpage'] ) : 1;
+		$this->return_books_only = $args['return_books_only'];
 
 		if ( 'reviews' == $this->query_type ) {
 			$primary_select = 'DISTINCT review.ID as review_id, book.ID as book_id';
@@ -469,7 +481,7 @@ class BDB_Book_Query {
 		}
 
 		// Join on series table.
-		if ( $this->query_vars['series_name'] ) {
+		if ( $this->query_vars['series_name'] || $this->query_vars['series_id'] ) {
 			$this->table_series_join = true;
 		}
 
@@ -565,6 +577,11 @@ class BDB_Book_Query {
 		// Filter by series name.
 		if ( $this->query_vars['series_name'] ) {
 			$where .= $wpdb->prepare( " AND series.name LIKE '%%%%" . '%s' . "%%%%' ", sanitize_text_field( wp_strip_all_tags( $this->query_vars['series_name'] ) ) );
+		}
+
+		// Filter by series ID.
+		if ( $this->query_vars['series_id'] ) {
+			$where .= $wpdb->prepare( " AND series.ID = %d ", absint( $this->query_vars['series_id'] ) );
 		}
 
 		// Filter by rating.
@@ -754,7 +771,7 @@ class BDB_Book_Query {
 			wp_cache_set( $cache_key, $books, 'book_query', 3600 );
 		}
 
-		if ( - 1 == $this->per_page ) {
+		if ( $this->query_vars['nopaging'] || - 1 == $this->per_page ) {
 			$this->total_books = count( $books );
 		}
 
@@ -812,10 +829,14 @@ class BDB_Book_Query {
 			$review_tmp->date_published = isset( $entry->date_published ) ? $entry->date_published : false;
 			$review                     = new BDB_Review( $review_tmp );
 
-			$final[] = array(
-				'book'   => $book,
-				'review' => $review
-			);
+			if ( $this->return_books_only ) {
+				$final[] = $book;
+			} else {
+				$final[] = array(
+					'book'   => $book,
+					'review' => $review
+				);
+			}
 		}
 
 		return $final;

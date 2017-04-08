@@ -204,6 +204,9 @@
   line-height: 1.4;
   margin: 0;
   padding: 8px 12px; }
+#bookdb-book-page-wrapper .postbox .hndle,
+#bookdb-review-page-wrapper .postbox .hndle {
+  cursor: auto !important; }
 
 .bookdb-box-row {
   margin: 1.5em 0; }

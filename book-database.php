@@ -243,7 +243,6 @@ if ( ! class_exists( 'Book_Database' ) ) :
 			require_once BDB_DIR . 'includes/class-bdb-html.php';
 			require_once BDB_DIR . 'includes/class-bdb-rating.php';
 			require_once BDB_DIR . 'includes/class-bdb-review.php';
-			require_once BDB_DIR . 'includes/class-bdb-review-query.php';
 			require_once BDB_DIR . 'includes/error-tracking.php';
 			require_once BDB_DIR . 'includes/misc-functions.php';
 			require_once BDB_DIR . 'includes/rating-functions.php';

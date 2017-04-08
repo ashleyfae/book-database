@@ -68,19 +68,32 @@ class BDB_Rating {
 	 *
 	 * @access public
 	 * @since  1.0.0
-	 * @return bool Whether or not set up was successful.
+	 * @return void
 	 */
 	public function set_rating( $rating ) {
 
-		$rating          = is_numeric( $rating ) ? (float) $rating : $rating; // to remove trailing 0
-		$allowed_ratings = bdb_get_available_ratings();
-		if ( array_key_exists( (string) $rating, $allowed_ratings ) ) {
-			$this->rating = $rating;
+		$rating       = is_numeric( $rating ) ? (float) $rating : $rating; // to remove trailing 0
+		$this->rating = (string) $rating;
 
-			return true;
+	}
+
+	/**
+	 * Round rating to nearest half
+	 *
+	 * @access public
+	 * @since  1.0
+	 * @return float|int Rounded rating.
+	 */
+	public function round_rating() {
+
+		$rating          = $this->rating;
+		$allowed_ratings = bdb_get_available_ratings();
+
+		if ( ! array_key_exists( (string) $rating, $allowed_ratings ) ) {
+			$rating = round( $this->rating * 2 ) / 2;
 		}
 
-		return false;
+		return $rating;
 
 	}
 
@@ -182,8 +195,9 @@ class BDB_Rating {
 
 		$allowed = bdb_get_available_ratings();
 		$class   = '';
+		$rating  = $this->round_rating();
 
-		switch ( $this->rating ) {
+		switch ( $rating ) {
 
 			case '5' :
 				$class = 'five-stars';
@@ -252,7 +266,7 @@ class BDB_Rating {
 	 */
 	public function repeat( $full_star = '', $half_star = '', $empty_star = '' ) {
 
-		$rating      = $this->rating;
+		$rating      = $this->round_rating();
 		$full_stars  = floor( $rating );
 		$half_stars  = ceil( $rating - $full_stars );
 		$empty_stars = $this->max - $full_stars - $half_stars;

@@ -175,6 +175,8 @@ class BDB_Rating {
 
 			if ( array_key_exists( (string) $text, $allowed ) ) {
 				$text = $allowed[ $text ];
+			} else {
+				$text = sprintf( _n( '%s star', '%s stars', $text, 'book-database' ), $text );
 			}
 		}
 

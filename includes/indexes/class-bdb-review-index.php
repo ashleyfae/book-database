@@ -16,7 +16,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 /**
  * Class BDB_Review_Index
  *
- * @since 1.0.0
+ * @since 1.0
  */
 class BDB_Review_Index {
 
@@ -25,7 +25,7 @@ class BDB_Review_Index {
 	 *
 	 * @var array
 	 * @access protected
-	 * @since  1.0.0
+	 * @since  1.0
 	 */
 	protected $atts;
 
@@ -34,7 +34,7 @@ class BDB_Review_Index {
 	 *
 	 * @var string
 	 * @access protected
-	 * @since  1.0.0
+	 * @since  1.0
 	 */
 	protected $template;
 
@@ -43,7 +43,7 @@ class BDB_Review_Index {
 	 *
 	 * @var array
 	 * @access protected
-	 * @since  1.0.0
+	 * @since  1.0
 	 */
 	protected $tables = array();
 
@@ -52,7 +52,7 @@ class BDB_Review_Index {
 	 *
 	 * @var string
 	 * @access protected
-	 * @since  1.0.0
+	 * @since  1.0
 	 */
 	protected $orderby;
 
@@ -61,7 +61,7 @@ class BDB_Review_Index {
 	 *
 	 * @var string
 	 * @access protected
-	 * @since  1.0.0
+	 * @since  1.0
 	 */
 	protected $order;
 
@@ -72,7 +72,7 @@ class BDB_Review_Index {
 	 * @param string $template Template for individual reviews.
 	 *
 	 * @access public
-	 * @since  1.0.0
+	 * @since  1.0
 	 */
 	public function __construct( $atts = array(), $template = '' ) {
 
@@ -108,7 +108,7 @@ class BDB_Review_Index {
 	 * @param object $review
 	 *
 	 * @access public
-	 * @since  1.0.0
+	 * @since  1.0
 	 * @return string
 	 */
 	public function format_review( $review ) {

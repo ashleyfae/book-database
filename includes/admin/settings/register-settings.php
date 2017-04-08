@@ -7,7 +7,7 @@
  * @package   book-database
  * @copyright Copyright (c) 2016, Ashley GIbson
  * @license   GPL2+
- * @since     1.0.0
+ * @since     1.0
  */
 
 // Exit if accessed directly
@@ -25,7 +25,7 @@ if ( ! defined( 'ABSPATH' ) ) {
  *
  * @global       $bdb_options
  *
- * @since 1.0.0
+ * @since 1.0
  * @return mixed
  */
 function bdb_get_option( $key = '', $default = false ) {
@@ -48,7 +48,7 @@ function bdb_get_option( $key = '', $default = false ) {
  *
  * @global       $bdb_options
  *
- * @since 1.0.0
+ * @since 1.0
  * @return bool True if updated, false if not
  */
 function bdb_update_option( $key = '', $value = false ) {
@@ -91,7 +91,7 @@ function bdb_update_option( $key = '', $value = false ) {
  *
  * @global       $bdb_options
  *
- * @since 1.0.0
+ * @since 1.0
  * @return boolean True if updated, false if not.
  */
 function bdb_delete_option( $key = '' ) {
@@ -124,7 +124,7 @@ function bdb_delete_option( $key = '' ) {
  *
  * Retrieves all plugin settings
  *
- * @since 1.0.0
+ * @since 1.0
  * @return array Novelist settings
  */
 function bdb_get_settings() {
@@ -136,7 +136,7 @@ function bdb_get_settings() {
 /**
  * Add all settings sections and fields.
  *
- * @since 1.0.0
+ * @since 1.0
  * @return void
  */
 function bdb_register_settings() {
@@ -204,7 +204,7 @@ add_action( 'admin_init', 'bdb_register_settings' );
  *  + book-database/settings/{key} - Where {key} is a specific tab. Used to modify a single tab/section.
  *  + book-database/settings/registered-settings - Includes the entire array of all settings.
  *
- * @since 1.0.0
+ * @since 1.0
  * @return array
  */
 function bdb_get_registered_settings() {
@@ -289,7 +289,7 @@ function bdb_get_registered_settings() {
  *
  * @global array $bdb_options Array of all the Novelist options
  *
- * @since 1.0.0
+ * @since 1.0
  * @return array New, sanitized settings.
  */
 function bdb_settings_sanitize( $input = array() ) {
@@ -352,7 +352,7 @@ function bdb_settings_sanitize( $input = array() ) {
  *
  * @param string $input
  *
- * @since 1.0.0
+ * @since 1.0
  * @return string
  */
 function bdb_settings_sanitize_text_field( $input ) {
@@ -366,7 +366,7 @@ add_filter( 'book-database/settings/sanitize/text', 'bdb_settings_sanitize_text_
  *
  * @param int $input
  *
- * @since 1.0.0
+ * @since 1.0
  * @return int
  */
 function bdb_settings_sanitize_number_field( $input ) {
@@ -380,7 +380,7 @@ add_filter( 'book-database/settings/sanitize/number', 'bdb_settings_sanitize_num
  *
  * @param int $input
  *
- * @since 1.0.0
+ * @since 1.0
  * @return bool
  */
 function bdb_settings_sanitize_checkbox_field( $input ) {
@@ -394,7 +394,7 @@ add_filter( 'book-database/settings/sanitize/checkbox', 'bdb_settings_sanitize_c
  *
  * @param string $input
  *
- * @since 1.0.0
+ * @since 1.0
  * @return string
  */
 function bdb_settings_sanitize_select_field( $input ) {
@@ -408,7 +408,7 @@ add_filter( 'book-database/settings/sanitize/select', 'bdb_settings_sanitize_sel
  *
  * @param array $input
  *
- * @since 1.0.0
+ * @since 1.0
  * @return array
  */
 function bdb_settings_sanitize_book_layout( $input ) {
@@ -436,7 +436,7 @@ add_filter( 'book-database/settings/sanitize/book_layout', 'bdb_settings_sanitiz
  *
  * @param array $input
  *
- * @since 1.0.0
+ * @since 1.0
  * @return array
  */
 function bdb_settings_sanitize_taxonomies( $input ) {
@@ -474,7 +474,7 @@ add_filter( 'book-database/settings/sanitize/taxonomies', 'bdb_settings_sanitize
 /**
  * Settings Tabs
  *
- * @since 1.0.0
+ * @since 1.0
  * @return array $tabs
  */
 function bdb_get_settings_tabs() {
@@ -490,7 +490,7 @@ function bdb_get_settings_tabs() {
 /**
  * Setting Tab Sections
  *
- * @since 1.0.0
+ * @since 1.0
  * @return array $section
  */
 function bdb_get_settings_tab_sections( $tab = false ) {
@@ -510,7 +510,7 @@ function bdb_get_settings_tab_sections( $tab = false ) {
  * Get the settings sections for each tab
  * Uses a static to avoid running the filters on every request to this function
  *
- * @since  1.0.0
+ * @since  1.0
  * @return array|false Array of tabs and sections
  */
 function bdb_get_registered_settings_sections() {
@@ -545,7 +545,7 @@ function bdb_get_registered_settings_sections() {
  *
  * @param  string $key String key
  *
- * @since 1.0.0
+ * @since 1.0
  * @return string Sanitized key
  */
 function bdb_sanitize_key( $key ) {
@@ -566,7 +566,7 @@ function bdb_sanitize_key( $key ) {
  *
  * @param array $args Arguments passed by the setting.
  *
- * @since 1.0.0
+ * @since 1.0
  * @return void
  */
 function bdb_missing_callback( $args ) {
@@ -581,7 +581,7 @@ function bdb_missing_callback( $args ) {
  *
  * @param array $args Arguments passed by the setting.
  *
- * @since 1.0.0
+ * @since 1.0
  * @return void
  */
 function bdb_text_callback( $args ) {
@@ -615,7 +615,7 @@ function bdb_text_callback( $args ) {
  *
  * @param array $args Arguments passed by the setting.
  *
- * @since 1.0.0
+ * @since 1.0
  * @return void
  */
 function bdb_checkbox_callback( $args ) {
@@ -634,7 +634,7 @@ function bdb_checkbox_callback( $args ) {
  *
  * @param array $args Arguments passed by the setting.
  *
- * @since 1.0.0
+ * @since 1.0
  * @return void
  */
 function bdb_select_callback( $args ) {
@@ -666,7 +666,7 @@ function bdb_select_callback( $args ) {
  *
  * @param array $args
  *
- * @since 1.0.0
+ * @since 1.0
  * @return void
  */
 function bdb_book_layout_callback( $args ) {
@@ -723,7 +723,7 @@ function bdb_book_layout_callback( $args ) {
  * @param array  $enabled_fields
  * @param string $disabled
  *
- * @since 1.0.0
+ * @since 1.0
  * @return void
  */
 function bdb_format_book_layout_option( $key = '', $options = array(), $all_fields = array(), $enabled_fields = array(), $disabled = 'false' ) {
@@ -791,7 +791,7 @@ function bdb_format_book_layout_option( $key = '', $options = array(), $all_fiel
  *
  * @global array $bdb_options
  *
- * @since 1.0.0
+ * @since 1.0
  * @return void
  */
 function bdb_taxonomies_callback( $args ) {
@@ -866,7 +866,7 @@ function bdb_taxonomies_callback( $args ) {
  *
  * @param bool $force Force the pages to be loaded even if not on the settings page.
  *
- * @since 1.0.0
+ * @since 1.0
  * @return array
  */
 function bdb_get_pages( $force = false ) {

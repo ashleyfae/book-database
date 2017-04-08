@@ -57,7 +57,7 @@ class BDB_DB_Reading_List extends BDB_DB {
 	 * Get default column values.
 	 *
 	 * @access public
-	 * @since  1.0.0
+	 * @since  1.0
 	 * @return array
 	 */
 	public function get_column_defaults() {
@@ -222,7 +222,7 @@ class BDB_DB_Reading_List extends BDB_DB {
 	 * @param array $args Query arguments.
 	 *
 	 * @access public
-	 * @since  1.0.0
+	 * @since  1.0
 	 * @return array Array of objects.
 	 */
 	public function get_entries( $args = array() ) {
@@ -522,7 +522,7 @@ class BDB_DB_Reading_List extends BDB_DB {
 	 * Create the table.
 	 *
 	 * @access public
-	 * @since  1.0.0
+	 * @since  1.0
 	 * @return void
 	 */
 	public function create_table() {

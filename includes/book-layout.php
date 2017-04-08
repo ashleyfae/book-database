@@ -23,7 +23,7 @@ if ( ! defined( 'ABSPATH' ) ) {
  * Other plugins can add their own fields using this filter:
  *  + book-database/book/available-fields
  *
- * @since 1.0.0
+ * @since 1.0
  * @return array
  */
 function bdb_get_book_fields() {
@@ -128,7 +128,7 @@ add_filter( 'book-database/book/available-fields', 'bdb_book_layout_taxonomy_fie
  *
  * Returns an array of book cover alignment options.
  *
- * @since 1.0.0
+ * @since 1.0
  * @return array
  */
 function bdb_book_alignment_options() {
@@ -146,7 +146,7 @@ function bdb_book_alignment_options() {
  *
  * Meta enabled by default for the book layout.
  *
- * @since 1.0.0
+ * @since 1.0
  * @return array
  */
 function bdb_get_default_book_layout_keys() {
@@ -177,7 +177,7 @@ function bdb_get_default_book_layout_keys() {
  *
  * @param array|null $all_fields
  *
- * @since 1.0.0
+ * @since 1.0
  * @return array
  */
 function bdb_get_default_book_field_values( $all_fields = null ) {
@@ -216,7 +216,7 @@ function bdb_get_default_book_field_values( $all_fields = null ) {
  * @param int      $book_id
  * @param BDB_Book $book
  *
- * @since 1.0.0
+ * @since 1.0
  * @return string
  */
 function bdb_book_layout_cover( $value, $enabled_fields, $book_id, $book ) {
@@ -247,7 +247,7 @@ add_filter( 'book-database/book/formatted-info/value/cover', 'bdb_book_layout_co
  * @param int      $book_id
  * @param BDB_Book $book
  *
- * @since 1.0.0
+ * @since 1.0
  * @return string
  */
 function bdb_book_layout_title( $value, $enabled_fields, $book_id, $book ) {
@@ -264,7 +264,7 @@ add_filter( 'book-database/book/formatted-info/value/title', 'bdb_book_layout_ti
  * @param int      $book_id
  * @param BDB_Book $book
  *
- * @since 1.0.0
+ * @since 1.0
  * @return string
  */
 function bdb_book_layout_author( $value, $enabled_fields, $book_id, $book ) {
@@ -296,7 +296,7 @@ add_filter( 'book-database/book/formatted-info/value/author', 'bdb_book_layout_a
  * @param int      $book_id
  * @param BDB_Book $book
  *
- * @since 1.0.0
+ * @since 1.0
  * @return string
  */
 function bdb_book_layout_series( $value, $enabled_fields, $book_id, $book ) {
@@ -319,7 +319,7 @@ add_filter( 'book-database/book/formatted-info/value/series', 'bdb_book_layout_s
  * @param int      $book_id
  * @param BDB_Book $book
  *
- * @since 1.0.0
+ * @since 1.0
  * @return string
  */
 function bdb_book_layout_publisher( $value, $enabled_fields, $book_id, $book ) {
@@ -349,7 +349,7 @@ add_filter( 'book-database/book/formatted-info/value/publisher', 'bdb_book_layou
  * @param int      $book_id
  * @param BDB_Book $book
  *
- * @since 1.0.0
+ * @since 1.0
  * @return string
  */
 function bdb_book_layout_pub_date( $value, $enabled_fields, $book_id, $book ) {
@@ -372,7 +372,7 @@ add_filter( 'book-database/book/formatted-info/value/pub_date', 'bdb_book_layout
  * @param int      $book_id
  * @param BDB_Book $book
  *
- * @since 1.0.0
+ * @since 1.0
  * @return string
  */
 function bdb_book_layout_genre( $value, $enabled_fields, $book_id, $book ) {
@@ -402,7 +402,7 @@ add_filter( 'book-database/book/formatted-info/value/genre', 'bdb_book_layout_ge
  * @param int      $book_id
  * @param BDB_Book $book
  *
- * @since 1.0.0
+ * @since 1.0
  * @return string
  */
 function bdb_book_layout_pages( $value, $enabled_fields, $book_id, $book ) {
@@ -425,7 +425,7 @@ add_filter( 'book-database/book/formatted-info/value/pages', 'bdb_book_layout_pa
  * @param int      $book_id
  * @param BDB_Book $book
  *
- * @since 1.0.0
+ * @since 1.0
  * @return string
  */
 function bdb_book_layout_source( $value, $enabled_fields, $book_id, $book ) {
@@ -454,7 +454,7 @@ add_filter( 'book-database/book/formatted-info/value/source', 'bdb_book_layout_s
  * @param int      $book_id
  * @param BDB_Book $book
  *
- * @since 1.0.0
+ * @since 1.0
  * @return string
  */
 function bdb_book_layout_goodreads_url( $value, $enabled_fields, $book_id, $book ) {
@@ -471,7 +471,7 @@ add_filter( 'book-database/book/formatted-info/value/goodreads_url', 'bdb_book_l
  * @param int      $book_id
  * @param BDB_Book $book
  *
- * @since 1.0.0
+ * @since 1.0
  * @return string
  */
 function bdb_book_layout_buy_link( $value, $enabled_fields, $book_id, $book ) {
@@ -488,7 +488,7 @@ add_filter( 'book-database/book/formatted-info/value/buy_link', 'bdb_book_layout
  * @param int      $book_id
  * @param BDB_Book $book
  *
- * @since 1.0.0
+ * @since 1.0
  * @return string
  */
 function bdb_book_layout_rating( $value, $enabled_fields, $book_id, $book ) {
@@ -520,7 +520,7 @@ add_filter( 'book-database/book/formatted-info/value/rating', 'bdb_book_layout_r
  * @param int      $book_id
  * @param BDB_Book $book
  *
- * @since 1.0.0
+ * @since 1.0
  * @return string
  */
 function bdb_book_layout_synopsis( $value, $enabled_fields, $book_id, $book ) {
@@ -537,7 +537,7 @@ add_filter( 'book-database/book/formatted-info/value/synopsis', 'bdb_book_layout
  * @param string   $html Formatted book info.
  * @param BDB_Book $book Book object.
  *
- * @since 1.0.0
+ * @since 1.0
  * @return string
  */
 function bdb_book_layout_wrapper( $html, $book ) {

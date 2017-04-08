@@ -21,7 +21,7 @@ class BDB_DB_Books extends BDB_DB {
 	 * BDB_DB_Books constructor.
 	 *
 	 * @access public
-	 * @since  1.0.0
+	 * @since  1.0
 	 * @return void
 	 */
 	public function __construct() {
@@ -37,7 +37,7 @@ class BDB_DB_Books extends BDB_DB {
 	 * Get columns and formats.
 	 *
 	 * @access public
-	 * @since  1.0.0
+	 * @since  1.0
 	 * @return array
 	 */
 	public function get_columns() {
@@ -60,7 +60,7 @@ class BDB_DB_Books extends BDB_DB {
 	 * Get default column values.
 	 *
 	 * @access public
-	 * @since  1.0.0
+	 * @since  1.0
 	 * @return array
 	 */
 	public function get_column_defaults() {
@@ -84,7 +84,7 @@ class BDB_DB_Books extends BDB_DB {
 	 * @param array $data Book data.
 	 *
 	 * @access public
-	 * @since  1.0.0
+	 * @since  1.0
 	 * @return int Book ID.
 	 */
 	public function add( $data = array() ) {
@@ -117,7 +117,7 @@ class BDB_DB_Books extends BDB_DB {
 	 * @param bool $id ID of the book to delete.
 	 *
 	 * @access public
-	 * @since  1.0.0
+	 * @since  1.0
 	 * @return bool|int False on failure.
 	 */
 	public function delete( $id = false ) {
@@ -146,7 +146,7 @@ class BDB_DB_Books extends BDB_DB {
 	 * @param array $ids Array of book IDs.
 	 *
 	 * @access public
-	 * @since  1.0.0
+	 * @since  1.0
 	 * @return int|false Number of rows deleted or false if none.
 	 */
 	public function delete_by_ids( $ids ) {
@@ -172,7 +172,7 @@ class BDB_DB_Books extends BDB_DB {
 	 * @param string $field Which field to check.
 	 *
 	 * @access public
-	 * @since  1.0.0
+	 * @since  1.0
 	 * @return bool
 	 */
 	public function exists( $value = '', $field = 'ID' ) {
@@ -192,7 +192,7 @@ class BDB_DB_Books extends BDB_DB {
 	 * @param int $book_id Book ID to fetch.
 	 *
 	 * @access public
-	 * @since  1.0.0
+	 * @since  1.0
 	 * @return object|false Upon success, an object of the book. Upon failure, false.
 	 */
 	public function get_book( $book_id ) {
@@ -208,7 +208,7 @@ class BDB_DB_Books extends BDB_DB {
 	 * @param int    $value The value to check against the column.
 	 *
 	 * @access public
-	 * @since  1.0.0
+	 * @since  1.0
 	 * @return object|false Upon success, an object of the book. Upon failure, false.
 	 */
 	public function get_book_by( $field = 'ID', $value = 0 ) {
@@ -271,7 +271,7 @@ class BDB_DB_Books extends BDB_DB {
 	 * @param array $args Query arguments.
 	 *
 	 * @access public
-	 * @since  1.0.0
+	 * @since  1.0
 	 * @return array Array of objects.
 	 */
 	public function get_books( $args = array() ) {
@@ -471,7 +471,7 @@ class BDB_DB_Books extends BDB_DB {
 	 * @param array $args Query arguments.
 	 *
 	 * @access public
-	 * @since  1.0.0
+	 * @since  1.0
 	 * @return int
 	 */
 	public function count( $args = array() ) {
@@ -601,7 +601,7 @@ class BDB_DB_Books extends BDB_DB {
 	 * Create the table.
 	 *
 	 * @access public
-	 * @since  1.0.0
+	 * @since  1.0
 	 * @return void
 	 */
 	public function create_table() {

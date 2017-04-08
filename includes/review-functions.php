@@ -5,7 +5,7 @@
  * @package   book-database
  * @copyright Copyright (c) 2016, Ashley GIbson
  * @license   GPL2+
- * @since     1.0.0
+ * @since     1.0
  */
 
 // Exit if accessed directly
@@ -18,7 +18,7 @@ if ( ! defined( 'ABSPATH' ) ) {
  *
  * @param int $review_id
  *
- * @since 1.0.0
+ * @since 1.0
  * @return BDB_Review|false
  */
 function bdb_get_review( $review_id ) {
@@ -36,7 +36,7 @@ function bdb_get_review( $review_id ) {
  *
  * @param int $post_id
  *
- * @since 1.0.0
+ * @since 1.0
  * @return array|false Array of review data.
  */
 function bdb_get_post_reviews( $post_id = 0 ) {
@@ -56,7 +56,7 @@ function bdb_get_post_reviews( $post_id = 0 ) {
  *
  * @param int $post_id
  *
- * @since 1.0.0
+ * @since 1.0
  * @return array|false Array of review data.
  */
 function bdb_get_book_reviews( $book_id, $args = array() ) {
@@ -73,7 +73,7 @@ function bdb_get_book_reviews( $book_id, $args = array() ) {
  *
  * @param array $args Array of arguments for the query.
  *
- * @since 1.0.0
+ * @since 1.0
  * @return int
  */
 function bdb_count_reviews( $args ) {
@@ -99,7 +99,7 @@ function bdb_count_reviews( $args ) {
  *                      `rating` - If a rating is provided then a reading log is added.
  *                      `reading_log` - ID of an existing rating log to associated with review.
  *
- * @since 1.0.0
+ * @since 1.0
  * @return int|WP_Error ID of the review inserted or updated, or WP_Error on failure.
  */
 function bdb_insert_review( $data = array() ) {
@@ -196,7 +196,7 @@ function bdb_insert_review( $data = array() ) {
  * @param string $type  Date type - either `written` or `published`.
  * @param string $order Either ASC or DESC.
  *
- * @since 1.0.0
+ * @since 1.0
  * @return array|false
  */
 function bdb_get_review_years( $type = 'written', $order = 'DESC' ) {

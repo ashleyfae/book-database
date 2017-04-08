@@ -17,7 +17,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 /**
  * Add Modal Content
  *
- * @since 1.0.0
+ * @since 1.0
  * @return void
  */
 function bdb_add_modal_content() {
@@ -33,7 +33,7 @@ add_action( 'admin_footer', 'bdb_add_modal_content' );
 /**
  * Get Modal Menu
  *
- * @since 1.0.0
+ * @since 1.0
  * @return array
  */
 function bdb_get_modal_menu() {
@@ -94,7 +94,7 @@ function bdb_get_modal_menu() {
  * @param array $a First array to compare.
  * @param array $b Second array to compare.
  *
- * @since 1.0.0
+ * @since 1.0
  * @return mixed
  */
 function bdb_modal_sort_by_order( $a, $b ) {
@@ -104,7 +104,7 @@ function bdb_modal_sort_by_order( $a, $b ) {
 /**
  * Enqueue CSS and JavaScript for Modals
  *
- * @since 1.0.0
+ * @since 1.0
  * @return void
  */
 function bdb_enqueue_modal_scripts() {

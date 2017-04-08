@@ -49,7 +49,7 @@ add_action( 'init', 'bdb_setup_book_meta_fields', 10 );
  *
  * @param BDB_Book $book
  *
- * @since 1.0.0
+ * @since 1.0
  * @return void
  */
 function bdb_book_cover_field( $book ) {
@@ -84,7 +84,7 @@ function bdb_book_cover_field( $book ) {
  *
  * @param BDB_Book $book
  *
- * @since 1.0.0
+ * @since 1.0
  * @return void
  */
 function bdb_book_title_field( $book ) {
@@ -102,7 +102,7 @@ function bdb_book_title_field( $book ) {
  *
  * @param BDB_Book $book
  *
- * @since 1.0.0
+ * @since 1.0
  * @return void
  */
 function bdb_book_title_alt_field( $book ) {
@@ -144,7 +144,7 @@ function bdb_book_title_alt_field( $book ) {
  *
  * @param BDB_Book $book
  *
- * @since 1.0.0
+ * @since 1.0
  * @return void
  */
 function bdb_book_author_field( $book ) {
@@ -180,7 +180,7 @@ function bdb_book_author_field( $book ) {
  *
  * @param BDB_Book $book
  *
- * @since 1.0.0
+ * @since 1.0
  * @return void
  */
 function bdb_book_series_field( $book ) {
@@ -218,7 +218,7 @@ function bdb_book_series_field( $book ) {
  *
  * @param BDB_Book $book
  *
- * @since 1.0.0
+ * @since 1.0
  * @return void
  */
 function bdb_book_pub_date_field( $book ) {
@@ -237,7 +237,7 @@ function bdb_book_pub_date_field( $book ) {
  *
  * @param BDB_Book $book
  *
- * @since 1.0.0
+ * @since 1.0
  * @return void
  */
 function bdb_book_pages_field( $book ) {
@@ -256,7 +256,7 @@ function bdb_book_pages_field( $book ) {
  *
  * @param BDB_Book $book
  *
- * @since 1.0.0
+ * @since 1.0
  * @return void
  */
 function bdb_book_goodreads_url_field( $book ) {
@@ -276,7 +276,7 @@ function bdb_book_goodreads_url_field( $book ) {
  *
  * @param BDB_Book $book
  *
- * @since 1.0.0
+ * @since 1.0
  * @return void
  */
 function bdb_book_buy_link_field( $book ) {
@@ -296,7 +296,7 @@ function bdb_book_buy_link_field( $book ) {
  *
  * @param BDB_Book $book
  *
- * @since 1.0.0
+ * @since 1.0
  * @return void
  */
 function bdb_book_taxonomy_fields( $book ) {
@@ -390,7 +390,7 @@ function bdb_book_taxonomy_fields( $book ) {
  *
  * @param BDB_Book $book
  *
- * @since 1.0.0
+ * @since 1.0
  * @return void
  */
 function bdb_book_synopsis_field( $book ) {
@@ -514,7 +514,7 @@ add_action( 'book-database/book-edit/after-save-box', 'bdb_books_in_series_field
  *
  * Triggers after saving a book via Book Reviews > Book Library.
  *
- * @since 1.0.0
+ * @since 1.0
  * @return void
  */
 function bdb_save_book() {
@@ -632,7 +632,7 @@ add_action( 'book-database/book/save', 'bdb_save_book' );
  *
  * Used in tag autocomplete.
  *
- * @since 1.0.0
+ * @since 1.0
  * @return void
  */
 function bdb_suggest_tags() {
@@ -666,7 +666,7 @@ add_action( 'wp_ajax_bdb_suggest_tags', 'bdb_suggest_tags' );
  *
  * Used in series name autocomplete.
  *
- * @since 1.2.1
+ * @since 1.0
  * @return void
  */
 function bdb_suggest_series() {
@@ -697,7 +697,7 @@ add_action( 'wp_ajax_bdb_suggest_series', 'bdb_suggest_series' );
  *
  * @param BDB_Book $book
  *
- * @since 1.0.0
+ * @since 1.0
  * @return void
  */
 function bdb_book_review_meta_table( $book ) {
@@ -767,7 +767,7 @@ add_action( 'book-database/book-edit/after-information-fields', 'bdb_book_review
  * Processes deletions from the delete book URL.
  * @see   bdb_get_admin_page_delete_book()
  *
- * @since 1.0.0
+ * @since 1.0
  * @return void
  */
 function bdb_delete_book_via_url() {

@@ -17,7 +17,7 @@ if ( ! defined( 'ABSPATH' ) ) {
  *
  * @param array $views
  *
- * @since 1.0.0
+ * @since 1.0
  * @return array
  */
 function bdb_register_default_book_views( $views ) {
@@ -36,7 +36,7 @@ add_filter( 'book-database/books/views', 'bdb_register_default_book_views' );
 /**
  * Ajax CB: Get Alt Titles
  *
- * @since 1.0.0
+ * @since 1.0
  * @return void
  */
 function bdb_ajax_get_alt_titles() {

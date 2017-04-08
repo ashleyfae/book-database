@@ -17,7 +17,7 @@ if ( ! defined( 'ABSPATH' ) ) {
  *
  * Renders the options page contents.
  *
- * @since 1.0.0
+ * @since 1.0
  * @return void
  */
 function bdb_options_page() {

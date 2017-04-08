@@ -47,7 +47,7 @@ if ( ! class_exists( 'Book_Database' ) ) :
 		 *
 		 * @var Book_Database Instance of the Book_Database class.
 		 * @access private
-		 * @since  1.0.0
+		 * @since  1.0
 		 */
 		private static $instance;
 
@@ -56,21 +56,21 @@ if ( ! class_exists( 'Book_Database' ) ) :
 		 *
 		 * @var BDB_DB_Reviews
 		 * @access public
-		 * @since  1.0.0
+		 * @since  1.0
 		 */
 		public $reviews;
 
 		/**
 		 * @var BDB_DB_Review_Meta
 		 * @access public
-		 * @since  1.0.0
+		 * @since  1.0
 		 */
 		public $review_meta;
 
 		/**
 		 * @var BDB_DB_Books
 		 * @access public
-		 * @since  1.0.0
+		 * @since  1.0
 		 */
 		public $books;
 
@@ -79,21 +79,21 @@ if ( ! class_exists( 'Book_Database' ) ) :
 		/**
 		 * @var BDB_DB_Series
 		 * @access public
-		 * @since  1.0.0
+		 * @since  1.0
 		 */
 		public $series;
 
 		/**
 		 * @var BDB_DB_Book_Terms
 		 * @access public
-		 * @since  1.0.0
+		 * @since  1.0
 		 */
 		public $book_terms;
 
 		/**
 		 * @var BDB_DB_Book_Term_Relationships
 		 * @access public
-		 * @since  1.0.0
+		 * @since  1.0
 		 */
 		public $book_term_relationships;
 
@@ -107,7 +107,7 @@ if ( ! class_exists( 'Book_Database' ) ) :
 		/**
 		 * @var BDB_HTML
 		 * @access public
-		 * @since  1.0.0
+		 * @since  1.0
 		 */
 		public $html;
 
@@ -121,7 +121,7 @@ if ( ! class_exists( 'Book_Database' ) ) :
 		 * @uses   Book_Database::load_textdomain() Load the language files.
 		 *
 		 * @access public
-		 * @since  1.0.0
+		 * @since  1.0
 		 * @return Book_Database Instance of Book_Database class
 		 */
 		public static function instance() {
@@ -155,31 +155,31 @@ if ( ! class_exists( 'Book_Database' ) ) :
 		 * object therefore, we don't want the object to be cloned.
 		 *
 		 * @access protected
-		 * @since  1.0.0
+		 * @since  1.0
 		 * @return void
 		 */
 		public function __clone() {
 			// Cloning instances of the class is forbidden.
-			_doing_it_wrong( __FUNCTION__, __( 'Cheatin&#8217; huh?', 'book-database' ), '1.0.0' );
+			_doing_it_wrong( __FUNCTION__, __( 'Cheatin&#8217; huh?', 'book-database' ), '1.0' );
 		}
 
 		/**
 		 * Disable unserializing of the class.
 		 *
 		 * @access protected
-		 * @since  1.0.0
+		 * @since  1.0
 		 * @return void
 		 */
 		public function __wakeup() {
 			// Unserializing instances of the class is forbidden.
-			_doing_it_wrong( __FUNCTION__, __( 'Cheatin&#8217; huh?', 'book-database' ), '1.0.0' );
+			_doing_it_wrong( __FUNCTION__, __( 'Cheatin&#8217; huh?', 'book-database' ), '1.0' );
 		}
 
 		/**
 		 * Setup plugin constants.
 		 *
 		 * @access private
-		 * @since  1.0.0
+		 * @since  1.0
 		 * @return void
 		 */
 		private function setup_constants() {
@@ -206,7 +206,7 @@ if ( ! class_exists( 'Book_Database' ) ) :
 		 * Include Required Files
 		 *
 		 * @access private
-		 * @since  1.0.0
+		 * @since  1.0
 		 * @return void
 		 */
 		private function includes() {
@@ -283,7 +283,7 @@ if ( ! class_exists( 'Book_Database' ) ) :
 		 * Loads the plugin language files.
 		 *
 		 * @access public
-		 * @since  1.0.0
+		 * @since  1.0
 		 * @return void
 		 */
 		public function load_textdomain() {
@@ -327,7 +327,7 @@ if ( version_compare( PHP_VERSION, '5.3', '<' ) ) {
 /**
  * Returns the main instance of Book_Database.
  *
- * @since 1.0.0
+ * @since 1.0
  * @return Book_Database
  */
 function book_database() {

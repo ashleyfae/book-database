@@ -17,7 +17,7 @@ if ( ! defined( 'ABSPATH' ) ) {
  *
  * Render the books page contents.
  *
- * @since 1.0.0
+ * @since 1.0
  * @return void
  */
 function bdb_books_page() {
@@ -34,7 +34,7 @@ function bdb_books_page() {
 /**
  * Register the views for book management.
  *
- * @since 1.0.0
+ * @since 1.0
  * @return array
  */
 function bdb_book_views() {
@@ -46,7 +46,7 @@ function bdb_book_views() {
 /**
  * Display List of Books
  *
- * @since 1.0.0
+ * @since 1.0
  * @return void
  */
 function bdb_books_list() {
@@ -83,7 +83,7 @@ function bdb_books_list() {
  * @param string $view      The view being requested.
  * @param array  $callbacks The registered views and their callback functions.
  *
- * @since 1.0.0
+ * @since 1.0
  * @return void
  */
 function bdb_render_book_view( $view, $callbacks ) {
@@ -138,7 +138,7 @@ function bdb_render_book_view( $view, $callbacks ) {
  *
  * @param BDB_Book $book
  *
- * @since 1.0.0
+ * @since 1.0
  * @return void
  */
 function bdb_books_edit_view( $book ) {

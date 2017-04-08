@@ -16,7 +16,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 /**
  * Class BDB_Notices
  *
- * @since 1.0.0
+ * @since 1.0
  */
 class BDB_Notices {
 
@@ -24,7 +24,7 @@ class BDB_Notices {
 	 * BDB_Notices constructor.
 	 *
 	 * @access public
-	 * @since  1.0.0
+	 * @since  1.0
 	 * @return void
 	 */
 	public function __construct() {
@@ -35,7 +35,7 @@ class BDB_Notices {
 	 * Show Notices
 	 *
 	 * @access public
-	 * @since  1.0.0
+	 * @since  1.0
 	 * @return void
 	 */
 	public function show_notices() {

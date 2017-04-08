@@ -23,7 +23,7 @@ if ( ! class_exists( 'WP_List_Table' ) ) {
  *
  * Renders the book table.
  *
- * @since 1.0.0
+ * @since 1.0
  */
 class BDB_Books_Table extends WP_List_Table {
 
@@ -32,7 +32,7 @@ class BDB_Books_Table extends WP_List_Table {
 	 *
 	 * @var int
 	 * @access public
-	 * @since  1.0.0
+	 * @since  1.0
 	 */
 	public $per_page = 20;
 
@@ -41,7 +41,7 @@ class BDB_Books_Table extends WP_List_Table {
 	 *
 	 * @var int
 	 * @access public
-	 * @since  1.0.0
+	 * @since  1.0
 	 */
 	public $count = 0;
 
@@ -50,7 +50,7 @@ class BDB_Books_Table extends WP_List_Table {
 	 *
 	 * @var int
 	 * @access public
-	 * @since  1.0.0
+	 * @since  1.0
 	 */
 	public $total = 0;
 
@@ -59,7 +59,7 @@ class BDB_Books_Table extends WP_List_Table {
 	 *
 	 * @var array
 	 * @access public
-	 * @since  1.0.0
+	 * @since  1.0
 	 */
 	public $args = array();
 
@@ -68,7 +68,7 @@ class BDB_Books_Table extends WP_List_Table {
 	 *
 	 * @var bool
 	 * @access private
-	 * @since  1.0.0
+	 * @since  1.0
 	 */
 	private $display_delete_message = false;
 
@@ -78,7 +78,7 @@ class BDB_Books_Table extends WP_List_Table {
 	 * @see    WP_List_Table::__construct()
 	 *
 	 * @access public
-	 * @since  1.0.0
+	 * @since  1.0
 	 * @return void
 	 */
 	public function __construct() {
@@ -100,7 +100,7 @@ class BDB_Books_Table extends WP_List_Table {
 	 * @param string $input_id ID of the search box.
 	 *
 	 * @access public
-	 * @since  1.0.0
+	 * @since  1.0
 	 * @return void
 	 */
 	public function search_box( $text, $input_id ) {
@@ -138,7 +138,7 @@ class BDB_Books_Table extends WP_List_Table {
 	 * Gets the name of the primary column.
 	 *
 	 * @access protected
-	 * @since  1.0.0
+	 * @since  1.0
 	 * @return string
 	 */
 	protected function get_primary_column_name() {
@@ -152,7 +152,7 @@ class BDB_Books_Table extends WP_List_Table {
 	 * @param string $column_name The name of the column.
 	 *
 	 * @access public
-	 * @since  1.0.0
+	 * @since  1.0
 	 * @return string Column name
 	 */
 	public function column_default( $item, $column_name ) {
@@ -229,7 +229,7 @@ class BDB_Books_Table extends WP_List_Table {
 	 * @param array $item Contains all the data of the reviews.
 	 *
 	 * @access public
-	 * @since  1.0.0
+	 * @since  1.0
 	 * @return void
 	 */
 	public function column_cb( $item ) {
@@ -253,7 +253,7 @@ class BDB_Books_Table extends WP_List_Table {
 	 * @param array $item Contains all the data of the books.
 	 *
 	 * @access public
-	 * @since  1.0.0
+	 * @since  1.0
 	 * @return string
 	 */
 	public function column_title( $item ) {
@@ -273,7 +273,7 @@ class BDB_Books_Table extends WP_List_Table {
 	 * Retrieves the column IDs and names.
 	 *
 	 * @access public
-	 * @since  1.0.0
+	 * @since  1.0
 	 * @return array
 	 */
 	public function get_columns() {
@@ -294,7 +294,7 @@ class BDB_Books_Table extends WP_List_Table {
 	 * Get the sortable columns.
 	 *
 	 * @access public
-	 * @since  1.0.0
+	 * @since  1.0
 	 * @return array
 	 */
 	public function get_sortable_columns() {
@@ -314,7 +314,7 @@ class BDB_Books_Table extends WP_List_Table {
 	 * @param string $which
 	 *
 	 * @access protected
-	 * @since  1.0.0
+	 * @since  1.0
 	 * @return void
 	 */
 	protected function display_tablenav( $which ) {
@@ -354,7 +354,7 @@ class BDB_Books_Table extends WP_List_Table {
 	 * Get Bulk Actions
 	 *
 	 * @access public
-	 * @since  1.0.0
+	 * @since  1.0
 	 * @return array
 	 */
 	public function get_bulk_actions() {
@@ -369,7 +369,7 @@ class BDB_Books_Table extends WP_List_Table {
 	 * Process Bulk Actions
 	 *
 	 * @access public
-	 * @since  1.0.0
+	 * @since  1.0
 	 * @return void
 	 */
 	public function process_bulk_actions() {
@@ -401,7 +401,7 @@ class BDB_Books_Table extends WP_List_Table {
 	 * Retrieve the current page number.
 	 *
 	 * @access public
-	 * @since  1.0.0
+	 * @since  1.0
 	 * @return int
 	 */
 	public function get_paged() {
@@ -412,7 +412,7 @@ class BDB_Books_Table extends WP_List_Table {
 	 * Retrieves the search query string.
 	 *
 	 * @access public
-	 * @since  1.0.0
+	 * @since  1.0
 	 * @return bool|string Search query or false if none.
 	 */
 	public function get_search() {
@@ -423,7 +423,7 @@ class BDB_Books_Table extends WP_List_Table {
 	 * Build all the book data.
 	 *
 	 * @access public
-	 * @since  1.0.0
+	 * @since  1.0
 	 * @return array Array of book data.
 	 */
 	public function books_data() {
@@ -511,7 +511,7 @@ class BDB_Books_Table extends WP_List_Table {
 	 * @uses   WP_List_Table::set_pagination_args()
 	 *
 	 * @access public
-	 * @since  1.0.0
+	 * @since  1.0
 	 * @return void
 	 */
 	public function prepare_items() {
@@ -540,7 +540,7 @@ class BDB_Books_Table extends WP_List_Table {
 	/**
 	 * Message to be displayed when there are no items
 	 *
-	 * @since  1.0.0
+	 * @since  1.0
 	 * @access public
 	 * @return void
 	 */

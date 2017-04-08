@@ -18,7 +18,7 @@ if ( ! defined( 'ABSPATH' ) ) {
  * @param array  $atts    Shortcode attributes.
  * @param string $content Shortcode content.
  *
- * @since 1.0.0
+ * @since 1.0
  * @return string
  */
 function bdb_book_shortcode( $atts, $content = '' ) {
@@ -46,7 +46,7 @@ add_shortcode( 'book', 'bdb_book_shortcode' );
  * @param array  $atts
  * @param string $content
  *
- * @since 1.0.0
+ * @since 1.0
  * @return string
  */
 function bdb_review_index_shortcode( $atts, $content = '' ) {
@@ -109,7 +109,7 @@ add_shortcode( 'review-index', 'bdb_review_index_shortcode' );
  * @param array  $atts    Shortcode attributes.
  * @param string $content Shortcode content.
  *
- * @since 1.0.0
+ * @since 1.0
  * @return string
  */
 function bdb_book_reviews_shortcode( $atts, $content = '' ) {
@@ -279,7 +279,7 @@ add_shortcode( 'book-grid', 'bdb_book_grid_shortcode' );
  * @param array          $atts    Shortcode attributes.
  * @param string         $content Shortcode content.
  *
- * @since 1.0.0
+ * @since 1.0
  * @return void
  */
 function bdb_reviews_filter_form_title( $vars, $query, $atts, $content ) {
@@ -301,7 +301,7 @@ add_action( 'book-database/shortcodes/book-reviews/filter-form', 'bdb_reviews_fi
  * @param array          $atts    Shortcode attributes.
  * @param string         $content Shortcode content.
  *
- * @since 1.0.0
+ * @since 1.0
  * @return void
  */
 function bdb_reviews_filter_form_author( $vars, $query, $atts, $content ) {
@@ -335,7 +335,7 @@ add_action( 'book-database/shortcodes/book-reviews/filter-form', 'bdb_reviews_fi
  * @param array          $atts    Shortcode attributes.
  * @param string         $content Shortcode content.
  *
- * @since 1.0.0
+ * @since 1.0
  * @return void
  */
 function bdb_reviews_filter_form_series( $vars, $query, $atts, $content ) {
@@ -357,7 +357,7 @@ add_action( 'book-database/shortcodes/book-reviews/filter-form', 'bdb_reviews_fi
  * @param array          $atts    Shortcode attributes.
  * @param string         $content Shortcode content.
  *
- * @since 1.0.0
+ * @since 1.0
  * @return void
  */
 function bdb_reviews_filter_form_rating( $vars, $query, $atts, $content ) {
@@ -385,7 +385,7 @@ add_action( 'book-database/shortcodes/book-reviews/filter-form', 'bdb_reviews_fi
  * @param array          $atts    Shortcode attributes.
  * @param string         $content Shortcode content.
  *
- * @since 1.0.0
+ * @since 1.0
  * @return void
  */
 function bdb_reviews_filter_form_genre( $vars, $query, $atts, $content ) {
@@ -410,7 +410,7 @@ add_action( 'book-database/shortcodes/book-reviews/filter-form', 'bdb_reviews_fi
  * @param array          $atts    Shortcode attributes.
  * @param string         $content Shortcode content.
  *
- * @since 1.0.0
+ * @since 1.0
  * @return void
  */
 function bdb_reviews_filter_form_publisher( $vars, $query, $atts, $content ) {
@@ -435,7 +435,7 @@ add_action( 'book-database/shortcodes/book-reviews/filter-form', 'bdb_reviews_fi
  * @param array          $atts    Shortcode attributes.
  * @param string         $content Shortcode content.
  *
- * @since 1.0.0
+ * @since 1.0
  * @return void
  */
 function bdb_reviews_filter_form_review_year( $vars, $query, $atts, $content ) {
@@ -465,7 +465,7 @@ add_action( 'book-database/shortcodes/book-reviews/filter-form', 'bdb_reviews_fi
  * @param array          $atts    Shortcode attributes.
  * @param string         $content Shortcode content.
  *
- * @since 1.0.0
+ * @since 1.0
  * @return void
  */
 function bdb_reviews_filter_form_orderby( $vars, $query, $atts, $content ) {
@@ -495,7 +495,7 @@ add_action( 'book-database/shortcodes/book-reviews/filter-form', 'bdb_reviews_fi
  * @param array          $atts    Shortcode attributes.
  * @param string         $content Shortcode content.
  *
- * @since 1.0.0
+ * @since 1.0
  * @return void
  */
 function bdb_reviews_filter_form_order( $vars, $query, $atts, $content ) {
@@ -528,7 +528,7 @@ add_action( 'book-database/shortcodes/book-reviews/filter-form', 'bdb_reviews_fi
  * @param array          $atts    Shortcode attributes.
  * @param string         $content Shortcode content.
  *
- * @since 1.0.0
+ * @since 1.0
  * @return void
  */
 function bdb_reviews_filter_form_submit( $vars, $query, $atts, $content ) {

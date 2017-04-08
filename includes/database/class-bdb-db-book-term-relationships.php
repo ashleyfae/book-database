@@ -22,7 +22,7 @@ class BDB_DB_Book_Term_Relationships extends BDB_DB {
 	 * BDB_DB_Book_Term_Relationships constructor.
 	 *
 	 * @access public
-	 * @since  1.0.0
+	 * @since  1.0
 	 * @return void
 	 */
 	public function __construct() {
@@ -38,7 +38,7 @@ class BDB_DB_Book_Term_Relationships extends BDB_DB {
 	 * Get columns and formats.
 	 *
 	 * @access public
-	 * @since  1.0.0
+	 * @since  1.0
 	 * @return array
 	 */
 	public function get_columns() {
@@ -53,7 +53,7 @@ class BDB_DB_Book_Term_Relationships extends BDB_DB {
 	 * Get default column values.
 	 *
 	 * @access public
-	 * @since  1.0.0
+	 * @since  1.0
 	 * @return array
 	 */
 	public function get_column_defaults() {
@@ -69,7 +69,7 @@ class BDB_DB_Book_Term_Relationships extends BDB_DB {
 	 * @param array $data Relationship data.
 	 *
 	 * @access public
-	 * @since  1.0.0
+	 * @since  1.0
 	 * @return int Relationship ID.
 	 */
 	public function add( $data = array() ) {
@@ -102,7 +102,7 @@ class BDB_DB_Book_Term_Relationships extends BDB_DB {
 	 * @param bool $id ID of the relationship to delete.
 	 *
 	 * @access public
-	 * @since  1.0.0
+	 * @since  1.0
 	 * @return bool|int False on failure.
 	 */
 	public function delete( $id = false ) {
@@ -132,7 +132,7 @@ class BDB_DB_Book_Term_Relationships extends BDB_DB {
 	 * @param int    $value The value to check against the column.
 	 *
 	 * @access public
-	 * @since  1.0.0
+	 * @since  1.0
 	 * @return object|false Upon success, an object of the term. Upon failure, false.
 	 */
 	public function get_relationship_by( $field = 'ID', $value = 0 ) {
@@ -186,7 +186,7 @@ class BDB_DB_Book_Term_Relationships extends BDB_DB {
 	 * @param array $args Query arguments.
 	 *
 	 * @access public
-	 * @since  1.0.0
+	 * @since  1.0
 	 * @return array Array of objects.
 	 */
 	public function get_relationships( $args = array() ) {
@@ -268,7 +268,7 @@ class BDB_DB_Book_Term_Relationships extends BDB_DB {
 	 * @param array $args
 	 *
 	 * @access public
-	 * @since  1.0.0
+	 * @since  1.0
 	 * @return int
 	 */
 	public function count( $args = array() ) {
@@ -335,7 +335,7 @@ class BDB_DB_Book_Term_Relationships extends BDB_DB {
 	 * Create the table.
 	 *
 	 * @access public
-	 * @since  1.0.0
+	 * @since  1.0
 	 * @return void
 	 */
 	public function create_table() {

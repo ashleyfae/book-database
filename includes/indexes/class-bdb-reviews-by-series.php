@@ -16,7 +16,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 /**
  * Class BDB_Reviews_by_Series
  *
- * @since 1.0.0
+ * @since 1.0
  */
 class BDB_Reviews_by_Series extends BDB_Review_Index {
 
@@ -24,7 +24,7 @@ class BDB_Reviews_by_Series extends BDB_Review_Index {
 	 * Query Series
 	 *
 	 * @access public
-	 * @since  1.0.0
+	 * @since  1.0
 	 * @return array
 	 */
 	public function query_series() {
@@ -45,7 +45,7 @@ class BDB_Reviews_by_Series extends BDB_Review_Index {
 	 * @param int $term_id ID of the term to look for.
 	 *
 	 * @access public
-	 * @since  1.0.0
+	 * @since  1.0
 	 * @return array
 	 */
 	public function query( $series_id = false ) {
@@ -82,7 +82,7 @@ class BDB_Reviews_by_Series extends BDB_Review_Index {
 	 * Creates the overall markup for the index.
 	 *
 	 * @access public
-	 * @since  1.0.0
+	 * @since  1.0
 	 * @return string|false
 	 */
 	public function display() {

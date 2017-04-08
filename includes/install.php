@@ -18,7 +18,7 @@ if ( ! defined( 'ABSPATH' ) ) {
  * Registers post types, custom taxonomies, and flushes
  * rewrite rules.
  *
- * @since 1.0.0
+ * @since 1.0
  * @return void
  */
 function bdb_install( $network_wide = false ) {
@@ -39,7 +39,7 @@ register_activation_hook( BDB_FILE, 'bdb_install' );
 /**
  * Run Installation
  *
- * @since 1.0.0
+ * @since 1.0
  * @return void
  */
 function bdb_run_install() {
@@ -113,7 +113,7 @@ function bdb_run_install() {
  * @param  int    $site_id The Site ID
  * @param  array  $meta    Blog Meta
  *
- * @since 1.0.0
+ * @since 1.0
  * @return void
  */
 function bdb_new_blog_created( $blog_id, $user_id, $domain, $path, $site_id, $meta ) {

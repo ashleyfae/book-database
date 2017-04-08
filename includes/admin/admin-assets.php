@@ -5,7 +5,7 @@
  * @package   book-database
  * @copyright Copyright (c) 2016, Ashley GIbson
  * @license   GPL2+
- * @since     1.0.0
+ * @since     1.0
  */
 
 // Exit if accessed directly
@@ -20,7 +20,7 @@ if ( ! defined( 'ABSPATH' ) ) {
  *
  * @param string $hook Currently loaded page.
  *
- * @since 1.0.0
+ * @since 1.0
  * @return void
  */
 function bdb_load_admin_scripts( $hook ) {
@@ -91,7 +91,7 @@ add_action( 'admin_enqueue_scripts', 'bdb_load_admin_scripts' );
  *
  * @param string $hook Currently loaded page.
  *
- * @since 1.0.0
+ * @since 1.0
  * @return void
  */
 function bdb_load_media_upload_scripts( $hook ) {

@@ -17,7 +17,7 @@ if ( ! defined( 'ABSPATH' ) ) {
  *
  * @param array $views
  *
- * @since 1.0.0
+ * @since 1.0
  * @return array
  */
 function bdb_register_default_review_views( $views ) {
@@ -36,7 +36,7 @@ add_filter( 'book-database/reviews/views', 'bdb_register_default_review_views' )
 /**
  * Ajax CB: Update or Create Review
  *
- * @since 1.0.0
+ * @since 1.0
  * @return void
  */
 function bdb_ajax_save_review() {
@@ -69,7 +69,7 @@ add_action( 'wp_ajax_bdb_save_review', 'bdb_ajax_save_review' );
 /**
  * Ajax CB: Remove Review
  *
- * @since 1.0.0
+ * @since 1.0
  * @return void
  */
 function bdb_ajax_remove_review() {

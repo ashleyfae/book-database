@@ -6,7 +6,7 @@
  * @package   book-database
  * @copyright Copyright (c) 2016, Ashley GIbson
  * @license   GPL2+
- * @since     1.0.0
+ * @since     1.0
  */
 
 // Exit if accessed directly
@@ -21,7 +21,7 @@ abstract class BDB_DB {
 	 *
 	 * @var string
 	 * @access public
-	 * @since  1.0.0
+	 * @since  1.0
 	 */
 	public $table_name;
 
@@ -30,7 +30,7 @@ abstract class BDB_DB {
 	 *
 	 * @var string
 	 * @access public
-	 * @since  1.0.0
+	 * @since  1.0
 	 */
 	public $version;
 
@@ -39,7 +39,7 @@ abstract class BDB_DB {
 	 *
 	 * @var string
 	 * @access public
-	 * @since  1.0.0
+	 * @since  1.0
 	 */
 	public $primary_key;
 
@@ -47,7 +47,7 @@ abstract class BDB_DB {
 	 * BDB_DB constructor.
 	 *
 	 * @access public
-	 * @since  1.0.0
+	 * @since  1.0
 	 * @return void
 	 */
 	public function __construct() {
@@ -58,7 +58,7 @@ abstract class BDB_DB {
 	 * Whitelist of columns.
 	 *
 	 * @access public
-	 * @since  1.0.0
+	 * @since  1.0
 	 * @return array
 	 */
 	public function get_columns() {
@@ -69,7 +69,7 @@ abstract class BDB_DB {
 	 * Default column values.
 	 *
 	 * @access public
-	 * @since  1.0.0
+	 * @since  1.0
 	 * @return array
 	 */
 	public function get_column_defaults() {
@@ -82,7 +82,7 @@ abstract class BDB_DB {
 	 * @param int|mixed $row_id
 	 *
 	 * @access public
-	 * @since  1.0.0
+	 * @since  1.0
 	 * @return object
 	 */
 	public function get( $row_id ) {
@@ -98,7 +98,7 @@ abstract class BDB_DB {
 	 * @param string|int $row_id Value of the column.
 	 *
 	 * @access public
-	 * @since  1.0.0
+	 * @since  1.0
 	 * @return object
 	 */
 	public function get_by( $column, $row_id ) {
@@ -115,7 +115,7 @@ abstract class BDB_DB {
 	 * @param int|mixed $row_id Primary key value.
 	 *
 	 * @access public
-	 * @since  1.0.0
+	 * @since  1.0
 	 * @return string
 	 */
 	public function get_column( $column, $row_id ) {
@@ -133,7 +133,7 @@ abstract class BDB_DB {
 	 * @param string $column_value Value of the previous column
 	 *
 	 * @access public
-	 * @since  1.0.0
+	 * @since  1.0
 	 * @return string
 	 */
 	public function get_column_by( $column, $column_where, $column_value ) {
@@ -151,7 +151,7 @@ abstract class BDB_DB {
 	 * @param string $type Type of table.
 	 *
 	 * @access public
-	 * @since  1.0.0
+	 * @since  1.0
 	 * @return int
 	 */
 	public function insert( $data, $type = '' ) {
@@ -192,7 +192,7 @@ abstract class BDB_DB {
 	 * @param string $where  Column to match the ID against.
 	 *
 	 * @access public
-	 * @since  1.0.0
+	 * @since  1.0
 	 * @return bool
 	 */
 	public function update( $row_id, $data = array(), $where = '' ) {
@@ -237,7 +237,7 @@ abstract class BDB_DB {
 	 * @param int $row_id ID of the row to delete.
 	 *
 	 * @access public
-	 * @since  1.0.0
+	 * @since  1.0
 	 * @return bool
 	 */
 	public function delete( $row_id = 0 ) {
@@ -265,7 +265,7 @@ abstract class BDB_DB {
 	 * @param string $table Name of the table to check.
 	 *
 	 * @access public
-	 * @since  1.0.0
+	 * @since  1.0
 	 * @return bool
 	 */
 	public function table_exists( $table ) {
@@ -281,7 +281,7 @@ abstract class BDB_DB {
 	 * Check if the table was ever installed.
 	 *
 	 * @access public
-	 * @since  1.0.0
+	 * @since  1.0
 	 * @return bool
 	 */
 	public function installed() {

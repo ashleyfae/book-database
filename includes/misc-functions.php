@@ -16,7 +16,7 @@ if ( ! defined( 'ABSPATH' ) ) {
  * Returns an array of post types that you can add reviews and
  * book information to.
  *
- * @since 1.0.0
+ * @since 1.0
  * @return array
  */
 function bdb_get_review_post_types() {
@@ -30,7 +30,7 @@ function bdb_get_review_post_types() {
 /**
  * Get Admin Page: Books Table
  *
- * @since 1.0.0
+ * @since 1.0
  * @return string
  */
 function bdb_get_admin_page_books() {
@@ -42,7 +42,7 @@ function bdb_get_admin_page_books() {
 /**
  * Get Admin Page: Add Book
  *
- * @since 1.0.0
+ * @since 1.0
  * @return string
  */
 function bdb_get_admin_page_add_book() {
@@ -59,7 +59,7 @@ function bdb_get_admin_page_add_book() {
  *
  * @param int $book_id
  *
- * @since 1.0.0
+ * @since 1.0
  * @return string
  */
 function bdb_get_admin_page_edit_book( $book_id ) {
@@ -77,7 +77,7 @@ function bdb_get_admin_page_edit_book( $book_id ) {
  *
  * @param int $book_id
  *
- * @since 1.0.0
+ * @since 1.0
  * @return string
  */
 function bdb_get_admin_page_delete_book( $book_id ) {
@@ -94,7 +94,7 @@ function bdb_get_admin_page_delete_book( $book_id ) {
 /**
  * Get Admin Page: Reviews Table
  *
- * @since 1.0.0
+ * @since 1.0
  * @return string
  */
 function bdb_get_admin_page_reviews() {
@@ -106,7 +106,7 @@ function bdb_get_admin_page_reviews() {
 /**
  * Get Admin Page: Add Review
  *
- * @since 1.0.0
+ * @since 1.0
  * @return string
  */
 function bdb_get_admin_page_add_review( $book_id = 0 ) {
@@ -130,7 +130,7 @@ function bdb_get_admin_page_add_review( $book_id = 0 ) {
  *
  * @param int $review_id
  *
- * @since 1.0.0
+ * @since 1.0
  * @return string
  */
 function bdb_get_admin_page_edit_review( $review_id ) {
@@ -148,7 +148,7 @@ function bdb_get_admin_page_edit_review( $review_id ) {
  *
  * @param int $review_id
  *
- * @since 1.0.0
+ * @since 1.0
  * @return string
  */
 function bdb_get_admin_page_delete_review( $review_id ) {
@@ -173,7 +173,7 @@ function bdb_get_admin_page_delete_review( $review_id ) {
  * @param string $slug Desired slug.
  * @param string $type Table type. Accepts any term type or `series`.
  *
- * @since 1.0.0
+ * @since 1.0
  * @return string Unique slug.
  */
 function bdb_unique_slug( $slug, $type = 'author' ) {
@@ -221,7 +221,7 @@ function bdb_unique_slug( $slug, $type = 'author' ) {
  * Disable with this:
  *      `add_filter( 'book-database/link-terms', '__return_false' );`
  *
- * @since 1.0.0
+ * @since 1.0
  * @return bool
  */
 function bdb_link_terms() {
@@ -233,7 +233,7 @@ function bdb_link_terms() {
  *
  * Used in review queries.
  *
- * @since 1.0.0
+ * @since 1.0
  * @return array
  */
 function bdb_get_allowed_orderby() {

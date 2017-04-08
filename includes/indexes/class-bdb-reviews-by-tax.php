@@ -16,7 +16,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 /**
  * Class BDB_Reviews_by_Tax
  *
- * @since 1.0.0
+ * @since 1.0
  */
 class BDB_Reviews_by_Tax extends BDB_Review_Index {
 
@@ -25,7 +25,7 @@ class BDB_Reviews_by_Tax extends BDB_Review_Index {
 	 *
 	 * @var string
 	 * @access protected
-	 * @since  1.0.0
+	 * @since  1.0
 	 */
 	protected $taxonomy;
 
@@ -36,7 +36,7 @@ class BDB_Reviews_by_Tax extends BDB_Review_Index {
 	 * @param string $template Template for individual reviews.
 	 *
 	 * @access public
-	 * @since  1.0.0
+	 * @since  1.0
 	 * @return void
 	 */
 	public function __construct( array $atts, $template ) {
@@ -49,7 +49,7 @@ class BDB_Reviews_by_Tax extends BDB_Review_Index {
 	 * Query Terms
 	 *
 	 * @access public
-	 * @since  1.0.0
+	 * @since  1.0
 	 * @return array
 	 */
 	public function query_terms() {
@@ -69,7 +69,7 @@ class BDB_Reviews_by_Tax extends BDB_Review_Index {
 	 * @param int $term_id ID of the term to look for.
 	 *
 	 * @access public
-	 * @since  1.0.0
+	 * @since  1.0
 	 * @return array
 	 */
 	public function query( $term_id = false ) {
@@ -111,7 +111,7 @@ class BDB_Reviews_by_Tax extends BDB_Review_Index {
 	 * Creates the overall markup for the index.
 	 *
 	 * @access public
-	 * @since  1.0.0
+	 * @since  1.0
 	 * @return string|false
 	 */
 	public function display() {

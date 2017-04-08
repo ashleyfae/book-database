@@ -33,7 +33,7 @@ function bdb_errors() {
  * @uses  bdb_get_errors()
  * @uses  bdb_clear_errors()
  *
- * @since 1.0.0
+ * @since 1.0
  * @return void
  */
 function bdb_print_errors() {
@@ -59,7 +59,7 @@ function bdb_print_errors() {
 /**
  * Get Errors
  *
- * @since 1.0.0
+ * @since 1.0
  * @return array
  */
 function bdb_get_errors() {
@@ -72,7 +72,7 @@ function bdb_get_errors() {
  * @param string|int $error_id      ID of the error.
  * @param string     $error_message Error message.
  *
- * @since 1.0.0
+ * @since 1.0
  * @return void
  */
 function bdb_set_error( $error_id, $error_message ) {
@@ -84,7 +84,7 @@ function bdb_set_error( $error_id, $error_message ) {
  *
  * @param string|int $error_id ID of the error to remove.
  *
- * @since 1.0.0
+ * @since 1.0
  * @return void
  */
 function bdb_unset_error( $error_id ) {
@@ -96,7 +96,7 @@ function bdb_unset_error( $error_id ) {
  *
  * @uses  bdb_unset_error()
  *
- * @since 1.0.0
+ * @since 1.0
  * @return void
  */
 function bdb_clear_errors() {

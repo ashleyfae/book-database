@@ -5,7 +5,7 @@
  * @package   book-database
  * @copyright Copyright (c) 2016, Ashley GIbson
  * @license   GPL2+
- * @since     1.0.0
+ * @since     1.0
  */
 
 // Exit if accessed directly
@@ -17,7 +17,7 @@ if ( ! defined( 'ABSPATH' ) ) {
  * Register all meta boxes for posts/pages and other post types that
  * support adding bookr eviews.
  *
- * @since 1.0.0
+ * @since 1.0
  * @return void
  */
 function bdb_add_post_meta_boxes() {
@@ -33,7 +33,7 @@ add_action( 'add_meta_boxes', 'bdb_add_post_meta_boxes' );
  *
  * @param WP_Post $post
  *
- * @since 1.0.0
+ * @since 1.0
  * @return void
  */
 function bdb_render_post_book_reviews_meta_box( $post ) {

@@ -16,7 +16,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 /**
  * Class BDB_Book_Query
  *
- * @since 1.3.0
+ * @since 1.0
  */
 class BDB_Book_Query {
 
@@ -493,7 +493,7 @@ class BDB_Book_Query {
 	 * Query
 	 *
 	 * @access protected
-	 * @since  1.3.0
+	 * @since  1.0
 	 * @return void
 	 */
 	public function query() {

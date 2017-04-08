@@ -15,7 +15,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 /**
  * Render Shortcode Preview
  *
- * @since 1.0.0
+ * @since 1.0
  * @return void
  */
 function bdb_tinymce_shortcode_preview() {
@@ -37,7 +37,7 @@ add_action( 'wp_ajax_bdb_shortcode_preview', 'bdb_tinymce_shortcode_preview' );
  *
  * @param array $plugin_array
  *
- * @since 1.0.0
+ * @since 1.0
  * @return array
  */
 function bdb_tinymce_shortcode_plugin( $plugin_array ) {

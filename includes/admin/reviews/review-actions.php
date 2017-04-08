@@ -21,7 +21,7 @@ if ( ! defined( 'ABSPATH' ) ) {
  *
  * @param BDB_Review $review
  *
- * @since 1.0.0
+ * @since 1.0
  * @return void
  */
 function bdb_review_book_id_field( $review ) {
@@ -41,7 +41,7 @@ add_action( 'book-database/review-edit/fields', 'bdb_review_book_id_field' );
  *
  * @param BDB_Review $review
  *
- * @since 1.0.0
+ * @since 1.0
  * @return void
  */
 function bdb_review_post_id_field( $review ) {
@@ -61,7 +61,7 @@ add_action( 'book-database/review-edit/fields', 'bdb_review_post_id_field' );
  *
  * @param BDB_Review $review
  *
- * @since 1.0.0
+ * @since 1.0
  * @return void
  */
 function bdb_review_url_field( $review ) {
@@ -82,7 +82,7 @@ add_action( 'book-database/review-edit/fields', 'bdb_review_url_field' );
  *
  * @param BDB_Review $review
  *
- * @since 1.0.0
+ * @since 1.0
  * @return void
  */
 function bdb_review_user_id_field( $review ) {
@@ -104,7 +104,7 @@ add_action( 'book-database/review-edit/fields', 'bdb_review_user_id_field' );
  *
  * @param BDB_Review $review
  *
- * @since 1.0.0
+ * @since 1.0
  * @return void
  */
 function bdb_review_date_written_field( $review ) {
@@ -124,7 +124,7 @@ add_action( 'book-database/review-edit/fields', 'bdb_review_date_written_field' 
  *
  * @param BDB_Review $review
  *
- * @since 1.0.0
+ * @since 1.0
  * @return void
  */
 function bdb_review_date_published_field( $review ) {
@@ -163,7 +163,7 @@ add_action( 'book-database/review-edit/fields', 'bdb_review_text_field' );
  *
  * @param BDB_Review $review
  *
- * @since 1.0.0
+ * @since 1.0
  * @return void
  */
 function bdb_review_insert_reading_log_field( $review ) {
@@ -292,7 +292,7 @@ add_action( 'book-database/review-edit/fields', 'bdb_review_insert_reading_log_f
  *
  * @param BDB_Review $review
  *
- * @since 1.0.0
+ * @since 1.0
  * @return void
  */
 function bdb_review_show_associated_book( $review ) {
@@ -330,7 +330,7 @@ add_action( 'book-database/review-edit/after-fields', 'bdb_review_show_associate
 /**
  * Save Review
  *
- * @since 1.0.0
+ * @since 1.0
  * @return void
  */
 function bdb_save_review() {
@@ -465,7 +465,7 @@ add_action( 'book-database/review/save', 'bdb_save_review' );
  * Processes deletions from the delete review URL.
  * @see   bdb_get_admin_page_delete_review()
  *
- * @since 1.0.0
+ * @since 1.0
  * @return void
  */
 function bdb_delete_review_via_url() {

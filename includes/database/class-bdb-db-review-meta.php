@@ -8,7 +8,7 @@
  * @package   book-database
  * @copyright Copyright (c) 2016, Ashley GIbson
  * @license   GPL2+
- * @since     1.0.0
+ * @since     1.0
  */
 
 // Exit if accessed directly
@@ -22,7 +22,7 @@ class BDB_DB_Review_Meta extends BDB_DB {
 	 * BDB_DB_Review_Meta constructor.
 	 *
 	 * @access public
-	 * @since  1.0.0
+	 * @since  1.0
 	 * @return void
 	 */
 	public function __construct() {
@@ -40,7 +40,7 @@ class BDB_DB_Review_Meta extends BDB_DB {
 	 * Get table columns and data types.
 	 *
 	 * @access public
-	 * @since  1.0.0
+	 * @since  1.0
 	 * @return array
 	 */
 	public function get_columns() {
@@ -56,7 +56,7 @@ class BDB_DB_Review_Meta extends BDB_DB {
 	 * Register the table with $wpdb so the metadata API can find it.
 	 *
 	 * @access public
-	 * @since  1.0.0
+	 * @since  1.0
 	 * @return void
 	 */
 	public function register_table() {
@@ -75,7 +75,7 @@ class BDB_DB_Review_Meta extends BDB_DB {
 	 * @param   bool   $single    Whether to return a single value.
 	 *
 	 * @access  public
-	 * @since   1.0.0
+	 * @since   1.0
 	 * @return mixed Will be an array if $single is false. Will be value of meta data field if $single is true.
 	 */
 	public function get_meta( $review_id = 0, $meta_key = '', $single = false ) {
@@ -99,7 +99,7 @@ class BDB_DB_Review_Meta extends BDB_DB {
 	 * @param bool   $unique     Optional, default is false. Whether the same key should not be added.
 	 *
 	 * @access public
-	 * @since  1.0.0
+	 * @since  1.0
 	 * @return bool False for failure, true for success.
 	 */
 	public function add_meta( $review_id = 0, $meta_key = '', $meta_value, $unique = false ) {
@@ -125,7 +125,7 @@ class BDB_DB_Review_Meta extends BDB_DB {
 	 * @param string $prev_value Optional. Previous value to check before removing.
 	 *
 	 * @access public
-	 * @since  1.0.0
+	 * @since  1.0
 	 * @return bool False for failure, true for success.
 	 */
 	public function update_meta( $review_id = 0, $meta_key = '', $meta_value, $prev_value = '' ) {
@@ -152,7 +152,7 @@ class BDB_DB_Review_Meta extends BDB_DB {
 	 * @param mixed  $meta_value Meta value.
 	 *
 	 * @access public
-	 * @since  1.0.0
+	 * @since  1.0
 	 * @return bool False for failure, true for success.
 	 */
 	public function delete_meta( $review_id = 0, $meta_key = '', $meta_value ) {
@@ -163,7 +163,7 @@ class BDB_DB_Review_Meta extends BDB_DB {
 	 * Create the table
 	 *
 	 * @access public
-	 * @since  1.0.0
+	 * @since  1.0
 	 * @return void
 	 */
 	public function create_table() {
@@ -195,7 +195,7 @@ class BDB_DB_Review_Meta extends BDB_DB {
 	 * @param int|string $review_id A passed review ID.
 	 *
 	 * @access private
-	 * @since  1.0.0
+	 * @since  1.0
 	 * @return int|bool The normalized review ID or false if it's found to not be valid.
 	 */
 	private function sanitize_review_id( $review_id ) {

@@ -15,7 +15,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 /**
  * Render Analytics Page
  *
- * @since 1.0.0
+ * @since 1.0
  * @return void
  */
 function bdb_analytics_page() {

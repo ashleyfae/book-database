@@ -15,7 +15,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 /**
  * Get Available Ratings
  *
- * @since 1.0.0
+ * @since 1.0
  * @return array
  */
 function bdb_get_available_ratings() {
@@ -40,7 +40,7 @@ function bdb_get_available_ratings() {
 /**
  * Get Maximum Rating
  *
- * @since 1.0.0
+ * @since 1.0
  * @return int
  */
 function bdb_get_max_rating() {

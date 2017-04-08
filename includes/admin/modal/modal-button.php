@@ -17,7 +17,7 @@ if ( ! defined( 'ABSPATH' ) ) {
  *
  * Determines whether or not to display the media button.
  *
- * @since 1.0.0
+ * @since 1.0
  * @return bool
  */
 function bdb_show_media_button() {
@@ -39,7 +39,7 @@ function bdb_show_media_button() {
  *
  * @param $editor_id
  *
- * @since 1.0.0
+ * @since 1.0
  * @return void
  */
 function bdb_media_buttons( $editor_id ) {

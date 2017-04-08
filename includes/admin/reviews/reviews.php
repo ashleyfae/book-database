@@ -5,7 +5,7 @@
  * @package   book-database
  * @copyright Copyright (c) 2016, Ashley GIbson
  * @license   GPL2+
- * @since     1.0.0
+ * @since     1.0
  */
 
 // Exit if accessed directly
@@ -18,7 +18,7 @@ if ( ! defined( 'ABSPATH' ) ) {
  *
  * Render the reviews page contents.
  *
- * @since 1.0.0
+ * @since 1.0
  * @return void
  */
 function bdb_reviews_page() {
@@ -35,7 +35,7 @@ function bdb_reviews_page() {
 /**
  * Register the views for review management.
  *
- * @since 1.0.0
+ * @since 1.0
  * @return array
  */
 function bdb_review_views() {
@@ -47,7 +47,7 @@ function bdb_review_views() {
 /**
  * Display List of Reviews
  *
- * @since 1.0.0
+ * @since 1.0
  * @return void
  */
 function bdb_reviews_list() {
@@ -84,7 +84,7 @@ function bdb_reviews_list() {
  * @param string $view      The view being requested.
  * @param array  $callbacks The registered viewas and their callback functions.
  *
- * @since 1.0.0
+ * @since 1.0
  * @return void
  */
 function bdb_render_review_view( $view, $callbacks ) {
@@ -139,7 +139,7 @@ function bdb_render_review_view( $view, $callbacks ) {
  *
  * @param BDB_Review $review
  *
- * @since 1.0.0
+ * @since 1.0
  * @return void
  */
 function bdb_reviews_edit_view( $review ) {

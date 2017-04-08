@@ -16,7 +16,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 /**
  * Class BDB_Book
  *
- * @since 1.0.0
+ * @since 1.0
  */
 class BDB_Book {
 
@@ -25,7 +25,7 @@ class BDB_Book {
 	 *
 	 * @var int
 	 * @access public
-	 * @since  1.0.0
+	 * @since  1.0
 	 */
 	public $ID;
 
@@ -34,7 +34,7 @@ class BDB_Book {
 	 *
 	 * @var int
 	 * @access private
-	 * @since  1.0.0
+	 * @since  1.0
 	 */
 	private $cover;
 
@@ -43,7 +43,7 @@ class BDB_Book {
 	 *
 	 * @var string
 	 * @access private
-	 * @since  1.0.0
+	 * @since  1.0
 	 */
 	private $title;
 
@@ -52,7 +52,7 @@ class BDB_Book {
 	 *
 	 * @var string
 	 * @access private
-	 * @since  1.0.0
+	 * @since  1.0
 	 */
 	private $index_title;
 
@@ -63,7 +63,7 @@ class BDB_Book {
 	 *
 	 * @var array
 	 * @access private
-	 * @since  1.0.0
+	 * @since  1.0
 	 */
 	private $author;
 
@@ -72,7 +72,7 @@ class BDB_Book {
 	 *
 	 * @var int|null
 	 * @access private
-	 * @since  1.0.0
+	 * @since  1.0
 	 */
 	private $series_id;
 
@@ -81,7 +81,7 @@ class BDB_Book {
 	 *
 	 * @var string|null
 	 * @access private
-	 * @since  1.0.0
+	 * @since  1.0
 	 */
 	private $series_position;
 
@@ -90,7 +90,7 @@ class BDB_Book {
 	 *
 	 * @var string
 	 * @access private
-	 * @since  1.0.0
+	 * @since  1.0
 	 */
 	private $pub_date;
 
@@ -99,7 +99,7 @@ class BDB_Book {
 	 *
 	 * @var string
 	 * @access private
-	 * @since  1.0.0
+	 * @since  1.0
 	 */
 	private $pages;
 
@@ -108,7 +108,7 @@ class BDB_Book {
 	 *
 	 * @var string
 	 * @access private
-	 * @since  1.0.0
+	 * @since  1.0
 	 */
 	private $synopsis;
 
@@ -117,7 +117,7 @@ class BDB_Book {
 	 *
 	 * @var string
 	 * @access private
-	 * @since  1.0.0
+	 * @since  1.0
 	 */
 	private $goodreads_url;
 
@@ -126,7 +126,7 @@ class BDB_Book {
 	 *
 	 * @var string
 	 * @access private
-	 * @since  1.0.0
+	 * @since  1.0
 	 */
 	private $buy_link;
 
@@ -135,7 +135,7 @@ class BDB_Book {
 	 *
 	 * @var int|string|null
 	 * @access private
-	 * @since  1.0.0
+	 * @since  1.0
 	 */
 	private $rating;
 
@@ -144,7 +144,7 @@ class BDB_Book {
 	 *
 	 * @var array
 	 * @access private
-	 * @since  1.0.0
+	 * @since  1.0
 	 */
 	private $terms;
 
@@ -154,7 +154,7 @@ class BDB_Book {
 	 * @param int|object|array $book_id Book ID to fetch from database or a prepared object in database format.
 	 *
 	 * @access public
-	 * @since  1.0.0
+	 * @since  1.0
 	 * @return bool
 	 */
 	public function __construct( $book_id ) {
@@ -177,7 +177,7 @@ class BDB_Book {
 	 * @param object|false $book Book object from the database.
 	 *
 	 * @access private
-	 * @since  1.0.0
+	 * @since  1.0
 	 * @return bool Whether or not the set up was successful.
 	 */
 	private function setup_book( $book ) {
@@ -207,7 +207,7 @@ class BDB_Book {
 	 * @param string $key Property to retrieve.
 	 *
 	 * @access public
-	 * @since  1.0.0
+	 * @since  1.0
 	 * @return mixed
 	 */
 	public function __get( $key ) {
@@ -231,7 +231,7 @@ class BDB_Book {
 	 * @param array $data
 	 *
 	 * @access public
-	 * @since  1.0.0
+	 * @since  1.0
 	 * @return int|false Book ID if success, or false if failure.
 	 */
 	public function create( $data = array() ) {
@@ -288,7 +288,7 @@ class BDB_Book {
 	 * @param array $data Array of data attributes for a book (checked via whitelist).
 	 *
 	 * @access public
-	 * @since  1.0.0
+	 * @since  1.0
 	 * @return bool Whether or not the update was successful.
 	 */
 	public function update( $data = array() ) {
@@ -340,7 +340,7 @@ class BDB_Book {
 	 * @param bool   $single   Whether or not to return a single value.
 	 *
 	 * @access public
-	 * @since  1.0.0
+	 * @since  1.0
 	 * @return mixed Will be an array if $single is false. Will be value of meta data field if $single is true.
 	 */
 	public function get_meta( $meta_key = '', $single = true ) {
@@ -357,7 +357,7 @@ class BDB_Book {
 	 * @param bool   $unique     Whether the same key should not be added.
 	 *
 	 * @access public
-	 * @since  1.0.0
+	 * @since  1.0
 	 * @return bool False for failure, true for success.
 	 */
 	public function add_meta( $meta_key = '', $meta_value, $unique = false ) {
@@ -374,7 +374,7 @@ class BDB_Book {
 	 * @param string $prev_value Optional. Previous value to check before updating.
 	 *
 	 * @access public
-	 * @since  1.0.0
+	 * @since  1.0
 	 * @return bool
 	 */
 	public function update_meta( $meta_key = '', $meta_value, $prev_value = '' ) {
@@ -390,7 +390,7 @@ class BDB_Book {
 	 * @param mixed  $meta_value Meta value.
 	 *
 	 * @access public
-	 * @since  1.0.0
+	 * @since  1.0
 	 * @return bool False for failure, true for success.
 	 */
 	public function delete_meta( $meta_key = '', $meta_value = '' ) {
@@ -405,7 +405,7 @@ class BDB_Book {
 	 * @param array $data The data to sanitize.
 	 *
 	 * @access private
-	 * @since  1.0.0
+	 * @since  1.0
 	 * @return array The sanitized data, based off column defaults.
 	 */
 	private function sanitize_columns( $data ) {
@@ -467,7 +467,7 @@ class BDB_Book {
 	 * Return the cover image attachment ID.
 	 *
 	 * @access public
-	 * @since  1.0.0
+	 * @since  1.0
 	 * @return string
 	 */
 	public function get_cover_id() {
@@ -480,7 +480,7 @@ class BDB_Book {
 	 * Return the URL for the cover image.
 	 *
 	 * @access public
-	 * @since  1.0.0
+	 * @since  1.0
 	 * @return string|false
 	 */
 	public function get_cover_url( $size = 'full' ) {
@@ -505,7 +505,7 @@ class BDB_Book {
 	 * @uses   wp_get_attachment_image()
 	 *
 	 * @access public
-	 * @since  1.0.0
+	 * @since  1.0
 	 * @return string|false
 	 */
 	public function get_cover( $size = 'full', $args = array() ) {
@@ -523,7 +523,7 @@ class BDB_Book {
 	 * Get Title
 	 *
 	 * @access public
-	 * @since  1.0.0
+	 * @since  1.0
 	 * @return string
 	 */
 	public function get_title() {
@@ -536,7 +536,7 @@ class BDB_Book {
 	 * Title used for sorting in the indexes.
 	 *
 	 * @access public
-	 * @since  1.0.0
+	 * @since  1.0
 	 * @return string
 	 */
 	public function get_index_title() {
@@ -553,7 +553,7 @@ class BDB_Book {
 	 * @param bool $include_custom Whether or not to include the "Custom" option.
 	 *
 	 * @access public
-	 * @since  1.0.0
+	 * @since  1.0
 	 * @return array
 	 */
 	public function get_title_choices( $include_custom = false ) {
@@ -580,7 +580,7 @@ class BDB_Book {
 	 * Get Author
 	 *
 	 * @access public
-	 * @since  1.0.0
+	 * @since  1.0
 	 * @return array|bool Array of author IDs and names or false if none.
 	 */
 	public function get_author() {
@@ -597,7 +597,7 @@ class BDB_Book {
 	 *
 	 * @param bool $implode Whether or not to implode the array into a string.
 	 *
-	 * @since 1.0.0
+	 * @since 1.0
 	 * @return array|string Array of author names or imploded string.
 	 */
 	public function get_author_names( $implode = true ) {
@@ -623,7 +623,7 @@ class BDB_Book {
 	 * Get Series ID
 	 *
 	 * @access public
-	 * @since  1.0.0
+	 * @since  1.0
 	 * @return string
 	 */
 	public function get_series_id() {
@@ -634,7 +634,7 @@ class BDB_Book {
 	 * Get Series Position
 	 *
 	 * @access public
-	 * @since  1.0.0
+	 * @since  1.0
 	 * @return string
 	 */
 	public function get_series_position() {
@@ -647,7 +647,7 @@ class BDB_Book {
 	 * @todo   Cache? Or join with bdb_get_book_series_name() or idk..
 	 *
 	 * @access public
-	 * @since  1.0.0
+	 * @since  1.0
 	 * @return string
 	 */
 	public function get_series_name() {
@@ -667,7 +667,7 @@ class BDB_Book {
 	 * @uses   bdb_get_formatted_series_name()
 	 *
 	 * @access public
-	 * @since  1.0.0
+	 * @since  1.0
 	 * @return string|false
 	 */
 	public function get_formatted_series( $linked = false ) {
@@ -711,7 +711,7 @@ class BDB_Book {
 	 * Returned in MySQL date format.
 	 *
 	 * @access public
-	 * @since  1.0.0
+	 * @since  1.0
 	 * @return string
 	 */
 	public function get_pub_date() {
@@ -724,7 +724,7 @@ class BDB_Book {
 	 * @param string|bool $format Format to use for the date. Leave as false to use format specified in settings.
 	 *
 	 * @access public
-	 * @since  1.0.0
+	 * @since  1.0
 	 * @return string
 	 */
 	public function get_formatted_pub_date( $format = false ) {
@@ -742,7 +742,7 @@ class BDB_Book {
 	 * Get Pages
 	 *
 	 * @access public
-	 * @since  1.0.0
+	 * @since  1.0
 	 * @return int|null
 	 */
 	public function get_pages() {
@@ -753,7 +753,7 @@ class BDB_Book {
 	 * Get Goodreads URL
 	 *
 	 * @access public
-	 * @since  1.0.0
+	 * @since  1.0
 	 * @return int|null
 	 */
 	public function get_goodreads_url() {
@@ -764,7 +764,7 @@ class BDB_Book {
 	 * Get Purchase Link
 	 *
 	 * @access public
-	 * @since  1.0.0
+	 * @since  1.0
 	 * @return int|null
 	 */
 	public function get_buy_link() {
@@ -775,7 +775,7 @@ class BDB_Book {
 	 * Get Synopsis
 	 *
 	 * @access public
-	 * @since  1.0.0
+	 * @since  1.0
 	 * @return string
 	 */
 	public function get_synopsis() {
@@ -790,7 +790,7 @@ class BDB_Book {
 	 * @param string|int|null $rating
 	 *
 	 * @access public
-	 * @since  1.0.0
+	 * @since  1.0
 	 * @return void
 	 */
 	public function set_rating( $rating ) {
@@ -803,7 +803,7 @@ class BDB_Book {
 	 * Returns the faux rating.
 	 *
 	 * @access public
-	 * @since  1.0.0
+	 * @since  1.0
 	 * @return string|int|null
 	 */
 	public function get_rating() {
@@ -835,7 +835,7 @@ class BDB_Book {
 	 * Returns all terms associated with the book, grouped by type.
 	 *
 	 * @access public
-	 * @since  1.0.0
+	 * @since  1.0
 	 * @return array|false
 	 */
 	public function get_terms() {
@@ -856,7 +856,7 @@ class BDB_Book {
 	 * @param string $type
 	 *
 	 * @access public
-	 * @since  1.0.0
+	 * @since  1.0
 	 * @return array|false
 	 */
 	public function get_term_type( $type ) {
@@ -881,7 +881,7 @@ class BDB_Book {
 	 * @param string     $type       Term type (`author`, `genre`, etc.).
 	 *
 	 * @access public
-	 * @since  1.0.0
+	 * @since  1.0
 	 * @return bool
 	 */
 	public function has_term( $name_or_id, $type ) {
@@ -905,7 +905,7 @@ class BDB_Book {
 	 * Returns *all* data associated with a book.
 	 *
 	 * @access public
-	 * @since  1.0.0
+	 * @since  1.0
 	 * @return array
 	 */
 	public function get_data() {
@@ -938,7 +938,7 @@ class BDB_Book {
 	 * Replaces placeholders with values.
 	 *
 	 * @access public
-	 * @since  1.0.0
+	 * @since  1.0
 	 * @return string
 	 */
 	public function get_formatted_info() {

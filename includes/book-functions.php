@@ -5,7 +5,7 @@
  * @package   book-database
  * @copyright Copyright (c) 2016, Ashley GIbson
  * @license   GPL2+
- * @since     1.0.0
+ * @since     1.0
  */
 
 // Exit if accessed directly
@@ -16,7 +16,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 /**
  * Get Default Labels
  *
- * @since 1.0.0
+ * @since 1.0
  * @return array
  */
 function bdb_get_default_labels() {
@@ -35,7 +35,7 @@ function bdb_get_default_labels() {
  *
  * @uses  bdb_get_default_labels()
  *
- * @since 1.0.0
+ * @since 1.0
  * @return string
  */
 function bdb_get_label_singular( $lowercase = false ) {
@@ -51,7 +51,7 @@ function bdb_get_label_singular( $lowercase = false ) {
  *
  * @uses  bdb_get_default_labels()
  *
- * @since 1.0.0
+ * @since 1.0
  * @return string
  */
 function bdb_get_label_plural( $lowercase = false ) {
@@ -67,7 +67,7 @@ function bdb_get_label_plural( $lowercase = false ) {
  *
  * @param int $book_id
  *
- * @since 1.0.0
+ * @since 1.0
  * @return BDB_Book|false
  */
 function bdb_get_book( $book_id ) {
@@ -87,7 +87,7 @@ function bdb_get_book( $book_id ) {
  *
  * @param array $args Query arguments to override the defaults.
  *
- * @since 1.0.0
+ * @since 1.0
  * @return array Array of book objects.
  */
 function bdb_get_books( $args = array() ) {
@@ -104,7 +104,7 @@ function bdb_get_books( $args = array() ) {
  *
  * @uses  bdb_get_book_terms()
  *
- * @since 1.0.0
+ * @since 1.0
  * @return array|false Array of author objects or false on failure.
  */
 function bdb_get_book_author( $book_id, $args = array() ) {
@@ -119,7 +119,7 @@ function bdb_get_book_author( $book_id, $args = array() ) {
  * @param int   $book_id ID of the book to get the author for.
  * @param array $args    Query arguments to override the defaults.
  *
- * @since 1.0.0
+ * @since 1.0
  * @return string|false Comma-separated list of author names or false on failure.
  */
 function bdb_get_book_author_name( $book_id, $args = array() ) {
@@ -147,7 +147,7 @@ function bdb_get_book_author_name( $book_id, $args = array() ) {
  * @param int  $book_id       ID of the book.
  * @param bool $with_position Whether or not to return the position.
  *
- * @since 1.0.0
+ * @since 1.0
  * @return string|array String of series name if `$with_position` is false. Otherwise array with the following keys:
  *                      `name` - Name of the series.
  *                      `series_position` - Position in the series.
@@ -192,7 +192,7 @@ function bdb_get_book_series_name( $book_id, $with_position = false ) {
  * @param int          $book_id     ID of the book to get the series for.
  * @param string|false $series_name Optionally pass the series name if you already know it.
  *
- * @since 1.0.0
+ * @since 1.0
  * @return string|false Name of the series with the position appended, or false on failure.
  */
 function bdb_get_formatted_series_name( $book_id, $series_name = false ) {
@@ -232,7 +232,7 @@ function bdb_get_formatted_series_name( $book_id, $series_name = false ) {
  *                      `terms` - Array of associated terms.
  *                      |----> `term_type` - Array of terms names of this type.
  *
- * @since 1.0.0
+ * @since 1.0
  * @return int|WP_Error ID of the book inserted or updated, or WP_Error on failure.
  */
 function bdb_insert_book( $data = array() ) {
@@ -312,7 +312,7 @@ function bdb_insert_book( $data = array() ) {
  * @param string $series_name Name of the series.
  * @param string $description Series description.
  *
- * @since 1.0.0
+ * @since 1.0
  * @return int ID of the series.
  */
 function bdb_insert_series( $series_name, $description = '' ) {
@@ -337,7 +337,7 @@ function bdb_insert_series( $series_name, $description = '' ) {
  *
  * @param array $args Query arguments to override the defaults.
  *
- * @since 1.0.0
+ * @since 1.0
  * @return object|false Database object or false.
  */
 function bdb_get_series( $args = array() ) {
@@ -362,7 +362,7 @@ function bdb_get_series( $args = array() ) {
  *
  * @param string $title
  *
- * @since 1.0.0
+ * @since 1.0
  * @return string|false
  */
 function bdb_generate_alternative_book_title( $title ) {

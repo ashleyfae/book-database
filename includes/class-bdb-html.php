@@ -25,7 +25,7 @@ class BDB_HTML {
 	 *
 	 * @param array $args Arguments to override the defaults.
 	 *
-	 * @since 1.0.0
+	 * @since 1.0
 	 * @return string
 	 */
 	public function rating_dropdown( $args = array() ) {
@@ -51,7 +51,7 @@ class BDB_HTML {
 	 * @param array  $args Arguments to override the defaults.
 	 *
 	 * @access public
-	 * @since  1.0.0
+	 * @since  1.0
 	 * @return string|false
 	 */
 	public function term_dropdown( $type, $args = array() ) {
@@ -97,7 +97,7 @@ class BDB_HTML {
 	 *
 	 * @param array $args Arguments to override the defaults.
 	 *
-	 * @since 1.0.0
+	 * @since 1.0
 	 * @return string
 	 */
 	public function select( $args = array() ) {
@@ -207,7 +207,7 @@ class BDB_HTML {
 	 *
 	 * @param array $args Arguments to override the defaults.
 	 *
-	 * @since 1.0.0
+	 * @since 1.0
 	 * @return string
 	 */
 	public function checkbox( $args = array() ) {
@@ -258,7 +258,7 @@ class BDB_HTML {
 	 * @param array $args Arguments to override the defaults.
 	 *
 	 * @access public
-	 * @since  1.0.0
+	 * @since  1.0
 	 * @return string
 	 */
 	public function multicheck( $args = array() ) {
@@ -304,7 +304,7 @@ class BDB_HTML {
 	 *
 	 * @param array $args Arguments to override the defaults.
 	 *
-	 * @since 1.0.0
+	 * @since 1.0
 	 * @return string
 	 */
 	public function text( $args = array() ) {
@@ -359,7 +359,7 @@ class BDB_HTML {
 	 *
 	 * @param array $args Arguments to override the defaults.
 	 *
-	 * @since 1.0.0
+	 * @since 1.0
 	 * @return string
 	 */
 	public function textarea( $args = array() ) {
@@ -427,7 +427,7 @@ class BDB_HTML {
 	 * @param array  $field_args Form field arguments
 	 *
 	 * @access public
-	 * @since  1.0.0
+	 * @since  1.0
 	 * @return void
 	 */
 	public function meta_row( $type = 'text', $meta_args = array(), $field_args = array() ) {

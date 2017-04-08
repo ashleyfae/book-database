@@ -15,7 +15,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 /**
  * Load Assets
  *
- * @since 1.0.0
+ * @since 1.0
  * @return void
  */
 function bdb_load_assets() {

@@ -17,7 +17,7 @@ if ( ! defined( 'ABSPATH' ) ) {
  *
  * Returns the path to the BDB templates directory.
  *
- * @since 1.0.0
+ * @since 1.0
  * @return string
  */
 function bdb_get_templates_dir() {
@@ -29,7 +29,7 @@ function bdb_get_templates_dir() {
  *
  * Returns the URL to the BDB templates directory.
  *
- * @since 1.0.0
+ * @since 1.0
  * @return string
  */
 function bdb_get_templates_url() {
@@ -49,7 +49,7 @@ function bdb_get_templates_url() {
  *
  * @uses  bdb_locate_template()
  *
- * @since 1.0.0
+ * @since 1.0
  * @return string
  */
 function bdb_get_template_part( $slug, $name = '', $load = true ) {
@@ -90,7 +90,7 @@ function bdb_get_template_part( $slug, $name = '', $load = true ) {
  *
  * @uses  bdb_get_theme_template_paths()
  *
- * @since 1.0.0
+ * @since 1.0
  * @return string|false The template filename, or false if none is found.
  */
 function bdb_locate_template( $template_names, $load = false, $require_once = false ) {
@@ -136,7 +136,7 @@ function bdb_locate_template( $template_names, $load = false, $require_once = fa
  * Returns an array of template paths that should be searched in to
  * look for a template part.
  *
- * @since 1.0.0
+ * @since 1.0
  * @return array
  */
 function bdb_get_theme_template_paths() {
@@ -164,7 +164,7 @@ function bdb_get_theme_template_paths() {
  * This is the name of the directory you should put in your theme to
  * override BDB templates.
  *
- * @since 1.0.0
+ * @since 1.0
  * @return string
  */
 function bdb_get_theme_template_dir_name() {

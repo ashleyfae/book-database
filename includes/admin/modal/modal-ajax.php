@@ -15,7 +15,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 /**
  * Ajax CB: Get Book by ID
  *
- * @since 1.0.0
+ * @since 1.0
  * @return void
  */
 function bdb_ajax_get_book() {
@@ -72,7 +72,7 @@ add_action( 'wp_ajax_bdb_get_book', 'bdb_ajax_get_book' );
 /**
  * Ajax CB: Update or Create Book
  *
- * @since 1.0.0
+ * @since 1.0
  * @return void
  */
 function bdb_ajax_save_book() {
@@ -116,7 +116,7 @@ add_action( 'wp_ajax_bdb_save_book', 'bdb_ajax_save_book' );
 /**
  * Ajax CB: Get Thumbnail URL from ID
  *
- * @since 1.0.0
+ * @since 1.0
  * @return void
  */
 function bdb_ajax_get_thumbnail() {
@@ -135,7 +135,7 @@ add_action( 'wp_ajax_bdb_get_thumbnail', 'bdb_ajax_get_thumbnail' );
 /**
  * Search for Existing Book
  *
- * @since 1.0.0
+ * @since 1.0
  * @return void
  */
 function bdb_ajax_search_book() {

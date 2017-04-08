@@ -16,7 +16,7 @@ if ( ! defined( 'ABSPATH' ) ) {
  * Processes all BDB actions sent via POST and GET by looking for the 'bdb-action'
  * request and running do_action() to call the function
  *
- * @since 1.0.0
+ * @since 1.0
  * @return void
  */
 function bdb_process_actions() {

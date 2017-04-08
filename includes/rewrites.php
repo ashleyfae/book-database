@@ -17,7 +17,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 /**
  * Get Reviews Page URL
  *
- * @since 1.0.0
+ * @since 1.0
  * @return string|false
  */
 function bdb_get_reviews_page_url() {
@@ -34,7 +34,7 @@ function bdb_get_reviews_page_url() {
 /**
  * Get Reviews Page Slug
  *
- * @since 1.0.0
+ * @since 1.0
  * @return string|false
  */
 function bdb_get_reviews_page_slug() {
@@ -52,7 +52,7 @@ function bdb_get_reviews_page_slug() {
 /**
  * Get Reviews Endpoint
  *
- * @since 1.0.0
+ * @since 1.0
  * @return string
  */
 function bdb_get_reviews_endpoint() {
@@ -62,7 +62,7 @@ function bdb_get_reviews_endpoint() {
 /**
  * Register Rewrite Tags
  *
- * @since 1.0.0
+ * @since 1.0
  * @return void
  */
 function bdb_rewrite_tags() {
@@ -75,7 +75,7 @@ add_action( 'init', 'bdb_rewrite_tags' );
 /**
  * Create Rewrite Rules
  *
- * @since 1.0.0
+ * @since 1.0
  * @return void
  */
 function bdb_rewrite_rules() {

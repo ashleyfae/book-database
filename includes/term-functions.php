@@ -17,7 +17,7 @@ if ( ! defined( 'ABSPATH' ) ) {
  *
  * How terms can be displayed in the admin area.
  *
- * @since 1.0.0
+ * @since 1.0
  * @return array
  */
 function bdb_get_term_display_types() {
@@ -34,7 +34,7 @@ function bdb_get_term_display_types() {
  *
  * @param bool $include_author Whether or not to include authors.
  *
- * @since 1.0.0
+ * @since 1.0
  * @return array
  */
 function bdb_get_taxonomies( $include_author = false ) {
@@ -61,7 +61,7 @@ function bdb_get_taxonomies( $include_author = false ) {
  *
  * @param array $args Arguments to override the defaults.
  *
- * @since 1.0.0
+ * @since 1.0
  * @return array
  */
 function bdb_get_terms( $args = array() ) {
@@ -77,7 +77,7 @@ function bdb_get_terms( $args = array() ) {
  *
  * @param array $args Query arguments to override the defaults.
  *
- * @since 1.0.0
+ * @since 1.0
  * @return object|false Single term object or false if none.
  */
 function bdb_get_term( $args = array() ) {
@@ -104,7 +104,7 @@ function bdb_get_term( $args = array() ) {
  * @param string|bool $type    Type of terms to retrieve, or false for all.
  * @param array       $args    Query arguments to override the defaults.
  *
- * @since 1.0.0
+ * @since 1.0
  * @return array|false Array of term objects or false on failure.
  */
 function bdb_get_book_terms( $book_id, $type = false, $args = array() ) {
@@ -174,7 +174,7 @@ function bdb_get_book_terms( $book_id, $type = false, $args = array() ) {
  *
  * @param int $book_id
  *
- * @since 1.0.0
+ * @since 1.0
  * @return array|bool
  */
 function bdb_get_all_book_terms( $book_id, $args = array() ) {
@@ -205,7 +205,7 @@ function bdb_get_all_book_terms( $book_id, $args = array() ) {
  * @param string           $type    Term type (`author`, `publisher`, etc.).
  * @param bool             $append  If false, will delete the difference of terms.
  *
- * @since 1.0.0
+ * @since 1.0
  * @return array|WP_Error Term IDs of the affected terms.
  */
 function bdb_set_book_terms( $book_id, $terms, $type, $append = false ) {
@@ -326,7 +326,7 @@ function bdb_set_book_terms( $book_id, $terms, $type, $append = false ) {
  * @param int $book_id
  * @param int $term_id
  *
- * @since 1.0.0
+ * @since 1.0
  * @return bool
  */
 function bdb_relationship_exists( $book_id, $term_id ) {
@@ -375,7 +375,7 @@ function bdb_get_relationship( $args = array() ) {
  *
  * @param int $term_id ID of the term.
  *
- * @since 1.0.0
+ * @since 1.0
  * @return int|bool Updated term ID on success, or false on failure.
  */
 function bdb_update_term_count( $term_id ) {
@@ -401,7 +401,7 @@ function bdb_update_term_count( $term_id ) {
  * @param string|object $term Term object or slug.
  * @param bool|string   $type Term type or you can leave as false if an object is passed to `$term`.
  *
- * @since 1.0.0
+ * @since 1.0
  * @return string|false
  */
 function bdb_get_term_link( $term, $type = false ) {

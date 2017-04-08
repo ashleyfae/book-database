@@ -6,7 +6,7 @@
  * @package   book-database
  * @copyright Copyright (c) 2016, Ashley GIbson
  * @license   GPL2+
- * @since     1.0.0
+ * @since     1.0
  */
 
 // Exit if accessed directly
@@ -21,7 +21,7 @@ class BDB_Review {
 	 *
 	 * @var int
 	 * @access public
-	 * @since  1.0.0
+	 * @since  1.0
 	 */
 	public $ID = 0;
 
@@ -30,7 +30,7 @@ class BDB_Review {
 	 *
 	 * @var int
 	 * @access public
-	 * @since  1.0.0
+	 * @since  1.0
 	 */
 	public $book_id;
 
@@ -39,7 +39,7 @@ class BDB_Review {
 	 *
 	 * @var int
 	 * @access public
-	 * @since  1.0.0
+	 * @since  1.0
 	 */
 	public $post_id;
 
@@ -49,7 +49,7 @@ class BDB_Review {
 	 *
 	 * @var string
 	 * @access public
-	 * @since  1.0.0
+	 * @since  1.0
 	 */
 	public $url;
 
@@ -58,7 +58,7 @@ class BDB_Review {
 	 *
 	 * @var int
 	 * @access public
-	 * @since  1.0.0
+	 * @since  1.0
 	 */
 	public $user_id;
 
@@ -67,7 +67,7 @@ class BDB_Review {
 	 *
 	 * @var int|float|string
 	 * @access public
-	 * @since  1.0.0
+	 * @since  1.0
 	 */
 	public $rating;
 
@@ -84,7 +84,7 @@ class BDB_Review {
 	 *
 	 * @var string
 	 * @access public
-	 * @since  1.0.0
+	 * @since  1.0
 	 */
 	public $date_written;
 
@@ -93,7 +93,7 @@ class BDB_Review {
 	 *
 	 * @var string
 	 * @access public
-	 * @since  1.0.0
+	 * @since  1.0
 	 */
 	public $date_published;
 
@@ -102,7 +102,7 @@ class BDB_Review {
 	 *
 	 * @var BDB_DB_Reviews
 	 * @access protected
-	 * @since  1.0.0
+	 * @since  1.0
 	 */
 	protected $db;
 
@@ -112,7 +112,7 @@ class BDB_Review {
 	 * @param int|object $id Review ID or object from database.
 	 *
 	 * @access public
-	 * @since  1.0.0
+	 * @since  1.0
 	 * @return bool False if set up failed.
 	 */
 	public function __construct( $id ) {
@@ -137,7 +137,7 @@ class BDB_Review {
 	 * @param object $review Review object from the database.
 	 *
 	 * @access private
-	 * @since  1.0.0
+	 * @since  1.0
 	 * @return bool Whether or not the set up was successful.
 	 */
 	private function setup_review( $review ) {
@@ -167,7 +167,7 @@ class BDB_Review {
 	 * @param string $key Property to retrieve.
 	 *
 	 * @access public
-	 * @since  1.0.0
+	 * @since  1.0
 	 * @return mixed
 	 */
 	public function __get( $key ) {
@@ -186,7 +186,7 @@ class BDB_Review {
 	 * @param array $data
 	 *
 	 * @access public
-	 * @since  1.0.0
+	 * @since  1.0
 	 * @return int|false Review ID if success, or false if failure.
 	 */
 	public function create( $data = array() ) {
@@ -249,7 +249,7 @@ class BDB_Review {
 	 * @param array $data Array of data attributes for a review (checked via whitelist).
 	 *
 	 * @access public
-	 * @since  1.0.0
+	 * @since  1.0
 	 * @return bool Whether or not the update was successful.
 	 */
 	public function update( $data = array() ) {
@@ -301,7 +301,7 @@ class BDB_Review {
 	 * @param bool   $single   Whether or not to return a single value.
 	 *
 	 * @access public
-	 * @since  1.0.0
+	 * @since  1.0
 	 * @return mixed Will be an array if $single is false. Will be value of meta data field if $single is true.
 	 */
 	public function get_meta( $meta_key = '', $single = true ) {
@@ -318,7 +318,7 @@ class BDB_Review {
 	 * @param bool   $unique     Whether the same key should not be added.
 	 *
 	 * @access public
-	 * @since  1.0.0
+	 * @since  1.0
 	 * @return bool False for failure, true for success.
 	 */
 	public function add_meta( $meta_key = '', $meta_value, $unique = false ) {
@@ -335,7 +335,7 @@ class BDB_Review {
 	 * @param string $prev_value Optional. Previous value to check before updating.
 	 *
 	 * @access public
-	 * @since  1.0.0
+	 * @since  1.0
 	 * @return bool
 	 */
 	public function update_meta( $meta_key = '', $meta_value, $prev_value = '' ) {
@@ -351,7 +351,7 @@ class BDB_Review {
 	 * @param mixed  $meta_value Meta value.
 	 *
 	 * @access public
-	 * @since  1.0.0
+	 * @since  1.0
 	 * @return bool False for failure, true for success.
 	 */
 	public function delete_meta( $meta_key = '', $meta_value = '' ) {
@@ -366,7 +366,7 @@ class BDB_Review {
 	 * @param array $data The data to sanitize.
 	 *
 	 * @access private
-	 * @since  1.0.0
+	 * @since  1.0
 	 * @return array The sanitized data, based off column defaults.
 	 */
 	private function sanitize_columns( $data ) {
@@ -422,7 +422,7 @@ class BDB_Review {
 	 * Get ID
 	 *
 	 * @access public
-	 * @since  1.0.0
+	 * @since  1.0
 	 * @return int
 	 */
 	public function get_ID() {
@@ -433,7 +433,7 @@ class BDB_Review {
 	 * Get Book ID
 	 *
 	 * @access public
-	 * @since  1.0.0
+	 * @since  1.0
 	 * @return int|BDB_Book|false Book ID, object, or false if none.
 	 */
 	public function get_book_id( $format = 'ID' ) {
@@ -450,7 +450,7 @@ class BDB_Review {
 	 * Get Post ID
 	 *
 	 * @access public
-	 * @since  1.0.0
+	 * @since  1.0
 	 * @return int|false Post ID, or false if none.
 	 */
 	public function get_post_id() {
@@ -463,7 +463,7 @@ class BDB_Review {
 	 * Get User ID
 	 *
 	 * @access public
-	 * @since  1.0.0
+	 * @since  1.0
 	 * @return int|false User ID, or false if none.
 	 */
 	public function get_user_id() {
@@ -478,7 +478,7 @@ class BDB_Review {
 	 * Returns the WP_User object for the reviewer.
 	 *
 	 * @access public
-	 * @since  1.0.0
+	 * @since  1.0
 	 * @return WP_User|false
 	 */
 	public function get_reviewer() {
@@ -498,7 +498,7 @@ class BDB_Review {
 	 * Get Reviewer Name
 	 *
 	 * @access public
-	 * @since  1.0.0
+	 * @since  1.0
 	 * @return string|false
 	 */
 	public function get_reviewer_name() {
@@ -520,7 +520,7 @@ class BDB_Review {
 	 * Returns the URL to the external review if provided, or false if none is set.
 	 *
 	 * @access public
-	 * @since  1.0.0
+	 * @since  1.0
 	 * @return string|false URL to review or false if none.
 	 */
 	public function get_external_url() {
@@ -549,7 +549,7 @@ class BDB_Review {
 	 *                          the book information.
 	 *
 	 * @access public
-	 * @since  1.0.0
+	 * @since  1.0
 	 * @return string|false URL to review or false if none.
 	 */
 	public function get_permalink( $use_id = true, $id_appended = true ) {
@@ -578,7 +578,7 @@ class BDB_Review {
 	 * If a `url` field is provided then the review is considered external.
 	 *
 	 * @access public
-	 * @since  1.0.0
+	 * @since  1.0
 	 * @return bool
 	 */
 	public function is_external() {
@@ -591,7 +591,7 @@ class BDB_Review {
 	 * Get Rating
 	 *
 	 * @access public
-	 * @since  1.0.0
+	 * @since  1.0
 	 * @return string
 	 */
 	public function get_rating() {
@@ -623,7 +623,7 @@ class BDB_Review {
 	 * Returned in MySQL date format.
 	 *
 	 * @access public
-	 * @since  1.0.0
+	 * @since  1.0
 	 * @return string
 	 */
 	public function get_date() {
@@ -636,7 +636,7 @@ class BDB_Review {
 	 * @param string|bool $format Format to use for the date. Leave as false to use format specified in settings.
 	 *
 	 * @access public
-	 * @since  1.0.0
+	 * @since  1.0
 	 * @return string
 	 */
 	public function get_formatted_date( $format = false ) {
@@ -654,7 +654,7 @@ class BDB_Review {
 	 * Returned in MySQL date format.
 	 *
 	 * @access public
-	 * @since  1.0.0
+	 * @since  1.0
 	 * @return string
 	 */
 	public function get_date_published() {
@@ -668,7 +668,7 @@ class BDB_Review {
 	 * @param string|bool $format   Format to use for the date. Leave as false to use format specified in settings.
 	 *
 	 * @access public
-	 * @since  1.0.0
+	 * @since  1.0
 	 * @return mixed|false
 	 */
 	public function format_date( $raw_date, $format = false ) {
@@ -690,7 +690,7 @@ class BDB_Review {
 	 * is in the past.
 	 *
 	 * @access public
-	 * @since  1.0.0
+	 * @since  1.0
 	 * @return bool
 	 */
 	public function is_review_published() {

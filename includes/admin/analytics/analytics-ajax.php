@@ -21,7 +21,7 @@ if ( ! defined( 'ABSPATH' ) ) {
  *      + Average rating
  *      + Rating breakdown
  *
- * @since 1.0.0
+ * @since 1.0
  * @return void
  */
 function bdb_analytics_batch_1() {
@@ -99,7 +99,7 @@ add_action( 'wp_ajax_bdb_analytics_batch_1', 'bdb_analytics_batch_1' );
  * Includes:
  *      + Rating/count breakdowns for each term type.
  *
- * @since 1.0.0
+ * @since 1.0
  * @return void
  */
 function bdb_analytics_batch_2() {

@@ -20,7 +20,7 @@ if ( ! defined( 'ABSPATH' ) ) {
  * Top Level: Book Library
  * Submenus: Book Reviews, Settings
  *
- * @since 1.0.0
+ * @since 1.0
  * @return void
  */
 function bdb_add_options_link() {
@@ -44,7 +44,7 @@ add_action( 'admin_menu', 'bdb_add_options_link', 10 );
  *
  * Checks whether or not the current page is an UBB admin page.
  *
- * @since 1.0.0
+ * @since 1.0
  * @return bool
  */
 function bdb_is_admin_page() {

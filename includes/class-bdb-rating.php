@@ -18,7 +18,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 /**
  * Class BDB_Rating
  *
- * @since 1.0.0
+ * @since 1.0
  */
 class BDB_Rating {
 
@@ -29,7 +29,7 @@ class BDB_Rating {
 	 *
 	 * @var string
 	 * @access protected
-	 * @since  1.0.0
+	 * @since  1.0
 	 */
 	protected $rating;
 
@@ -38,7 +38,7 @@ class BDB_Rating {
 	 *
 	 * @var int
 	 * @access public
-	 * @since  1.0.0
+	 * @since  1.0
 	 */
 	public $max;
 
@@ -48,7 +48,7 @@ class BDB_Rating {
 	 * @param bool|string|int|float $rating Rating value.
 	 *
 	 * @access public
-	 * @since  1.0.0
+	 * @since  1.0
 	 * @return void
 	 */
 	public function __construct( $rating = false ) {
@@ -67,7 +67,7 @@ class BDB_Rating {
 	 * @param string|int|float $rating Rating value to set.
 	 *
 	 * @access public
-	 * @since  1.0.0
+	 * @since  1.0
 	 * @return void
 	 */
 	public function set_rating( $rating ) {
@@ -106,7 +106,7 @@ class BDB_Rating {
 	 *                     text - Plain text with "Star(s)" appended.
 	 *
 	 * @access public
-	 * @since  1.0.0
+	 * @since  1.0
 	 * @return string|bool Formatted star rating or false on failure.
 	 */
 	public function format( $type = '' ) {
@@ -127,7 +127,7 @@ class BDB_Rating {
 	 * Format With Font Awesome
 	 *
 	 * @access public
-	 * @since  1.0.0
+	 * @since  1.0
 	 * @return string
 	 */
 	public function format_font_awesome() {
@@ -144,7 +144,7 @@ class BDB_Rating {
 	 * Format With HTML Stars
 	 *
 	 * @access public
-	 * @since  1.0.0
+	 * @since  1.0
 	 * @return string
 	 */
 	public function format_html_stars() {
@@ -161,7 +161,7 @@ class BDB_Rating {
 	 * Format as Text (with "Star(s)" appended)
 	 *
 	 * @access public
-	 * @since  1.0.0
+	 * @since  1.0
 	 * @return string
 	 */
 	public function format_text() {
@@ -190,7 +190,7 @@ class BDB_Rating {
 	 * For use in class attributes.
 	 *
 	 * @access public
-	 * @since  1.0.0
+	 * @since  1.0
 	 * @return string
 	 */
 	public function format_html_class() {
@@ -263,7 +263,7 @@ class BDB_Rating {
 	 * @param string $empty_star Text/HTML to repeat for number of empty stars.
 	 *
 	 * @access public
-	 * @since  1.0.0
+	 * @since  1.0
 	 * @return string
 	 */
 	public function repeat( $full_star = '', $half_star = '', $empty_star = '' ) {

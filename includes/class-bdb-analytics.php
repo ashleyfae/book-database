@@ -16,7 +16,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 /**
  * Class BDB_Analytics
  *
- * @since 1.0.0
+ * @since 1.0
  */
 class BDB_Analytics {
 
@@ -25,7 +25,7 @@ class BDB_Analytics {
 	 *
 	 * @var BDB_Analytics
 	 * @access public
-	 * @since  1.0.0
+	 * @since  1.0
 	 */
 	public static $instance;
 
@@ -36,7 +36,7 @@ class BDB_Analytics {
 	 *
 	 * @var int
 	 * @access public
-	 * @since  1.0.0
+	 * @since  1.0
 	 */
 	public static $start = null;
 
@@ -47,7 +47,7 @@ class BDB_Analytics {
 	 *
 	 * @var int
 	 * @access public
-	 * @since  1.0.0
+	 * @since  1.0
 	 */
 	public static $end = null;
 
@@ -58,7 +58,7 @@ class BDB_Analytics {
 	 *
 	 * @var string
 	 * @access public
-	 * @since  1.0.0
+	 * @since  1.0
 	 */
 	public static $startstr = null;
 
@@ -69,7 +69,7 @@ class BDB_Analytics {
 	 *
 	 * @var string
 	 * @access public
-	 * @since  1.0.0
+	 * @since  1.0
 	 */
 	public static $endstr = null;
 
@@ -78,7 +78,7 @@ class BDB_Analytics {
 	 *
 	 * @var array
 	 * @access public
-	 * @since  1.0.0
+	 * @since  1.0
 	 */
 	public static $reviews;
 
@@ -87,7 +87,7 @@ class BDB_Analytics {
 	 *
 	 * @var array
 	 * @access public
-	 * @since  1.0.0
+	 * @since  1.0
 	 */
 	public static $book_ids;
 
@@ -95,7 +95,7 @@ class BDB_Analytics {
 	 * Get Instance
 	 *
 	 * @access public
-	 * @since  1.0.0
+	 * @since  1.0
 	 * @return BDB_Analytics
 	 */
 	public static function instance() {
@@ -117,7 +117,7 @@ class BDB_Analytics {
 	 * @param string $end
 	 *
 	 * @access public
-	 * @since  1.0.0
+	 * @since  1.0
 	 * @return void
 	 */
 	public function set_dates( $start = '-30 days', $end = 'now' ) {
@@ -135,7 +135,7 @@ class BDB_Analytics {
 	 * Returns an array of all review objects created during this period.
 	 *
 	 * @access public
-	 * @since  1.0.0
+	 * @since  1.0
 	 * @return array
 	 */
 	public function query_reviews() {
@@ -180,7 +180,7 @@ class BDB_Analytics {
 	 * Array of all book IDs read during this period.
 	 *
 	 * @access public
-	 * @since  1.0.0
+	 * @since  1.0
 	 * @return array
 	 */
 	public function get_book_ids() {
@@ -288,7 +288,7 @@ class BDB_Analytics {
 	 * Get Number of Reviews
 	 *
 	 * @access public
-	 * @since  1.0.0
+	 * @since  1.0
 	 * @return int
 	 */
 	public function get_number_reviews() {
@@ -303,7 +303,7 @@ class BDB_Analytics {
 	 * Get Pages Read
 	 *
 	 * @access public
-	 * @since  1.0.0
+	 * @since  1.0
 	 * @return int
 	 */
 	public function get_pages_read() {
@@ -429,7 +429,7 @@ class BDB_Analytics {
 	 * Get Average Rating
 	 *
 	 * @access public
-	 * @since  1.0.0
+	 * @since  1.0
 	 * @return int|float
 	 */
 	public function get_average_rating() {
@@ -460,7 +460,7 @@ class BDB_Analytics {
 	 * Returns an array of the list of books reviewed in this time.
 	 *
 	 * @access public
-	 * @since  1.0.0
+	 * @since  1.0
 	 * @return array
 	 */
 	public function get_book_list() {
@@ -551,7 +551,7 @@ class BDB_Analytics {
 	 * ratings and the number of reviews for that rating.
 	 *
 	 * @access public
-	 * @since  1.0.0
+	 * @since  1.0
 	 * @return array
 	 */
 	public function get_rating_breakdown() {
@@ -646,7 +646,7 @@ class BDB_Analytics {
 	 * @param bool $term_type
 	 *
 	 * @access public
-	 * @since  1.0.0
+	 * @since  1.0
 	 * @return array
 	 */
 	public function get_terms_breakdown( $term_type = false ) {

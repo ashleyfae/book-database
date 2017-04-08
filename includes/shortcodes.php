@@ -114,8 +114,13 @@ add_shortcode( 'review-index', 'bdb_review_index_shortcode' );
  */
 function bdb_book_reviews_shortcode( $atts, $content = '' ) {
 
-	$query = new BDB_Review_Query( array( 'hide_future' => true ) );
-	$vars  = $query->parse_query_args();
+	$args                  = array(
+		'hide_future' => true,
+		'reviews'     => 'only'
+	);
+	$query                 = new BDB_Book_Query( apply_filters( 'book-database/shortcodes/book-reviews/query-args', $args, $atts ), 'reviews' );
+	$query->table_log_join = true;
+	$vars                  = $query->parse_query_args();
 	$query->query();
 	$template = bdb_get_template_part( 'shortcode-book-reviews-entry', '', false );
 
@@ -128,10 +133,10 @@ function bdb_book_reviews_shortcode( $atts, $content = '' ) {
 
 	echo '<div id="reviews">';
 
-	if ( $query->have_reviews() && ! empty( $template ) ) {
-		echo '<div class="bookdb-review-list-number-results">' . sprintf( _n( '%s review found', '%s reviews found', $query->total_reviews, 'book-database' ), $query->total_reviews ) . '</div>';
+	if ( $query->have_books() && ! empty( $template ) ) {
+		echo '<div class="bookdb-review-list-number-results">' . sprintf( _n( '%s review found', '%s reviews found', $query->total_books, 'book-database' ), $query->total_books ) . '</div>';
 		echo '<div class="book-reviews-list">';
-		foreach ( $query->get_reviews() as $entry ) {
+		foreach ( $query->get_books() as $entry ) {
 			include $template;
 		}
 		echo '</div>';
@@ -194,21 +199,17 @@ function bdb_book_grid_shortcode( $atts, $content = '' ) {
 
 	$query_args = $term_args = array();
 
-	$query_args['ids']                 = ! empty( $atts['ids'] ) ? explode( ',', $atts['ids'] ) : null;
-	$query_args['author_name']         = $atts['author'];
-	$query_args['series_name']         = $atts['series'];
-	$query_args['rating']              = $atts['rating'];
-	$query_args['year']                = $atts['year'];
-	$query_args['month']               = $atts['month'];
-	$query_args['day']                 = $atts['day'];
-	$query_args['pub_year']            = $atts['pub-year'];
-	$query_args['orderby']             = $atts['orderby'];
-	$query_args['order']               = $atts['order'];
-	$query_args['number']              = intval( $atts['number'] );
-	$query_args['show_ratings']        = ( $atts['show-ratings'] ) ? true : false;
-	$query_args['show_review_link']    = ( $atts['show-review-link'] ) ? true : false;
-	$query_args['show_goodreads_link'] = ( $atts['show-goodreads-link'] ) ? true : false;
-	$query_args['reviews_only']        = ( $atts['reviews-only'] ) ? true : false;
+	$query_args['ids']         = ! empty( $atts['ids'] ) ? explode( ',', $atts['ids'] ) : null;
+	$query_args['author_name'] = $atts['author'];
+	$query_args['series_name'] = $atts['series'];
+	$query_args['rating']      = $atts['rating'];
+	$query_args['year']        = $atts['year'];
+	$query_args['month']       = $atts['month'];
+	$query_args['day']         = $atts['day'];
+	$query_args['pub_year']    = $atts['pub-year'];
+	$query_args['orderby']     = $atts['orderby'];
+	$query_args['order']       = $atts['order'];
+	$query_args['number']      = intval( $atts['number'] );
 
 	// Setup book publish date
 	if ( $atts['start-date'] ) {
@@ -237,7 +238,16 @@ function bdb_book_grid_shortcode( $atts, $content = '' ) {
 		$query_args['terms'] = $term_args;
 	}
 
-	$query = new BDB_Book_Query( $query_args );
+	$type  = ( $atts['reviews-only'] ) ? 'reviews' : 'books';
+	$query = new BDB_Book_Query( $query_args, $type );
+
+	if ( $atts['show-ratings'] ) {
+		$query->table_log_join = true;
+	}
+	if ( $atts['show-review-link'] ) {
+		$query->table_reviews_join = true;
+	}
+
 	$query->query();
 	$template = bdb_get_template_part( 'shortcode-book-grid-entry', '', false );
 
@@ -262,10 +272,10 @@ add_shortcode( 'book-grid', 'bdb_book_grid_shortcode' );
 /**
  * Filter: Title
  *
- * @param array            $vars    Query vars.
- * @param BDB_Review_Query $query   Review query.
- * @param array            $atts    Shortcode attributes.
- * @param string           $content Shortcode content.
+ * @param array          $vars    Query vars.
+ * @param BDB_Book_Query $query   Review query.
+ * @param array          $atts    Shortcode attributes.
+ * @param string         $content Shortcode content.
  *
  * @since 1.0.0
  * @return void
@@ -284,10 +294,10 @@ add_action( 'book-database/shortcodes/book-reviews/filter-form', 'bdb_reviews_fi
 /**
  * Filter: Author
  *
- * @param array            $vars    Query vars.
- * @param BDB_Review_Query $query   Review query.
- * @param array            $atts    Shortcode attributes.
- * @param string           $content Shortcode content.
+ * @param array          $vars    Query vars.
+ * @param BDB_Book_Query $query   Review query.
+ * @param array          $atts    Shortcode attributes.
+ * @param string         $content Shortcode content.
  *
  * @since 1.0.0
  * @return void
@@ -318,10 +328,10 @@ add_action( 'book-database/shortcodes/book-reviews/filter-form', 'bdb_reviews_fi
 /**
  * Filter: Series
  *
- * @param array            $vars    Query vars.
- * @param BDB_Review_Query $query   Review query.
- * @param array            $atts    Shortcode attributes.
- * @param string           $content Shortcode content.
+ * @param array          $vars    Query vars.
+ * @param BDB_Book_Query $query   Review query.
+ * @param array          $atts    Shortcode attributes.
+ * @param string         $content Shortcode content.
  *
  * @since 1.0.0
  * @return void
@@ -340,10 +350,10 @@ add_action( 'book-database/shortcodes/book-reviews/filter-form', 'bdb_reviews_fi
 /**
  * Filter: Rating
  *
- * @param array            $vars    Query vars.
- * @param BDB_Review_Query $query   Review query.
- * @param array            $atts    Shortcode attributes.
- * @param string           $content Shortcode content.
+ * @param array          $vars    Query vars.
+ * @param BDB_Book_Query $query   Review query.
+ * @param array          $atts    Shortcode attributes.
+ * @param string         $content Shortcode content.
  *
  * @since 1.0.0
  * @return void
@@ -368,10 +378,10 @@ add_action( 'book-database/shortcodes/book-reviews/filter-form', 'bdb_reviews_fi
 /**
  * Filter: Genre
  *
- * @param array            $vars    Query vars.
- * @param BDB_Review_Query $query   Review query.
- * @param array            $atts    Shortcode attributes.
- * @param string           $content Shortcode content.
+ * @param array          $vars    Query vars.
+ * @param BDB_Book_Query $query   Review query.
+ * @param array          $atts    Shortcode attributes.
+ * @param string         $content Shortcode content.
  *
  * @since 1.0.0
  * @return void
@@ -393,10 +403,10 @@ add_action( 'book-database/shortcodes/book-reviews/filter-form', 'bdb_reviews_fi
 /**
  * Filter: Publisher
  *
- * @param array            $vars    Query vars.
- * @param BDB_Review_Query $query   Review query.
- * @param array            $atts    Shortcode attributes.
- * @param string           $content Shortcode content.
+ * @param array          $vars    Query vars.
+ * @param BDB_Book_Query $query   Review query.
+ * @param array          $atts    Shortcode attributes.
+ * @param string         $content Shortcode content.
  *
  * @since 1.0.0
  * @return void
@@ -418,10 +428,10 @@ add_action( 'book-database/shortcodes/book-reviews/filter-form', 'bdb_reviews_fi
 /**
  * Filter: Review Year
  *
- * @param array            $vars    Query vars.
- * @param BDB_Review_Query $query   Review query.
- * @param array            $atts    Shortcode attributes.
- * @param string           $content Shortcode content.
+ * @param array          $vars    Query vars.
+ * @param BDB_Book_Query $query   Review query.
+ * @param array          $atts    Shortcode attributes.
+ * @param string         $content Shortcode content.
  *
  * @since 1.0.0
  * @return void
@@ -448,10 +458,10 @@ add_action( 'book-database/shortcodes/book-reviews/filter-form', 'bdb_reviews_fi
 /**
  * Filter: Order By
  *
- * @param array            $vars    Query vars.
- * @param BDB_Review_Query $query   Review query.
- * @param array            $atts    Shortcode attributes.
- * @param string           $content Shortcode content.
+ * @param array          $vars    Query vars.
+ * @param BDB_Book_Query $query   Review query.
+ * @param array          $atts    Shortcode attributes.
+ * @param string         $content Shortcode content.
  *
  * @since 1.0.0
  * @return void
@@ -478,10 +488,10 @@ add_action( 'book-database/shortcodes/book-reviews/filter-form', 'bdb_reviews_fi
 /**
  * Filter: Order
  *
- * @param array            $vars    Query vars.
- * @param BDB_Review_Query $query   Review query.
- * @param array            $atts    Shortcode attributes.
- * @param string           $content Shortcode content.
+ * @param array          $vars    Query vars.
+ * @param BDB_Book_Query $query   Review query.
+ * @param array          $atts    Shortcode attributes.
+ * @param string         $content Shortcode content.
  *
  * @since 1.0.0
  * @return void
@@ -511,10 +521,10 @@ add_action( 'book-database/shortcodes/book-reviews/filter-form', 'bdb_reviews_fi
 /**
  * Filter: Submit Button
  *
- * @param array            $vars    Query vars.
- * @param BDB_Review_Query $query   Review query.
- * @param array            $atts    Shortcode attributes.
- * @param string           $content Shortcode content.
+ * @param array          $vars    Query vars.
+ * @param BDB_Book_Query $query   Review query.
+ * @param array          $atts    Shortcode attributes.
+ * @param string         $content Shortcode content.
  *
  * @since 1.0.0
  * @return void

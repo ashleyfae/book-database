@@ -21,20 +21,58 @@ if ( ! defined( 'ABSPATH' ) ) {
 class BDB_Book_Query {
 
 	/**
-	 * Number of results.
+	 * Current page number
 	 *
 	 * @var int
 	 * @access protected
-	 * @since  1.3.0
+	 * @since  1.0
 	 */
-	protected $number;
+	protected $page;
+
+	/**
+	 * Offset
+	 *
+	 * Calculated from the page number.
+	 *
+	 * @var int
+	 * @access protected
+	 * @since  1.0
+	 */
+	protected $offset;
+
+	/**
+	 * Number of results per page
+	 *
+	 * @var int
+	 * @access protected
+	 * @since  1.0
+	 */
+	protected $per_page;
+
+	/**
+	 * Current page number
+	 *
+	 * @var int
+	 * @access protected
+	 * @since  1.0
+	 */
+	protected $current_page;
+
+	/**
+	 * Total number of books
+	 *
+	 * @var int
+	 * @access public
+	 * @since  1.0
+	 */
+	public $total_books;
 
 	/**
 	 * Array of table names
 	 *
 	 * @var array
 	 * @access protected
-	 * @since  1.3.0
+	 * @since  1.0
 	 */
 	protected $tables = array();
 
@@ -43,7 +81,7 @@ class BDB_Book_Query {
 	 *
 	 * @var string
 	 * @access protected
-	 * @since  1.3.0
+	 * @since  1.0
 	 */
 	protected $orderby;
 
@@ -52,7 +90,7 @@ class BDB_Book_Query {
 	 *
 	 * @var string
 	 * @access protected
-	 * @since  1.3.0
+	 * @since  1.0
 	 */
 	protected $order;
 
@@ -61,58 +99,106 @@ class BDB_Book_Query {
 	 *
 	 * @var array
 	 * @access protected
-	 * @since  1.3.0
+	 * @since  1.0
 	 */
 	protected $query_vars;
 
 	/**
-	 * Join on log table
+	 * Whether to join on the reading log table
 	 *
 	 * @var bool
-	 * @access protected
-	 * @since  1.3.0
+	 * @access public
+	 * @since  1.0
 	 */
-	protected $table_log_join = false;
+	public $table_log_join = false;
 
 	/**
-	 * Join on reviews table
-	 *
-	 * Will either be `false`, `LEFT`, or `INNER`
-	 *
-	 * @var bool|string
-	 * @access protected
-	 * @since  1.3.0
-	 */
-	protected $table_reviews_join = false;
-
-	/**
-	 * Join on terms table
+	 * Whether to join on reviews table
 	 *
 	 * @var bool
-	 * @access protected
-	 * @since  1.3.0
+	 * @access public
+	 * @since  1.0
 	 */
-	protected $table_terms_join = false;
+	public $table_reviews_join = false;
+
+	/**
+	 * Whether or not to join on the authors table, which is
+	 * actually just the terms table but we treat it differently.
+	 * This is probably stupid and should be changed at some point.
+	 *
+	 * @var bool
+	 * @access public
+	 * @since  1.0
+	 */
+	public $table_authors_join = false;
+
+	/**
+	 * Whether to join on terms table
+	 *
+	 * @var bool
+	 * @access public
+	 * @since  1.0
+	 */
+	public $table_terms_join = false;
+
+	/**
+	 * Whether to join on the series table
+	 *
+	 * @var bool
+	 * @access public
+	 * @since  1.0
+	 */
+	public $table_series_join = false;
+
+	/**
+	 * Array of columns to select from the database
+	 *
+	 * @var array
+	 * @access public
+	 * @since  1.0
+	 */
+	public $select = array();
+
+	/**
+	 * What to group the query results by
+	 *
+	 * @var string
+	 * @access public
+	 * @since  1.0
+	 */
+	public $group_by;
+
+	/**
+	 * Primary type of query ('books' or 'reviews'). This determines whether we select
+	 * distinct book IDs or distinct review IDs (the latter of which may result in
+	 * the same book appearing multiple times with different reviews).
+	 *
+	 * @var string
+	 * @access protected
+	 * @since  1.0
+	 */
+	protected $query_type = 'books';
 
 	/**
 	 * Results from the query
 	 *
 	 * @var array
 	 * @access protected
-	 * @since  1.3.0
+	 * @since  1.0
 	 */
 	protected $books;
 
 	/**
 	 * BDB_Book_Query constructor.
 	 *
-	 * @param array $args Query arguments.
+	 * @param array  $args       Query arguments.
+	 * @param string $query_type Primary query type ('books' or 'reviews').
 	 *
 	 * @access public
-	 * @since  1.3.0
+	 * @since  1.0
 	 * @return void
 	 */
-	public function __construct( $args = array() ) {
+	public function __construct( $args = array(), $query_type = 'books' ) {
 
 		// Set up table names.
 		$this->tables['reviews']       = book_database()->reviews->table_name;
@@ -120,35 +206,56 @@ class BDB_Book_Query {
 		$this->tables['series']        = book_database()->series->table_name;
 		$this->tables['terms']         = book_database()->book_terms->table_name;
 		$this->tables['relationships'] = book_database()->book_term_relationships->table_name;
+		$this->tables['log']           = book_database()->reading_list->table_name;
 
 		// Default args.
 		$defaults = array(
-			'ids'                 => false,
-			'book_title'          => false,
-			'author_name'         => false,
-			'author_slug'         => false,
-			'series_name'         => false,
-			'rating'              => false,
-			'terms'               => array(),
-			'review_date'         => false,
-			'year'                => false, // review written year
-			'month'               => false, // review written month
-			'day'                 => false, // review written day
-			'pub_date'            => false,
-			'orderby'             => 'date',
-			'order'               => 'DESC',
+			'ids'                 => false,// get specific book IDs
+			'book_title'          => false, // filter by book title
+			'author_name'         => false, // specific author name
+			'author_slug'         => false, // author slug
+			'series_name'         => false, // specific series name
+			'rating'              => false, // specific rating
+			'terms'               => array(), // specific term values
+			'review_date'         => false, // specific review date (value or array)
+			'review_year'         => false, // review year (number)
+			'review_month'        => false, // review month (number)
+			'review_day'          => false, // review day (number)
+			'pub_date'            => false, // book publication date (value or array)
+			'pub_year'            => false, // book publication year (number)
+			'pub_month'           => false, // book publication month (number)
+			'pub_day'             => false, // book publication day (number)
+			'orderby'             => 'date', // order results by
+			'order'               => 'DESC', // order
 			'offset'              => false,
-			'show_ratings'        => false,
-			'show_review_link'    => false,
-			'show_goodreads_link' => false,
-			'reviews_only'        => false,
-			'number'              => 20
+			'hide_future_reviews' => false, // whether to hide reviews not yet published
+			'per_page'            => 20,
+			'nopaging'            => false
 		);
 		$args     = wp_parse_args( $args, $defaults );
 
 		// Set up query vars.
-		$this->number     = ( $args['number'] > 0 ) ? absint( $args['number'] ) : 999999999999;
-		$this->query_vars = $args;
+		$this->per_page     = $args['per_page'];
+		$this->query_vars   = $args;
+		$this->query_type   = ( 'reviews' == $query_type ) ? 'reviews' : 'books';
+		$this->current_page = ( isset( $_GET['bdbpage'] ) ) ? absint( $_GET['bdbpage'] ) : 1;
+
+		if ( 'reviews' == $this->query_type ) {
+			$primary_select = 'DISTINCT review.ID as review_id, book.ID as book_id';
+			$this->group_by = 'review.ID';
+		} else {
+			$primary_select = 'DISTINCT book.ID as book_id';
+			$this->group_by = 'book.ID';
+		}
+
+		$this->select = array(
+			$primary_select,
+			'book.cover as book_cover_id',
+			'book.title as book_title',
+			'series_position',
+			'pub_date',
+			'goodreads_url'
+		);
 
 	}
 
@@ -156,7 +263,7 @@ class BDB_Book_Query {
 	 * Parse Orderby
 	 *
 	 * @access protected
-	 * @since  1.3.0
+	 * @since  1.0
 	 * @return void
 	 */
 	protected function parse_orderby() {
@@ -179,6 +286,157 @@ class BDB_Book_Query {
 	}
 
 	/**
+	 * Add new column to select in query
+	 *
+	 * @param string $column ID of the column to add.
+	 *
+	 * @access public
+	 * @since  1.0
+	 * @return void
+	 */
+	public function add_select( $column ) {
+		if ( ! in_array( $column, $this->select ) ) {
+			$this->select[] = $column;
+		}
+	}
+
+	/**
+	 * Remove column ID from the selection
+	 *
+	 * @param string $column ID of the column to remove.
+	 *
+	 * @access public
+	 * @since  1.0
+	 * @return void
+	 */
+	public function remove_select( $column ) {
+		$key = array_search( $column, $this->select );
+		if ( false !== $key ) {
+			unset( $this->select[ $key ] );
+		}
+	}
+
+	/**
+	 * Parse Query Args
+	 *
+	 * Puts together query arguments based on $_GET and query vars.
+	 *
+	 * @access public
+	 * @since  1.0
+	 * @return array Array of query vars.
+	 */
+	public function parse_query_args() {
+
+		// Book title
+		if ( isset( $_GET['title'] ) ) {
+			$this->query_vars['book_title'] = wp_strip_all_tags( $_GET['title'] );
+		}
+
+		// Author
+		if ( isset( $_GET['author'] ) ) {
+			$this->query_vars['author_name'] = $author_name = wp_strip_all_tags( $_GET['author'] );
+		}
+
+		// Series
+		if ( isset( $_GET['series'] ) ) {
+			$this->query_vars['series_name'] = $series_name = wp_strip_all_tags( $_GET['series'] );
+		}
+
+		// Rating
+		if ( isset( $_GET['rating'] ) && 'any' != $_GET['rating'] && 'all' != $_GET['rating'] ) {
+			$allowed_ratings = bdb_get_available_ratings();
+
+			if ( array_key_exists( $_GET['rating'], $allowed_ratings ) ) {
+				$this->query_vars['rating'] = wp_strip_all_tags( $_GET['rating'] );
+			}
+		}
+
+		// Genre
+		if ( isset( $_GET['genre'] ) && 'all' != $_GET['genre'] ) {
+			$this->query_vars['terms']['genre'] = absint( $_GET['genre'] );
+		}
+
+		// Publisher
+		if ( isset( $_GET['publisher'] ) && 'all' != $_GET['publisher'] ) {
+			$this->query_vars['terms']['publisher'] = absint( $_GET['publisher'] );
+		}
+
+		// Review Year
+		if ( isset( $_GET['review_year'] ) && 'all' != $_GET['review_year'] ) {
+			$this->query_vars['review_year'] = absint( $_GET['review_year'] );
+		}
+
+		// Pub Year
+		if ( isset( $_GET['pub_year'] ) ) {
+			$this->query_vars['pub_year'] = absint( $_GET['pub_year'] );
+		}
+
+		// Orderby
+		if ( isset( $_GET['orderby'] ) ) {
+			$orderby = wp_strip_all_tags( $_GET['orderby'] );
+
+			if ( ! array_key_exists( $orderby, bdb_get_allowed_orderby() ) ) {
+				$orderby = 'date';
+			}
+
+			$this->query_vars['orderby'] = wp_slash( $orderby );
+		}
+
+		// Order
+		if ( isset( $_GET['order'] ) ) {
+			$this->query_vars['order'] = ( 'ASC' == $_GET['order'] ) ? 'ASC' : 'DESC';
+		}
+
+		/*
+		 * Look in WP_Query
+		 */
+		global $wp_query;
+
+		if ( array_key_exists( 'book_tax', $wp_query->query_vars ) && array_key_exists( 'book_term', $wp_query->query_vars ) ) {
+
+			if ( 'series' == $wp_query->query_vars['book_tax'] ) {
+
+				$series_obj = bdb_get_series( array(
+					'slug'   => sanitize_text_field( wp_strip_all_tags( $wp_query->query_vars['book_term'] ) ),
+					'fields' => 'names'
+				) );
+
+				if ( $series_obj ) {
+					$this->query_vars['series_name'] = $series_obj;
+					$this->query_vars['orderby']     = 'pub_date';
+					$this->query_vars['order']       = 'ASC';
+				}
+
+			} elseif ( 'rating' == $wp_query->query_vars['book_tax'] ) {
+
+				$allowed_ratings = bdb_get_available_ratings();
+
+				if ( array_key_exists( $wp_query->query_vars['book_term'], $allowed_ratings ) ) {
+					$this->query_vars['rating'] = wp_strip_all_tags( $wp_query->query_vars['book_term'] );
+				}
+
+			} else {
+
+				$type    = sanitize_text_field( wp_strip_all_tags( $wp_query->query_vars['book_tax'] ) );
+				$term_id = bdb_get_term( array(
+					'type'   => $type,
+					'slug'   => sanitize_text_field( wp_strip_all_tags( $wp_query->query_vars['book_term'] ) ),
+					'fields' => 'ids'
+				) );
+
+				if ( $term_id ) {
+					$this->query_vars['terms'][ $type ] = $term_id;
+				}
+
+			}
+
+		}
+
+		return $this->query_vars;
+
+	}
+
+	/**
 	 * Setup table joins
 	 *
 	 * @access protected
@@ -187,17 +445,35 @@ class BDB_Book_Query {
 	 */
 	protected function setup_joins() {
 
-		// Ratings - join on logs.
-		if ( 'rating' == $this->orderby || true == $this->query_vars['show_ratings'] ) {
+		// Join on reading logs table.
+		if ( 'rating' == $this->orderby || ! empty( $this->query_vars['rating'] ) || in_array( $this->orderby, array(
+				'date_started',
+				'date_finished'
+			) )
+		) {
 			$this->table_log_join = true;
 		}
 
-		// Reviews -- required.
-		if ( true == $this->query_vars['reviews_only'] ) {
-			$this->table_reviews_join = 'INNER';
-		} elseif ( true === $this->query_vars['show_review_link'] ) {
-			$this->table_reviews_join = 'LEFT';
+		// Join on reviews table.
+		if ( 'reviews' == $this->query_type || $this->query_vars['review_date'] || $this->query_vars['hide_future_reviews'] || in_array( $this->orderby, array(
+				'date_written',
+				'date_published'
+			) )
+		) {
+			$this->table_reviews_join = true;
 		}
+
+		// Join on author table.
+		if ( $this->query_vars['author_name'] || $this->query_vars['author_slug'] ) {
+			$this->table_authors_join = true;
+		}
+
+		// Join on series table.
+		if ( $this->query_vars['series_name'] ) {
+			$this->table_series_join = true;
+		}
+
+		// @todo
 
 	}
 
@@ -218,24 +494,46 @@ class BDB_Book_Query {
 
 		global $wpdb;
 
-		$join   = '';
-		$where  = ' WHERE 1=1 ';
-		$select = 'DISTINCT book.ID as book_id, book.cover as book_cover_id, book.title as book_title';
+		$join  = '';
+		$where = ' WHERE 1=1 ';
+		$group = '';
 
-		// Join on reading log to get rating.
-		if ( $this->query_vars['show_ratings'] ) {
-			$reading_table = book_database()->reading_list->table_name;
-			$join          .= " LEFT JOIN {$reading_table} as log on (book.ID = log.book_id AND log.rating IS NOT NULL)";
+		/*
+		 * Table joins
+		 */
+
+		// Reading log table.
+		if ( $this->table_log_join ) {
+			$join .= " LEFT JOIN {$this->tables['log']} AS log ON (book.ID = log.book_id AND log.rating IS NOT NULL)";
 		}
 
-		// Join on review table to get review link.
-		if ( $this->table_reviews_join || $this->query_vars['review_date'] ) {
-			$review_table = book_database()->reviews->table_name;
-			$join         .= " {$this->table_reviews_join} JOIN {$review_table} as review on (book.ID = review.book_id) ";
+		// Review table.
+		if ( $this->table_reviews_join ) {
+			$reviews_join_dir = 'LEFT';
+
+			if ( 'reviews' == $this->query_type ) {
+				$reviews_join_dir = 'INNER';
+			}
+
+			$join .= " {$reviews_join_dir} JOIN {$this->tables['reviews']} AS review ON (book.ID = review.book_id)";
 		}
+
+		// Authors table.
+		if ( $this->table_authors_join ) {
+			$join .= " INNER JOIN {$this->tables['relationships']} as ar ON book.ID = ar.book_ID INNER JOIN {$this->tables['terms']} as author ON (ar.term_id = author.term_id AND author.type = 'author') ";
+		}
+
+		// Series table.
+		if ( $this->table_series_join ) {
+			$join .= " INNER JOIN {$this->tables['series']} as series on book.series_id = series.ID ";
+		}
+
+		/*
+		 * Where clauses
+		 */
 
 		// If reviews only, only show published ones.
-		if ( $this->query_vars['reviews_only'] ) {
+		if ( 'reviews' == $this->query_type ) {
 			$current = get_gmt_from_date( 'now', 'Y-m-d H:i:s' );
 			$where   .= $wpdb->prepare( " AND `date_published` <= %s", $current );
 		}
@@ -256,24 +554,17 @@ class BDB_Book_Query {
 		}
 
 		// Filter by author name.
-		if ( $this->query_vars['author_name'] || $this->query_vars['author_slug'] ) {
-			$join .= " INNER JOIN {$this->tables['relationships']} as ar ON book.ID = ar.book_ID INNER JOIN {$this->tables['terms']} as author ON (ar.term_id = author.term_id AND author.type = 'author') ";
-
-			if ( $this->query_vars['author_name'] ) {
-				$where .= $wpdb->prepare( " AND author.name LIKE '%%%%" . '%s' . "%%%%'", sanitize_text_field( wp_strip_all_tags( $this->query_vars['author_name'] ) ) );
-			}
-			// Filter by author slug.
-			if ( $this->query_vars['author_slug'] ) {
-				$where .= $wpdb->prepare( " AND author.slug = %s", sanitize_text_field( wp_strip_all_tags( $this->query_vars['author_slug'] ) ) );
-			}
+		if ( $this->query_vars['author_name'] ) {
+			$where .= $wpdb->prepare( " AND author.name LIKE '%%%%" . '%s' . "%%%%'", sanitize_text_field( wp_strip_all_tags( $this->query_vars['author_name'] ) ) );
+		}
+		// Filter by author slug.
+		if ( $this->query_vars['author_slug'] ) {
+			$where .= $wpdb->prepare( " AND author.slug = %s", sanitize_text_field( wp_strip_all_tags( $this->query_vars['author_slug'] ) ) );
 		}
 
 		// Filter by series name.
 		if ( $this->query_vars['series_name'] ) {
-			$series_table = book_database()->series->table_name;
-			$join         .= " INNER JOIN {$series_table} as series on book.series_id = series.ID ";
-			$where        .= $wpdb->prepare( " AND series.name LIKE '%%%%" . '%s' . "%%%%' ", sanitize_text_field( wp_strip_all_tags( $this->query_vars['series_name'] ) ) );
-			$select       .= ', series.name';
+			$where .= $wpdb->prepare( " AND series.name LIKE '%%%%" . '%s' . "%%%%' ", sanitize_text_field( wp_strip_all_tags( $this->query_vars['series_name'] ) ) );
 		}
 
 		// Filter by rating.
@@ -334,16 +625,35 @@ class BDB_Book_Query {
 		}
 
 		// Review date -- year
-		if ( $this->query_vars['year'] ) {
-			$where .= $wpdb->prepare( " AND %d = YEAR ( date_written )", absint( $this->query_vars['year'] ) );
+		if ( $this->query_vars['review_year'] ) {
+			$where .= $wpdb->prepare( " AND %d = YEAR ( date_written )", absint( $this->query_vars['review_year'] ) );
 		}
 		// Review date -- month
-		if ( $this->query_vars['month'] ) {
-			$where .= $wpdb->prepare( " AND %d = MONTH ( date_written )", absint( $this->query_vars['month'] ) );
+		if ( $this->query_vars['review_month'] ) {
+			$where .= $wpdb->prepare( " AND %d = MONTH ( date_written )", absint( $this->query_vars['review_month'] ) );
 		}
 		// Review date -- day
-		if ( $this->query_vars['day'] ) {
-			$where .= $wpdb->prepare( " AND %d = DAY ( date_written )", absint( $this->query_vars['day'] ) );
+		if ( $this->query_vars['review_day'] ) {
+			$where .= $wpdb->prepare( " AND %d = DAY ( date_written )", absint( $this->query_vars['review_day'] ) );
+		}
+
+		// Book publication date -- year
+		if ( $this->query_vars['pub_year'] ) {
+			$where .= $wpdb->prepare( " AND %d = YEAR ( pub_date )", absint( $this->query_vars['pub_year'] ) );
+		}
+		// Book publication date -- month
+		if ( $this->query_vars['pub_month'] ) {
+			$where .= $wpdb->prepare( " AND %d = MONTH ( pub_date )", absint( $this->query_vars['pub_month'] ) );
+		}
+		// Book publication date -- day
+		if ( $this->query_vars['pub_day'] ) {
+			$where .= $wpdb->prepare( " AND %d = DAY ( pub_date )", absint( $this->query_vars['pub_day'] ) );
+		}
+
+		// Only show reviews that have already been published.
+		if ( $this->query_vars['hide_future_reviews'] ) {
+			$current = get_gmt_from_date( 'now', 'Y-m-d H:i:s' );
+			$where   .= $wpdb->prepare( " AND `date_published` <= %s", $current );
 		}
 
 		// Filter by misc terms.
@@ -371,37 +681,82 @@ class BDB_Book_Query {
 			}
 		}
 
+		/*
+		 * Set up extra select params.
+		 */
+		if ( 'rating' == $this->orderby || ( 'books' == $this->query_type && $this->table_log_join ) ) {
+			$this->add_select( 'ROUND(AVG(IF(log.rating = \'dnf\', 0, log.rating)), 2) as rating' );
+		}
+		if ( $this->table_reviews_join ) {
+			$this->add_select( 'review.post_id' );
+			$this->add_select( 'review.url' );
+		}
+		if ( $this->table_series_join ) {
+			$this->add_select( 'book.series_id' );
+			$this->add_select( 'series.name as series_name' );
+		}
+		if ( $this->table_authors_join ) {
+			$this->add_select( 'author.term_id as author_id' );
+			$this->add_select( 'GROUP_CONCAT(author.name SEPARATOR \', \') as author_name' );
+		}
+		if ( 'reviews' == $this->query_type && $this->table_log_join ) {
+			$this->add_select( 'log.rating as rating' );
+		}
+		$select = implode( ', ', array_unique( $this->select ) );
+
 		// Tweak order by rating.
 		if ( 'rating' == $this->orderby ) {
 			$this->orderby = $this->orderby . " * 1";
 		}
 
-		// Set up extra select params.
-		if ( 'rating' == $this->orderby || true == $this->query_vars['show_ratings'] ) {
-			$select .= ', ROUND(AVG(IF(log.rating = \'dnf\', 0, log.rating)), 2) as rating';
+		// Grouping
+		if ( ! empty( $this->group_by ) ) {
+			$group = 'GROUP BY ' . esc_sql( $this->group_by );
 		}
 
-		if ( true === $this->query_vars['show_goodreads_link'] ) {
-			$select .= ', book.goodreads_url';
-		}
-
-		if ( true === $this->query_vars['show_review_link'] ) {
-			$select .= ', review.post_id, review.url';
-		}
-
-		$query = $wpdb->prepare(
-			"SELECT $select
-			FROM {$this->tables['books']} as book
+		$query = "SELECT $select
+			FROM {$this->tables['books']} AS book
 			{$join}
 			{$where}
-			GROUP BY book.ID 
+			{$group} 
 			ORDER BY {$this->orderby} 
-			{$this->order}
-			LIMIT %d",
-			$this->number
-		);
+			{$this->order}";
 
-		$books = $wpdb->get_results( $query );
+		// Only get total number of results if `nopaging` is `false` and we haven't already gotten all of them.
+		if ( ! $this->query_vars['nopaging'] || - 1 == $this->per_page ) {
+			$total_cache_key = md5( 'bdb_book_query_count_' . serialize( $this->query_vars ) );
+			$total           = wp_cache_get( $total_cache_key, 'book_query' );
+
+			if ( false === $total ) {
+				$total_query       = "SELECT COUNT(1) FROM ({$query}) AS combined_table";
+				$this->total_books = $wpdb->get_var( $total_query );
+
+				wp_cache_set( $total_cache_key, $this->total_books, 'book_query', 3600 );
+			} else {
+				$this->total_books = $total;
+			}
+		}
+
+		// Add pagination parameters to query.
+		if ( $this->per_page > 0 ) {
+			$offset     = ( false !== $this->query_vars['offset'] ) ? $this->query_vars['offset'] : ( $this->current_page * $this->per_page ) - $this->per_page;
+			$pagination = $wpdb->prepare( " LIMIT %d, %d", $offset, $this->per_page );
+		} else {
+			$pagination = $wpdb->prepare( " LIMIT %d", 999999999999 );
+		}
+
+		// Get the final results.
+		$cache_key = md5( 'bdb_book_query_' . serialize( $this->query_vars ) );
+		$books     = wp_cache_get( $cache_key, 'book_query' );
+
+		if ( false === $books ) {
+			$books = $wpdb->get_results( $query . $pagination );
+			wp_cache_set( $cache_key, $books, 'book_query', 3600 );
+		}
+
+		if ( - 1 == $this->per_page ) {
+			$this->total_books = count( $books );
+		}
 
 		$this->books = wp_unslash( $books );
 
@@ -464,6 +819,26 @@ class BDB_Book_Query {
 		}
 
 		return $final;
+
+	}
+
+	/**
+	 * Get pagination links
+	 *
+	 * @access public
+	 * @since  1.0
+	 * @return string
+	 */
+	public function get_pagination() {
+
+		return paginate_links( array(
+			'base'      => add_query_arg( 'bdbpage', '%#%' ),
+			'format'    => '',
+			'prev_text' => __( '&laquo;' ),
+			'next_text' => __( '&raquo;' ),
+			'total'     => ceil( $this->total_books / $this->per_page ),
+			'current'   => $this->current_page
+		) );
 
 	}
 

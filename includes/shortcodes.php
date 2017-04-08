@@ -115,8 +115,9 @@ add_shortcode( 'review-index', 'bdb_review_index_shortcode' );
 function bdb_book_reviews_shortcode( $atts, $content = '' ) {
 
 	$args                  = array(
-		'hide_future' => true,
-		'reviews'     => 'only'
+		'hide_future'       => true,
+		'reviews'           => 'only',
+		'return_books_only' => false
 	);
 	$query                 = new BDB_Book_Query( apply_filters( 'book-database/shortcodes/book-reviews/query-args', $args, $atts ), 'reviews' );
 	$query->table_log_join = true;
@@ -199,17 +200,18 @@ function bdb_book_grid_shortcode( $atts, $content = '' ) {
 
 	$query_args = $term_args = array();
 
-	$query_args['ids']         = ! empty( $atts['ids'] ) ? explode( ',', $atts['ids'] ) : null;
-	$query_args['author_name'] = $atts['author'];
-	$query_args['series_name'] = $atts['series'];
-	$query_args['rating']      = $atts['rating'];
-	$query_args['year']        = $atts['year'];
-	$query_args['month']       = $atts['month'];
-	$query_args['day']         = $atts['day'];
-	$query_args['pub_year']    = $atts['pub-year'];
-	$query_args['orderby']     = $atts['orderby'];
-	$query_args['order']       = $atts['order'];
-	$query_args['number']      = intval( $atts['number'] );
+	$query_args['ids']               = ! empty( $atts['ids'] ) ? explode( ',', $atts['ids'] ) : null;
+	$query_args['author_name']       = $atts['author'];
+	$query_args['series_name']       = $atts['series'];
+	$query_args['rating']            = $atts['rating'];
+	$query_args['year']              = $atts['year'];
+	$query_args['month']             = $atts['month'];
+	$query_args['day']               = $atts['day'];
+	$query_args['pub_year']          = $atts['pub-year'];
+	$query_args['orderby']           = $atts['orderby'];
+	$query_args['order']             = $atts['order'];
+	$query_args['number']            = intval( $atts['number'] );
+	$query_args['return_books_only'] = false;
 
 	// Setup book publish date
 	if ( $atts['start-date'] ) {

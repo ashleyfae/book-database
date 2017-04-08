@@ -153,8 +153,8 @@ class BDB_Book_Query {
 	/**
 	 * Array of columns to select from the database
 	 *
-	 * @var string
-	 * @access array
+	 * @var array
+	 * @access public
 	 * @since  1.0
 	 */
 	public $select = array();

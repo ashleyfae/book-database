@@ -480,6 +480,15 @@ function bdb_books_in_series_field( $book ) {
 	<div class="postbox bdb-books-in-series">
 		<h2 class="hndle ui-sortable handle"><?php printf( __( '%s Series', 'book-database' ), esc_html( $series->name ) ); ?></h2>
 		<div class="inside">
+			<?php
+			$average_rating = $series->get_average_rating();
+
+			if ( ! empty( $average_rating ) ) {
+				$rating = new BDB_Rating( $average_rating );
+				echo '<p>' . sprintf( __( 'Average Rating: %s', 'book-database' ), $rating->format_text() ) . '</p>';
+			}
+			?>
+
 			<div class="bdb-books-in-series-wrap">
 				<?php
 				$cover = array( 150, 300 );

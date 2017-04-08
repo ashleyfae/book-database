@@ -69,6 +69,17 @@ class BDB_Series {
 	protected $books;
 
 	/**
+	 * Average rating for all books in this series
+	 *
+	 * @see    BDB_Series::get_average_rating()
+	 *
+	 * @var float|int
+	 * @access protected
+	 * @since  1.0
+	 */
+	protected $average_rating;
+
+	/**
 	 * BDB_Series constructor.
 	 *
 	 * @param int|object|array|string $id_or_name Series ID, object/array or name.
@@ -145,6 +156,36 @@ class BDB_Series {
 		}
 
 		return apply_filters( 'book-database/series/get-books', $this->books, $this->ID, $this );
+
+	}
+
+	/**
+	 * Get average rating of all books in the series
+	 *
+	 * @access public
+	 * @since  1.0
+	 * @return float|int
+	 */
+	public function get_average_rating() {
+
+		if ( ! isset( $this->average_rating ) ) {
+			$books                = $this->get_books();
+			$total_ratings        = 0;
+			$total_books          = 0;
+			$this->average_rating = 0;
+
+			if ( is_array( $books ) ) {
+				foreach ( $books as $book ) {
+					$book_average  = $book->get_average_rating();
+					$total_ratings = $total_ratings + $book_average;
+					$total_books ++;
+				}
+
+				$this->average_rating = round( ( $total_ratings / $total_books ), 2 );
+			}
+		}
+
+		return apply_filters( 'book-database/series/average-rating', $this->average_rating, $this->ID, $this );
 
 	}
 

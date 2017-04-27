@@ -180,7 +180,8 @@ function bdb_review_insert_reading_log_field( $review ) {
 	}
 
 	// Get all the entries associated with this book.
-	$all_book_entries = book_database()->reading_list->get_entries( array( 'book_id' => $review->book_id ) );
+	$book_id          = isset( $_GET['book_id'] ) ? $_GET['book_id'] : $review->book_id;
+	$all_book_entries = book_database()->reading_list->get_entries( array( 'book_id' => absint( $book_id ) ) );
 	$choose_entries   = array();
 
 	if ( is_array( $all_book_entries ) ) {

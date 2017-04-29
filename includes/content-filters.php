@@ -57,7 +57,7 @@ add_filter( 'content_save_pre', 'bdb_replace_shortcode_with_fallback' );
  * @since 1.0
  * @return string
  */
-function bdb_replace_fallback_with_shortcode( $content ) {
+function bdb_replace_book_fallback_with_shortcode( $content ) {
 
 	if ( is_feed() ) {
 		return $content;
@@ -81,5 +81,5 @@ function bdb_replace_fallback_with_shortcode( $content ) {
 
 }
 
-add_filter( 'the_content', 'bdb_replace_fallback_with_shortcode', 1 );
-add_filter( 'content_edit_pre', 'bdb_replace_fallback_with_shortcode' );
+add_filter( 'the_content', 'bdb_replace_book_fallback_with_shortcode', 1 );
+add_filter( 'content_edit_pre', 'bdb_replace_book_fallback_with_shortcode' );

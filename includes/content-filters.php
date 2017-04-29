@@ -23,7 +23,7 @@ if ( ! defined( 'ABSPATH' ) ) {
  * @since 1.0
  * @return string
  */
-function bdb_replace_shortcode_with_fallback( $content ) {
+function bdb_replace_book_shortcode_with_fallback( $content ) {
 
 	$book_shortcodes = array();
 	$pattern         = get_shortcode_regex( array( 'book' ) );
@@ -47,7 +47,7 @@ function bdb_replace_shortcode_with_fallback( $content ) {
 
 }
 
-add_filter( 'content_save_pre', 'bdb_replace_shortcode_with_fallback' );
+add_filter( 'content_save_pre', 'bdb_replace_book_shortcode_with_fallback' );
 
 /**
  * Replace the fallback static template with the shortcode

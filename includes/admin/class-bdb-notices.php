@@ -73,6 +73,22 @@ class BDB_Notices {
 					break;
 			}
 
+			// Terms
+			switch ( $_GET['bdb-message'] ) {
+				case 'term-added' :
+					$notices['updated']['bookdb-term-added'] = __( 'Term added.', 'book-database' );
+					break;
+				case 'term-add-error' :
+					$notices['error']['bookdb-term-add-error'] = __( 'An error occurred while adding the term.', 'book-database' );
+					break;
+				case 'term-updated' :
+					$notices['updated']['bookdb-term-updated'] = __( 'Term successfully updated.', 'book-database' );
+					break;
+				case 'term-deleted' :
+					$notices['updated']['bookdb-term-deleted'] = __( 'The term has been deleted.', 'book-database' );
+					break;
+			}
+
 		}
 
 		if ( count( $notices['updated'] ) > 0 ) {

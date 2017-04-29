@@ -30,6 +30,9 @@ function bdb_add_options_link() {
 	// Book Reviews
 	add_submenu_page( 'bdb-books', sprintf( esc_html__( '%s Reviews', 'book-database' ), bdb_get_label_singular() ), sprintf( esc_html__( '%s Reviews', 'book-database' ), bdb_get_label_singular() ), 'edit_posts', 'bdb-reviews', 'bdb_reviews_page' );
 
+	// Book Terms
+	add_submenu_page( 'bdb-books', sprintf( esc_html__( '%s Terms', 'book-database' ), bdb_get_label_singular() ), sprintf( esc_html__( '%s Terms', 'book-database' ), bdb_get_label_singular() ), 'edit_posts', 'bdb-terms', 'bdb_terms_page' );
+
 	// Analytics
 	add_submenu_page( 'bdb-books', esc_html__( 'Review Analytics', 'book-database' ), esc_html__( 'Analytics', 'book-database' ), 'manage_options', 'bdb-analytics', 'bdb_analytics_page' );
 

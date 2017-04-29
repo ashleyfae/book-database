@@ -260,6 +260,31 @@ abstract class BDB_DB {
 	}
 
 	/**
+	 * Delete multiple rows by IDs
+	 *
+	 * @param array $ids Array of primary key values (numeric)
+	 *
+	 * @access public
+	 * @since  1.0
+	 * @return int|false Number of rows deleted or false if none.
+	 */
+	public function delete_by_ids( $ids ) {
+
+		global $wpdb;
+
+		if ( is_array( $ids ) ) {
+			$ids = implode( ',', array_map( 'absint', $ids ) );
+		} else {
+			$ids = intval( $ids );
+		}
+
+		$results = $wpdb->query( "DELETE FROM  $this->table_name WHERE $this->primary_key IN( {$ids} )" );
+
+		return $results;
+
+	}
+
+	/**
 	 * Check if the given table exists.
 	 *
 	 * @param string $table Name of the table to check.

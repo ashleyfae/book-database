@@ -22,11 +22,11 @@ if ( ! defined( 'ABSPATH' ) ) {
  * @return void
  */
 function bdb_reviews_page() {
-	$default_reviews = bdb_review_views();
+	$default_views = bdb_review_views();
 	$requested_view  = isset( $_GET['view'] ) ? sanitize_text_field( $_GET['view'] ) : 'reviews';
 
-	if ( array_key_exists( $requested_view, $default_reviews ) && function_exists( $default_reviews[ $requested_view ] ) ) {
-		bdb_render_review_view( $requested_view, $default_reviews );
+	if ( array_key_exists( $requested_view, $default_views ) && function_exists( $default_views[ $requested_view ] ) ) {
+		bdb_render_review_view( $requested_view, $default_views );
 	} else {
 		bdb_reviews_list();
 	}
@@ -64,9 +64,9 @@ function bdb_reviews_list() {
 			<a href="<?php echo esc_url( bdb_get_admin_page_add_review() ); ?>" class="page-title-action"><?php _e( 'Add New', 'book-database' ); ?></a>
 		</h1>
 		<?php do_action( 'book-database/reviews/table/top' ); ?>
-		<form id="ubb-reviews-filter" method="GET" action="">
+		<form id="bookdb-reviews-filter" method="GET" action="">
 			<?php
-			$review_table->search_box( __( 'Search Reviews', 'book-database' ), 'ubb-reviews' );
+			$review_table->search_box( __( 'Search Reviews', 'book-database' ), 'bdb-reviews' );
 			$review_table->display();
 			?>
 			<input type="hidden" name="post_type" value="bdb_review">
@@ -79,7 +79,7 @@ function bdb_reviews_list() {
 }
 
 /**
- * Render Book View
+ * Render Review View
  *
  * @param string $view      The view being requested.
  * @param array  $callbacks The registered viewas and their callback functions.
@@ -108,7 +108,7 @@ function bdb_render_review_view( $view, $callbacks ) {
 	}
 
 	if ( 'edit' == $view && ! $review->ID ) {
-		bdb_set_error( 'ubb-invalid-review', __( 'Invalid review ID provided.', 'book-database' ) );
+		bdb_set_error( 'bdb-invalid-review', __( 'Invalid review ID provided.', 'book-database' ) );
 		$render = false;
 	}
 	?>

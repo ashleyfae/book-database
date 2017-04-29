@@ -4,6 +4,8 @@
  *
  * Replace shortcodes with static HTML as a fallback when the plugin is deactivated.
  *
+ * @todo Do the same for [book-grid]
+ *
  * @package   book-database
  * @copyright Copyright (c) 2017, Ashley Gibson
  * @license   GPL2+

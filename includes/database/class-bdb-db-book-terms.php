@@ -447,7 +447,7 @@ class BDB_DB_Book_Terms extends BDB_DB {
 
 		dbDelta( $sql );
 
-		update_option( $this->table_name . '_db_version', $this->version );
+		update_option( $this->table_name . '_db_version', $this->version, false );
 
 	}
 

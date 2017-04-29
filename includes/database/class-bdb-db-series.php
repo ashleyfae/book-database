@@ -385,7 +385,7 @@ class BDB_DB_Series extends BDB_DB {
 
 		dbDelta( $sql );
 
-		update_option( $this->table_name . '_db_version', $this->version );
+		update_option( $this->table_name . '_db_version', $this->version, false );
 
 	}
 

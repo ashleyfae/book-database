@@ -411,7 +411,7 @@ var BookDB_Modal_Admin = {
 
 				if (response.success) {
 
-					if (0 === BookDB_Modal_Admin.editingBook || true == BookDB_Modal_Admin.newButExistingBook) {
+					if (0 === BookDB_Modal_Admin.editingBook || true === BookDB_Modal_Admin.newButExistingBook) {
 						BookDB_Modal_Admin.addToEditor('[book id="' + response.data + '"]');
 					} else {
 						// Refresh content in editor.

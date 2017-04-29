@@ -492,6 +492,7 @@ add_filter( 'book-database/book/formatted-info/value/buy_link', 'bdb_book_layout
  * @return string
  */
 function bdb_book_layout_rating( $value, $enabled_fields, $book_id, $book ) {
+
 	if ( null !== $book->get_rating() ) {
 		$rating       = new BDB_Rating( $book->get_rating() );
 		$fa_stars     = $rating->format( 'font_awesome' );
@@ -508,6 +509,7 @@ function bdb_book_layout_rating( $value, $enabled_fields, $book_id, $book ) {
 	}
 
 	return $value;
+
 }
 
 add_filter( 'book-database/book/formatted-info/value/rating', 'bdb_book_layout_rating', 10, 4 );

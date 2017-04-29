@@ -131,7 +131,7 @@ function bdb_enqueue_modal_scripts() {
 			'insert_new_book'       => esc_html__( 'Insert New Book', 'book-database' ),
 			'media_title'           => esc_html__( 'Select or Upload Image', 'book-database' ),
 			'media_button'          => esc_html__( 'Use Image', 'book-database' ),
-			'shortcode_remove'      => esc_html__( 'Are you sure you want to remove this book?', 'book-database' )
+			'shortcode_remove'      => esc_html__( 'Are you sure you want to remove this book? It will not be deleted from your library - just from this post.', 'book-database' )
 		)
 	) );
 }

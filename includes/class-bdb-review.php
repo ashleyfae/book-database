@@ -595,7 +595,7 @@ class BDB_Review {
 	 * @return string
 	 */
 	public function get_rating() {
-		if ( ! isset( $this->rating ) ) {
+		if ( empty( $this->rating ) ) {
 			$log = bdb_get_review_reading_entry( $this->ID );
 
 			if ( $log ) {

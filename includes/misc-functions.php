@@ -269,8 +269,7 @@ function bdb_format_mysql_date( $mysql_date, $format = false ) {
 		$format = get_option( 'date_format' );
 	}
 
-	$gmt_date = $mysql_date ? get_date_from_gmt( $mysql_date, 'U' ) : false;
-	$date     = date_i18n( $format, $gmt_date );
+	$date = mysql2date( $format, get_date_from_gmt( $mysql_date ) );
 
 	return $date;
 

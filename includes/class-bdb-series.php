@@ -214,7 +214,7 @@ class BDB_Series {
 
 		$query = "SELECT DISTINCT book_id FROM $reading_table log
 				  INNER JOIN $books_table as book on (book.ID = log.book_id AND book.series_id = %d)
-				  WHERE log.complete = 100
+				  WHERE log.date_finished IS NOT NULL
 				  GROUP BY book.ID";
 
 		$book_ids = $wpdb->get_results( $wpdb->prepare( $query, $this->ID ) );

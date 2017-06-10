@@ -497,6 +497,8 @@ function bdb_books_in_series_field( $book ) {
 				}
 				?>
 			</div>
+
+			<a href="<?php echo esc_url( bdb_get_admin_page_edit_series( $series_id ) ); ?>" class="button button-secondary"><?php _e( 'Edit Series', 'book-database' ) ?></a>
 		</div>
 	</div>
 	<?php

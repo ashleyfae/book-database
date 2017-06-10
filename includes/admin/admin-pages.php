@@ -5,7 +5,7 @@
  * Creates admin pages and loads any required assets on these pages.
  *
  * @package   book-database
- * @copyright Copyright (c) 2016, Ashley GIbson
+ * @copyright Copyright (c) 2017, Ashley Gibson
  * @license   GPL2+
  */
 
@@ -26,6 +26,9 @@ if ( ! defined( 'ABSPATH' ) ) {
 function bdb_add_options_link() {
 	// Book Library
 	add_menu_page( sprintf( esc_html__( '%s Library', 'book-database' ), bdb_get_label_singular() ), sprintf( esc_html__( '%s Library', 'book-database' ), bdb_get_label_singular() ), 'edit_posts', 'bdb-books', 'bdb_books_page', 'dashicons-book' );
+
+	// Series
+	add_submenu_page( 'bdb-books', sprintf( esc_html__( '%s Series', 'book-database' ), bdb_get_label_singular() ), sprintf( esc_html__( '%s Series', 'book-database' ), bdb_get_label_singular() ), 'edit_posts', 'bdb-series', 'bdb_series_page' );
 
 	// Book Reviews
 	add_submenu_page( 'bdb-books', sprintf( esc_html__( '%s Reviews', 'book-database' ), bdb_get_label_singular() ), sprintf( esc_html__( '%s Reviews', 'book-database' ), bdb_get_label_singular() ), 'edit_posts', 'bdb-reviews', 'bdb_reviews_page' );
@@ -53,6 +56,7 @@ function bdb_is_admin_page() {
 
 	$bdb_page_ids = array(
 		'toplevel_page_bdb-books',
+		'book-library_page_bdb-series',
 		'book-library_page_bdb-reviews',
 		'book-library_page_bdb-settings',
 		'book-library_page_bdb-analytics'

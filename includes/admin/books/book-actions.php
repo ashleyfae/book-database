@@ -512,7 +512,7 @@ add_action( 'book-database/book-edit/after-save-box', 'bdb_books_in_series_field
 /**
  * Save Book
  *
- * Triggers after saving a book via Book Reviews > Book Library.
+ * Triggers after saving a book via Book Library.
  *
  * @since 1.0
  * @return void

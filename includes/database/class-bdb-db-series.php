@@ -42,10 +42,11 @@ class BDB_DB_Series extends BDB_DB {
 	 */
 	public function get_columns() {
 		return array(
-			'ID'          => '%d',
-			'name'        => '%s',
-			'slug'        => '%s',
-			'description' => '%s'
+			'ID'           => '%d',
+			'name'         => '%s',
+			'slug'         => '%s',
+			'description'  => '%s',
+			'number_books' => '%d'
 		);
 	}
 
@@ -58,9 +59,10 @@ class BDB_DB_Series extends BDB_DB {
 	 */
 	public function get_column_defaults() {
 		return array(
-			'name'        => '',
-			'slug'        => '',
-			'description' => ''
+			'name'         => '',
+			'slug'         => '',
+			'description'  => '',
+			'number_books' => 1
 		);
 	}
 
@@ -104,6 +106,11 @@ class BDB_DB_Series extends BDB_DB {
 
 	/**
 	 * Delete a Series.
+	 *
+	 * Do not call this directly. Use `bdb_delete_series()` instead, as that also removes
+	 * book associations.
+	 *
+	 * @see    bdb_delete_series()
 	 *
 	 * @param bool $id ID of the series to delete.
 	 *
@@ -215,7 +222,7 @@ class BDB_DB_Series extends BDB_DB {
 
 		}
 
-		return $series;
+		return wp_unslash( $series );
 
 	}
 
@@ -302,7 +309,7 @@ class BDB_DB_Series extends BDB_DB {
 			wp_cache_set( $cache_key, $series, 'series', 3600 );
 		}
 
-		return $series;
+		return wp_unslash( $series );
 
 	}
 
@@ -375,10 +382,11 @@ class BDB_DB_Series extends BDB_DB {
 		require_once( ABSPATH . 'wp-admin/includes/upgrade.php' );
 
 		$sql = "CREATE TABLE " . $this->table_name . " (
-		ID bigint(20) NOT NULL AUTO_INCREMENT,
-		name varchar(200) NOT NULL,
-		slug varchar(200) NOT NULL,
-		description longtext NOT NULL,
+		ID BIGINT(20) NOT NULL AUTO_INCREMENT,
+		name VARCHAR(200) NOT NULL,
+		slug VARCHAR(200) NOT NULL,
+		description LONGTEXT NOT NULL,
+		number_books INT(20) NOT NULL,
 		PRIMARY KEY  (ID),
 		INDEX name (name)
 		) CHARACTER SET utf8 COLLATE utf8_general_ci;";

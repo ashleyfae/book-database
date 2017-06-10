@@ -148,12 +148,12 @@ class BDB_Books_Table extends WP_List_Table {
 	/**
 	 * Renders most of the columns in the list table.
 	 *
-	 * @param object $item        Contains all the data of the customers.
+	 * @param object $item        Contains all the data of the books.
 	 * @param string $column_name The name of the column.
 	 *
 	 * @access public
 	 * @since  1.0
-	 * @return string Column name
+	 * @return string Column contents
 	 */
 	public function column_default( $item, $column_name ) {
 
@@ -226,7 +226,7 @@ class BDB_Books_Table extends WP_List_Table {
 	/**
 	 * Render Checkbox Column
 	 *
-	 * @param array $item Contains all the data of the reviews.
+	 * @param array $item Contains all the data of the books.
 	 *
 	 * @access public
 	 * @since  1.0
@@ -327,7 +327,7 @@ class BDB_Books_Table extends WP_List_Table {
 		if ( 'top' == $which && true === $this->display_delete_message ) {
 			?>
             <div id="message" class="updated notice notice-success">
-                <p><?php _e( 'books successfully deleted.', 'book-database' ); ?></p>
+                <p><?php _e( 'Books successfully deleted.', 'book-database' ); ?></p>
             </div>
 			<?php
 		}
@@ -507,7 +507,7 @@ class BDB_Books_Table extends WP_List_Table {
 	 *
 	 * @uses   BDB_Books_Table::get_columns()
 	 * @uses   WP_List_Table::get_sortable_columns()
-	 * @uses   BDB_Books_Table::reviews_data()
+	 * @uses   BDB_Books_Table::books_data()
 	 * @uses   WP_List_Table::set_pagination_args()
 	 *
 	 * @access public

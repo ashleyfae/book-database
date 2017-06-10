@@ -255,6 +255,7 @@ if ( ! class_exists( 'Book_Database' ) ) :
 			require_once BDB_DIR . 'includes/rating-functions.php';
 			require_once BDB_DIR . 'includes/rewrites.php';
 			require_once BDB_DIR . 'includes/review-functions.php';
+			require_once BDB_DIR . 'includes/series-functions.php';
 			require_once BDB_DIR . 'includes/shortcodes.php';
 			require_once BDB_DIR . 'includes/template-functions.php';
 			require_once BDB_DIR . 'includes/term-functions.php';
@@ -278,6 +279,9 @@ if ( ! class_exists( 'Book_Database' ) ) :
 				require_once BDB_DIR . 'includes/admin/reviews/review-actions.php';
 				require_once BDB_DIR . 'includes/admin/reviews/review-functions.php';
 				require_once BDB_DIR . 'includes/admin/reviews/reviews.php';
+				require_once BDB_DIR . 'includes/admin/series/series-actions.php';
+				require_once BDB_DIR . 'includes/admin/series/series-functions.php';
+				require_once BDB_DIR . 'includes/admin/series/series.php';
 				require_once BDB_DIR . 'includes/admin/settings/display-settings.php';
 			}
 

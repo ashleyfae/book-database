@@ -198,14 +198,16 @@
   display: none; }
 
 #bookdb-book-page-wrapper .postbox > h2,
-#bookdb-review-page-wrapper .postbox > h2 {
+#bookdb-review-page-wrapper .postbox > h2,
+#bookdb-series-page-wrapper .postbox > h2 {
   border-bottom: 1px solid #eee;
   font-size: 14px;
   line-height: 1.4;
   margin: 0;
   padding: 8px 12px; }
 #bookdb-book-page-wrapper .postbox .hndle,
-#bookdb-review-page-wrapper .postbox .hndle {
+#bookdb-review-page-wrapper .postbox .hndle,
+#bookdb-series-page-wrapper .postbox .hndle {
   cursor: auto !important; }
 
 .bookdb-box-row {
@@ -276,15 +278,18 @@
     width: 30%; } }
 /* Save Box */
 #bookdb-review-page-wrapper #major-publishing-actions,
-#bookdb-book-page-wrapper #major-publishing-actions {
+#bookdb-book-page-wrapper #major-publishing-actions,
+#bookdb-series-page-wrapper #major-publishing-actions {
   clear: both;
   overflow: hidden; }
 #bookdb-review-page-wrapper #delete-action a,
-#bookdb-book-page-wrapper #delete-action a {
+#bookdb-book-page-wrapper #delete-action a,
+#bookdb-series-page-wrapper #delete-action a {
   color: #a00;
   text-decoration: none; }
   #bookdb-review-page-wrapper #delete-action a:hover,
-  #bookdb-book-page-wrapper #delete-action a:hover {
+  #bookdb-book-page-wrapper #delete-action a:hover,
+  #bookdb-series-page-wrapper #delete-action a:hover {
     color: red; }
 
 /* Tags */

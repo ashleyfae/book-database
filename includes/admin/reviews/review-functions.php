@@ -13,7 +13,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 }
 
 /**
- * Register Default Book Views
+ * Register Default Review Views
  *
  * @param array $views
  *

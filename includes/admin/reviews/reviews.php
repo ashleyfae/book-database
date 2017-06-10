@@ -3,7 +3,7 @@
  * Review Page
  *
  * @package   book-database
- * @copyright Copyright (c) 2016, Ashley GIbson
+ * @copyright Copyright (c) 2017, Ashley Gibson
  * @license   GPL2+
  * @since     1.0
  */
@@ -79,7 +79,7 @@ function bdb_reviews_list() {
 }
 
 /**
- * Render Book View
+ * Render Review View
  *
  * @param string $view      The view being requested.
  * @param array  $callbacks The registered viewas and their callback functions.

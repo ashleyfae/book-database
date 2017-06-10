@@ -1,5 +1,6 @@
 #bookdb-book-page-wrapper,
-#bookdb-review-page-wrapper {
+#bookdb-review-page-wrapper,
+#bookdb-series-page-wrapper {
     .postbox {
         > h2 {
             border-bottom: 1px solid #eee;
@@ -122,7 +123,8 @@
 
 /* Save Box */
 #bookdb-review-page-wrapper,
-#bookdb-book-page-wrapper {
+#bookdb-book-page-wrapper,
+#bookdb-series-page-wrapper {
     #major-publishing-actions {
         clear: both;
         overflow: hidden;

@@ -185,9 +185,12 @@ class BDB_Series {
 
 			if ( is_array( $books ) ) {
 				foreach ( $books as $book ) {
-					$book_average  = $book->get_average_rating();
-					$total_ratings = $total_ratings + $book_average;
-					$total_books ++;
+					$book_average = $book->get_average_rating();
+
+					if ( ! is_null( $book_average ) ) {
+						$total_ratings = $total_ratings + $book_average;
+						$total_books ++;
+					}
 				}
 
 				$this->average_rating = round( ( $total_ratings / $total_books ), 2 );

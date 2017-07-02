@@ -193,7 +193,9 @@ class BDB_Series {
 					}
 				}
 
-				$this->average_rating = round( ( $total_ratings / $total_books ), 2 );
+				if ( $total_books > 0 ) {
+					$this->average_rating = round( ( $total_ratings / $total_books ), 2 );
+				}
 			}
 		}
 

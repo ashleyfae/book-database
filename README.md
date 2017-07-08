@@ -28,11 +28,54 @@ I'm not sure if I'll ever officially release this. I'm mostly building this for 
 Most read books:
 
 ```
-SELECT book_id, book.title, COUNT(*) AS count FROM `wp_bdb_reading_list` list INNER JOIN `wp_bdb_books` book on book.ID = list.book_id GROUP BY book_id ORDER BY count DESC LIMIT 25
+SELECT
+  book_id,
+  book.title,
+  COUNT(*) AS count
+FROM `wp_bdb_reading_list` list INNER JOIN `wp_bdb_books` book ON book.ID = list.book_id
+GROUP BY book_id
+ORDER BY count DESC
+LIMIT 25
 ```
 
 Get all the books and their ratings from a specific term name ("Fantasy") and within a specific time period (the year 2016):
 
 ```
-SELECT book.title, log.rating FROM `wp_bdb_reviews` review RIGHT JOIN `wp_bdb_reading_list` log on log.review_id = review.ID INNER JOIN `wp_bdb_books` book on book.ID = review.book_id INNER JOIN `wp_bdb_book_term_relationships` r on r.book_id = review.book_id INNER JOIN `wp_bdb_book_terms` term on (term.term_id = r.term_id AND term.name = 'Fantasy') WHERE `date_written` >= '2016-01-01 00:00:00' AND `date_written` <= '2016-12-31 00:00:00' ORDER BY book.title ASC
+SELECT
+  book.title,
+  log.rating
+FROM `wp_bdb_reviews` review RIGHT JOIN `wp_bdb_reading_list` log ON log.review_id = review.ID
+  INNER JOIN `wp_bdb_books` book ON book.ID = review.book_id
+  INNER JOIN `wp_bdb_book_term_relationships` r ON r.book_id = review.book_id
+  INNER JOIN `wp_bdb_book_terms` term ON (term.term_id = r.term_id AND term.name = 'Fantasy')
+WHERE `date_written` >= '2016-01-01 00:00:00' AND `date_written` <= '2016-12-31 00:00:00'
+ORDER BY book.title ASC
+```
+
+Get books with 4 stars or higher in the genres "Contemporary" _and_ "Romance":
+
+```
+SELECT
+  book.title,
+  author.name,
+  log.rating
+FROM wp_bdb_books AS book
+  INNER JOIN wp_bdb_book_term_relationships AS r ON book.ID = r.book_id
+  INNER JOIN wp_bdb_book_terms AS author ON (r.term_id = author.term_id AND author.type = 'author')
+  INNER JOIN wp_bdb_reading_list AS log ON book.ID = log.book_id
+WHERE log.rating > 4
+      AND book.ID IN (
+  SELECT book_id
+  FROM wp_bdb_book_term_relationships AS r
+    INNER JOIN wp_bdb_book_terms AS t ON r.term_id = t.term_id
+  WHERE t.name = 'Contemporary'
+        AND book_id IN (
+    SELECT book_id
+    FROM wp_bdb_book_term_relationships AS r2
+      INNER JOIN wp_bdb_book_terms AS t2 ON r2.term_id = t2.term_id
+    WHERE t2.name = 'Romance'
+  )
+)
+GROUP BY book.ID
+ORDER BY log.rating DESC
 ```

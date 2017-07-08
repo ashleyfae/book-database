@@ -27,7 +27,7 @@ I'm not sure if I'll ever officially release this. I'm mostly building this for 
 
 Most read books:
 
-```
+```mysql
 SELECT
   book_id,
   book.title,
@@ -40,7 +40,7 @@ LIMIT 25
 
 Get all the books and their ratings from a specific term name ("Fantasy") and within a specific time period (the year 2016):
 
-```
+```mysql
 SELECT
   book.title,
   log.rating
@@ -54,7 +54,7 @@ ORDER BY book.title ASC
 
 Get books with 4 stars or higher in the genres "Contemporary" _and_ "Romance":
 
-```
+```mysql
 SELECT
   book.title,
   author.name,

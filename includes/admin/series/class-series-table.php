@@ -393,8 +393,8 @@ class BDB_Series_Table extends WP_List_Table {
 		$this->_column_headers = array( $columns, $hidden, $sortable );
 
 		$this->items = $this->series_data();
-
-		$this->total = book_database()->books->count( $this->args );
+		
+		$this->total = book_database()->series->count( $this->args );
 
 		$this->set_pagination_args( array(
 			'total_items' => $this->total,

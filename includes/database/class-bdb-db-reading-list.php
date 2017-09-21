@@ -299,20 +299,20 @@ class BDB_DB_Reading_List extends BDB_DB {
 			if ( is_array( $args['date_started'] ) ) {
 
 				if ( ! empty( $args['date_started']['start'] ) ) {
-					$start = get_gmt_from_date( wp_strip_all_tags( $args['date_started']['start'] ), 'Y-m-d 00:00:00' );
+					$start = get_gmt_from_date( sanitize_text_field( $args['date_started']['start'] ), 'Y-m-d 00:00:00' );
 					$where .= $wpdb->prepare( " AND `date_started` >= %s", $start );
 				}
 
 				if ( ! empty( $args['date_started']['end'] ) ) {
-					$end = get_gmt_from_date( wp_strip_all_tags( $args['date_started']['end'] ), 'Y-m-d 23:59:59' );
+					$end = get_gmt_from_date( sanitize_text_field( $args['date_started']['end'] ), 'Y-m-d 23:59:59' );
 					$where .= $wpdb->prepare( " AND `date_started` <= %s", $end );
 				}
 
 			} else {
 
-				$year  = get_gmt_from_date( wp_strip_all_tags( $args['date_started'] ), 'Y' );
-				$month = get_gmt_from_date( wp_strip_all_tags( $args['date_started'] ), 'm' );
-				$day   = get_gmt_from_date( wp_strip_all_tags( $args['date_started'] ), 'd' );
+				$year  = get_gmt_from_date( sanitize_text_field( $args['date_started'] ), 'Y' );
+				$month = get_gmt_from_date( sanitize_text_field( $args['date_started'] ), 'm' );
+				$day   = get_gmt_from_date( sanitize_text_field( $args['date_started'] ), 'd' );
 				$where .= $wpdb->prepare( " AND %d = YEAR ( date_started ) AND %d = MONTH ( date_started ) AND %d = DAY ( date_started )", $year, $month, $day );
 
 			}
@@ -325,20 +325,20 @@ class BDB_DB_Reading_List extends BDB_DB {
 			if ( is_array( $args['date_finished'] ) ) {
 
 				if ( ! empty( $args['date_finished']['start'] ) ) {
-					$start = get_gmt_from_date( wp_strip_all_tags( $args['date_finished']['start'] ), 'Y-m-d 00:00:00' );
+					$start = get_gmt_from_date( sanitize_text_field( $args['date_finished']['start'] ), 'Y-m-d 00:00:00' );
 					$where .= $wpdb->prepare( " AND `date_finished` >= %s", $start );
 				}
 
 				if ( ! empty( $args['date_finished']['end'] ) ) {
-					$end = get_gmt_from_date( wp_strip_all_tags( $args['date_finished']['end'] ), 'Y-m-d 23:59:59' );
+					$end = get_gmt_from_date( sanitize_text_field( $args['date_finished']['end'] ), 'Y-m-d 23:59:59' );
 					$where .= $wpdb->prepare( " AND `date_finished` <= %s", $end );
 				}
 
 			} else {
 
-				$year  = get_gmt_from_date( wp_strip_all_tags( $args['date_finished'] ), 'Y' );
-				$month = get_gmt_from_date( wp_strip_all_tags( $args['date_finished'] ), 'm' );
-				$day   = get_gmt_from_date( wp_strip_all_tags( $args['date_finished'] ), 'd' );
+				$year  = get_gmt_from_date( sanitize_text_field( $args['date_finished'] ), 'Y' );
+				$month = get_gmt_from_date( sanitize_text_field( $args['date_finished'] ), 'm' );
+				$day   = get_gmt_from_date( sanitize_text_field( $args['date_finished'] ), 'd' );
 				$where .= $wpdb->prepare( " AND %d = YEAR ( date_finished ) AND %d = MONTH ( date_finished ) AND %d = DAY ( date_finished )", $year, $month, $day );
 
 			}
@@ -347,10 +347,10 @@ class BDB_DB_Reading_List extends BDB_DB {
 
 		// By specific rating.
 		if ( ! empty( $args['rating'] ) ) {
-			$where .= $wpdb->prepare( " AND `rating` LIKE '" . '%s' . "' ", wp_strip_all_tags( $args['rating'] ) );
+			$where .= $wpdb->prepare( " AND `rating` LIKE '" . '%s' . "' ", sanitize_text_field( $args['rating'] ) );
 		}
 
-		$orderby = ! array_key_exists( $args['orderby'], $this->get_columns() ) ? 'ID' : wp_strip_all_tags( $args['orderby'] );
+		$orderby = ! array_key_exists( $args['orderby'], $this->get_columns() ) ? 'ID' : sanitize_text_field( $args['orderby'] );
 		$order   = ( 'ASC' == strtoupper( $args['order'] ) ) ? 'ASC' : 'DESC';
 		$orderby = esc_sql( $orderby );
 		$order   = esc_sql( $order );
@@ -453,20 +453,20 @@ class BDB_DB_Reading_List extends BDB_DB {
 			if ( is_array( $args['date_started'] ) ) {
 
 				if ( ! empty( $args['date_started']['start'] ) ) {
-					$start = get_gmt_from_date( wp_strip_all_tags( $args['date_started']['start'] ), 'Y-m-d 00:00:00' );
+					$start = get_gmt_from_date( sanitize_text_field( $args['date_started']['start'] ), 'Y-m-d 00:00:00' );
 					$where .= $wpdb->prepare( " AND `date_started` >= %s", $start );
 				}
 
 				if ( ! empty( $args['date_started']['end'] ) ) {
-					$end = get_gmt_from_date( wp_strip_all_tags( $args['date_started']['end'] ), 'Y-m-d 23:59:59' );
+					$end = get_gmt_from_date( sanitize_text_field( $args['date_started']['end'] ), 'Y-m-d 23:59:59' );
 					$where .= $wpdb->prepare( " AND `date_started` <= %s", $end );
 				}
 
 			} else {
 
-				$year  = get_gmt_from_date( wp_strip_all_tags( $args['date_started'] ), 'Y' );
-				$month = get_gmt_from_date( wp_strip_all_tags( $args['date_started'] ), 'm' );
-				$day   = get_gmt_from_date( wp_strip_all_tags( $args['date_started'] ), 'd' );
+				$year  = get_gmt_from_date( sanitize_text_field( $args['date_started'] ), 'Y' );
+				$month = get_gmt_from_date( sanitize_text_field( $args['date_started'] ), 'm' );
+				$day   = get_gmt_from_date( sanitize_text_field( $args['date_started'] ), 'd' );
 				$where .= $wpdb->prepare( " AND %d = YEAR ( date_started ) AND %d = MONTH ( date_started ) AND %d = DAY ( date_started )", $year, $month, $day );
 
 			}
@@ -479,20 +479,20 @@ class BDB_DB_Reading_List extends BDB_DB {
 			if ( is_array( $args['date_finished'] ) ) {
 
 				if ( ! empty( $args['date_finished']['start'] ) ) {
-					$start = get_gmt_from_date( wp_strip_all_tags( $args['date_finished']['start'] ), 'Y-m-d 00:00:00' );
+					$start = get_gmt_from_date( sanitize_text_field( $args['date_finished']['start'] ), 'Y-m-d 00:00:00' );
 					$where .= $wpdb->prepare( " AND `date_finished` >= %s", $start );
 				}
 
 				if ( ! empty( $args['date_finished']['end'] ) ) {
-					$end = get_gmt_from_date( wp_strip_all_tags( $args['date_finished']['end'] ), 'Y-m-d 23:59:59' );
+					$end = get_gmt_from_date( sanitize_text_field( $args['date_finished']['end'] ), 'Y-m-d 23:59:59' );
 					$where .= $wpdb->prepare( " AND `date_finished` <= %s", $end );
 				}
 
 			} else {
 
-				$year  = get_gmt_from_date( wp_strip_all_tags( $args['date_finished'] ), 'Y' );
-				$month = get_gmt_from_date( wp_strip_all_tags( $args['date_finished'] ), 'm' );
-				$day   = get_gmt_from_date( wp_strip_all_tags( $args['date_finished'] ), 'd' );
+				$year  = get_gmt_from_date( sanitize_text_field( $args['date_finished'] ), 'Y' );
+				$month = get_gmt_from_date( sanitize_text_field( $args['date_finished'] ), 'm' );
+				$day   = get_gmt_from_date( sanitize_text_field( $args['date_finished'] ), 'd' );
 				$where .= $wpdb->prepare( " AND %d = YEAR ( date_finished ) AND %d = MONTH ( date_finished ) AND %d = DAY ( date_finished )", $year, $month, $day );
 
 			}
@@ -501,7 +501,7 @@ class BDB_DB_Reading_List extends BDB_DB {
 
 		// Specific rating.
 		if ( ! empty( $args['rating'] ) ) {
-			$where .= $wpdb->prepare( " AND `rating` LIKE '" . '%s' . "' ", wp_strip_all_tags( $args['rating'] ) );
+			$where .= $wpdb->prepare( " AND `rating` LIKE '" . '%s' . "' ", sanitize_text_field( $args['rating'] ) );
 		}
 
 		$cache_key = md5( 'bdb_reading_list_' . serialize( $args ) );

@@ -273,17 +273,17 @@ class BDB_DB_Series extends BDB_DB {
 
 		// Series with a specific name.
 		if ( ! empty( $args['name'] ) ) {
-			$where .= $wpdb->prepare( " AND `name` LIKE '%%%%" . '%s' . "%%%%' ", wp_strip_all_tags( $args['name'] ) );
+			$where .= $wpdb->prepare( " AND `name` LIKE '%%%%" . '%s' . "%%%%' ", sanitize_text_field( $args['name'] ) );
 		}
 
 		// Series with a specific slug.
 		if ( ! empty( $args['slug'] ) ) {
-			$where .= $wpdb->prepare( " AND `slug` = %s ", wp_strip_all_tags( $args['slug'] ) );
+			$where .= $wpdb->prepare( " AND `slug` = %s ", sanitize_text_field( $args['slug'] ) );
 		}
 
 		// @todo author
 
-		$orderby = ! array_key_exists( $args['orderby'], $this->get_columns() ) ? 'ID' : wp_strip_all_tags( $args['orderby'] );
+		$orderby = ! array_key_exists( $args['orderby'], $this->get_columns() ) ? 'ID' : sanitize_text_field( $args['orderby'] );
 		$order   = ( 'ASC' == strtoupper( $args['order'] ) ) ? 'ASC' : 'DESC';
 		$orderby = esc_sql( $orderby );
 		$order   = esc_sql( $order );
@@ -349,7 +349,7 @@ class BDB_DB_Series extends BDB_DB {
 
 		// Series with a specific name.
 		if ( ! empty( $args['author'] ) ) {
-			$where .= $wpdb->prepare( " AND `author` LIKE '%%%%" . '%s' . "%%%%' ", wp_strip_all_tags( $args['author'] ) );
+			$where .= $wpdb->prepare( " AND `author` LIKE '%%%%" . '%s' . "%%%%' ", sanitize_text_field( $args['author'] ) );
 		}
 
 		// @todo author

@@ -374,7 +374,7 @@ class BDB_DB_Reviews extends BDB_DB {
 
 		// Reviews with a specific rating.
 		if ( ! empty( $args['rating'] ) ) {
-			$where .= $wpdb->prepare( " AND log.rating LIKE '" . '%s' . "' ", wp_strip_all_tags( $args['rating'] ) );
+			$where .= $wpdb->prepare( " AND log.rating LIKE '" . '%s' . "' ", sanitize_text_field( $args['rating'] ) );
 		}
 
 		// Reviews created for a specific date or in a date range.
@@ -383,20 +383,20 @@ class BDB_DB_Reviews extends BDB_DB {
 			if ( is_array( $args['date_written'] ) ) {
 
 				if ( ! empty( $args['date_written']['start'] ) ) {
-					$start = get_gmt_from_date( wp_strip_all_tags( $args['date_written']['start'] ), 'Y-m-d 00:00:00' );
+					$start = get_gmt_from_date( sanitize_text_field( $args['date_written']['start'] ), 'Y-m-d 00:00:00' );
 					$where .= $wpdb->prepare( " AND `date_written` >= %s", $start );
 				}
 
 				if ( ! empty( $args['date_written']['end'] ) ) {
-					$end = get_gmt_from_date( wp_strip_all_tags( $args['date_written']['end'] ), 'Y-m-d 23:59:59' );
+					$end = get_gmt_from_date( sanitize_text_field( $args['date_written']['end'] ), 'Y-m-d 23:59:59' );
 					$wpdb->prepare( " AND `date_written` <= %s", $end );
 				}
 
 			} else {
 
-				$year  = get_gmt_from_date( wp_strip_all_tags( $args['date_written'] ), 'Y' );
-				$month = get_gmt_from_date( wp_strip_all_tags( $args['date_written'] ), 'm' );
-				$day   = get_gmt_from_date( wp_strip_all_tags( $args['date_written'] ), 'd' );
+				$year  = get_gmt_from_date( sanitize_text_field( $args['date_written'] ), 'Y' );
+				$month = get_gmt_from_date( sanitize_text_field( $args['date_written'] ), 'm' );
+				$day   = get_gmt_from_date( sanitize_text_field( $args['date_written'] ), 'd' );
 				$where .= $wpdb->prepare( " AND %d = YEAR ( date_written ) AND %d = MONTH ( date_written ) AND %d = DAY ( date_written )", $year, $month, $day );
 
 			}
@@ -504,7 +504,7 @@ class BDB_DB_Reviews extends BDB_DB {
 		if ( ! empty( $args['rating'] ) ) {
 			$reading_table = book_database()->reading_list->table_name;
 			$join .= " LEFT JOIN {$reading_table} as log on log.review_id = review.ID";
-			$where .= $wpdb->prepare( " AND log.rating LIKE '" . '%s' . "' ", wp_strip_all_tags( $args['rating'] ) );
+			$where .= $wpdb->prepare( " AND log.rating LIKE '" . '%s' . "' ", sanitize_text_field( $args['rating'] ) );
 		}
 
 		// Reviews created for a specific date or in a date range.
@@ -513,20 +513,20 @@ class BDB_DB_Reviews extends BDB_DB {
 			if ( is_array( $args['date_written'] ) ) {
 
 				if ( ! empty( $args['date_written']['start'] ) ) {
-					$start = get_gmt_from_date( wp_strip_all_tags( $args['date_written']['start'] ), 'Y-m-d 00:00:00' );
+					$start = get_gmt_from_date( sanitize_text_field( $args['date_written']['start'] ), 'Y-m-d 00:00:00' );
 					$where .= $wpdb->prepare( " AND `date_written` >= %s", $start );
 				}
 
 				if ( ! empty( $args['date_written']['end'] ) ) {
-					$end = get_gmt_from_date( wp_strip_all_tags( $args['date_written']['end'] ), 'Y-m-d 23:59:59' );
+					$end = get_gmt_from_date( sanitize_text_field( $args['date_written']['end'] ), 'Y-m-d 23:59:59' );
 					$wpdb->prepare( " AND `date_written` <= %s", $end );
 				}
 
 			} else {
 
-				$year  = get_gmt_from_date( wp_strip_all_tags( $args['date_written'] ), 'Y' );
-				$month = get_gmt_from_date( wp_strip_all_tags( $args['date_written'] ), 'm' );
-				$day   = get_gmt_from_date( wp_strip_all_tags( $args['date_written'] ), 'd' );
+				$year  = get_gmt_from_date( sanitize_text_field( $args['date_written'] ), 'Y' );
+				$month = get_gmt_from_date( sanitize_text_field( $args['date_written'] ), 'm' );
+				$day   = get_gmt_from_date( sanitize_text_field( $args['date_written'] ), 'd' );
 				$where .= $wpdb->prepare( " AND %d = YEAR ( date_written ) AND %d = MONTH ( date_written ) AND %d = DAY ( date_written )", $year, $month, $day );
 
 			}

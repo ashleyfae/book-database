@@ -144,7 +144,7 @@ add_action( 'book-database/book-edit/after-information-fields', 'bdb_book_readin
  *
  * @param object $entry
  *
- * @since 1.1.0
+ * @since 1.0
  * @return void
  */
 function bdb_reading_entry_tr( $entry ) {

@@ -380,3 +380,45 @@ function bdb_generate_alternative_book_title( $title ) {
 	return apply_filters( 'book-database/book/generate-alternative-title', $alternate_title, $title );
 
 }
+
+/**
+ * Gets an array of all available book formats.
+ *
+ * @since 1.0
+ * @return array
+ */
+function bdb_get_book_formats() {
+
+	$formats = array(
+		'arc'       => __( 'ARC', 'book-database' ),
+		'earc'      => __( 'eARC', 'book-database' ),
+		'ebook'     => __( 'eBook', 'book-database' ),
+		'hardcover' => __( 'Hardcover', 'book-database' ),
+		'paperback' => __( 'Paperback', 'book-database' ),
+	);
+
+	return apply_filters( 'book-database/book/formats', $formats );
+
+}
+
+/**
+ * Returns the book format label for display, given the key value.
+ *
+ * @uses bdb_get_book_formats()
+ *
+ * @param string $format_key
+ *
+ * @since 1.0
+ * @return string|false
+ */
+function bdb_get_book_format_label( $format_key ) {
+
+	$formats = bdb_get_book_formats();
+
+	if ( ! array_key_exists( $format_key, $formats ) ) {
+		return false;
+	}
+
+	return $formats[ $format_key ];
+
+}

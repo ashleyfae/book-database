@@ -1,4 +1,5 @@
-#bdb-book-reading-list {
+#bdb-book-reading-list,
+#bdb-book-editions-list {
     table {
         margin-bottom: 1.5em;
 
@@ -11,6 +12,8 @@
 }
 
 #bookdb-read-book-fields,
-.bookdb-reading-list-edit-value{
+#bookdb-owned-edition-fields,
+.bookdb-reading-list-edit-value,
+.bookdb-owned-edition-edit-value {
     display: none;
 }

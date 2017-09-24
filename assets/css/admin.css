@@ -180,15 +180,20 @@
       height: auto;
       max-width: 100%; }
 
-#bdb-book-reading-list table {
+#bdb-book-reading-list table,
+#bdb-book-editions-list table {
   margin-bottom: 1.5em; }
   #bdb-book-reading-list table input[type="text"],
-  #bdb-book-reading-list table input[type="number"] {
+  #bdb-book-reading-list table input[type="number"],
+  #bdb-book-editions-list table input[type="text"],
+  #bdb-book-editions-list table input[type="number"] {
     display: block;
     width: 100%; }
 
 #bookdb-read-book-fields,
-.bookdb-reading-list-edit-value {
+#bookdb-owned-edition-fields,
+.bookdb-reading-list-edit-value,
+.bookdb-owned-edition-edit-value {
   display: none; }
 
 .book-library_page_bdb-reviews #ID {

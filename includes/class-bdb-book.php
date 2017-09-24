@@ -900,6 +900,38 @@ class BDB_Book {
 	}
 
 	/**
+	 * Determines whether or not a copy of the book is owned
+	 *
+	 * @access public
+	 * @since  1.0
+	 * @return bool
+	 */
+	public function is_owned() {
+
+		$editions = $this->get_owned_editions();
+
+		return ! empty( $editions );
+
+	}
+
+	/**
+	 * Get owned editions of this book
+	 *
+	 * @access public
+	 * @since  1.0
+	 * @return array|false
+	 */
+	public function get_owned_editions() {
+
+		$editions = book_database()->owned_editions->get_books( array(
+			'book_id' => $this->ID
+		) );
+
+		return ! empty( $editions ) ? $editions : false;
+
+	}
+
+	/**
 	 * Get Data
 	 *
 	 * Returns *all* data associated with a book.

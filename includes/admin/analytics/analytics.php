@@ -48,7 +48,7 @@ function bdb_analytics_page() {
 				<div class="bookdb-metric">
 					<div class="bookdb-metric-inner bookdb-metric-multi-col">
 						<div>
-							<p class="top-text"><?php _e( 'Total Books Read', 'book-database' ); ?></p>
+							<p class="top-text"><?php _e( 'Total Books Finished', 'book-database' ); ?></p>
 							<div class="bookdb-loading"></div>
 							<h2 id="number-books" class="bookdb-result"></h2>
 							<p class="bottom-text" id="number-books-compare"><span></span></p>

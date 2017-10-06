@@ -240,7 +240,8 @@ class BDB_DB_Reading_List extends BDB_DB {
 			'order'         => 'DESC',
 			'date_started'  => false,
 			'date_finished' => false,
-			'rating'        => false
+			'rating'        => false,
+			'complete'      => false
 		);
 
 		$args = wp_parse_args( $args, $defaults );
@@ -304,7 +305,7 @@ class BDB_DB_Reading_List extends BDB_DB {
 				}
 
 				if ( ! empty( $args['date_started']['end'] ) ) {
-					$end = get_gmt_from_date( sanitize_text_field( $args['date_started']['end'] ), 'Y-m-d 23:59:59' );
+					$end   = get_gmt_from_date( sanitize_text_field( $args['date_started']['end'] ), 'Y-m-d 23:59:59' );
 					$where .= $wpdb->prepare( " AND `date_started` <= %s", $end );
 				}
 
@@ -330,7 +331,7 @@ class BDB_DB_Reading_List extends BDB_DB {
 				}
 
 				if ( ! empty( $args['date_finished']['end'] ) ) {
-					$end = get_gmt_from_date( sanitize_text_field( $args['date_finished']['end'] ), 'Y-m-d 23:59:59' );
+					$end   = get_gmt_from_date( sanitize_text_field( $args['date_finished']['end'] ), 'Y-m-d 23:59:59' );
 					$where .= $wpdb->prepare( " AND `date_finished` <= %s", $end );
 				}
 
@@ -348,6 +349,28 @@ class BDB_DB_Reading_List extends BDB_DB {
 		// By specific rating.
 		if ( ! empty( $args['rating'] ) ) {
 			$where .= $wpdb->prepare( " AND `rating` LIKE '" . '%s' . "' ", sanitize_text_field( $args['rating'] ) );
+		}
+
+		// By completion.
+		if ( ! empty( $args['complete'] ) && is_array( $args['complete'] ) ) {
+			$allowed_comparisons = array(
+				'>',
+				'<',
+				'>=',
+				'<=',
+				'=',
+				'!=',
+				'LIKE',
+				'NOT LIKE',
+				'IN',
+				'NOT IN',
+				'BETWEEN'
+			);
+
+			if ( empty( $args['complete']['compare'] ) || ! in_array( $args['complete']['compare'], $allowed_comparisons ) ) {
+				$args['complete']['compare'] = '=';
+			}
+			$where .= $wpdb->prepare( " AND `complete` " . esc_sql( $args['complete']['compare'] ) . " %s", sanitize_text_field( $args['complete']['value'] ) );
 		}
 
 		$orderby = ! array_key_exists( $args['orderby'], $this->get_columns() ) ? 'ID' : sanitize_text_field( $args['orderby'] );
@@ -458,7 +481,7 @@ class BDB_DB_Reading_List extends BDB_DB {
 				}
 
 				if ( ! empty( $args['date_started']['end'] ) ) {
-					$end = get_gmt_from_date( sanitize_text_field( $args['date_started']['end'] ), 'Y-m-d 23:59:59' );
+					$end   = get_gmt_from_date( sanitize_text_field( $args['date_started']['end'] ), 'Y-m-d 23:59:59' );
 					$where .= $wpdb->prepare( " AND `date_started` <= %s", $end );
 				}
 
@@ -484,7 +507,7 @@ class BDB_DB_Reading_List extends BDB_DB {
 				}
 
 				if ( ! empty( $args['date_finished']['end'] ) ) {
-					$end = get_gmt_from_date( sanitize_text_field( $args['date_finished']['end'] ), 'Y-m-d 23:59:59' );
+					$end   = get_gmt_from_date( sanitize_text_field( $args['date_finished']['end'] ), 'Y-m-d 23:59:59' );
 					$where .= $wpdb->prepare( " AND `date_finished` <= %s", $end );
 				}
 
@@ -532,14 +555,14 @@ class BDB_DB_Reading_List extends BDB_DB {
 		require_once( ABSPATH . 'wp-admin/includes/upgrade.php' );
 
 		$sql = "CREATE TABLE " . $this->table_name . " (
-		ID bigint(20) NOT NULL AUTO_INCREMENT,
-		book_id bigint(20) NOT NULL,
-		review_id bigint(20) NOT NULL,
-		user_id bigint(20) NOT NULL,
-		date_started datetime,
-		date_finished datetime,
-		complete bigint(3) NOT NULL,
-		rating varchar(32),
+		ID BIGINT(20) NOT NULL AUTO_INCREMENT,
+		book_id BIGINT(20) NOT NULL,
+		review_id BIGINT(20) NOT NULL,
+		user_id BIGINT(20) NOT NULL,
+		date_started DATETIME,
+		date_finished DATETIME,
+		complete BIGINT(3) NOT NULL,
+		rating VARCHAR(32),
 		PRIMARY KEY (ID),
 		KEY rating_book_id (rating, book_id),
 		KEY rating_review_id (rating, review_id),

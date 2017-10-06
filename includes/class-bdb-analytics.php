@@ -233,6 +233,10 @@ class BDB_Analytics {
 			'date_finished' => array(
 				'start' => self::$startstr,
 				'end'   => self::$endstr
+			),
+			'complete'      => array(
+				'value'   => 100,
+				'compare' => '='
 			)
 		) );
 

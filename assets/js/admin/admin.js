@@ -17,8 +17,8 @@
 			this.sort();
 			this.clone();
 
-			$('.bookdb-book-option-toggle').click(this.toggleBookTextarea);
-			$('#bookdb-book-layout-cover-changer').change(this.changeCoverAlignment);
+			$(document).on('click', '.bookdb-book-option-toggle', this.toggleBookTextarea);
+			$(document).on('change', '#bookdb-book-layout-cover-changer', this.changeCoverAlignment);
 			$('.bookdb-new-checkbox-term').on('click', '.button', this.addCheckboxTerm);
 			$('.bookdb-new-checkbox-term .bookdb-new-checkbox-term-value').keypress(this.addCheckboxTerm);
 			$('#bookdb-add-review').on('click', this.toggleAddReviewFields);
@@ -31,17 +31,17 @@
 				.on('blur', this.populateAltTitles);
 			$(document).ready(this.toggleCustomIndexTitle);
 			// Owned Editions
-			$('#bookdb-add-owned-edition').on('click', this.toggleOwnedEditionFields);
-			$('#bookdb-submit-owned-edition').on('click', this.submitOwnedEdition);
-			$('.bookdb-edit-owned-edition').on('click', this.editOwnedEdition);
-			$('.bookdb-delete-owned-edition').on('click', this.deleteOwnedEdition);
+			$(document).on('click', '#bookdb-add-owned-edition', this.toggleOwnedEditionFields);
+			$(document).on('click', '#bookdb-submit-owned-edition', this.submitOwnedEdition);
+			$(document).on('click', '.bookdb-edit-owned-edition', this.editOwnedEdition);
+			$(document).on('click', '.bookdb-delete-owned-edition', this.deleteOwnedEdition);
 			// Reading Logs
-			$('#bookdb-read-book').on('click', this.toggleReadingListFields);
-			$('#bookdb-submit-reading-entry').on('click', this.submitReadingEntry);
-			$('.bookdb-edit-reading-entry').on('click', this.editReadingEntry);
-			$('.bookdb-delete-reading-entry').on('click', this.deleteReadingEntry);
+			$(document).on('click', '#bookdb-read-book', this.toggleReadingListFields);
+			$(document).on('click', '#bookdb-submit-reading-entry', this.submitReadingEntry);
+			$(document).on('click', '.bookdb-edit-reading-entry', this.editReadingEntry);
+			$(document).on('click', '.bookdb-delete-reading-entry', this.deleteReadingEntry);
 			$(document).ready(this.associateReadingLog);
-			$('#insert_reading_log').on('change', this.associateReadingLog);
+			$(document).on('change', '#insert_reading_log', this.associateReadingLog);
 		},
 
 		/**
@@ -496,8 +496,6 @@
 
 						$('#bookdb-owned-edition-fields').slideUp();
 
-						Book_Database.init();
-
 					} else {
 						console.log(response);
 					}
@@ -682,8 +680,6 @@
 						wrap.parents('.postbox').find('tbody').append(response.data);
 
 						$('#bookdb-read-book-fields').slideUp();
-
-						Book_Database.init();
 
 					} else {
 						console.log(response);

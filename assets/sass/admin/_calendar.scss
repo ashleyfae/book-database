@@ -77,13 +77,23 @@
 
         .bdb-calendar-book-link {
             flex: 0 33%;
+            margin-right: -1px;
+            overflow: visible;
             padding: 0 0 0 20px;
             position: relative;
-            margin-right: -1px;
 
             img {
                 height: auto;
                 max-width: 100%;
+            }
+
+            .dashicons {
+                background: white;
+                box-shadow: -1px 1px 1px rgba(0, 0, 0, 0.2);
+                color: #aaa;
+                position: absolute;
+                top: -3px;
+                right: -3px;
             }
         }
 
@@ -186,7 +196,7 @@
                 min-height: 80px;
             }
 
-            @media screen and ( max-width: 782px ) {
+            @media screen and (max-width: 782px) {
                 .books-for-cell {
                     margin: 0;
                     padding-top: 30px;
@@ -208,7 +218,7 @@
             }
         }
 
-        @media screen and ( max-width: 782px ) {
+        @media screen and (max-width: 782px) {
 
         }
     }

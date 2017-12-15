@@ -522,6 +522,12 @@ class BDB_Books_Month_Table extends BDB_Books_Table {
 				} else {
 					printf( '%s by %s', $book_title, $book->get_author_names() );
 				}
+
+				$reviews = bdb_get_book_reviews( $book->ID );
+
+				if ( ! empty( $reviews ) ) {
+					echo '<span class="dashicons dashicons-welcome-write-blog"></span>';
+				}
 				?>
 			</a>
 			<?php

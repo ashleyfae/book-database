@@ -251,8 +251,11 @@
     #bookdb-books-filter .calendar .bdb-calendar-book-link img {
       height: auto;
       max-width: 100%; }
-    #bookdb-books-filter .calendar .bdb-calendar-book-link .dashicons {
+    #bookdb-books-filter .calendar .bdb-calendar-book-link .bdb-calendar-book-flags {
       background: white;
+      border: 1px solid #e1e1e1;
+      border-bottom: none;
+      border-left: none;
       box-shadow: -1px 1px 1px rgba(0, 0, 0, 0.2);
       color: #aaa;
       position: absolute;

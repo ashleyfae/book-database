@@ -523,12 +523,22 @@ class BDB_Books_Month_Table extends BDB_Books_Table {
 					printf( '%s by %s', $book_title, $book->get_author_names() );
 				}
 
-				$reviews = bdb_get_book_reviews( $book->ID );
-
-				if ( ! empty( $reviews ) ) {
-					echo '<span class="dashicons dashicons-welcome-write-blog"></span>';
-				}
 				?>
+				<span class="bdb-calendar-book-flags">
+					<?php
+					// Designate read
+					$read = bdb_get_book_reading_list( $book->ID );
+					if ( ! empty( $read ) ) {
+						echo '<span class="dashicons dashicons-book"></span>';
+					}
+
+					// Designate reviewed
+					$reviews = bdb_get_book_reviews( $book->ID );
+					if ( ! empty( $reviews ) ) {
+						echo '<span class="dashicons dashicons-welcome-write-blog"></span>';
+					}
+					?>
+				</span>
 			</a>
 			<?php
 

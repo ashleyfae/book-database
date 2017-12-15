@@ -51,8 +51,6 @@ function bdb_book_views() {
  */
 function bdb_books_list() {
 
-	include dirname( __FILE__ ) . '/class-book-table.php';
-
 	$book_table = new BDB_Books_Table();
 	$book_table->prepare_items();
 

@@ -77,11 +77,13 @@ class BDB_Books_Table extends WP_List_Table {
 	 *
 	 * @see    WP_List_Table::__construct()
 	 *
+	 * @param array $args
+	 *
 	 * @access public
 	 * @since  1.0
 	 * @return void
 	 */
-	public function __construct() {
+	public function __construct( $args = array() ) {
 
 		global $status, $page;
 
@@ -104,6 +106,9 @@ class BDB_Books_Table extends WP_List_Table {
 	 * @return void
 	 */
 	public function search_box( $text, $input_id ) {
+
+		do_action( 'book-database/books/table/top/search/before' );
+
 		$input_id = $input_id . '-search-input';
 
 		if ( ! empty( $_REQUEST['orderby'] ) ) {
@@ -136,6 +141,8 @@ class BDB_Books_Table extends WP_List_Table {
 			<?php submit_button( $text, 'button', false, false, array( 'ID' => 'search-submit' ) ); ?>
 		</p>
 		<?php
+		do_action( 'book-database/books/table/top/search/after' );
+
 	}
 
 	/**

@@ -467,6 +467,8 @@ class BDB_Books_Table extends WP_List_Table {
 	/**
 	 * Display the table.
 	 *
+	 * @see WP_List_Table::display()
+	 *
 	 * @access public
 	 * @since  1.0
 	 * @return void
@@ -493,6 +495,7 @@ class BDB_Books_Table extends WP_List_Table {
 			</tfoot>
 		</table>
 		<?php
+		$this->display_tablenav( 'bottom' );
 
 	}
 

@@ -542,6 +542,9 @@ class BDB_DB_Books extends BDB_DB {
 			'series_position' => false,
 			'pub_date'        => false,
 			'rating'          => false,
+			'owned'           => false,
+			'format'          => false,
+			'isbn'            => false
 		);
 
 		$args = wp_parse_args( $args, $defaults );
@@ -585,7 +588,7 @@ class BDB_DB_Books extends BDB_DB {
 			$term_relationship_table = book_database()->book_term_relationships->table_name;
 			$term_table              = book_database()->book_terms->table_name;
 
-			$join .= " RIGHT JOIN $term_relationship_table as r on book.ID = r.book_id INNER JOIN $term_table as t on (r.term_id = t.term_id AND t.type = 'author')";
+			$join .= " RIGHT JOIN $term_relationship_table as r on books.ID = r.book_id INNER JOIN $term_table as t on (r.term_id = t.term_id AND t.type = 'author')";
 
 			if ( $args['author_id'] ) {
 				$where .= $wpdb->prepare( " AND t.term_id = %d", absint( $args['author_id'] ) );
@@ -601,7 +604,7 @@ class BDB_DB_Books extends BDB_DB {
 		if ( ! empty( $args['series_name'] ) ) {
 			$series_table = book_database()->series->table_name;
 
-			$join  .= " LEFT JOIN $series_table as series on book.series_id = series.ID";
+			$join  .= " LEFT JOIN $series_table as series on books.series_id = series.ID";
 			$where .= $wpdb->prepare( " AND series.name LIKE '%%%%" . '%s' . "%%%%'", sanitize_text_field( $args['series_name'] ) );
 		}
 
@@ -637,12 +640,53 @@ class BDB_DB_Books extends BDB_DB {
 			$join          .= $wpdb->prepare( " INNER JOIN {$reading_table} as log on (book.ID = log.book_id AND log.rating = %s)", sanitize_text_field( $args['rating'] ) );
 		}
 
+		$joined_owned_books = false;
+		$owned_table        = book_database()->owned_editions->table_name;
+
+		// Filter by owned books.
+		if ( ! empty( $args['owned'] ) ) {
+			if ( 'unowned' == $args['owned'] ) {
+				$where .= " AND books.ID NOT IN( SELECT book_id FROM {$owned_table} GROUP BY book_id ) ";
+			} else {
+				if ( ! $joined_owned_books ) {
+					$join               .= " INNER JOIN {$owned_table} as ob on (books.ID = ob.book_id) ";
+					$joined_owned_books = true;
+				}
+
+				if ( 'signed' == $args['owned'] ) {
+					$where .= " AND ob.signed IS NOT NULL ";
+				}
+			}
+		}
+
+		// Filter by format
+		if ( ! empty( $args['format'] ) ) {
+			// Only joined if we haven't yet already.
+			if ( ! $joined_owned_books ) {
+				$join               .= " INNER JOIN {$owned_table} as ob on (books.ID = ob.book_id) ";
+				$joined_owned_books = true;
+			}
+
+			$where .= $wpdb->prepare( "AND ob.format = %s", sanitize_text_field( $args['format'] ) );
+		}
+
+		// Filter by ISBN
+		if ( ! empty( $args['isbn'] ) ) {
+			// Only joined if we haven't yet already.
+			if ( ! $joined_owned_books ) {
+				$join               .= " INNER JOIN {$owned_table} as ob on (books.ID = ob.book_id) ";
+				$joined_owned_books = true;
+			}
+
+			$where .= $wpdb->prepare( "AND ob.isbn = %s", sanitize_text_field( $args['isbn'] ) );
+		}
+
 		$cache_key = md5( 'bdb_books_count' . serialize( $args ) );
 
 		$count = wp_cache_get( $cache_key, 'books' );
 
 		if ( $count === false ) {
-			$query = "SELECT COUNT(book.ID) FROM " . $this->table_name . " as book {$join} {$where};";
+			$query = "SELECT COUNT(distinct books.ID) FROM " . $this->table_name . " as books {$join} {$where};";
 			$count = $wpdb->get_var( $query );
 			wp_cache_set( $cache_key, $count, 'books', 3600 );
 		}

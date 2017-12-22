@@ -397,6 +397,16 @@ class BDB_DB_Books extends BDB_DB {
 					$where .= $wpdb->prepare( " AND `pub_date` <= %s", $end );
 				}
 
+				if ( ! empty( $args['pub_date']['year'] ) ) {
+					$where .= $wpdb->prepare( " AND %d = YEAR ( pub_date ) ", absint( $args['pub_date']['year'] ) );
+				}
+				if ( ! empty( $args['pub_date']['month'] ) ) {
+					$where .= $wpdb->prepare( " AND %d = MONTH ( pub_date ) ", absint( $args['pub_date']['month'] ) );
+				}
+				if ( ! empty( $args['pub_date']['day'] ) ) {
+					$where .= $wpdb->prepare( " AND %d = DAY ( pub_date ) ", absint( $args['pub_date']['day'] ) );
+				}
+
 			} else {
 
 				$year  = get_gmt_from_date( sanitize_text_field( $args['pub_date'] ), 'Y' );

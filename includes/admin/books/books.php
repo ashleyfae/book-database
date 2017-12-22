@@ -51,21 +51,46 @@ function bdb_book_views() {
  */
 function bdb_books_list() {
 
-	$book_table = new BDB_Books_Table();
+	$mode = ! empty( $_GET['mode'] ) ? $_GET['mode'] : 'list';
+
+	switch ( $mode ) {
+		/*case 'day' :
+			$book_table = new BDB_Books_Day_Table();
+			break;
+		case 'week' :
+			$book_table = new BDB_Books_Week_Table();
+			break;*/
+		case 'month' :
+			$book_table = new BDB_Books_Month_Table();
+			break;
+		default :
+			$book_table = new BDB_Books_Table();
+			break;
+	}
+
 	$book_table->prepare_items();
 
 	?>
 	<div class="wrap">
 		<h1>
-			<?php echo bdb_get_label_plural(); ?>
+			<?php
+			if ( 'month' == $mode ) {
+				printf( __( '%s %d Releases', 'book-database' ), $book_table->get_month_name(), $book_table->get_year() );
+			} else {
+				echo bdb_get_label_plural();
+			}
+			?>
 			<a href="<?php echo esc_url( bdb_get_admin_page_add_book() ); ?>" class="page-title-action"><?php _e( 'Add New', 'book-database' ); ?></a>
 		</h1>
 		<?php do_action( 'book-database/books/table/top' ); ?>
 		<form id="bookdb-books-filter" method="GET" action="">
-			<?php
-			$book_table->search_box( sprintf( __( 'Search %s', 'book-database' ), bdb_get_label_plural( true ) ), 'bookdb' );
-			$book_table->display();
-			?>
+			<div class="wp-filter">
+				<?php
+				$book_table->view_switcher();
+				$book_table->search_box( sprintf( __( 'Search %s', 'book-database' ), bdb_get_label_plural( true ) ), 'bookdb' );
+				?>
+			</div>
+			<?php $book_table->display(); ?>
 			<input type="hidden" name="post_type" value="bdb_book">
 			<input type="hidden" name="page" value="bdb-books">
 			<input type="hidden" name="view" value="books">

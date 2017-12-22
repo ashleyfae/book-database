@@ -222,12 +222,18 @@ function bdb_book_series_field( $book ) {
  * @return void
  */
 function bdb_book_pub_date_field( $book ) {
+	$pub_date = $book->get_formatted_pub_date();
+
+	if ( ! empty( $_GET['pub_date'] ) ) {
+		$pub_date = date_i18n( get_option( 'date_format' ), strtotime( $_GET['pub_date'] ) );
+	}
+
 	book_database()->html->meta_row( 'text', array(
 		'label' => __( 'Publication Date', 'book-database' )
 	), array(
 		'id'    => 'book_pub_date',
 		'name'  => 'pub_date',
-		'value' => $book->get_formatted_pub_date(),
+		'value' => $pub_date,
 		'desc'  => esc_html__( 'Format: September 1st 2016', 'book-database' )
 	) );
 }

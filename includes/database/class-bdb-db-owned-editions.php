@@ -47,6 +47,7 @@ class BDB_DB_Owned_Editions extends BDB_DB {
 			'isbn'          => '%s',
 			'format'        => '%s',
 			'date_acquired' => '%s',
+			'source'        => '%d',
 			'signed'        => '%d'
 		);
 	}
@@ -64,6 +65,7 @@ class BDB_DB_Owned_Editions extends BDB_DB {
 			'isbn'          => '',
 			'format'        => '',
 			'date_acquired' => null,
+			'source'        => null,
 			'signed'        => null
 		);
 	}
@@ -308,7 +310,7 @@ class BDB_DB_Owned_Editions extends BDB_DB {
 				$ids = intval( $args['book_id'] );
 			}
 			$where .= " AND `book_id` IN( {$ids} ) ";
-			$join .= " INNER JOIN  $books_table as books on books.ID = ob.book_id ";
+			$join  .= " INNER JOIN  $books_table as books on books.ID = ob.book_id ";
 		}
 
 		// Books with a specific ISBN.
@@ -393,7 +395,7 @@ class BDB_DB_Owned_Editions extends BDB_DB {
 		global $wpdb;
 
 		$defaults = array(
-			'ID'              => false,
+			'ID'            => false,
 			'book_id'       => false,
 			'isbn'          => false,
 			'format'        => false,
@@ -426,7 +428,7 @@ class BDB_DB_Owned_Editions extends BDB_DB {
 				$ids = intval( $args['book_id'] );
 			}
 			$where .= " AND `book_id` IN( {$ids} ) ";
-			$join .= " INNER JOIN  $books_table as books on books.ID = ob.book_id ";
+			$join  .= " INNER JOIN  $books_table as books on books.ID = ob.book_id ";
 		}
 
 		// Books with a specific ISBN.
@@ -500,9 +502,10 @@ class BDB_DB_Owned_Editions extends BDB_DB {
 		$sql = "CREATE TABLE " . $this->table_name . " (
 		ID BIGINT(20) NOT NULL AUTO_INCREMENT,
 		book_id BIGINT(20) NOT NULL,
-		isbn varchar(13) NOT NULL,
-		format varchar(200) NOT NULL,
+		isbn VARCHAR(13) NOT NULL,
+		format VARCHAR(200) NOT NULL,
 		date_acquired DATETIME,
+		source BIGINT(20) NULL,
 		signed INT(1),
 		PRIMARY KEY  (ID),
 		INDEX book_id (book_id)

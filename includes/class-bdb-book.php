@@ -924,7 +924,9 @@ class BDB_Book {
 	public function get_owned_editions() {
 
 		$editions = book_database()->owned_editions->get_books( array(
-			'book_id' => $this->ID
+			'book_id' => $this->ID,
+			'orderby' => 'date_acquired',
+			'order'   => 'ASC'
 		) );
 
 		return ! empty( $editions ) ? $editions : false;

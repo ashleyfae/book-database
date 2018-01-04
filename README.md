@@ -34,6 +34,7 @@ SELECT
   COUNT(*) AS count
 FROM `wp_bdb_reading_list` list INNER JOIN `wp_bdb_books` book ON book.ID = list.book_id
 GROUP BY book_id
+HAVING count > 1
 ORDER BY count DESC
 LIMIT 25
 ```

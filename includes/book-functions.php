@@ -409,19 +409,6 @@ function bdb_get_book_formats() {
  */
 function bdb_get_book_sources() {
 
-	$sources = array(
-		'blog_tour'        => __( 'Blog Tour', 'book-database' ),
-		'bookexpo_america' => __( 'BookExpo America', 'book-database' ),
-		'edelweiss'        => __( 'Edelweiss', 'book-database' ),
-		'author'           => __( 'From Author', 'book-database' ),
-		'publisher'        => __( 'From Publisher', 'book-database' ),
-		'gift'             => __( 'Gift', 'book-database' ),
-		'netgalley'        => __( 'NetGalley', 'book-database' ),
-		'purchased'        => __( 'Purchased', 'book-database' ),
-		'traded'           => __( 'Traded', 'book-database' ),
-		'won'              => __( 'Won', 'book-database' )
-	);
-
 	$sources = book_database()->book_terms->get_terms( array(
 		'type'    => 'source',
 		'orderby' => 'name',

@@ -39,6 +39,19 @@ ORDER BY count DESC
 LIMIT 25
 ```
 
+Books you own two or more copies of:
+
+```mysql
+SELECT
+  book_id,
+  book.title,
+  COUNT(*) AS number_copies
+FROM `wp_bdb_owned_editions` e INNER JOIN `wp_bdb_books` book ON book.ID = e.book_id
+GROUP BY book_id
+HAVING number_copies > 1
+ORDER BY number_copies DESC
+```
+
 Get all the books and their ratings from a specific term name ("Fantasy") that were read in 2017.
 
 ```mysql

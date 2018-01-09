@@ -297,11 +297,22 @@ function bdb_save_owned_edition() {
 	if ( is_numeric( $edition['source'] ) && $edition['source'] > 0 ) {
 		$args['source'] = absint( $edition['source'] );
 	} elseif ( ! empty( $edition['source'] ) && '-1' != $edition['source'] ) {
-		// Need to add the book term first.
-		$term_id = book_database()->book_terms->add( array(
-			'type' => 'source',
-			'name' => sanitize_text_field( $edition['source'] ),
+		// See if a term with this name already exists.
+		$terms = bdb_get_terms( array(
+			'name'   => sanitize_text_field( $edition['source'] ),
+			'type'   => 'source',
+			'fields' => 'ids'
 		) );
+
+		if ( ! empty( $terms ) && isset( $terms[0] ) ) {
+			$term_id = $terms[0];
+		} else {
+			// Need to add a new book term.
+			$term_id = book_database()->book_terms->add( array(
+				'type' => 'source',
+				'name' => sanitize_text_field( $edition['source'] ),
+			) );
+		}
 
 		if ( ! empty( $term_id ) ) {
 			$args['source'] = absint( $term_id );

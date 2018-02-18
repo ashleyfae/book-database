@@ -3,7 +3,7 @@
  * Misc Functions
  *
  * @package   book-database
- * @copyright Copyright (c) 2016, Ashley GIbson
+ * @copyright Copyright (c) 2017, Ashley Gibson
  * @license   GPL2+
  */
 
@@ -163,6 +163,59 @@ function bdb_get_admin_page_delete_review( $review_id ) {
 }
 
 /**
+ * Get Admin Page: Series Table
+ *
+ * @since 1.0
+ * @return string
+ */
+function bdb_get_admin_page_series() {
+	$url = admin_url( 'admin.php?page=bdb-series' );
+
+	return apply_filters( 'book-database/admin-page-url/series', $url );
+}
+
+/**
+ * Get Admin Page: Edit Series
+ *
+ * @param int $series_id
+ *
+ * @since 1.0
+ * @return string
+ */
+function bdb_get_admin_page_edit_series( $series_id ) {
+	$series_page = bdb_get_admin_page_series();
+
+	$edit_series_page = add_query_arg( array(
+		'view' => 'edit',
+		'ID'   => absint( $series_id )
+	), $series_page );
+
+	return apply_filters( 'book-database/admin-page-url/edit-series', $edit_series_page );
+}
+
+/**
+ * Get Admin Page: Delete Series
+ *
+ * @todo  Make this work.
+ *
+ * @param int $series_id
+ *
+ * @since 1.0
+ * @return string
+ */
+function bdb_get_admin_page_delete_series( $series_id ) {
+	$series_page = bdb_get_admin_page_series();
+
+	$delete_series_page = add_query_arg( array(
+		'bdb-action' => urlencode( 'series/delete' ),
+		'ID'         => absint( $series_id ),
+		'nonce'      => wp_create_nonce( 'bdb_delete_series' )
+	), $series_page );
+
+	return apply_filters( 'book-database/admin-page-url/delete-series', $delete_series_page );
+}
+
+/**
  * Get Admin Page: Terms Table
  *
  * @since 1.0
@@ -199,7 +252,8 @@ function bdb_get_admin_page_add_term() {
  * @return string
  */
 function bdb_get_admin_page_edit_term( $term_id ) {
-	$term_page      = bdb_get_admin_page_terms();
+	$term_page = bdb_get_admin_page_terms();
+
 	$edit_term_page = add_query_arg( array(
 		'view' => 'edit',
 		'ID'   => absint( $term_id )
@@ -218,7 +272,8 @@ function bdb_get_admin_page_edit_term( $term_id ) {
  */
 function bdb_get_admin_page_delete_term( $term_id ) {
 	$term_page = bdb_get_admin_page_terms();
-	$args      = array(
+
+	$args = array(
 		'bdb-action' => urlencode( 'terms/delete' ),
 		'ID'         => absint( $term_id ),
 		'nonce'      => wp_create_nonce( 'bdb_delete_term' )
@@ -340,8 +395,7 @@ function bdb_format_mysql_date( $mysql_date, $format = false ) {
 		$format = get_option( 'date_format' );
 	}
 
-	$gmt_date = $mysql_date ? get_date_from_gmt( $mysql_date, 'U' ) : false;
-	$date     = date_i18n( $format, $gmt_date );
+	$date = mysql2date( $format, get_date_from_gmt( $mysql_date ) );
 
 	return $date;
 

@@ -3,7 +3,7 @@
  * Load Admin Assets
  *
  * @package   book-database
- * @copyright Copyright (c) 2016, Ashley GIbson
+ * @copyright Copyright (c) 2017, Ashley Gibson
  * @license   GPL2+
  * @since     1.0
  */
@@ -74,6 +74,7 @@ function bdb_load_admin_scripts( $hook ) {
 		'ajax_url' => admin_url( 'admin-ajax.php' ),
 		'nonce'    => wp_create_nonce( 'book-database' ),
 		'l10n'     => array(
+			'owned_edition_remove'  => esc_html__( 'Are you sure you wish to permanently delete this edition?', 'book-database' ),
 			'reading_entry_remove'  => esc_html__( 'Are you sure you wish to permanently delete this entry?', 'book-database' ),
 			'review_remove'         => esc_html__( 'Are you sure you wish to delete this review?', 'book-database' ),
 			'error_removing_review' => esc_html__( 'Error: Review ID not found.', 'book-database' )

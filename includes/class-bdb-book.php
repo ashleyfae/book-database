@@ -4,7 +4,7 @@
  * Book Class
  *
  * @package   book-database
- * @copyright Copyright (c) 2016, Ashley GIbson
+ * @copyright Copyright (c) 2017, Ashley Gibson
  * @license   GPL2+
  */
 
@@ -896,6 +896,40 @@ class BDB_Book {
 		$fields   = wp_list_pluck( $terms, $to_pluck );
 
 		return in_array( $name_or_id, $fields );
+
+	}
+
+	/**
+	 * Determines whether or not a copy of the book is owned
+	 *
+	 * @access public
+	 * @since  1.0
+	 * @return bool
+	 */
+	public function is_owned() {
+
+		$editions = $this->get_owned_editions();
+
+		return ! empty( $editions );
+
+	}
+
+	/**
+	 * Get owned editions of this book
+	 *
+	 * @access public
+	 * @since  1.0
+	 * @return array|false
+	 */
+	public function get_owned_editions() {
+
+		$editions = book_database()->owned_editions->get_books( array(
+			'book_id' => $this->ID,
+			'orderby' => 'date_acquired',
+			'order'   => 'ASC'
+		) );
+
+		return ! empty( $editions ) ? $editions : false;
 
 	}
 

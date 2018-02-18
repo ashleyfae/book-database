@@ -17,8 +17,8 @@
 			this.sort();
 			this.clone();
 
-			$('.bookdb-book-option-toggle').click(this.toggleBookTextarea);
-			$('#bookdb-book-layout-cover-changer').change(this.changeCoverAlignment);
+			$(document).on('click', '.bookdb-book-option-toggle', this.toggleBookTextarea);
+			$(document).on('change', '#bookdb-book-layout-cover-changer', this.changeCoverAlignment);
 			$('.bookdb-new-checkbox-term').on('click', '.button', this.addCheckboxTerm);
 			$('.bookdb-new-checkbox-term .bookdb-new-checkbox-term-value').keypress(this.addCheckboxTerm);
 			$('#bookdb-add-review').on('click', this.toggleAddReviewFields);
@@ -30,12 +30,18 @@
 			$('#book_title').on('keyup', this.writeOriginalIndexTitle)
 				.on('blur', this.populateAltTitles);
 			$(document).ready(this.toggleCustomIndexTitle);
-			$('#bookdb-read-book').on('click', this.toggleReadingListFields);
-			$('#bookdb-submit-reading-entry').on('click', this.submitReadingEntry);
-			$('.bookdb-edit-reading-entry').on('click', this.editReadingEntry);
-			$('.bookdb-delete-reading-entry').on('click', this.deleteReadingEntry);
+			// Owned Editions
+			$(document).on('click', '#bookdb-add-owned-edition', this.toggleOwnedEditionFields);
+			$(document).on('click', '#bookdb-submit-owned-edition', this.submitOwnedEdition);
+			$(document).on('click', '.bookdb-edit-owned-edition', this.editOwnedEdition);
+			$(document).on('click', '.bookdb-delete-owned-edition', this.deleteOwnedEdition);
+			// Reading Logs
+			$(document).on('click', '#bookdb-read-book', this.toggleReadingListFields);
+			$(document).on('click', '#bookdb-submit-reading-entry', this.submitReadingEntry);
+			$(document).on('click', '.bookdb-edit-reading-entry', this.editReadingEntry);
+			$(document).on('click', '.bookdb-delete-reading-entry', this.deleteReadingEntry);
 			$(document).ready(this.associateReadingLog);
-			$('#insert_reading_log').on('change', this.associateReadingLog);
+			$(document).on('change', '#insert_reading_log', this.associateReadingLog);
 		},
 
 		/**
@@ -436,6 +442,191 @@
 		},
 
 		/**
+		 * Toggle Owned Edition Fields
+		 *
+		 * @param e
+		 */
+		toggleOwnedEditionFields: function (e) {
+			e.preventDefault();
+
+			$('#bookdb-owned-edition-fields').slideToggle();
+		},
+
+		/**
+		 * Submit Owned Edition
+		 *
+		 * @param e
+		 */
+		submitOwnedEdition: function (e) {
+			e.preventDefault();
+
+			var button = $(this);
+			var wrap = $('#bookdb-owned-edition-fields');
+
+			button.attr('disabled', true);
+
+			var edition = {
+				book_id: wrap.data('book-id'),
+				isbn: $('#owned_edition_isbn').val(),
+				format: $('#owned_edition_format').val(),
+				date_acquired: $('#owned_edition_date_acquired').val(),
+				source: $('#bookdb-owned-edition-fields #dbd-checkboxes-source').find('input:checked').val(),
+				signed: $('#owned_edition_signed:checked').length
+			};
+
+			var data = {
+				action: 'bdb_save_owned_edition',
+				nonce: book_database.nonce,
+				edition: edition
+			};
+
+			$.ajax({
+				type: 'POST',
+				url: ajaxurl,
+				data: data,
+				dataType: "json",
+				success: function (response) {
+
+					button.attr('disabled', false);
+
+					if (response.success) {
+
+						$('#bookdb-no-owned-editions').remove();
+
+						wrap.parents('.postbox').find('tbody').append(response.data);
+
+						$('#bookdb-owned-edition-fields').slideUp();
+
+					} else {
+						console.log(response);
+					}
+
+				}
+			}).fail(function (response) {
+				if (window.console && window.console.log) {
+					console.log(response);
+				}
+			});
+		},
+
+		/**
+		 * Edit Owned Edition
+		 *
+		 * @param e
+		 * @returns {boolean}
+		 */
+		editOwnedEdition: function (e) {
+			e.preventDefault();
+
+			var button = $(this);
+			var wrap = $('#bookdb-owned-edition-fields');
+			var tr = $(this).parents('tr');
+			var editionID = tr.data('edition-id');
+			var edition = {};
+
+			if (typeof editionID == 'undefined' || editionID == '') {
+				return false;
+			}
+
+			// Replace 'Edit' button.
+			button.addClass('button-primary').text('Save'); // @todo l10n
+
+			tr.find('.bookdb-owned-edition-display-value').hide();
+			tr.find('.bookdb-owned-edition-edit-value').show();
+
+			button.on('click', function (e) {
+				e.preventDefault();
+
+				button.attr('disabled', true);
+
+				var edition = {
+					ID: editionID,
+					book_id: wrap.data('book-id'),
+					isbn: tr.find('.bookdb-owned-edition-isbn input').val(),
+					format: tr.find('.bookdb-owned-edition-format select').val(),
+					date_acquired: tr.find('.bookdb-owned-edition-date-acquired input').val(),
+					source: tr.find('.bookdb-owned-edition-source select').val(),
+					signed: tr.find('.bookdb-owned-edition-signed input:checked').length
+				};
+
+				var data = {
+					action: 'bdb_save_owned_edition',
+					nonce: book_database.nonce,
+					edition: edition
+				};
+
+				$.ajax({
+					type: 'POST',
+					url: ajaxurl,
+					data: data,
+					dataType: "json",
+					success: function (response) {
+						button.attr('disabled', false);
+
+						if (response.success) {
+							tr.replaceWith(response.data);
+
+							// Re-initialize actions.
+							$('.bookdb-edit-owned-edition').on('click', Book_Database.editOwnedEdition());
+							$('.bookdb-delete-owned-edition').on('click', Book_Database.deleteOwnedEdition());
+						}
+
+					}
+				}).fail(function (response) {
+					if (window.console && window.console.log) {
+						console.log(response);
+					}
+				});
+			});
+		},
+
+		/**
+		 * Delete Owned Edition
+		 *
+		 * @param e
+		 */
+		deleteOwnedEdition: function (e) {
+			e.preventDefault();
+
+			if (!confirm(book_database.l10n.owned_edition_remove)) {
+				return false;
+			}
+
+			var button = $(this);
+			var tr = button.parents('tr');
+
+			button.attr('disabled', true);
+
+			var data = {
+				action: 'bdb_delete_owned_edition',
+				nonce: book_database.nonce,
+				edition_id: tr.data('edition-id')
+			};
+
+			$.ajax({
+				type: 'POST',
+				url: ajaxurl,
+				data: data,
+				dataType: "json",
+				success: function (response) {
+
+					button.attr('disabled', false);
+
+					if (response.success) {
+
+						tr.remove();
+
+					}
+
+				}
+			}).fail(function (response) {
+				if (window.console && window.console.log) {
+					console.log(response);
+				}
+			});
+		},
+
+		/**
 		 * Toggle Reading List FIelds
 		 *
 		 * @param e
@@ -491,8 +682,6 @@
 						wrap.parents('.postbox').find('tbody').append(response.data);
 
 						$('#bookdb-read-book-fields').slideUp();
-
-						Book_Database.init();
 
 					} else {
 						console.log(response);

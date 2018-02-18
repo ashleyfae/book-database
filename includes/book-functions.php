@@ -3,7 +3,7 @@
  * Book Functions
  *
  * @package   book-database
- * @copyright Copyright (c) 2016, Ashley GIbson
+ * @copyright Copyright (c) 2017, Ashley Gibson
  * @license   GPL2+
  * @since     1.0
  */
@@ -378,5 +378,73 @@ function bdb_generate_alternative_book_title( $title ) {
 	}
 
 	return apply_filters( 'book-database/book/generate-alternative-title', $alternate_title, $title );
+
+}
+
+/**
+ * Gets an array of all available book formats.
+ *
+ * @since 1.0
+ * @return array
+ */
+function bdb_get_book_formats() {
+
+	$formats = array(
+		'arc'       => __( 'ARC', 'book-database' ),
+		'earc'      => __( 'eARC', 'book-database' ),
+		'ebook'     => __( 'eBook', 'book-database' ),
+		'hardcover' => __( 'Hardcover', 'book-database' ),
+		'paperback' => __( 'Paperback', 'book-database' ),
+	);
+
+	return apply_filters( 'book-database/book/formats', $formats );
+
+}
+
+/**
+ * Gets an array of all available book sources.
+ *
+ * @since 1.0
+ * @return array
+ */
+function bdb_get_book_sources() {
+
+	$sources = book_database()->book_terms->get_terms( array(
+		'type'    => 'source',
+		'orderby' => 'name',
+		'order'   => 'ASC',
+	) );
+
+	$final_sources = array();
+
+	if ( is_array( $sources ) ) {
+		foreach ( $sources as $source ) {
+			$final_sources[ $source->term_id ] = $source->name;
+		}
+	}
+
+	return apply_filters( 'book-database/book/sources', $final_sources );
+
+}
+
+/**
+ * Returns the book format label for display, given the key value.
+ *
+ * @uses  bdb_get_book_formats()
+ *
+ * @param string $format_key
+ *
+ * @since 1.0
+ * @return string|false
+ */
+function bdb_get_book_format_label( $format_key ) {
+
+	$formats = bdb_get_book_formats();
+
+	if ( ! array_key_exists( $format_key, $formats ) ) {
+		return false;
+	}
+
+	return $formats[ $format_key ];
 
 }

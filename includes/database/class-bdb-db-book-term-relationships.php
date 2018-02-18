@@ -243,7 +243,7 @@ class BDB_DB_Book_Term_Relationships extends BDB_DB {
 			$where .= " AND `book_id` IN( {$ids} ) ";
 		}
 
-		$orderby = ! array_key_exists( $args['orderby'], $this->get_columns() ) ? 'term_id' : wp_strip_all_tags( $args['orderby'] );
+		$orderby = ! array_key_exists( $args['orderby'], $this->get_columns() ) ? 'term_id' : sanitize_text_field( $args['orderby'] );
 		$order   = ( 'ASC' == strtoupper( $args['order'] ) ) ? 'ASC' : 'DESC';
 		$orderby = esc_sql( $orderby );
 		$order   = esc_sql( $order );

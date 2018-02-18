@@ -243,7 +243,7 @@ class BDB_DB_Books extends BDB_DB {
 
 			case 'title' :
 				$db_field = 'title';
-				$value    = wp_strip_all_tags( $value );
+				$value    = sanitize_text_field( $value );
 				break;
 
 			case 'series' :
@@ -290,6 +290,9 @@ class BDB_DB_Books extends BDB_DB {
 			'series_position' => false,
 			'pub_date'        => false,
 			'rating'          => false,
+			'owned'           => false,
+			'format'          => false,
+			'isbn'            => false,
 			'orderby'         => 'ID',
 			'order'           => 'DESC',
 			'include_author'  => false,
@@ -341,7 +344,7 @@ class BDB_DB_Books extends BDB_DB {
 
 			$join .= " RIGHT JOIN $term_relationship_table as r on books.ID = r.book_id INNER JOIN $term_table as t on r.term_id = t.term_id";
 
-			$where .= $wpdb->prepare( " AND t.type = %s AND t.name LIKE '%%%%" . '%s' . "%%%%'", 'author', wp_strip_all_tags( $args['author_name'] ) );
+			$where .= $wpdb->prepare( " AND t.type = %s AND t.name LIKE '%%%%" . '%s' . "%%%%'", 'author', sanitize_text_field( $args['author_name'] ) );
 		}
 
 		// Specific books.
@@ -356,7 +359,7 @@ class BDB_DB_Books extends BDB_DB {
 
 		// Books with a specific title.
 		if ( ! empty( $args['title'] ) ) {
-			$where .= $wpdb->prepare( " AND `title` LIKE '%%%%" . '%s' . "%%%%' ", wp_strip_all_tags( $args['title'] ) );
+			$where .= $wpdb->prepare( " AND `title` LIKE '%%%%" . '%s' . "%%%%' ", sanitize_text_field( $args['title'] ) );
 		}
 
 		// Specific books in a series.
@@ -371,12 +374,12 @@ class BDB_DB_Books extends BDB_DB {
 
 		// Series name.
 		if ( ! empty( $args['series_name'] ) ) {
-			$where .= $wpdb->prepare( " AND series.name LIKE '%%%%" . '%s' . "%%%%'", wp_strip_all_tags( $args['series_name'] ) );
+			$where .= $wpdb->prepare( " AND series.name LIKE '%%%%" . '%s' . "%%%%'", sanitize_text_field( $args['series_name'] ) );
 		}
 
 		// Series in a certain position.
 		if ( ! empty( $args['series_position'] ) ) {
-			$where .= $wpdb->prepare( " AND `series_position` LIKE '%s'", wp_strip_all_tags( $args['series_position'] ) );
+			$where .= $wpdb->prepare( " AND `series_position` LIKE '%s'", sanitize_text_field( $args['series_position'] ) );
 		}
 
 		// Books published on a given date or in a range.
@@ -385,20 +388,30 @@ class BDB_DB_Books extends BDB_DB {
 			if ( is_array( $args['pub_date'] ) ) {
 
 				if ( ! empty( $args['pub_date']['start'] ) ) {
-					$start = get_gmt_from_date( wp_strip_all_tags( $args['pub_date']['start'] ), 'Y-m-d 00:00:00' );
+					$start = get_gmt_from_date( sanitize_text_field( $args['pub_date']['start'] ), 'Y-m-d 00:00:00' );
 					$where .= $wpdb->prepare( " AND `pub_date` >= %s", $start );
 				}
 
 				if ( ! empty( $args['pub_date']['end'] ) ) {
-					$end = get_gmt_from_date( wp_strip_all_tags( $args['pub_date']['end'] ), 'Y-m-d 23:59:59' );
+					$end   = get_gmt_from_date( sanitize_text_field( $args['pub_date']['end'] ), 'Y-m-d 23:59:59' );
 					$where .= $wpdb->prepare( " AND `pub_date` <= %s", $end );
+				}
+
+				if ( ! empty( $args['pub_date']['year'] ) ) {
+					$where .= $wpdb->prepare( " AND %d = YEAR ( pub_date ) ", absint( $args['pub_date']['year'] ) );
+				}
+				if ( ! empty( $args['pub_date']['month'] ) ) {
+					$where .= $wpdb->prepare( " AND %d = MONTH ( pub_date ) ", absint( $args['pub_date']['month'] ) );
+				}
+				if ( ! empty( $args['pub_date']['day'] ) ) {
+					$where .= $wpdb->prepare( " AND %d = DAY ( pub_date ) ", absint( $args['pub_date']['day'] ) );
 				}
 
 			} else {
 
-				$year  = get_gmt_from_date( wp_strip_all_tags( $args['pub_date'] ), 'Y' );
-				$month = get_gmt_from_date( wp_strip_all_tags( $args['pub_date'] ), 'm' );
-				$day   = get_gmt_from_date( wp_strip_all_tags( $args['pub_date'] ), 'd' );
+				$year  = get_gmt_from_date( sanitize_text_field( $args['pub_date'] ), 'Y' );
+				$month = get_gmt_from_date( sanitize_text_field( $args['pub_date'] ), 'm' );
+				$day   = get_gmt_from_date( sanitize_text_field( $args['pub_date'] ), 'd' );
 				$where .= $wpdb->prepare( " AND %d = YEAR ( pub_date ) AND %d = MONTH ( pub_date ) AND %d = DAY ( pub_date )", $year, $month, $day );
 
 			}
@@ -408,11 +421,52 @@ class BDB_DB_Books extends BDB_DB {
 		// Get average rating.
 		if ( ! empty( $args['include_rating'] ) ) {
 			$reading_table = book_database()->reading_list->table_name;
-			$join .= " LEFT JOIN {$reading_table} as log on (books.ID = log.book_id AND log.rating IS NOT NULL)";
+			$join          .= " LEFT JOIN {$reading_table} as log on (books.ID = log.book_id AND log.rating IS NOT NULL)";
 
 			if ( false !== $args['rating'] ) {
-				$where .= $wpdb->prepare( " AND log.rating = %s", wp_strip_all_tags( $args['rating'] ) );
+				$where .= $wpdb->prepare( " AND log.rating = %s", sanitize_text_field( $args['rating'] ) );
 			}
+		}
+
+		$joined_owned_books = false;
+		$owned_table        = book_database()->owned_editions->table_name;
+
+		// Filter by owned books.
+		if ( ! empty( $args['owned'] ) ) {
+			if ( 'unowned' == $args['owned'] ) {
+				$where .= " AND books.ID NOT IN( SELECT book_id FROM {$owned_table} GROUP BY book_id ) ";
+			} else {
+				if ( ! $joined_owned_books ) {
+					$join               .= " INNER JOIN {$owned_table} as ob on (books.ID = ob.book_id) ";
+					$joined_owned_books = true;
+				}
+
+				if ( 'signed' == $args['owned'] ) {
+					$where .= " AND ob.signed IS NOT NULL ";
+				}
+			}
+		}
+
+		// Filter by format
+		if ( ! empty( $args['format'] ) ) {
+			// Only joined if we haven't yet already.
+			if ( ! $joined_owned_books ) {
+				$join               .= " INNER JOIN {$owned_table} as ob on (books.ID = ob.book_id) ";
+				$joined_owned_books = true;
+			}
+
+			$where .= $wpdb->prepare( "AND ob.format = %s", sanitize_text_field( $args['format'] ) );
+		}
+
+		// Filter by ISBN
+		if ( ! empty( $args['isbn'] ) ) {
+			// Only joined if we haven't yet already.
+			if ( ! $joined_owned_books ) {
+				$join               .= " INNER JOIN {$owned_table} as ob on (books.ID = ob.book_id) ";
+				$joined_owned_books = true;
+			}
+
+			$where .= $wpdb->prepare( "AND ob.isbn = %s", sanitize_text_field( $args['isbn'] ) );
 		}
 
 		switch ( $args['orderby'] ) {
@@ -488,6 +542,9 @@ class BDB_DB_Books extends BDB_DB {
 			'series_position' => false,
 			'pub_date'        => false,
 			'rating'          => false,
+			'owned'           => false,
+			'format'          => false,
+			'isbn'            => false
 		);
 
 		$args = wp_parse_args( $args, $defaults );
@@ -507,7 +564,7 @@ class BDB_DB_Books extends BDB_DB {
 
 		// Books with a specific title.
 		if ( ! empty( $args['title'] ) ) {
-			$where .= $wpdb->prepare( " AND `title` LIKE '%%%%" . '%s' . "%%%%' ", wp_strip_all_tags( $args['title'] ) );
+			$where .= $wpdb->prepare( " AND `title` LIKE '%%%%" . '%s' . "%%%%' ", sanitize_text_field( $args['title'] ) );
 		}
 
 		// Books in a specific series.
@@ -522,7 +579,7 @@ class BDB_DB_Books extends BDB_DB {
 
 		// Series in a certain position.
 		if ( ! empty( $args['series_position'] ) ) {
-			$where .= $wpdb->prepare( " AND `series_position` LIKE '%s'", wp_strip_all_tags( $args['series_position'] ) );
+			$where .= $wpdb->prepare( " AND `series_position` LIKE '%s'", sanitize_text_field( $args['series_position'] ) );
 		}
 
 		// Author
@@ -531,14 +588,14 @@ class BDB_DB_Books extends BDB_DB {
 			$term_relationship_table = book_database()->book_term_relationships->table_name;
 			$term_table              = book_database()->book_terms->table_name;
 
-			$join .= " RIGHT JOIN $term_relationship_table as r on book.ID = r.book_id INNER JOIN $term_table as t on (r.term_id = t.term_id AND t.type = 'author')";
+			$join .= " RIGHT JOIN $term_relationship_table as r on books.ID = r.book_id INNER JOIN $term_table as t on (r.term_id = t.term_id AND t.type = 'author')";
 
 			if ( $args['author_id'] ) {
 				$where .= $wpdb->prepare( " AND t.term_id = %d", absint( $args['author_id'] ) );
 			}
 
 			if ( $args['author_name'] ) {
-				$where .= $wpdb->prepare( " AND t.name LIKE '%%%%" . '%s' . "%%%%'", wp_strip_all_tags( $args['author_name'] ) );
+				$where .= $wpdb->prepare( " AND t.name LIKE '%%%%" . '%s' . "%%%%'", sanitize_text_field( $args['author_name'] ) );
 			}
 
 		}
@@ -547,8 +604,8 @@ class BDB_DB_Books extends BDB_DB {
 		if ( ! empty( $args['series_name'] ) ) {
 			$series_table = book_database()->series->table_name;
 
-			$join .= " LEFT JOIN $series_table as series on book.series_id = series.ID";
-			$where .= $wpdb->prepare( " AND series.name LIKE '%%%%" . '%s' . "%%%%'", wp_strip_all_tags( $args['series_name'] ) );
+			$join  .= " LEFT JOIN $series_table as series on books.series_id = series.ID";
+			$where .= $wpdb->prepare( " AND series.name LIKE '%%%%" . '%s' . "%%%%'", sanitize_text_field( $args['series_name'] ) );
 		}
 
 		// Books published on a given date or in a range.
@@ -557,20 +614,20 @@ class BDB_DB_Books extends BDB_DB {
 			if ( is_array( $args['pub_date'] ) ) {
 
 				if ( ! empty( $args['pub_date']['start'] ) ) {
-					$start = get_gmt_from_date( wp_strip_all_tags( $args['pub_date']['start'] ), 'Y-m-d 00:00:00' );
+					$start = get_gmt_from_date( sanitize_text_field( $args['pub_date']['start'] ), 'Y-m-d 00:00:00' );
 					$where .= $wpdb->prepare( " AND `pub_date` >= %s", $start );
 				}
 
 				if ( ! empty( $args['pub_date']['end'] ) ) {
-					$end = get_gmt_from_date( wp_strip_all_tags( $args['pub_date']['end'] ), 'Y-m-d 23:59:59' );
+					$end   = get_gmt_from_date( sanitize_text_field( $args['pub_date']['end'] ), 'Y-m-d 23:59:59' );
 					$where .= $wpdb->prepare( " AND `pub_date` <= %s", $end );
 				}
 
 			} else {
 
-				$year  = get_gmt_from_date( wp_strip_all_tags( $args['pub_date'] ), 'Y' );
-				$month = get_gmt_from_date( wp_strip_all_tags( $args['pub_date'] ), 'm' );
-				$day   = get_gmt_from_date( wp_strip_all_tags( $args['pub_date'] ), 'd' );
+				$year  = get_gmt_from_date( sanitize_text_field( $args['pub_date'] ), 'Y' );
+				$month = get_gmt_from_date( sanitize_text_field( $args['pub_date'] ), 'm' );
+				$day   = get_gmt_from_date( sanitize_text_field( $args['pub_date'] ), 'd' );
 				$where .= $wpdb->prepare( " AND %d = YEAR ( pub_date ) AND %d = MONTH ( pub_date ) AND %d = DAY ( pub_date )", $year, $month, $day );
 
 			}
@@ -580,7 +637,48 @@ class BDB_DB_Books extends BDB_DB {
 		// Books with a specific rating.
 		if ( false !== $args['rating'] ) {
 			$reading_table = book_database()->reading_list->table_name;
-			$join .= $wpdb->prepare( " INNER JOIN {$reading_table} as log on (book.ID = log.book_id AND log.rating = %s)", wp_strip_all_tags( $args['rating'] ) );
+			$join          .= $wpdb->prepare( " INNER JOIN {$reading_table} as log on (book.ID = log.book_id AND log.rating = %s)", sanitize_text_field( $args['rating'] ) );
+		}
+
+		$joined_owned_books = false;
+		$owned_table        = book_database()->owned_editions->table_name;
+
+		// Filter by owned books.
+		if ( ! empty( $args['owned'] ) ) {
+			if ( 'unowned' == $args['owned'] ) {
+				$where .= " AND books.ID NOT IN( SELECT book_id FROM {$owned_table} GROUP BY book_id ) ";
+			} else {
+				if ( ! $joined_owned_books ) {
+					$join               .= " INNER JOIN {$owned_table} as ob on (books.ID = ob.book_id) ";
+					$joined_owned_books = true;
+				}
+
+				if ( 'signed' == $args['owned'] ) {
+					$where .= " AND ob.signed IS NOT NULL ";
+				}
+			}
+		}
+
+		// Filter by format
+		if ( ! empty( $args['format'] ) ) {
+			// Only joined if we haven't yet already.
+			if ( ! $joined_owned_books ) {
+				$join               .= " INNER JOIN {$owned_table} as ob on (books.ID = ob.book_id) ";
+				$joined_owned_books = true;
+			}
+
+			$where .= $wpdb->prepare( "AND ob.format = %s", sanitize_text_field( $args['format'] ) );
+		}
+
+		// Filter by ISBN
+		if ( ! empty( $args['isbn'] ) ) {
+			// Only joined if we haven't yet already.
+			if ( ! $joined_owned_books ) {
+				$join               .= " INNER JOIN {$owned_table} as ob on (books.ID = ob.book_id) ";
+				$joined_owned_books = true;
+			}
+
+			$where .= $wpdb->prepare( "AND ob.isbn = %s", sanitize_text_field( $args['isbn'] ) );
 		}
 
 		$cache_key = md5( 'bdb_books_count' . serialize( $args ) );
@@ -588,7 +686,7 @@ class BDB_DB_Books extends BDB_DB {
 		$count = wp_cache_get( $cache_key, 'books' );
 
 		if ( $count === false ) {
-			$query = "SELECT COUNT(book.ID) FROM " . $this->table_name . " as book {$join} {$where};";
+			$query = "SELECT COUNT(distinct books.ID) FROM " . $this->table_name . " as books {$join} {$where};";
 			$count = $wpdb->get_var( $query );
 			wp_cache_set( $cache_key, $count, 'books', 3600 );
 		}
@@ -611,24 +709,24 @@ class BDB_DB_Books extends BDB_DB {
 		require_once( ABSPATH . 'wp-admin/includes/upgrade.php' );
 
 		$sql = "CREATE TABLE " . $this->table_name . " (
-		ID bigint(20) NOT NULL AUTO_INCREMENT,
-		cover bigint(20),
-		title text NOT NULL,
-		index_title text NOT NULL,
-		series_id bigint(20),
-		series_position float,
-		pub_date datetime,
-		pages bigint(20),
-		synopsis longtext NOT NULL,
-		goodreads_url text NOT NULL,
-		buy_link text NOT NULL,
+		ID BIGINT(20) NOT NULL AUTO_INCREMENT,
+		cover BIGINT(20),
+		title TEXT NOT NULL,
+		index_title TEXT NOT NULL,
+		series_id BIGINT(20),
+		series_position FLOAT,
+		pub_date DATETIME,
+		pages BIGINT(20),
+		synopsis LONGTEXT NOT NULL,
+		goodreads_url TEXT NOT NULL,
+		buy_link TEXT NOT NULL,
 		PRIMARY KEY  (ID),
 		INDEX series_id (series_id)
 		) CHARACTER SET utf8 COLLATE utf8_general_ci;";
 
 		dbDelta( $sql );
 
-		update_option( $this->table_name . '_db_version', $this->version );
+		update_option( $this->table_name . '_db_version', $this->version, false );
 
 	}
 

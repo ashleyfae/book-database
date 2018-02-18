@@ -277,17 +277,17 @@ class BDB_DB_Book_Terms extends BDB_DB {
 
 		// Terms with a specific name.
 		if ( ! empty( $args['name'] ) ) {
-			$where .= $wpdb->prepare( " AND `name` LIKE '%%%%" . '%s' . "%%%%' ", wp_strip_all_tags( $args['name'] ) );
+			$where .= $wpdb->prepare( " AND `name` LIKE '%%%%" . '%s' . "%%%%' ", sanitize_text_field( $args['name'] ) );
 		}
 
 		// Terms with a specific slug.
 		if ( ! empty( $args['slug'] ) ) {
-			$where .= $wpdb->prepare( " AND `slug` = %s ", wp_strip_all_tags( $args['slug'] ) );
+			$where .= $wpdb->prepare( " AND `slug` = %s ", sanitize_text_field( $args['slug'] ) );
 		}
 
 		// Terms with a specific type.
 		if ( ! empty( $args['type'] ) ) {
-			$where .= $wpdb->prepare( " AND `type` LIKE '%s' ", wp_strip_all_tags( $args['type'] ) );
+			$where .= $wpdb->prepare( " AND `type` LIKE '%s' ", sanitize_text_field( $args['type'] ) );
 		}
 
 		// Terms with a specific count.
@@ -305,7 +305,7 @@ class BDB_DB_Book_Terms extends BDB_DB {
 			}
 		}
 
-		$orderby = ! array_key_exists( $args['orderby'], $this->get_columns() ) ? 'term_id' : wp_strip_all_tags( $args['orderby'] );
+		$orderby = ! array_key_exists( $args['orderby'], $this->get_columns() ) ? 'term_id' : sanitize_text_field( $args['orderby'] );
 		$order   = ( 'ASC' == strtoupper( $args['order'] ) ) ? 'ASC' : 'DESC';
 		$orderby = esc_sql( $orderby );
 		$order   = esc_sql( $order );
@@ -379,12 +379,12 @@ class BDB_DB_Book_Terms extends BDB_DB {
 
 		// Terms with a specific name.
 		if ( ! empty( $args['name'] ) ) {
-			$where .= $wpdb->prepare( " AND `name` LIKE '%%%%" . '%s' . "%%%%' ", wp_strip_all_tags( $args['name'] ) );
+			$where .= $wpdb->prepare( " AND `name` LIKE '%%%%" . '%s' . "%%%%' ", sanitize_text_field( $args['name'] ) );
 		}
 
 		// Terms with a specific type.
 		if ( ! empty( $args['type'] ) ) {
-			$where .= $wpdb->prepare( " AND `type` LIKE '%s' ", wp_strip_all_tags( $args['type'] ) );
+			$where .= $wpdb->prepare( " AND `type` LIKE '%s' ", sanitize_text_field( $args['type'] ) );
 		}
 
 		// Terms with a specific count.
@@ -447,7 +447,7 @@ class BDB_DB_Book_Terms extends BDB_DB {
 
 		dbDelta( $sql );
 
-		update_option( $this->table_name . '_db_version', $this->version );
+		update_option( $this->table_name . '_db_version', $this->version, false );
 
 	}
 

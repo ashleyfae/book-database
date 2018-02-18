@@ -180,15 +180,168 @@
       height: auto;
       max-width: 100%; }
 
-#bdb-book-reading-list table {
+#bookdb-books-filter .view-month:before {
+  content: '\f508';
+  font-size: 23px;
+  font-weight: 500;
+  margin-top: -3px;
+  -webkit-font-smoothing: subpixel-antialiased; }
+#bookdb-books-filter .view-week:before {
+  content: '\f164'; }
+#bookdb-books-filter .view-day:before {
+  content: '\f163'; }
+#bookdb-books-filter .calendar {
+  table-layout: fixed;
+  -webkit-touch-callout: none;
+  /* iOS Safari */
+  -webkit-user-select: none;
+  /* Safari */
+  -khtml-user-select: none;
+  /* Konqueror HTML */
+  -moz-user-select: none;
+  /* Firefox */
+  -ms-user-select: none;
+  /* Internet Explorer/Edge */
+  user-select: none;
+  /* Non-prefixed version, currently */
+  /**
+   * Month
+   */ }
+  #bookdb-books-filter .calendar thead th,
+  #bookdb-books-filter .calendar tfoot th {
+    text-align: center; }
+  #bookdb-books-filter .calendar tbody td {
+    border-bottom: 1px solid #e1e1e1;
+    border-right: 1px solid #e1e1e1;
+    padding: 0;
+    position: relative;
+    text-align: left; }
+    #bookdb-books-filter .calendar tbody td:hover {
+      box-shadow: inset 0 0 0 1px #ccc !important; }
+  #bookdb-books-filter .calendar a {
+    display: block;
+    margin: 0;
+    overflow-x: hidden;
+    padding: 0;
+    -o-text-overflow: ellipsis;
+    text-overflow: ellipsis;
+    white-space: nowrap; }
+    #bookdb-books-filter .calendar a:before {
+      display: inline-block;
+      font-family: 'dashicons';
+      font-size: 15px;
+      font-weight: normal;
+      margin: 0;
+      width: 18px;
+      height: 18px;
+      position: absolute;
+      left: 2px;
+      speak: none;
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale; }
+  #bookdb-books-filter .calendar .books-for-cell {
+    display: flex;
+    flex-flow: row wrap; }
+  #bookdb-books-filter .calendar .bdb-calendar-book-link {
+    flex: 0 33%;
+    margin-right: -1px;
+    overflow: visible;
+    padding: 0 0 0 20px;
+    position: relative; }
+    #bookdb-books-filter .calendar .bdb-calendar-book-link img {
+      height: auto;
+      max-width: 100%; }
+    #bookdb-books-filter .calendar .bdb-calendar-book-link .bdb-calendar-book-flags {
+      background: white;
+      border: 1px solid #e1e1e1;
+      border-bottom: none;
+      border-left: none;
+      box-shadow: -1px 1px 1px rgba(0, 0, 0, 0.2);
+      color: #aaa;
+      position: absolute;
+      top: -3px;
+      right: -3px; }
+  #bookdb-books-filter .calendar:not(.day) tbody td.saturday,
+  #bookdb-books-filter .calendar:not(.day) tbody td.sunday {
+    background-color: #f1f1f1; }
+  #bookdb-books-filter .calendar.month tbody tr th:last-of-type {
+    border-right: 1px solid #e1e1e1; }
+  #bookdb-books-filter .calendar.month tbody th {
+    background-color: #fff;
+    border-bottom: 1px solid #e1e1e1;
+    height: 80px; }
+  #bookdb-books-filter .calendar.month tbody td {
+    min-height: 110px;
+    position: relative; }
+    #bookdb-books-filter .calendar.month tbody td a.day-number,
+    #bookdb-books-filter .calendar.month tbody td a.add-book-for-day {
+      background-color: rgba(255, 255, 255, 0.8);
+      border: 1px solid transparent;
+      border-bottom: 1px solid #e1e1e1;
+      color: #aaa;
+      font-weight: 600;
+      line-height: 1.9em;
+      height: 26px;
+      width: 26px;
+      margin: 0;
+      padding: 0;
+      position: absolute;
+      top: 0;
+      text-align: center; }
+      #bookdb-books-filter .calendar.month tbody td a.day-number:hover,
+      #bookdb-books-filter .calendar.month tbody td a.add-book-for-day:hover {
+        background: rgba(245, 245, 245, 0.8); }
+    #bookdb-books-filter .calendar.month tbody td a.add-book-for-day {
+      border-left: 1px solid #e1e1e1;
+      right: 0;
+      visibility: hidden; }
+    #bookdb-books-filter .calendar.month tbody td td.today {
+      background: #ffe; }
+    #bookdb-books-filter .calendar.month tbody td:hover a.day-number,
+    #bookdb-books-filter .calendar.month tbody td:hover a.add-book-for-day {
+      border-color: #ccc; }
+    #bookdb-books-filter .calendar.month tbody td:hover a.add-book-for-day {
+      visibility: visible; }
+    #bookdb-books-filter .calendar.month tbody td:last-of-type {
+      border-right: none; }
+      #bookdb-books-filter .calendar.month tbody td:last-of-type:not(.position-6) {
+        border-right: 1px solid #e1e1e1; }
+  #bookdb-books-filter .calendar.month tbody a i {
+    font-size: 15px;
+    line-height: 1.9em;
+    overflow: hidden; }
+  #bookdb-books-filter .calendar.month .books-for-cell {
+    margin: 30px 0 5px;
+    min-height: 80px; }
+  @media screen and (max-width: 782px) {
+    #bookdb-books-filter .calendar.month .books-for-cell {
+      margin: 0;
+      padding-top: 30px; }
+    #bookdb-books-filter .calendar.month tbody th.padding {
+      display: none; }
+    #bookdb-books-filter .calendar.month tbody td {
+      border-width: 0 0 1px 0 !important;
+      padding: 0;
+      margin: 0; } }
+
+#bdb-filter-by-cy {
+  float: left;
+  width: 80px; }
+
+#bdb-book-reading-list table,
+#bdb-book-editions-list table {
   margin-bottom: 1.5em; }
   #bdb-book-reading-list table input[type="text"],
-  #bdb-book-reading-list table input[type="number"] {
+  #bdb-book-reading-list table input[type="number"],
+  #bdb-book-editions-list table input[type="text"],
+  #bdb-book-editions-list table input[type="number"] {
     display: block;
     width: 100%; }
 
 #bookdb-read-book-fields,
-.bookdb-reading-list-edit-value {
+#bookdb-owned-edition-fields,
+.bookdb-reading-list-edit-value,
+.bookdb-owned-edition-edit-value {
   display: none; }
 
 .book-library_page_bdb-reviews #ID {
@@ -198,14 +351,16 @@
   display: none; }
 
 #bookdb-book-page-wrapper .postbox > h2,
-#bookdb-review-page-wrapper .postbox > h2 {
+#bookdb-review-page-wrapper .postbox > h2,
+#bookdb-series-page-wrapper .postbox > h2 {
   border-bottom: 1px solid #eee;
   font-size: 14px;
   line-height: 1.4;
   margin: 0;
   padding: 8px 12px; }
 #bookdb-book-page-wrapper .postbox .hndle,
-#bookdb-review-page-wrapper .postbox .hndle {
+#bookdb-review-page-wrapper .postbox .hndle,
+#bookdb-series-page-wrapper .postbox .hndle {
   cursor: auto !important; }
 
 .bookdb-box-row {
@@ -276,15 +431,18 @@
     width: 30%; } }
 /* Save Box */
 #bookdb-review-page-wrapper #major-publishing-actions,
-#bookdb-book-page-wrapper #major-publishing-actions {
+#bookdb-book-page-wrapper #major-publishing-actions,
+#bookdb-series-page-wrapper #major-publishing-actions {
   clear: both;
   overflow: hidden; }
 #bookdb-review-page-wrapper #delete-action a,
-#bookdb-book-page-wrapper #delete-action a {
+#bookdb-book-page-wrapper #delete-action a,
+#bookdb-series-page-wrapper #delete-action a {
   color: #a00;
   text-decoration: none; }
   #bookdb-review-page-wrapper #delete-action a:hover,
-  #bookdb-book-page-wrapper #delete-action a:hover {
+  #bookdb-book-page-wrapper #delete-action a:hover,
+  #bookdb-series-page-wrapper #delete-action a:hover {
     color: red; }
 
 /* Tags */

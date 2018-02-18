@@ -27,12 +27,109 @@ I'm not sure if I'll ever officially release this. I'm mostly building this for 
 
 Most read books:
 
-```
-SELECT book_id, book.title, COUNT(*) AS count FROM `wp_bdb_reading_list` list INNER JOIN `wp_bdb_books` book on book.ID = list.book_id GROUP BY book_id ORDER BY count DESC LIMIT 25
+```mysql
+SELECT
+  book_id,
+  book.title,
+  COUNT(*) AS count
+FROM `wp_bdb_reading_list` list INNER JOIN `wp_bdb_books` book ON book.ID = list.book_id
+GROUP BY book_id
+HAVING count > 1
+ORDER BY count DESC
+LIMIT 25
 ```
 
-Get all the books and their ratings from a specific term name ("Fantasy") and within a specific time period (the year 2016):
+Books you own two or more copies of:
 
+```mysql
+SELECT
+  book_id,
+  book.title,
+  COUNT(*) AS number_copies
+FROM `wp_bdb_owned_editions` e INNER JOIN `wp_bdb_books` book ON book.ID = e.book_id
+GROUP BY book_id
+HAVING number_copies > 1
+ORDER BY number_copies DESC
 ```
-SELECT book.title, log.rating FROM `wp_bdb_reviews` review RIGHT JOIN `wp_bdb_reading_list` log on log.review_id = review.ID INNER JOIN `wp_bdb_books` book on book.ID = review.book_id INNER JOIN `wp_bdb_book_term_relationships` r on r.book_id = review.book_id INNER JOIN `wp_bdb_book_terms` term on (term.term_id = r.term_id AND term.name = 'Fantasy') WHERE `date_written` >= '2016-01-01 00:00:00' AND `date_written` <= '2016-12-31 00:00:00' ORDER BY book.title ASC
+
+Get all the books and their ratings from a specific term name ("Fantasy") that were read in 2017.
+
+```mysql
+SELECT
+  book.title,
+  log.rating,
+  log.date_finished
+FROM `wp_bdb_books` book RIGHT JOIN `wp_bdb_reading_list` log ON log.book_id = book.ID
+  INNER JOIN `wp_bdb_book_term_relationships` r ON r.book_id = book.ID
+  INNER JOIN `wp_bdb_book_terms` term ON (term.term_id = r.term_id AND term.name = 'Fantasy')
+WHERE 2017 = YEAR (date_finished)
+ORDER BY log.date_finished ASC
+```
+
+Same as above, but checks reviews only, where the review was written in a specific year (2017).
+
+```mysql
+SELECT
+  book.title,
+  log.rating
+FROM `wp_bdb_reviews` review RIGHT JOIN `wp_bdb_reading_list` log ON log.review_id = review.ID
+  INNER JOIN `wp_bdb_books` book ON book.ID = review.book_id
+  INNER JOIN `wp_bdb_book_term_relationships` r ON r.book_id = review.book_id
+  INNER JOIN `wp_bdb_book_terms` term ON (term.term_id = r.term_id AND term.name = 'Fantasy')
+WHERE 2017 = YEAR (date_written)
+ORDER BY book.title ASC
+```
+
+Get books with 4 stars or higher in the genres "Contemporary" _and_ "Romance":
+
+```mysql
+SELECT
+  book.title,
+  author.name,
+  log.rating
+FROM wp_bdb_books AS book
+  INNER JOIN wp_bdb_book_term_relationships AS r ON book.ID = r.book_id
+  INNER JOIN wp_bdb_book_terms AS author ON (r.term_id = author.term_id AND author.type = 'author')
+  INNER JOIN wp_bdb_reading_list AS log ON book.ID = log.book_id
+WHERE log.rating > 4
+      AND book.ID IN (
+  SELECT book_id
+  FROM wp_bdb_book_term_relationships AS r
+    INNER JOIN wp_bdb_book_terms AS t ON r.term_id = t.term_id
+  WHERE t.name = 'Contemporary'
+        AND book_id IN (
+    SELECT book_id
+    FROM wp_bdb_book_term_relationships AS r2
+      INNER JOIN wp_bdb_book_terms AS t2 ON r2.term_id = t2.term_id
+    WHERE t2.name = 'Romance'
+  )
+)
+GROUP BY book.ID
+ORDER BY log.rating DESC
+```
+
+Get a count of how many books were read in each format in a given year (2017).
+
+```mysql
+SELECT
+  format,
+  COUNT(*) AS count
+FROM `wp_bdb_owned_editions` AS b
+  INNER JOIN wp_bdb_reading_list AS l ON l.book_id = b.book_id
+WHERE 2017 = YEAR (date_finished)
+GROUP BY format
+ORDER BY format ASC;
+```
+
+Get a count of how many books read in 2017 were published in each year.
+
+```mysql
+SELECT
+  YEAR(pub_date) AS pub_year,
+  COUNT(*) AS number_books
+FROM wp_bdb_books AS b
+  INNER JOIN wp_bdb_reading_list AS l ON l.book_id = b.ID
+WHERE 2017 = YEAR (date_finished)
+GROUP BY YEAR(pub_date)
+ORDER BY pub_year DESC;
 ```

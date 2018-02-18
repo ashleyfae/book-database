@@ -158,10 +158,17 @@ function bdb_render_term_view( $view, $callbacks ) {
 	?>
 	<div class="wrap">
 		<h1><?php echo $page_title; ?></h1>
+
 		<?php if ( bdb_get_errors() ) : ?>
 			<div class="error settings-error">
 				<?php bdb_print_errors(); ?>
 			</div>
+		<?php endif; ?>
+
+		<?php if ( 'edit' == $view ) : ?>
+			<p>
+				<a href="<?php echo esc_url( wp_get_referer() ); ?>"><?php _e( '&laquo; Back to List', 'book-database' ); ?></a>
+			</p>
 		<?php endif; ?>
 
 		<div id="bookdb-term-page-wrapper">

@@ -4,7 +4,7 @@
  * Review Object
  *
  * @package   book-database
- * @copyright Copyright (c) 2016, Ashley GIbson
+ * @copyright Copyright (c) 2017, Ashley Gibson
  * @license   GPL2+
  * @since     1.0
  */
@@ -697,6 +697,14 @@ class BDB_Review {
 
 		if ( $this->is_external() ) {
 			return true;
+		}
+
+		$post = get_post( $this->post_id );
+
+		if ( is_a( $post, 'WP_Post' ) ) {
+			if ( 'publish' != $post->post_status ) {
+				return false;
+			}
 		}
 
 		return ( bdb_format_mysql_date( $this->get_date_published(), 'U' ) <= current_time( 'timestamp' ) );

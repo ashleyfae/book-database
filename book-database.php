@@ -77,9 +77,16 @@ if ( ! class_exists( 'Book_Database' ) ) :
 		/**
 		 * @var BDB_DB_Book_Meta
 		 * @access public
-		 * @since 1.0
+		 * @since  1.0
 		 */
 		public $book_meta;
+
+		/**
+		 * @var BDB_DB_owned_editions
+		 * @access public
+		 * @since  1.0
+		 */
+		public $owned_editions;
 
 		/**
 		 * @var BDB_DB_Series
@@ -145,6 +152,7 @@ if ( ! class_exists( 'Book_Database' ) ) :
 				self::$instance->series                  = new BDB_DB_Series();
 				self::$instance->book_terms              = new BDB_DB_Book_Terms();
 				self::$instance->book_term_relationships = new BDB_DB_Book_Term_Relationships();
+				self::$instance->owned_editions          = new BDB_DB_Owned_Editions();
 				self::$instance->reading_list            = new BDB_DB_Reading_List();
 				self::$instance->html                    = new BDB_HTML();
 			}
@@ -228,6 +236,7 @@ if ( ! class_exists( 'Book_Database' ) ) :
 			require_once BDB_DIR . 'includes/database/class-bdb-db-books.php';
 			require_once BDB_DIR . 'includes/database/class-bdb-db-book-terms.php';
 			require_once BDB_DIR . 'includes/database/class-bdb-db-book-term-relationships.php';
+			require_once BDB_DIR . 'includes/database/class-bdb-db-owned-editions.php';
 			require_once BDB_DIR . 'includes/database/class-bdb-db-reading-list.php';
 			require_once BDB_DIR . 'includes/database/class-bdb-db-reviews.php';
 			require_once BDB_DIR . 'includes/database/class-bdb-db-review-meta.php';
@@ -249,11 +258,13 @@ if ( ! class_exists( 'Book_Database' ) ) :
 			require_once BDB_DIR . 'includes/class-bdb-rating.php';
 			require_once BDB_DIR . 'includes/class-bdb-review.php';
 			require_once BDB_DIR . 'includes/class-bdb-series.php';
+			require_once BDB_DIR . 'includes/content-filters.php';
 			require_once BDB_DIR . 'includes/error-tracking.php';
 			require_once BDB_DIR . 'includes/misc-functions.php';
 			require_once BDB_DIR . 'includes/rating-functions.php';
 			require_once BDB_DIR . 'includes/rewrites.php';
 			require_once BDB_DIR . 'includes/review-functions.php';
+			require_once BDB_DIR . 'includes/series-functions.php';
 			require_once BDB_DIR . 'includes/shortcodes.php';
 			require_once BDB_DIR . 'includes/template-functions.php';
 			require_once BDB_DIR . 'includes/term-functions.php';
@@ -268,15 +279,21 @@ if ( ! class_exists( 'Book_Database' ) ) :
 				require_once BDB_DIR . 'includes/admin/books/book-actions.php';
 				require_once BDB_DIR . 'includes/admin/books/book-functions.php';
 				require_once BDB_DIR . 'includes/admin/books/books.php';
+				require_once BDB_DIR . 'includes/admin/books/class-book-table.php';
+				require_once BDB_DIR . 'includes/admin/books/class-book-table-month.php';
 				require_once BDB_DIR . 'includes/admin/modal/modal.php';
 				require_once BDB_DIR . 'includes/admin/modal/modal-ajax.php';
 				require_once BDB_DIR . 'includes/admin/modal/modal-button.php';
 				require_once BDB_DIR . 'includes/admin/modal/shortcode-preview.php';
+				require_once BDB_DIR . 'includes/admin/owned-editions/owned-editions-actions.php';
 				require_once BDB_DIR . 'includes/admin/posts/meta-box.php';
 				require_once BDB_DIR . 'includes/admin/reading-list/reading-actions.php';
 				require_once BDB_DIR . 'includes/admin/reviews/review-actions.php';
 				require_once BDB_DIR . 'includes/admin/reviews/review-functions.php';
 				require_once BDB_DIR . 'includes/admin/reviews/reviews.php';
+				require_once BDB_DIR . 'includes/admin/series/series-actions.php';
+				require_once BDB_DIR . 'includes/admin/series/series-functions.php';
+				require_once BDB_DIR . 'includes/admin/series/series.php';
 				require_once BDB_DIR . 'includes/admin/settings/display-settings.php';
 				require_once BDB_DIR . 'includes/admin/terms/term-actions.php';
 				require_once BDB_DIR . 'includes/admin/terms/term-functions.php';

@@ -58,6 +58,15 @@ class BDB_Series {
 	public $description;
 
 	/**
+	 * Number of books in the series
+	 *
+	 * @var int
+	 * @access public
+	 * @since  1.0
+	 */
+	public $number_books = null;
+
+	/**
 	 * Books in this series
 	 *
 	 * @see    BDB_Series::get_books()
@@ -88,14 +97,14 @@ class BDB_Series {
 	 * @since  1.0
 	 * @return void
 	 */
-	public function __construct( $id_or_name = 0 ) {
+	public function __construct( $id_name_or_object = 0 ) {
 
-		if ( is_object( $id_or_name ) || is_array( $id_or_name ) ) {
-			$series = $id_or_name;
-		} elseif ( is_numeric( $id_or_name ) ) {
-			$series = book_database()->series->get_series_by( 'ID', $id_or_name );
+		if ( is_object( $id_name_or_object ) || is_array( $id_name_or_object ) ) {
+			$series = $id_name_or_object;
+		} elseif ( is_numeric( $id_name_or_object ) ) {
+			$series = book_database()->series->get_series_by( 'ID', $id_name_or_object );
 		} else {
-			$series = book_database()->series->get_series_by( 'name', $id_or_name );
+			$series = book_database()->series->get_series_by( 'name', $id_name_or_object );
 		}
 
 		if ( empty( $series ) ) {
@@ -176,16 +185,68 @@ class BDB_Series {
 
 			if ( is_array( $books ) ) {
 				foreach ( $books as $book ) {
-					$book_average  = $book->get_average_rating();
-					$total_ratings = $total_ratings + $book_average;
-					$total_books ++;
+					$book_average = $book->get_average_rating();
+
+					if ( ! is_null( $book_average ) ) {
+						$total_ratings = $total_ratings + $book_average;
+						$total_books ++;
+					}
 				}
 
-				$this->average_rating = round( ( $total_ratings / $total_books ), 2 );
+				if ( $total_books > 0 ) {
+					$this->average_rating = round( ( $total_ratings / $total_books ), 2 );
+				}
 			}
 		}
 
 		return apply_filters( 'book-database/series/average-rating', $this->average_rating, $this->ID, $this );
+
+	}
+
+	/**
+	 * Gets the number of books in the series that have been read
+	 *
+	 * @access public
+	 * @since  1.0
+	 * @return int
+	 */
+	public function get_number_books_read() {
+
+		global $wpdb;
+
+		$reading_table = book_database()->reading_list->table_name;
+		$books_table   = book_database()->books->table_name;
+
+		$query = "SELECT DISTINCT book_id FROM $reading_table log
+				  INNER JOIN $books_table as book on (book.ID = log.book_id AND book.series_id = %d)
+				  WHERE log.date_finished IS NOT NULL
+				  GROUP BY book.ID";
+
+		$book_ids = $wpdb->get_results( $wpdb->prepare( $query, $this->ID ) );
+
+		return is_array( $book_ids ) ? count( $book_ids ) : 0;
+
+	}
+
+	/**
+	 * Gets the total number of books in the series
+	 *
+	 * This uses the database column if populated. If not, it counts how many books in the
+	 * series have been entered in the library.
+	 *
+	 * @access public
+	 * @since  1.0
+	 * @return int
+	 */
+	public function get_number_books() {
+
+		if ( ! empty( $this->number_books ) ) {
+			return $this->number_books;
+		}
+
+		$count = book_database()->books->count( array( 'series_id' => $this->ID ) );
+
+		return $count;
 
 	}
 

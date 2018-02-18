@@ -4,7 +4,7 @@
  * Review Table Class
  *
  * @package   book-database
- * @copyright Copyright (c) 2016, Ashley GIbson
+ * @copyright Copyright (c) 2017, Ashley Gibson
  * @license   GPL2+
  * @since     1.0
  */
@@ -154,12 +154,12 @@ class BDB_Reviews_Table extends WP_List_Table {
 	/**
 	 * Renders most of the columns in the list table.
 	 *
-	 * @param object $item        Contains all the data of the customers.
+	 * @param object $item        Contains all the data of the reviews.
 	 * @param string $column_name The name of the column.
 	 *
 	 * @access public
 	 * @since  1.0
-	 * @return string Column name
+	 * @return string Column contents
 	 */
 	public function column_default( $item, $column_name ) {
 

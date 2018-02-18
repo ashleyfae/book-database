@@ -42,10 +42,11 @@ class BDB_DB_Series extends BDB_DB {
 	 */
 	public function get_columns() {
 		return array(
-			'ID'          => '%d',
-			'name'        => '%s',
-			'slug'        => '%s',
-			'description' => '%s'
+			'ID'           => '%d',
+			'name'         => '%s',
+			'slug'         => '%s',
+			'description'  => '%s',
+			'number_books' => '%d'
 		);
 	}
 
@@ -58,9 +59,10 @@ class BDB_DB_Series extends BDB_DB {
 	 */
 	public function get_column_defaults() {
 		return array(
-			'name'        => '',
-			'slug'        => '',
-			'description' => ''
+			'name'         => '',
+			'slug'         => '',
+			'description'  => '',
+			'number_books' => 1
 		);
 	}
 
@@ -104,6 +106,11 @@ class BDB_DB_Series extends BDB_DB {
 
 	/**
 	 * Delete a Series.
+	 *
+	 * Do not call this directly. Use `bdb_delete_series()` instead, as that also removes
+	 * book associations.
+	 *
+	 * @see    bdb_delete_series()
 	 *
 	 * @param bool $id ID of the series to delete.
 	 *
@@ -215,7 +222,7 @@ class BDB_DB_Series extends BDB_DB {
 
 		}
 
-		return $series;
+		return wp_unslash( $series );
 
 	}
 
@@ -266,17 +273,17 @@ class BDB_DB_Series extends BDB_DB {
 
 		// Series with a specific name.
 		if ( ! empty( $args['name'] ) ) {
-			$where .= $wpdb->prepare( " AND `name` LIKE '%%%%" . '%s' . "%%%%' ", wp_strip_all_tags( $args['name'] ) );
+			$where .= $wpdb->prepare( " AND `name` LIKE '%%%%" . '%s' . "%%%%' ", sanitize_text_field( $args['name'] ) );
 		}
 
 		// Series with a specific slug.
 		if ( ! empty( $args['slug'] ) ) {
-			$where .= $wpdb->prepare( " AND `slug` = %s ", wp_strip_all_tags( $args['slug'] ) );
+			$where .= $wpdb->prepare( " AND `slug` = %s ", sanitize_text_field( $args['slug'] ) );
 		}
 
 		// @todo author
 
-		$orderby = ! array_key_exists( $args['orderby'], $this->get_columns() ) ? 'ID' : wp_strip_all_tags( $args['orderby'] );
+		$orderby = ! array_key_exists( $args['orderby'], $this->get_columns() ) ? 'ID' : sanitize_text_field( $args['orderby'] );
 		$order   = ( 'ASC' == strtoupper( $args['order'] ) ) ? 'ASC' : 'DESC';
 		$orderby = esc_sql( $orderby );
 		$order   = esc_sql( $order );
@@ -302,7 +309,7 @@ class BDB_DB_Series extends BDB_DB {
 			wp_cache_set( $cache_key, $series, 'series', 3600 );
 		}
 
-		return $series;
+		return wp_unslash( $series );
 
 	}
 
@@ -342,7 +349,7 @@ class BDB_DB_Series extends BDB_DB {
 
 		// Series with a specific name.
 		if ( ! empty( $args['author'] ) ) {
-			$where .= $wpdb->prepare( " AND `author` LIKE '%%%%" . '%s' . "%%%%' ", wp_strip_all_tags( $args['author'] ) );
+			$where .= $wpdb->prepare( " AND `author` LIKE '%%%%" . '%s' . "%%%%' ", sanitize_text_field( $args['author'] ) );
 		}
 
 		// @todo author
@@ -375,17 +382,18 @@ class BDB_DB_Series extends BDB_DB {
 		require_once( ABSPATH . 'wp-admin/includes/upgrade.php' );
 
 		$sql = "CREATE TABLE " . $this->table_name . " (
-		ID bigint(20) NOT NULL AUTO_INCREMENT,
-		name varchar(200) NOT NULL,
-		slug varchar(200) NOT NULL,
-		description longtext NOT NULL,
+		ID BIGINT(20) NOT NULL AUTO_INCREMENT,
+		name VARCHAR(200) NOT NULL,
+		slug VARCHAR(200) NOT NULL,
+		description LONGTEXT NOT NULL,
+		number_books INT(20) NOT NULL,
 		PRIMARY KEY  (ID),
 		INDEX name (name)
 		) CHARACTER SET utf8 COLLATE utf8_general_ci;";
 
 		dbDelta( $sql );
 
-		update_option( $this->table_name . '_db_version', $this->version );
+		update_option( $this->table_name . '_db_version', $this->version, false );
 
 	}
 

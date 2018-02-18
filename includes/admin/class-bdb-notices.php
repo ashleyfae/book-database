@@ -73,6 +73,16 @@ class BDB_Notices {
 					break;
 			}
 
+			// Series
+			switch ( $_GET['bdb-message'] ) {
+				case 'series-updated' :
+					$notices['updated']['bookdb-series-updated'] = __( 'Series successfully updated.', 'book-database' );
+					break;
+				case 'series-deleted' :
+					$notices['updated']['bookdb-series-deleted'] = __( 'The series has been deleted.', 'book-database' );
+					break;
+			}
+
 			// Terms
 			switch ( $_GET['bdb-message'] ) {
 				case 'term-added' :

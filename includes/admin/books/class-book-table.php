@@ -28,6 +28,24 @@ if ( ! class_exists( 'WP_List_Table' ) ) {
 class BDB_Books_Table extends WP_List_Table {
 
 	/**
+	 * The mode of the current view.
+	 *
+	 * @var string
+	 * @access public
+	 * @since  1.0
+	 */
+	public $mode = 'list';
+
+	/**
+	 * All available modes.
+	 *
+	 * @var array
+	 * @access public
+	 * @since  1.0
+	 */
+	public $modes = array();
+
+	/**
 	 * Number of items per page
 	 *
 	 * @var int
@@ -77,19 +95,85 @@ class BDB_Books_Table extends WP_List_Table {
 	 *
 	 * @see    WP_List_Table::__construct()
 	 *
+	 * @param array $args
+	 *
 	 * @access public
 	 * @since  1.0
 	 * @return void
 	 */
-	public function __construct() {
+	public function __construct( $args = array() ) {
 
-		global $status, $page;
+		// Set modes
+		$this->modes = $this->get_modes();
 
 		parent::__construct( array(
 			'singular' => bdb_get_label_singular(),
 			'plural'   => bdb_get_label_plural(),
 			'ajax'     => false
 		) );
+
+	}
+
+	/**
+	 * Get available modes.
+	 *
+	 * @access protected
+	 * @since  1.0
+	 * @return array
+	 */
+	protected function get_modes() {
+
+		$modes = array(
+			'list'  => esc_html__( 'List', 'book-database' ),
+			'month' => esc_html__( 'Month', 'book-database' ),
+			//'week'  => esc_html__( 'Week', 'book-database' ),
+			//'day'   => esc_html__( 'Day', 'book-database' )
+		);
+
+		return $modes;
+
+	}
+
+	/**
+	 * Display the view switcher.
+	 *
+	 * @param string $current_mode
+	 *
+	 * @access public
+	 * @since 1.0
+	 * @return void
+	 */
+	public function view_switcher( $current_mode = '' ) {
+
+		?>
+		<div class="view-switch">
+			<div class="filter-items">
+				<?php
+				foreach ( $this->modes as $mode => $title ) {
+
+					// Get the URL for the mode.
+					$url = bdb_get_admin_page_books();
+					if ( 'list' != $mode ) {
+						$url = add_query_arg( 'mode', urlencode( $mode ), $url );
+					}
+
+					// Setup classes.
+					$classes = array( 'view-' . $mode );
+					if ( empty( $this->mode ) || ( $this->mode === $mode ) ) {
+						$classes[] = 'current';
+					}
+					?>
+					<a href="<?php echo esc_url( $url ); ?>" class="<?php echo esc_attr( implode( ' ', $classes ) ); ?>" id="view-switch-<?php echo esc_attr( $mode ); ?>" title="<?php echo esc_attr( $title ); ?>">
+						<span class="screen-reader-text"><?php echo esc_html( $title ); ?></span>
+					</a>
+					<?php
+
+				}
+				?>
+				<input type="hidden" name="mode" value="<?php echo esc_attr( $this->mode ); ?>">
+			</div>
+		</div>
+		<?php
 
 	}
 
@@ -104,6 +188,9 @@ class BDB_Books_Table extends WP_List_Table {
 	 * @return void
 	 */
 	public function search_box( $text, $input_id ) {
+
+		do_action( 'book-database/books/table/top/search/before' );
+
 		$input_id = $input_id . '-search-input';
 
 		if ( ! empty( $_REQUEST['orderby'] ) ) {
@@ -117,21 +204,25 @@ class BDB_Books_Table extends WP_List_Table {
 		$title  = isset( $_REQUEST['book_title'] ) ? wp_unslash( $_REQUEST['book_title'] ) : '';
 		$author = isset( $_REQUEST['book_author'] ) ? wp_unslash( $_REQUEST['book_author'] ) : '';
 		$series = isset( $_REQUEST['series_name'] ) ? wp_unslash( $_REQUEST['series_name'] ) : '';
+		$isbn   = isset( $_REQUEST['isbn'] ) ? wp_unslash( $_REQUEST['isbn'] ) : '';
 
 		?>
-        <p class="search-box">
-            <label class="screen-reader-text" for="<?php echo esc_attr( $input_id ); ?>-title"><?php esc_html_e( 'Search by book title', 'book-database' ); ?></label>
-            <input type="search" id="<?php echo esc_attr( $input_id ); ?>-title" name="book_title" value="<?php echo esc_attr( $title ); ?>" placeholder="<?php esc_attr_e( 'Book title', 'book-database' ); ?>">
+		<div class="search-form">
+			<label class="screen-reader-text" for="<?php echo esc_attr( $input_id ); ?>-title"><?php esc_html_e( 'Search by book title', 'book-database' ); ?></label>
+			<input type="search" id="<?php echo esc_attr( $input_id ); ?>-title" name="book_title" value="<?php echo esc_attr( $title ); ?>" placeholder="<?php esc_attr_e( 'Book title', 'book-database' ); ?>">
 
-            <label class="screen-reader-text" for="<?php echo esc_attr( $input_id ); ?>-author"><?php esc_html_e( 'Search by author name', 'book-database' ); ?></label>
-            <input type="search" id="<?php echo esc_attr( $input_id ); ?>-author" name="book_author" value="<?php echo esc_attr( $author ); ?>" placeholder="<?php esc_attr_e( 'Author name', 'book-database' ); ?>">
+			<label class="screen-reader-text" for="<?php echo esc_attr( $input_id ); ?>-author"><?php esc_html_e( 'Search by author name', 'book-database' ); ?></label>
+			<input type="search" id="<?php echo esc_attr( $input_id ); ?>-author" name="book_author" value="<?php echo esc_attr( $author ); ?>" placeholder="<?php esc_attr_e( 'Author name', 'book-database' ); ?>">
 
-            <label class="screen-reader-text" for="<?php echo esc_attr( $input_id ); ?>-series"><?php esc_html_e( 'Search by series name', 'book-database' ); ?></label>
-            <input type="search" id="<?php echo esc_attr( $input_id ); ?>-series" name="series_name" value="<?php echo esc_attr( $series ); ?>" placeholder="<?php esc_attr_e( 'Series name', 'book-database' ); ?>">
+			<label class="screen-reader-text" for="<?php echo esc_attr( $input_id ); ?>-series"><?php esc_html_e( 'Search by series name', 'book-database' ); ?></label>
+			<input type="search" id="<?php echo esc_attr( $input_id ); ?>-series" name="series_name" value="<?php echo esc_attr( $series ); ?>" placeholder="<?php esc_attr_e( 'Series name', 'book-database' ); ?>">
 
-			<?php submit_button( $text, 'button', false, false, array( 'ID' => 'search-submit' ) ); ?>
-        </p>
+			<label class="screen-reader-text" for="<?php echo esc_attr( $input_id ); ?>-isbn"><?php esc_html_e( 'Search by ISBN', 'book-database' ); ?></label>
+			<input type="search" id="<?php echo esc_attr( $input_id ); ?>-isbn" name="isbn" value="<?php echo esc_attr( $isbn ); ?>" placeholder="<?php esc_attr_e( 'ISBN', 'book-database' ); ?>">
+		</div>
 		<?php
+		do_action( 'book-database/books/table/top/search/after' );
+
 	}
 
 	/**
@@ -142,18 +233,18 @@ class BDB_Books_Table extends WP_List_Table {
 	 * @return string
 	 */
 	protected function get_primary_column_name() {
-		return 'title';
+		return 'cover';
 	}
 
 	/**
 	 * Renders most of the columns in the list table.
 	 *
-	 * @param object $item        Contains all the data of the customers.
+	 * @param object $item        Contains all the data of the books.
 	 * @param string $column_name The name of the column.
 	 *
 	 * @access public
 	 * @since  1.0
-	 * @return string Column name
+	 * @return string Column contents
 	 */
 	public function column_default( $item, $column_name ) {
 
@@ -226,7 +317,7 @@ class BDB_Books_Table extends WP_List_Table {
 	/**
 	 * Render Checkbox Column
 	 *
-	 * @param array $item Contains all the data of the reviews.
+	 * @param array $item Contains all the data of the books.
 	 *
 	 * @access public
 	 * @since  1.0
@@ -239,10 +330,10 @@ class BDB_Books_Table extends WP_List_Table {
 		}
 
 		?>
-        <label class="screen-reader-text" for="cb-select-<?php echo esc_attr( $item['ID'] ); ?>">
+		<label class="screen-reader-text" for="cb-select-<?php echo esc_attr( $item['ID'] ); ?>">
 			<?php _e( 'Select this book', 'book-database' ) ?>
-        </label>
-        <input id="cb-select-<?php echo esc_attr( $item['ID'] ); ?>" type="checkbox" name="books[]" value="<?php echo esc_attr( $item['ID'] ); ?>">
+		</label>
+		<input id="cb-select-<?php echo esc_attr( $item['ID'] ); ?>" type="checkbox" name="books[]" value="<?php echo esc_attr( $item['ID'] ); ?>">
 		<?php
 
 	}
@@ -291,6 +382,73 @@ class BDB_Books_Table extends WP_List_Table {
 	}
 
 	/**
+	 * Returns the current base URL.
+	 *
+	 * @access protected
+	 * @since  1.0
+	 * @return string
+	 */
+	protected function get_base_url() {
+
+		$args = array();
+
+		// Filter by owned books.
+		if ( isset( $_GET['owned'] ) && 'all' != $_GET['owned'] ) {
+			$args['owned'] = sanitize_text_field( $_GET['owned'] );
+		}
+
+		// Filter by format.
+		if ( isset( $_GET['format'] ) && 'all' != $_GET['format'] ) {
+			$args['format'] = sanitize_text_field( $_GET['format'] );
+		}
+
+		// Filter by ISBN.
+		if ( isset( $_GET['isbn'] ) ) {
+			$args['isbn'] = sanitize_text_field( $_GET['isbn'] );
+		}
+
+		// Filter by author.
+		if ( isset( $_GET['author_id'] ) ) {
+			$args['author_id'] = absint( $_GET['author_id'] );
+		}
+
+		// Filter by series.
+		if ( isset( $_GET['series_id'] ) ) {
+			$args['series_id'] = absint( $_GET['series_id'] );
+			$args['orderby']   = 'series_position';
+		}
+
+		// Filter by book title
+		if ( isset( $_GET['book_title'] ) ) {
+			$args['title'] = wp_strip_all_tags( $_GET['book_title'] );
+		}
+
+		// Filter by author name
+		if ( isset( $_GET['book_author'] ) ) {
+			$args['author_name'] = wp_strip_all_tags( $_GET['book_author'] );
+		}
+
+		// Filter by series name
+		if ( isset( $_GET['series_name'] ) ) {
+			$args['series_name'] = wp_strip_all_tags( $_GET['series_name'] );
+		}
+
+		// Add mode.
+		$args['mode'] = $this->mode;
+
+		// Sanitize args.
+		$safe_args = array();
+		foreach ( $args as $key => $value ) {
+			$safe_args[ $key ] = urlencode( $value );
+		}
+
+		$url = remove_query_arg( array( 'filter_action', 's', 'mode' ), bdb_get_admin_page_books() );
+
+		return add_query_arg( $safe_args, $url );
+
+	}
+
+	/**
 	 * Get the sortable columns.
 	 *
 	 * @access public
@@ -304,6 +462,52 @@ class BDB_Books_Table extends WP_List_Table {
 			'pub_date' => array( 'pub_date', true ),
 			'rating'   => array( 'rating', true )
 		);
+	}
+
+	/**
+	 * Display the table.
+	 *
+	 * @see WP_List_Table::display()
+	 *
+	 * @access public
+	 * @since  1.0
+	 * @return void
+	 */
+	public function display() {
+
+		$this->display_tablenav( 'top' );
+		?>
+		<table class="wp-list-table <?php echo esc_attr( implode( ' ', $this->get_table_classes() ) ); ?>">
+			<thead>
+			<tr>
+				<?php $this->print_column_headers(); ?>
+			</tr>
+			</thead>
+
+			<tbody id="the-list" data-wp-lists="list:<?php echo $this->_args['singular']; ?>">
+			<?php $this->display_mode(); ?>
+			</tbody>
+
+			<tfoot>
+			<tr>
+				<?php $this->print_column_headers( false ); ?>
+			</tr>
+			</tfoot>
+		</table>
+		<?php
+		$this->display_tablenav( 'bottom' );
+
+	}
+
+	/**
+	 * Display table for "list" mode.
+	 *
+	 * @access protected
+	 * @since  1.0
+	 * @return void
+	 */
+	protected function display_mode() {
+		$this->display_rows_or_placeholder();
 	}
 
 	/**
@@ -326,28 +530,82 @@ class BDB_Books_Table extends WP_List_Table {
 		// Display 'delete' success message.
 		if ( 'top' == $which && true === $this->display_delete_message ) {
 			?>
-            <div id="message" class="updated notice notice-success">
-                <p><?php _e( 'books successfully deleted.', 'book-database' ); ?></p>
-            </div>
+			<div id="message" class="updated notice notice-success">
+				<p><?php _e( 'Books successfully deleted.', 'book-database' ); ?></p>
+			</div>
 			<?php
 		}
 
 		?>
-        <div class="tablenav <?php echo esc_attr( $which ); ?>">
+		<div class="tablenav <?php echo esc_attr( $which ); ?>">
 
-			<?php if ( $this->has_items() ): ?>
-                <div class="alignleft actions bulkactions">
+			<?php if ( 'list' == $this->mode && $this->has_items() ): ?>
+				<div class="alignleft actions bulkactions">
 					<?php $this->bulk_actions( $which ); ?>
-                </div>
+				</div>
 			<?php endif;
 			$this->extra_tablenav( $which );
 			$this->pagination( $which );
 			?>
 
-            <br class="clear"/>
-        </div>
+			<br class="clear"/>
+		</div>
 		<?php
+		do_action( 'book-database/books-table/tablenav/after', $which );
 
+	}
+
+	/**
+	 * Extra controls to be displayed between bulk actions and pagination
+	 *
+	 * @see    WP_List_Table::extra_tablenav()
+	 *
+	 * @since  1.0
+	 * @access protected
+	 *
+	 * @param string $which
+	 */
+	protected function extra_tablenav( $which ) {
+		if ( 'top' != $which ) {
+			return;
+		}
+		?>
+		<div class="alignleft actions">
+			<?php do_action( 'book-database/books-table/extra-tablenav/filters/before' ); ?>
+
+			<label for="bdb-filter-by-owned" class="screen-reader-text"><?php _e( 'Filter by owned', 'book-database' ); ?></label>
+			<?php
+			echo book_database()->html->select( array(
+				'name'             => 'owned',
+				'id'               => 'bdb-filter-by-owned',
+				'options'          => array(
+					'owned'   => sprintf( __( 'Owned %s', 'book-database' ), bdb_get_label_plural() ),
+					'signed'  => sprintf( __( 'Signed %s', 'book-database' ), bdb_get_label_plural() ),
+					'unowned' => sprintf( __( 'Unowned %s', 'book-database' ), bdb_get_label_plural() )
+				),
+				'selected'         => isset( $_GET['owned'] ) ? sanitize_text_field( $_GET['owned'] ) : 0,
+				'show_option_all'  => sprintf( _x( 'All %s', 'all dropdown items', 'book-database' ), bdb_get_label_plural() ),
+				'show_option_none' => false
+			) );
+			?>
+
+			<label for="bdb-filter-by-format" class="screen-reader-text"><?php _e( 'Filter by format', 'book-database' ); ?></label>
+			<?php
+			echo book_database()->html->select( array(
+				'name'             => 'format',
+				'id'               => 'bdb-filter-by-format',
+				'options'          => bdb_get_book_formats(),
+				'selected'         => isset( $_GET['format'] ) ? sanitize_text_field( $_GET['format'] ) : 0,
+				'show_option_all'  => _x( 'All Formats', 'all dropdown items', 'book-database' ),
+				'show_option_none' => false
+			) );
+			?>
+
+			<?php do_action( 'book-database/books-table/extra-tablenav/filters/ater' ); ?>
+
+			<input type="submit" name="filter_action" id="post-query-submit" class="button" value="<?php esc_attr_e( 'Filter', 'book-database' ); ?>">
+		</div>
+		<?php
 	}
 
 	/**
@@ -422,13 +680,13 @@ class BDB_Books_Table extends WP_List_Table {
 	/**
 	 * Build all the book data.
 	 *
-	 * @access public
+	 * @param array $args Query args.
+	 *
+	 * @access protected
 	 * @since  1.0
 	 * @return array Array of book data.
 	 */
-	public function books_data() {
-
-		global $wpdb;
+	protected function books_data( $args = array() ) {
 
 		$data    = array();
 		$paged   = $this->get_paged();
@@ -436,14 +694,29 @@ class BDB_Books_Table extends WP_List_Table {
 		$order   = isset( $_GET['order'] ) ? sanitize_text_field( $_GET['order'] ) : 'DESC';
 		$orderby = isset( $_GET['orderby'] ) ? sanitize_text_field( $_GET['orderby'] ) : 'ID';
 
-		$args = array(
+		$args = wp_parse_args( $args, array(
 			'number'         => $this->per_page,
 			'offset'         => $offset,
 			'order'          => $order,
 			'orderby'        => $orderby,
 			'include_author' => true,
 			'include_rating' => true
-		);
+		) );
+
+		// Filter by owned books.
+		if ( isset( $_GET['owned'] ) && 'all' != $_GET['owned'] ) {
+			$args['owned'] = sanitize_text_field( $_GET['owned'] );
+		}
+
+		// Filter by format.
+		if ( isset( $_GET['format'] ) && 'all' != $_GET['format'] ) {
+			$args['format'] = sanitize_text_field( $_GET['format'] );
+		}
+
+		// Filter by ISBN.
+		if ( isset( $_GET['isbn'] ) ) {
+			$args['isbn'] = sanitize_text_field( $_GET['isbn'] );
+		}
 
 		// Filter by author.
 		if ( isset( $_GET['author_id'] ) ) {
@@ -507,7 +780,7 @@ class BDB_Books_Table extends WP_List_Table {
 	 *
 	 * @uses   BDB_Books_Table::get_columns()
 	 * @uses   WP_List_Table::get_sortable_columns()
-	 * @uses   BDB_Books_Table::reviews_data()
+	 * @uses   BDB_Books_Table::books_data()
 	 * @uses   WP_List_Table::set_pagination_args()
 	 *
 	 * @access public
@@ -552,6 +825,5 @@ class BDB_Books_Table extends WP_List_Table {
 			'</a>'
 		);
 	}
-
 
 }

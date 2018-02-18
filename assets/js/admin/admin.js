@@ -470,6 +470,7 @@
 				isbn: $('#owned_edition_isbn').val(),
 				format: $('#owned_edition_format').val(),
 				date_acquired: $('#owned_edition_date_acquired').val(),
+				source: $('#bookdb-owned-edition-fields #dbd-checkboxes-source').find('input:checked').val(),
 				signed: $('#owned_edition_signed:checked').length
 			};
 
@@ -544,6 +545,7 @@
 					isbn: tr.find('.bookdb-owned-edition-isbn input').val(),
 					format: tr.find('.bookdb-owned-edition-format select').val(),
 					date_acquired: tr.find('.bookdb-owned-edition-date-acquired input').val(),
+					source: tr.find('.bookdb-owned-edition-source select').val(),
 					signed: tr.find('.bookdb-owned-edition-signed input:checked').length
 				};
 

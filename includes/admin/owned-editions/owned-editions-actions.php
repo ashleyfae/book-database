@@ -28,6 +28,30 @@ function bdb_owned_editions_table( $book ) {
 	}
 
 	$owned_editions = $book->get_owned_editions();
+
+	$temp_all_terms = bdb_get_terms( array(
+		'number'  => - 1,
+		'type'    => 'source',
+		'fields'  => 'names',
+		'orderby' => 'name',
+		'order'   => 'ASC'
+	) );
+	$all_terms      = array();
+
+	if ( ! is_array( $temp_all_terms ) ) {
+		$temp_all_terms = array();
+	}
+
+	foreach ( $temp_all_terms as $term_name ) {
+		$all_terms[ $term_name ] = $term_name;
+	}
+
+	$checks = book_database()->html->multicheck( array(
+		'id'      => 'owned_edition_source',
+		'name'    => 'owned_edition_source',
+		'current' => array(),
+		'choices' => $all_terms
+	) );
 	?>
 	<div id="bdb-book-editions-list" class="postbox">
 		<h2><?php _e( 'Owned Editions', 'book-database' ) ?></h2>
@@ -38,6 +62,7 @@ function bdb_owned_editions_table( $book ) {
 					<th><?php _e( 'ISBN', 'book-database' ); ?></th>
 					<th><?php _e( 'Format', 'book-database' ); ?></th>
 					<th><?php _e( 'Date Acquired', 'book-database' ); ?></th>
+					<th><?php _e( 'Source', 'book-database' ); ?></th>
 					<th><?php _e( 'Signed', 'book-database' ); ?></th>
 					<th><?php _e( 'Actions', 'book-database' ); ?></th>
 				</tr>
@@ -95,6 +120,25 @@ function bdb_owned_editions_table( $book ) {
 					'value' => date_i18n( 'j F Y', current_time( 'timestamp' ) ),
 					'desc'  => esc_html__( 'Date you acquired the book.', 'book-database' )
 				) );
+
+				// Source
+				?>
+				<div class="bookdb-box-row">
+					<label for="owned_edition_source"><?php _e( 'Source', 'book-database' ); ?></label>
+					<div class="bookdb-input-wrapper">
+						<div id="dbd-checkboxes-source" class="bookdb-taxonomy-checkboxes" data-type="source" data-name="owned_edition_source[]">
+							<div class="bookdb-checkbox-wrap">
+								<?php echo $checks; ?>
+							</div>
+							<div class="bookdb-new-checkbox-term">
+								<label for="bookdb-new-checkbox-term-source" class="screen-reader-text"><?php esc_html_e( 'Enter the name of a new source', 'book-database' ); ?></label>
+								<input type="text" id="bookdb-new-checkbox-term-source" name="bookdb-new-term" class="regular-text bookdb-new-checkbox-term-value">
+								<input type="button" class="button" value="<?php esc_attr_e( 'Add', 'book-database' ); ?>">
+							</div>
+						</div>
+					</div>
+				</div>
+				<?php
 
 				// Signed
 				book_database()->html->meta_row( 'checkbox', array(
@@ -156,7 +200,7 @@ function bdb_owned_edition_entry_tr( $edition ) {
 					'selected'         => $edition->format ? $edition->format : '-1',
 					'show_option_none' => _x( 'None', 'no dropdown items', 'book-database' ),
 					'show_option_all'  => false
-				) )
+				) );
 				?>
 			</div>
 		</td>
@@ -167,6 +211,30 @@ function bdb_owned_edition_entry_tr( $edition ) {
 
 			<div class="bookdb-owned-edition-edit-value">
 				<input type="text" value="<?php echo esc_attr( bdb_format_mysql_date( $edition->date_acquired ) ); ?>">
+			</div>
+		</td>
+		<td class="bookdb-owned-edition-source">
+			<div class="bookdb-owned-edition-display-value">
+				<?php
+				if ( ! empty( $edition->source ) ) {
+					echo book_database()->book_terms->get_column( 'name', $edition->source );
+				} else {
+					_e( 'Unknown', 'book-database' );
+				}
+				?>
+			</div>
+
+			<div class="bookdb-owned-edition-edit-value">
+				<?php
+				echo book_database()->html->select( array(
+					'id'               => 'owned_edition_source_' . $edition->ID,
+					'name'             => 'owned_edition_source_' . $edition->ID,
+					'options'          => bdb_get_book_sources(),
+					'selected'         => ! empty( $edition->source ) ? absint( $edition->source ) : '-1',
+					'show_option_none' => _x( 'Unknown', 'no dropdown items', 'book-database' ),
+					'show_option_all'  => false
+				) );
+				?>
 			</div>
 		</td>
 		<td class="bookdb-owned-edition-signed">
@@ -222,7 +290,34 @@ function bdb_save_owned_edition() {
 	$args['isbn']          = ! empty( $edition['isbn'] ) ? sanitize_text_field( $edition['isbn'] ) : '';
 	$args['format']        = ( ! empty( $edition['format'] ) && array_key_exists( $edition['format'], bdb_get_book_formats() ) ) ? sanitize_text_field( $edition['format'] ) : '';
 	$args['date_acquired'] = ! empty( $edition['date_acquired'] ) ? get_gmt_from_date( wp_strip_all_tags( $edition['date_acquired'] ) ) : null;
+	$args['source']        = null; // Default to null, override below.
 	$args['signed']        = ! empty( $edition['signed'] ) ? 1 : null;
+
+	// Source
+	if ( is_numeric( $edition['source'] ) && $edition['source'] > 0 ) {
+		$args['source'] = absint( $edition['source'] );
+	} elseif ( ! empty( $edition['source'] ) && '-1' != $edition['source'] ) {
+		// See if a term with this name already exists.
+		$terms = bdb_get_terms( array(
+			'name'   => sanitize_text_field( $edition['source'] ),
+			'type'   => 'source',
+			'fields' => 'ids'
+		) );
+
+		if ( ! empty( $terms ) && isset( $terms[0] ) ) {
+			$term_id = $terms[0];
+		} else {
+			// Need to add a new book term.
+			$term_id = book_database()->book_terms->add( array(
+				'type' => 'source',
+				'name' => sanitize_text_field( $edition['source'] ),
+			) );
+		}
+
+		if ( ! empty( $term_id ) ) {
+			$args['source'] = absint( $term_id );
+		}
+	}
 
 	$inserted = book_database()->owned_editions->add( $args );
 

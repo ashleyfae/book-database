@@ -402,9 +402,35 @@ function bdb_get_book_formats() {
 }
 
 /**
+ * Gets an array of all available book sources.
+ *
+ * @since 1.0
+ * @return array
+ */
+function bdb_get_book_sources() {
+
+	$sources = book_database()->book_terms->get_terms( array(
+		'type'    => 'source',
+		'orderby' => 'name',
+		'order'   => 'ASC',
+	) );
+
+	$final_sources = array();
+
+	if ( is_array( $sources ) ) {
+		foreach ( $sources as $source ) {
+			$final_sources[ $source->term_id ] = $source->name;
+		}
+	}
+
+	return apply_filters( 'book-database/book/sources', $final_sources );
+
+}
+
+/**
  * Returns the book format label for display, given the key value.
  *
- * @uses bdb_get_book_formats()
+ * @uses  bdb_get_book_formats()
  *
  * @param string $format_key
  *

@@ -107,6 +107,8 @@ function bdb_insert_reading_entry( $data = array() ) {
 
 		if ( array_key_exists( $data['rating'], $allowed_ratings ) ) {
 			$sanitized_data['rating'] = sanitize_text_field( $data['rating'] );
+		} elseif ( -1 === intval( $data['rating'] ) ) {
+			$sanitized_data['rating'] = null;
 		}
 	}
 

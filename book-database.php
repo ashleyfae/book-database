@@ -295,6 +295,9 @@ if ( ! class_exists( 'Book_Database' ) ) :
 				require_once BDB_DIR . 'includes/admin/series/series-functions.php';
 				require_once BDB_DIR . 'includes/admin/series/series.php';
 				require_once BDB_DIR . 'includes/admin/settings/display-settings.php';
+				require_once BDB_DIR . 'includes/admin/terms/term-actions.php';
+				require_once BDB_DIR . 'includes/admin/terms/term-functions.php';
+				require_once BDB_DIR . 'includes/admin/terms/terms.php';
 			}
 
 			require_once BDB_DIR . 'includes/install.php';

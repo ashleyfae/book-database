@@ -183,7 +183,8 @@ function bdb_get_admin_page_series() {
  * @return string
  */
 function bdb_get_admin_page_edit_series( $series_id ) {
-	$series_page      = bdb_get_admin_page_series();
+	$series_page = bdb_get_admin_page_series();
+
 	$edit_series_page = add_query_arg( array(
 		'view' => 'edit',
 		'ID'   => absint( $series_id )
@@ -203,7 +204,8 @@ function bdb_get_admin_page_edit_series( $series_id ) {
  * @return string
  */
 function bdb_get_admin_page_delete_series( $series_id ) {
-	$series_page        = bdb_get_admin_page_series();
+	$series_page = bdb_get_admin_page_series();
+
 	$delete_series_page = add_query_arg( array(
 		'bdb-action' => urlencode( 'series/delete' ),
 		'ID'         => absint( $series_id ),
@@ -211,6 +213,79 @@ function bdb_get_admin_page_delete_series( $series_id ) {
 	), $series_page );
 
 	return apply_filters( 'book-database/admin-page-url/delete-series', $delete_series_page );
+}
+
+/**
+ * Get Admin Page: Terms Table
+ *
+ * @since 1.0
+ * @return string
+ */
+function bdb_get_admin_page_terms() {
+	$url = admin_url( 'admin.php?page=bdb-terms' );
+
+	return apply_filters( 'book-database/admin-page-url/terms', $url );
+}
+
+/**
+ * Get Admin Page: Add Term
+ *
+ * @since 1.0
+ * @return string
+ */
+function bdb_get_admin_page_add_term() {
+	$term_page = bdb_get_admin_page_terms();
+
+	$add_term_page = add_query_arg( array(
+		'view' => 'add'
+	), $term_page );
+
+	return apply_filters( 'book-database/admin-page-url/add-term', $add_term_page );
+}
+
+/**
+ * Get Admin Page: Edit Term
+ *
+ * @param int $term_id
+ *
+ * @since 1.0
+ * @return string
+ */
+function bdb_get_admin_page_edit_term( $term_id ) {
+	$term_page = bdb_get_admin_page_terms();
+
+	$edit_term_page = add_query_arg( array(
+		'view' => 'edit',
+		'ID'   => absint( $term_id )
+	), $term_page );
+
+	return apply_filters( 'book-database/admin-page-url/edit-term', $edit_term_page );
+}
+
+/**
+ * Get Admin Page: Delete Term
+ *
+ * @param int $term_id
+ *
+ * @since 1.0
+ * @return string
+ */
+function bdb_get_admin_page_delete_term( $term_id ) {
+	$term_page = bdb_get_admin_page_terms();
+
+	$args = array(
+		'bdb-action' => urlencode( 'terms/delete' ),
+		'ID'         => absint( $term_id ),
+		'nonce'      => wp_create_nonce( 'bdb_delete_term' )
+	);
+
+	if ( isset( $_GET['type'] ) ) {
+		$args['type'] = urlencode( $_GET['type'] );
+	}
+
+	$delete_term_page = add_query_arg( $args, $term_page );
+
+	return apply_filters( 'book-database/admin-page-url/delete-term', $delete_term_page );
 }
 
 /**

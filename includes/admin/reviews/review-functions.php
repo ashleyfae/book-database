@@ -5,6 +5,7 @@
  * @package   review-database
  * @copyright Copyright (c) 2017, Ashley Gibson
  * @license   GPL2+
+ * @since 1.0
  */
 
 // Exit if accessed directly

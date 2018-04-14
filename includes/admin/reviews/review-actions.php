@@ -470,6 +470,7 @@ add_action( 'book-database/review/save', 'bdb_save_review' );
  * @return void
  */
 function bdb_delete_review_via_url() {
+
 	if ( ! isset( $_GET['nonce'] ) ) {
 		return;
 	}
@@ -492,6 +493,7 @@ function bdb_delete_review_via_url() {
 	wp_safe_redirect( $url );
 
 	exit;
+
 }
 
 add_action( 'book-database/review/delete', 'bdb_delete_review_via_url' );

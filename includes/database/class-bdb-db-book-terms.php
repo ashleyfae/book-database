@@ -408,7 +408,7 @@ class BDB_DB_Book_Terms extends BDB_DB {
 
 		if ( $terms === false ) {
 			$query = "SELECT COUNT($this->primary_key) FROM " . $this->table_name . "{$join} {$where};";
-			$terms = $wpdb->get_results( $query );
+			$terms = $wpdb->get_var( $query );
 			wp_cache_set( $cache_key, $terms, 'book_terms', 3600 );
 		}
 

@@ -57,6 +57,26 @@ function bdb_get_taxonomies( $include_author = false ) {
 }
 
 /**
+ * Get the name of a taxonomy from its slug.
+ *
+ * @param string $tax_id Taxonomy slug.
+ *
+ * @since 1.0
+ * @return string|false Name of the taxonomy or false if not found.
+ */
+function bdb_get_taxonomy_name( $tax_id ) {
+
+	$taxonomies = bdb_get_taxonomies( true );
+
+	if ( ! array_key_exists( $tax_id, $taxonomies ) ) {
+		return false;
+	}
+
+	return $taxonomies[ $tax_id ]['name'];
+
+}
+
+/**
  * Get Terms
  *
  * @param array $args Arguments to override the defaults.
@@ -418,6 +438,16 @@ function bdb_get_term_link( $term, $type = false ) {
 	return apply_filters( 'book-database/term-archive-link', $final_url, $slug, $type, $term );
 }
 
+/**
+ * Checks if a given book has a specific term
+ *
+ * @param int|object $book_id_or_object Book ID number or object.
+ * @param int|string $term_name_or_id   ID or name of the term to check.
+ * @param string     $term_type         Term type.
+ *
+ * @since 1.0
+ * @return bool
+ */
 function bdb_has_term( $book_id_or_object, $term_name_or_id, $term_type ) {
 	$book = new BDB_Book( $book_id_or_object );
 

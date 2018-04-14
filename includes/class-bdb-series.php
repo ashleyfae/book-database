@@ -214,7 +214,7 @@ class BDB_Series {
 
 		global $wpdb;
 
-		$reading_table = book_database()->reading_list->table_name;
+		$reading_table = book_database()->reading_log->table_name;
 		$books_table   = book_database()->books->table_name;
 
 		$query = "SELECT DISTINCT book_id FROM $reading_table log

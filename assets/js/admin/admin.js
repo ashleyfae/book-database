@@ -627,7 +627,7 @@
 		},
 
 		/**
-		 * Toggle Reading List FIelds
+		 * Toggle Reading Log Fields
 		 *
 		 * @param e
 		 */
@@ -677,7 +677,7 @@
 
 					if (response.success) {
 
-						$('#bookdb-no-reading-list-entries').remove();
+						$('#bookdb-no-reading-log-entries').remove();
 
 						wrap.parents('.postbox').find('tbody').append(response.data);
 
@@ -717,8 +717,8 @@
 			// Replace 'Edit' button.
 			button.addClass('button-primary').text('Save'); // @todo l10n
 
-			tr.find('.bookdb-reading-list-display-value').hide();
-			tr.find('.bookdb-reading-list-edit-value').show();
+			tr.find('.bookdb-reading-log-display-value').hide();
+			tr.find('.bookdb-reading-log-edit-value').show();
 
 			button.on('click', function (e) {
 				e.preventDefault();
@@ -728,12 +728,12 @@
 				var entry = {
 					ID: entryID,
 					book_id: wrap.data('book-id'),
-					date_started: tr.find('.bookdb-reading-list-date-started input').val(),
-					date_finished: tr.find('.bookdb-reading-list-date-finished input').val(),
-					user_id: tr.find('.bookdb-reading-list-user-id input').val(),
-					review_id: tr.find('.bookdb-reading-list-review-id input').val(),
-					complete: tr.find('.bookdb-reading-list-complete input').val(),
-					rating: tr.find('.bookdb-reading-list-rating select').val()
+					date_started: tr.find('.bookdb-reading-log-date-started input').val(),
+					date_finished: tr.find('.bookdb-reading-log-date-finished input').val(),
+					user_id: tr.find('.bookdb-reading-log-user-id input').val(),
+					review_id: tr.find('.bookdb-reading-log-review-id input').val(),
+					complete: tr.find('.bookdb-reading-log-complete input').val(),
+					rating: tr.find('.bookdb-reading-log-rating select').val()
 				};
 
 				var data = {

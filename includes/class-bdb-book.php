@@ -820,7 +820,7 @@ class BDB_Book {
 	public function get_average_rating() {
 
 		global $wpdb;
-		$log_table  = book_database()->reading_list->table_name;
+		$log_table  = book_database()->reading_log->table_name;
 		$book_table = book_database()->books->table_name;
 		$query      = $wpdb->prepare( "SELECT ROUND(AVG(IF(log.rating = 'dnf', 0, log.rating)), 2) FROM {$log_table} AS log LEFT JOIN {$book_table} AS book on log.book_id = book.ID WHERE book.ID = %d", $this->ID );
 		$average    = $wpdb->get_var( $query );

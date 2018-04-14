@@ -215,7 +215,7 @@ class BDB_Book_Query {
 		$this->tables['series']        = book_database()->series->table_name;
 		$this->tables['terms']         = book_database()->book_terms->table_name;
 		$this->tables['relationships'] = book_database()->book_term_relationships->table_name;
-		$this->tables['log']           = book_database()->reading_list->table_name;
+		$this->tables['log']           = book_database()->reading_log->table_name;
 
 		// Default args.
 		$defaults = array(

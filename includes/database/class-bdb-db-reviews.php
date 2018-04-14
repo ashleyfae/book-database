@@ -368,7 +368,7 @@ class BDB_DB_Reviews extends BDB_DB {
 		}
 
 		// Always join on reading log to get rating.
-		$reading_table = book_database()->reading_list->table_name;
+		$reading_table = book_database()->reading_log->table_name;
 		$select .= ", log.rating";
 		$join .= " LEFT JOIN {$reading_table} as log on log.review_id = review.ID";
 
@@ -502,7 +502,7 @@ class BDB_DB_Reviews extends BDB_DB {
 
 		// Reviews with a specific rating.
 		if ( ! empty( $args['rating'] ) ) {
-			$reading_table = book_database()->reading_list->table_name;
+			$reading_table = book_database()->reading_log->table_name;
 			$join .= " LEFT JOIN {$reading_table} as log on log.review_id = review.ID";
 			$where .= $wpdb->prepare( " AND log.rating LIKE '" . '%s' . "' ", sanitize_text_field( $args['rating'] ) );
 		}

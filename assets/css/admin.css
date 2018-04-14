@@ -328,11 +328,11 @@
   float: left;
   width: 80px; }
 
-#bdb-book-reading-list table,
+#bdb-book-reading-log table,
 #bdb-book-editions-list table {
   margin-bottom: 1.5em; }
-  #bdb-book-reading-list table input[type="text"],
-  #bdb-book-reading-list table input[type="number"],
+  #bdb-book-reading-log table input[type="text"],
+  #bdb-book-reading-log table input[type="number"],
   #bdb-book-editions-list table input[type="text"],
   #bdb-book-editions-list table input[type="number"] {
     display: block;
@@ -340,7 +340,7 @@
 
 #bookdb-read-book-fields,
 #bookdb-owned-edition-fields,
-.bookdb-reading-list-edit-value,
+.bookdb-reading-log-edit-value,
 .bookdb-owned-edition-edit-value {
   display: none; }
 

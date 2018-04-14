@@ -178,7 +178,7 @@ function bdb_insert_review( $data = array() ) {
 
 	// Update existing reading entry to be associated with this review.
 	if ( array_key_exists( 'reading_log', $data ) && ! empty( $data['reading_log'] ) ) {
-		book_database()->reading_list->add( array(
+		book_database()->reading_log->add( array(
 			'ID'        => absint( $data['reading_log'] ),
 			'review_id' => absint( $review_id )
 		) );
@@ -297,7 +297,7 @@ add_action( 'transition_post_status', 'bdb_run_sync_review_publish_date_on_trans
  * @return false|object
  */
 function bdb_get_review_reading_entry( $review_id ) {
-	$log = book_database()->reading_list->get_entry_by( 'review_id', $review_id );
+	$log = book_database()->reading_log->get_entry_by( 'review_id', $review_id );
 
 	return $log;
 }

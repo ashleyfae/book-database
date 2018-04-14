@@ -147,7 +147,7 @@ class BDB_Analytics {
 			$book_table         = book_database()->books->table_name;
 			$relationship_table = book_database()->book_term_relationships->table_name;
 			$term_table         = book_database()->book_terms->table_name;
-			$reading_table      = book_database()->reading_list->table_name;
+			$reading_table      = book_database()->reading_log->table_name;
 
 			$query = $wpdb->prepare( "SELECT DISTINCT review.ID, review.date_written,
 										log.rating as rating,
@@ -220,7 +220,7 @@ class BDB_Analytics {
 
 		global $wpdb;
 		$book_table    = book_database()->books->table_name;
-		$reading_table = book_database()->reading_list->table_name;
+		$reading_table = book_database()->reading_log->table_name;
 
 		$read = array(
 			'total'   => 0,
@@ -228,7 +228,7 @@ class BDB_Analytics {
 			'new'     => 0
 		);
 
-		$reading_list = book_database()->reading_list->get_entries( array(
+		$reading_log = book_database()->reading_log->get_entries( array(
 			'number'        => - 1,
 			'date_finished' => array(
 				'start' => self::$startstr,
@@ -240,9 +240,9 @@ class BDB_Analytics {
 			)
 		) );
 
-		$read['total'] = is_array( $reading_list ) ? count( $reading_list ) : 0;
+		$read['total'] = is_array( $reading_log ) ? count( $reading_log ) : 0;
 
-		if ( is_array( $reading_list ) && ! empty( $reading_list ) ) {
+		if ( is_array( $reading_log ) && ! empty( $reading_log ) ) {
 			$query = $wpdb->prepare(
 				"SELECT (COUNT(*) - 1) AS count, GROUP_CONCAT(date_finished SEPARATOR ',') as date_finished
 					FROM $reading_table list
@@ -314,7 +314,7 @@ class BDB_Analytics {
 
 		global $wpdb;
 		$book_table    = book_database()->books->table_name;
-		$reading_table = book_database()->reading_list->table_name;
+		$reading_table = book_database()->reading_log->table_name;
 		$pages_read    = 0;
 
 		$query   = $wpdb->prepare(
@@ -346,7 +346,7 @@ class BDB_Analytics {
 
 		global $wpdb;
 
-		$reading_table = book_database()->reading_list->table_name;
+		$reading_table = book_database()->reading_log->table_name;
 		$book_table    = book_database()->books->table_name;
 
 		$query = $wpdb->prepare(
@@ -378,7 +378,7 @@ class BDB_Analytics {
 
 		global $wpdb;
 
-		$reading_table = book_database()->reading_list->table_name;
+		$reading_table = book_database()->reading_log->table_name;
 		$book_table    = book_database()->books->table_name;
 
 		$query = $wpdb->prepare(
@@ -407,7 +407,7 @@ class BDB_Analytics {
 
 		global $wpdb;
 
-		$reading_table      = book_database()->reading_list->table_name;
+		$reading_table      = book_database()->reading_log->table_name;
 		$relationship_table = book_database()->book_term_relationships->table_name;
 		$term_table         = book_database()->book_terms->table_name;
 
@@ -440,7 +440,7 @@ class BDB_Analytics {
 
 		global $wpdb;
 
-		$reading_table = book_database()->reading_list->table_name;
+		$reading_table = book_database()->reading_log->table_name;
 
 		$query = $wpdb->prepare(
 			"SELECT ROUND(AVG(IF(rating = 'dnf', 0, rating)), 2)
@@ -508,7 +508,7 @@ class BDB_Analytics {
 
 		global $wpdb;
 		$book_table         = book_database()->books->table_name;
-		$reading_table      = book_database()->reading_list->table_name;
+		$reading_table      = book_database()->reading_log->table_name;
 		$relationship_table = book_database()->book_term_relationships->table_name;
 		$term_table         = book_database()->book_terms->table_name;
 
@@ -561,7 +561,7 @@ class BDB_Analytics {
 	public function get_rating_breakdown() {
 
 		global $wpdb;
-		$reading_table = book_database()->reading_list->table_name;
+		$reading_table = book_database()->reading_log->table_name;
 
 		$query   = $wpdb->prepare( "SELECT rating, COUNT(rating) AS count FROM {$reading_table} WHERE `rating` IS NOT NULL AND `date_finished` >= %s AND `date_finished` <= %s GROUP BY rating ORDER BY rating + 0 DESC", self::$start, self::$end );
 		$results = $wpdb->get_results( $query );
@@ -609,7 +609,7 @@ class BDB_Analytics {
 	public function get_pages_breakdown( $number_range = 200 ) {
 
 		global $wpdb;
-		$reading_table = book_database()->reading_list->table_name;
+		$reading_table = book_database()->reading_log->table_name;
 		$book_table    = book_database()->books->table_name;
 
 		$query = $wpdb->prepare(
@@ -661,7 +661,7 @@ class BDB_Analytics {
 		$review_table       = book_database()->reviews->table_name;
 		$relationship_table = book_database()->book_term_relationships->table_name;
 		$term_table         = book_database()->book_terms->table_name;
-		$reading_table      = book_database()->reading_list->table_name;
+		$reading_table      = book_database()->reading_log->table_name;
 
 		$where = '';
 

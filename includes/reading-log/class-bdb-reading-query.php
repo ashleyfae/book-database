@@ -1,7 +1,7 @@
 <?php
 
 /**
- * Reading List Query
+ * Reading Log Query
  *
  * @todo
  *

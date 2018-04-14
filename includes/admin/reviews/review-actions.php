@@ -171,7 +171,7 @@ function bdb_review_insert_reading_log_field( $review ) {
 
 	// Fetch by GET.
 	if ( isset( $_GET['reading-log'] ) ) {
-		$reading_entry = book_database()->reading_list->get_entry( absint( $_GET['reading-log'] ) );
+		$reading_entry = book_database()->reading_log->get_entry( absint( $_GET['reading-log'] ) );
 	}
 
 	// Fetch via database.
@@ -181,7 +181,7 @@ function bdb_review_insert_reading_log_field( $review ) {
 
 	// Get all the entries associated with this book.
 	$book_id          = isset( $_GET['book_id'] ) ? $_GET['book_id'] : $review->book_id;
-	$all_book_entries = book_database()->reading_list->get_entries( array( 'book_id' => absint( $book_id ) ) );
+	$all_book_entries = book_database()->reading_log->get_entries( array( 'book_id' => absint( $book_id ) ) );
 	$choose_entries   = array();
 
 	if ( is_array( $all_book_entries ) ) {
@@ -414,16 +414,16 @@ function bdb_save_review() {
 
 		} elseif ( 'existing' == $_POST['insert_reading_log'] && '-1' != $_POST['reading_log_id'] ) {
 
-			$result = book_database()->reading_list->update( absint( $_POST['reading_log_id'] ), array( 'review_id' => $new_review_id ) );
+			$result = book_database()->reading_log->update( absint( $_POST['reading_log_id'] ), array( 'review_id' => $new_review_id ) );
 
 		} else {
 
 			// Find any logs with this review and disassociate.
-			$logs = book_database()->reading_list->get_entries( array( 'review_id' => $new_review_id ) );
+			$logs = book_database()->reading_log->get_entries( array( 'review_id' => $new_review_id ) );
 
 			if ( is_array( $logs ) && ! empty( $logs ) ) {
 				foreach ( $logs as $log ) {
-					book_database()->reading_list->update( $log->ID, array( 'review_id' => 0 ) );
+					book_database()->reading_log->update( $log->ID, array( 'review_id' => 0 ) );
 				}
 			}
 
@@ -438,11 +438,11 @@ function bdb_save_review() {
 	} else {
 
 		// Find any logs with this review and disassociate.
-		$logs = book_database()->reading_list->get_entries( array( 'review_id' => $new_review_id ) );
+		$logs = book_database()->reading_log->get_entries( array( 'review_id' => $new_review_id ) );
 
 		if ( is_array( $logs ) && ! empty( $logs ) ) {
 			foreach ( $logs as $log ) {
-				book_database()->reading_list->update( $log->ID, array( 'review_id' => 0 ) );
+				book_database()->reading_log->update( $log->ID, array( 'review_id' => 0 ) );
 			}
 		}
 

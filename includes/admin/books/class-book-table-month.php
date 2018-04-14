@@ -527,7 +527,7 @@ class BDB_Books_Month_Table extends BDB_Books_Table {
 				<span class="bdb-calendar-book-flags">
 					<?php
 					// Designate read
-					$read = bdb_get_book_reading_list( $book->ID );
+					$read = bdb_get_book_reading_log( $book->ID );
 					if ( ! empty( $read ) ) {
 						echo '<span class="dashicons dashicons-book"></span>';
 					}

@@ -34,7 +34,7 @@ $wpdb->query( "DELETE FROM $wpdb->options WHERE option_name LIKE 'bdb\_%'" );
 $wpdb->query( "DROP TABLE IF EXISTS " . $wpdb->prefix . "bdb_book_term_relationships" );
 $wpdb->query( "DROP TABLE IF EXISTS " . $wpdb->prefix . "bdb_book_terms" );
 $wpdb->query( "DROP TABLE IF EXISTS " . $wpdb->prefix . "bdb_books" );
-$wpdb->query( "DROP TABLE IF EXISTS " . $wpdb->prefix . "bdb_reading_list" );
+$wpdb->query( "DROP TABLE IF EXISTS " . $wpdb->prefix . "bdb_reading_log" );
 $wpdb->query( "DROP TABLE IF EXISTS " . $wpdb->prefix . "bdb_reviewmeta" );
 $wpdb->query( "DROP TABLE IF EXISTS " . $wpdb->prefix . "bdb_reviews" );
 $wpdb->query( "DROP TABLE IF EXISTS " . $wpdb->prefix . "bdb_series" );

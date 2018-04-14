@@ -1,6 +1,6 @@
 <?php
 /**
- * Reading List Functions
+ * Reading Log Functions
  *
  * @package   book-database
  * @copyright Copyright (c) 2017, Ashley Gibson
@@ -13,7 +13,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 }
 
 /**
- * Get Book Reading List
+ * Get Book Reading Log
  *
  * Returns the reading entries for a given book.
  *
@@ -22,7 +22,7 @@ if ( ! defined( 'ABSPATH' ) ) {
  * @since 1.1.0
  * @return array|false
  */
-function bdb_get_book_reading_list( $book_id, $args = array() ) {
+function bdb_get_book_reading_log( $book_id, $args = array() ) {
 
 	$default_args = array(
 		'book_id' => absint( $book_id )
@@ -30,7 +30,7 @@ function bdb_get_book_reading_list( $book_id, $args = array() ) {
 
 	$args = wp_parse_args( $args, $default_args );
 
-	$entries = book_database()->reading_list->get_entries( $args );
+	$entries = book_database()->reading_log->get_entries( $args );
 
 	return $entries;
 
@@ -107,12 +107,12 @@ function bdb_insert_reading_entry( $data = array() ) {
 
 		if ( array_key_exists( $data['rating'], $allowed_ratings ) ) {
 			$sanitized_data['rating'] = sanitize_text_field( $data['rating'] );
-		} elseif ( -1 === intval( $data['rating'] ) ) {
+		} elseif ( - 1 === intval( $data['rating'] ) ) {
 			$sanitized_data['rating'] = null;
 		}
 	}
 
-	$result = book_database()->reading_list->add( $sanitized_data );
+	$result = book_database()->reading_log->add( $sanitized_data );
 
 	return $result;
 

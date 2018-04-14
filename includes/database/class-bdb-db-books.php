@@ -420,7 +420,7 @@ class BDB_DB_Books extends BDB_DB {
 
 		// Get average rating.
 		if ( ! empty( $args['include_rating'] ) ) {
-			$reading_table = book_database()->reading_list->table_name;
+			$reading_table = book_database()->reading_log->table_name;
 			$join          .= " LEFT JOIN {$reading_table} as log on (books.ID = log.book_id AND log.rating IS NOT NULL)";
 
 			if ( false !== $args['rating'] ) {
@@ -636,7 +636,7 @@ class BDB_DB_Books extends BDB_DB {
 
 		// Books with a specific rating.
 		if ( false !== $args['rating'] ) {
-			$reading_table = book_database()->reading_list->table_name;
+			$reading_table = book_database()->reading_log->table_name;
 			$join          .= $wpdb->prepare( " INNER JOIN {$reading_table} as log on (book.ID = log.book_id AND log.rating = %s)", sanitize_text_field( $args['rating'] ) );
 		}
 

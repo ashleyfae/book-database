@@ -88,7 +88,7 @@ function bdb_run_install() {
 	@book_database()->book_terms->create_table();
 	@book_database()->book_term_relationships->create_table();
 	@book_database()->owned_editions->create_table();
-	@book_database()->reading_list->create_table();
+	@book_database()->reading_log->create_table();
 
 	// Rewrite rules.
 	bdb_rewrite_tags();

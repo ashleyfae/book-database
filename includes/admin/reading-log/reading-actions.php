@@ -13,24 +13,24 @@ if ( ! defined( 'ABSPATH' ) ) {
 }
 
 /**
- * Reading List Table
+ * Reading Log Table
  *
  * @param BDB_Book $book
  *
  * @since 1.1.0
  * @return void
  */
-function bdb_book_reading_list_table( $book ) {
+function bdb_book_reading_log_table( $book ) {
 	if ( 0 == $book->ID ) {
 		return;
 	}
 
-	$entries = bdb_get_book_reading_list( $book->ID, array(
+	$entries = bdb_get_book_reading_log( $book->ID, array(
 		'orderby' => 'date_started',
 		'order'   => 'ASC'
 	) );
 	?>
-    <div id="bdb-book-reading-list" class="postbox">
+    <div id="bdb-book-reading-log" class="postbox">
         <h2><?php esc_html_e( 'Reading Log', 'book-database' ) ?></h2>
         <div class="inside">
             <table class="wp-list-table widefat fixed posts">
@@ -54,7 +54,7 @@ function bdb_book_reading_list_table( $book ) {
 
 				} else {
 					?>
-                    <tr id="bookdb-no-reading-list-entries">
+                    <tr id="bookdb-no-reading-log-entries">
                         <td colspan="5"><?php _e( 'You haven\'t read this book yet!', 'book-database' ); ?></td>
                     </tr>
 					<?php
@@ -137,7 +137,7 @@ function bdb_book_reading_list_table( $book ) {
 	<?php
 }
 
-add_action( 'book-database/book-edit/after-information-fields', 'bdb_book_reading_list_table' );
+add_action( 'book-database/book-edit/after-information-fields', 'bdb_book_reading_log_table' );
 
 /**
  * Format Reading Entry `<tr>`
@@ -153,26 +153,26 @@ function bdb_reading_entry_tr( $entry ) {
 	}
 	?>
     <tr data-entry-id="<?php echo esc_attr( $entry->ID ); ?>">
-        <td class="bookdb-reading-list-date-started">
-            <div class="bookdb-reading-list-display-value">
+        <td class="bookdb-reading-log-date-started">
+            <div class="bookdb-reading-log-display-value">
 				<?php echo $entry->date_started ? bdb_format_mysql_date( $entry->date_started ) : '&ndash;'; ?>
             </div>
 
-            <div class="bookdb-reading-list-edit-value">
+            <div class="bookdb-reading-log-edit-value">
                 <input type="text" value="<?php echo esc_attr( bdb_format_mysql_date( $entry->date_started ) ); ?>">
             </div>
         </td>
-        <td class="bookdb-reading-list-date-finished">
-            <div class="bookdb-reading-list-display-value">
+        <td class="bookdb-reading-log-date-finished">
+            <div class="bookdb-reading-log-display-value">
 				<?php echo $entry->date_finished ? bdb_format_mysql_date( $entry->date_finished ) : '&ndash;' ?>
             </div>
 
-            <div class="bookdb-reading-list-edit-value">
+            <div class="bookdb-reading-log-edit-value">
                 <input type="text" value="<?php echo esc_attr( bdb_format_mysql_date( $entry->date_finished ) ); ?>">
             </div>
         </td>
-        <td class="bookdb-reading-list-review-id">
-            <div class="bookdb-reading-list-display-value">
+        <td class="bookdb-reading-log-review-id">
+            <div class="bookdb-reading-log-display-value">
 				<?php
 				if ( $entry->review_id ) {
 					echo '<a href="' . esc_url( bdb_get_admin_page_edit_review( absint( $entry->review_id ) ) ) . '">' . sprintf( __( '%d (Edit)', 'book-database' ), absint( $entry->review_id ) ) . '</a>';
@@ -183,38 +183,38 @@ function bdb_reading_entry_tr( $entry ) {
 				?>
             </div>
 
-            <div class="bookdb-reading-list-edit-value">
+            <div class="bookdb-reading-log-edit-value">
 				<?php $review_id = ! empty( $entry->review_id ) ? absint( $entry->review_id ) : ''; ?>
                 <input type="number" value="<?php echo esc_attr( $review_id ); ?>">
             </div>
         </td>
-        <td class="bookdb-reading-list-user-id">
-            <div class="bookdb-reading-list-display-value">
+        <td class="bookdb-reading-log-user-id">
+            <div class="bookdb-reading-log-display-value">
 				<?php echo absint( $entry->user_id ); ?>
             </div>
 
-            <div class="bookdb-reading-list-edit-value">
+            <div class="bookdb-reading-log-edit-value">
                 <input type="number" value="<?php echo esc_attr( $entry->user_id ); ?>">
             </div>
         </td>
-        <td class="bookdb-reading-list-complete">
-            <div class="bookdb-reading-list-display-value">
+        <td class="bookdb-reading-log-complete">
+            <div class="bookdb-reading-log-display-value">
 				<?php echo absint( $entry->complete ); ?>%
             </div>
 
-            <div class="bookdb-reading-list-edit-value">
+            <div class="bookdb-reading-log-edit-value">
                 <input type="number" value="<?php echo esc_attr( $entry->complete ); ?>">
             </div>
         </td>
-        <td class="bookdb-reading-list-rating">
-            <div class="bookdb-reading-list-display-value">
+        <td class="bookdb-reading-log-rating">
+            <div class="bookdb-reading-log-display-value">
 				<?php
 				$rating = new BDB_Rating( $entry->rating );
 				echo $rating->format( 'text' );
 				?>
             </div>
 
-            <div class="bookdb-reading-list-edit-value">
+            <div class="bookdb-reading-log-edit-value">
 				<?php
 				echo book_database()->html->rating_dropdown( array(
 					'id'               => 'book_rating_' . $entry->ID,
@@ -254,7 +254,7 @@ function bdb_save_reading_entry() {
 		wp_send_json_error( __( 'Error inserting the reading entry.', 'book-database' ) );
 	}
 
-	$reading_entry = book_database()->reading_list->get_entry( $inserted );
+	$reading_entry = book_database()->reading_log->get_entry( $inserted );
 
 	if ( ! $reading_entry ) {
 		wp_send_json_error( __( 'Error inserting the reading entry.', 'book-database' ) );
@@ -284,7 +284,7 @@ function bdb_delete_reading_entry() {
 		wp_send_json_error( __( 'Error: Invalid entry ID.', 'book-database' ) );
 	}
 
-	$success = book_database()->reading_list->delete( $entry_id );
+	$success = book_database()->reading_log->delete( $entry_id );
 
 	if ( $success ) {
 		wp_send_json_success();

@@ -105,7 +105,7 @@ function bdb_ajax_get_book_reading_logs() {
 		wp_send_json_error( __( 'Invalid book ID.', 'book-database' ) );
 	}
 
-	$reading_logs = bdb_get_book_reading_list( absint( $book_id ) );
+	$reading_logs = bdb_get_book_reading_log( absint( $book_id ) );
 	$entries      = array();
 
 	if ( is_array( $reading_logs ) ) {

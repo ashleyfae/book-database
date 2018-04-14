@@ -53,7 +53,7 @@ class BDB_Reading_Entry {
 	 */
 	public function __construct( $entry_id_or_object ) {
 
-		$entry = ( is_object( $entry_id_or_object ) || is_array( $entry_id_or_object ) ) ? $entry_id_or_object : book_database()->reading_list->get_entry( $entry_id_or_object );
+		$entry = ( is_object( $entry_id_or_object ) || is_array( $entry_id_or_object ) ) ? $entry_id_or_object : book_database()->reading_log->get_entry( $entry_id_or_object );
 
 		if ( empty( $entry ) || ( ! is_object( $entry ) && ! is_array( $entry ) ) ) {
 			return false;

@@ -1,9 +1,9 @@
 <?php
 
 /**
- * Reading List DB Class
+ * Reading Log DB Class
  *
- * This class is for interacting with the reading list table.
+ * This class is for interacting with the reading log table.
  *
  * @package   book-database
  * @copyright Copyright (c) 2017, Ashley Gibson
@@ -15,10 +15,10 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
-class BDB_DB_Reading_List extends BDB_DB {
+class BDB_DB_Reading_Log extends BDB_DB {
 
 	/**
-	 * BDB_DB_Reading_List constructor.
+	 * BDB_DB_reading_log constructor.
 	 *
 	 * @access public
 	 * @since  1.1.0
@@ -28,7 +28,7 @@ class BDB_DB_Reading_List extends BDB_DB {
 
 		global $wpdb;
 
-		$this->table_name  = $wpdb->prefix . 'bdb_reading_list';
+		$this->table_name  = $wpdb->prefix . 'bdb_reading_log';
 		$this->primary_key = 'ID';
 		$this->version     = '1.0';
 	}
@@ -99,7 +99,7 @@ class BDB_DB_Reading_List extends BDB_DB {
 		} else {
 
 			// Adding a new review.
-			return $this->insert( $args, 'reading_list' );
+			return $this->insert( $args, 'reading_log' );
 
 		}
 
@@ -378,17 +378,17 @@ class BDB_DB_Reading_List extends BDB_DB {
 		$orderby = esc_sql( $orderby );
 		$order   = esc_sql( $order );
 
-		$cache_key = md5( 'bdb_reading_list_' . serialize( $args ) );
+		$cache_key = md5( 'bdb_reading_log_' . serialize( $args ) );
 
-		$entries = wp_cache_get( $cache_key, 'reading_list' );
+		$entries = wp_cache_get( $cache_key, 'reading_log' );
 
 		$args['orderby'] = esc_sql( $args['orderby'] );
 		$args['order']   = esc_sql( $args['order'] );
 
 		if ( $entries === false ) {
-			$query   = $wpdb->prepare( "SELECT * FROM  $this->table_name AS reading_list $join $where GROUP BY $this->primary_key ORDER BY $orderby $order LIMIT %d,%d;", absint( $args['offset'] ), absint( $args['number'] ) );
+			$query   = $wpdb->prepare( "SELECT * FROM  $this->table_name AS reading_log $join $where GROUP BY $this->primary_key ORDER BY $orderby $order LIMIT %d,%d;", absint( $args['offset'] ), absint( $args['number'] ) );
 			$entries = $wpdb->get_results( $query );
-			wp_cache_set( $cache_key, $entries, 'reading_list', 3600 );
+			wp_cache_set( $cache_key, $entries, 'reading_log', 3600 );
 		}
 
 		return wp_unslash( $entries );
@@ -527,14 +527,14 @@ class BDB_DB_Reading_List extends BDB_DB {
 			$where .= $wpdb->prepare( " AND `rating` LIKE '" . '%s' . "' ", sanitize_text_field( $args['rating'] ) );
 		}
 
-		$cache_key = md5( 'bdb_reading_list_' . serialize( $args ) );
+		$cache_key = md5( 'bdb_reading_log_' . serialize( $args ) );
 
-		$count = wp_cache_get( $cache_key, 'reading_list' );
+		$count = wp_cache_get( $cache_key, 'reading_log' );
 
 		if ( $count === false ) {
 			$query = "SELECT COUNT($this->primary_key) FROM " . $this->table_name . "{$join} {$where};";
 			$count = $wpdb->get_var( $query );
-			wp_cache_set( $cache_key, $count, 'reading_list', 3600 );
+			wp_cache_set( $cache_key, $count, 'reading_log', 3600 );
 		}
 
 		return absint( $count );

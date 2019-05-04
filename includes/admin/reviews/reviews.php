@@ -151,6 +151,19 @@ function bdb_reviews_edit_view( $review ) {
 	<div id="poststuff">
 		<div id="post-body" class="metabox-holder columns-2">
 			<div id="post-body-content">
+				<div id="postbox-container-2" class="postbox-container">
+					<?php do_action( 'book-database/review-edit/before-fields', $review ); ?>
+
+					<div class="postbox">
+						<h2><?php _e( 'Review Information', 'book-database' ); ?></h2>
+						<div class="inside">
+							<?php do_action( 'book-database/review-edit/fields', $review ); ?>
+						</div>
+					</div>
+
+					<?php do_action( 'book-database/review-edit/after-fields', $review ); ?>
+				</div>
+				
 				<div id="postbox-container-1" class="postbox-container">
 					<div id="side-sortables" class="meta-box-sortables ui-sortables">
 						<div id="submitdiv" class="postbox">
@@ -171,19 +184,6 @@ function bdb_reviews_edit_view( $review ) {
 
 						<?php do_action( 'book-database/review-edit/after-save-box', $review ); ?>
 					</div>
-				</div>
-
-				<div id="postbox-container-2" class="postbox-container">
-					<?php do_action( 'book-database/review-edit/before-fields', $review ); ?>
-
-					<div class="postbox">
-						<h2><?php _e( 'Review Information', 'book-database' ); ?></h2>
-						<div class="inside">
-							<?php do_action( 'book-database/review-edit/fields', $review ); ?>
-						</div>
-					</div>
-
-					<?php do_action( 'book-database/review-edit/after-fields', $review ); ?>
 				</div>
 			</div>
 		</div>

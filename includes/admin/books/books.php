@@ -173,6 +173,19 @@ function bdb_books_edit_view( $book ) {
 	<div id="poststuff">
 		<div id="post-body" class="metabox-holder columns-2">
 			<div id="post-body-content">
+				<div id="postbox-container-2" class="postbox-container">
+					<?php do_action( 'book-database/book-edit/before-information-fields', $book ); ?>
+
+					<div class="postbox">
+						<h2><?php printf( __( '%s Information', 'book-database' ), bdb_get_label_singular() ); ?></h2>
+						<div class="inside">
+							<?php do_action( 'book-database/book-edit/information-fields', $book ); ?>
+						</div>
+					</div>
+
+					<?php do_action( 'book-database/book-edit/after-information-fields', $book ); ?>
+				</div>
+				
 				<div id="postbox-container-1" class="postbox-container">
 					<div id="side-sortables" class="meta-box-sortables ui-sortables">
 						<div id="submitdiv" class="postbox">
@@ -193,19 +206,6 @@ function bdb_books_edit_view( $book ) {
 
 						<?php do_action( 'book-database/book-edit/after-save-box', $book ); ?>
 					</div>
-				</div>
-
-				<div id="postbox-container-2" class="postbox-container">
-					<?php do_action( 'book-database/book-edit/before-information-fields', $book ); ?>
-
-					<div class="postbox">
-						<h2><?php printf( __( '%s Information', 'book-database' ), bdb_get_label_singular() ); ?></h2>
-						<div class="inside">
-							<?php do_action( 'book-database/book-edit/information-fields', $book ); ?>
-						</div>
-					</div>
-
-					<?php do_action( 'book-database/book-edit/after-information-fields', $book ); ?>
 				</div>
 			</div>
 		</div>

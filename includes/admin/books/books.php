@@ -185,7 +185,7 @@ function bdb_books_edit_view( $book ) {
 
 					<?php do_action( 'book-database/book-edit/after-information-fields', $book ); ?>
 				</div>
-				
+
 				<div id="postbox-container-1" class="postbox-container">
 					<div id="side-sortables" class="meta-box-sortables ui-sortables">
 						<div id="submitdiv" class="postbox">

@@ -1,7 +1,0 @@
-{
-"version": 3,
-"mappings": "AACI,+BAAc,CACV,YAAY,CAAE,GAAG,CACjB,aAAa,CAAE,GAAG,CAElB,0CAAW,CACP,YAAY,CAAE,GAAG",
-"sources": ["post-screen.scss"],
-"names": [],
-"file": "post-screen.min.css"
-}

@@ -2,10 +2,10 @@
 /**
  * Owned Editions
  *
- * @package   book-database
+ * @since     1.0
  * @copyright Copyright (c) 2017, Ashley Gibson
  * @license   GPL2+
- * @since     1.0
+ * @package   book-database
  */
 
 // Exit if accessed directly
@@ -59,7 +59,7 @@ function bdb_owned_editions_table( $book ) {
 			<table class="wp-list-table widefat fixed posts">
 				<thead>
 				<tr>
-					<th><?php _e( 'ISBN', 'book-database' ); ?></th>
+					<th class="column-primary"><?php _e( 'ISBN', 'book-database' ); ?></th>
 					<th><?php _e( 'Format', 'book-database' ); ?></th>
 					<th><?php _e( 'Date Acquired', 'book-database' ); ?></th>
 					<th><?php _e( 'Source', 'book-database' ); ?></th>
@@ -76,8 +76,8 @@ function bdb_owned_editions_table( $book ) {
 
 				} else {
 					?>
-					<tr id="bookdb-no-owned-editions">
-						<td colspan="5"><?php _e( 'You don\'t own any copies of this book.', 'book-database' ); ?></td>
+					<tr id="bookdb-no-owned-editions" class="no-items">
+						<td colspan="6"><?php _e( 'You don\'t own any copies of this book.', 'book-database' ); ?></td>
 					</tr>
 					<?php
 				}
@@ -177,7 +177,7 @@ function bdb_owned_edition_entry_tr( $edition ) {
 
 	?>
 	<tr data-edition-id="<?php echo esc_attr( $edition->ID ); ?>">
-		<td class="bookdb-owned-edition-isbn">
+		<td class="bookdb-owned-edition-isbn column-primary" data-colname="<?php esc_attr_e( 'ISBN', 'book-database' ); ?>">
 			<div class="bookdb-owned-edition-display-value">
 				<?php echo ! empty( $edition->isbn ) ? esc_html( $edition->isbn ) : '&ndash;'; ?>
 			</div>
@@ -185,8 +185,12 @@ function bdb_owned_edition_entry_tr( $edition ) {
 			<div class="bookdb-owned-edition-edit-value">
 				<input type="text" value="<?php echo esc_attr( $edition->isbn ); ?>">
 			</div>
+
+			<button type="button" class="toggle-row">
+				<span class="screen-reader-text"><?php _e( 'Show more details', 'book-database' ); ?></span>
+			</button>
 		</td>
-		<td class="bookdb-owned-edition-format">
+		<td class="bookdb-owned-edition-format" data-colname="<?php esc_attr_e( 'Format', 'book-database' ); ?>">
 			<div class="bookdb-owned-edition-display-value">
 				<?php echo ! empty( $edition->format ) ? bdb_get_book_format_label( $edition->format ) : '&ndash;' ?>
 			</div>
@@ -204,7 +208,7 @@ function bdb_owned_edition_entry_tr( $edition ) {
 				?>
 			</div>
 		</td>
-		<td class="bookdb-owned-edition-date-acquired">
+		<td class="bookdb-owned-edition-date-acquired" data-colname="<?php esc_attr_e( 'Date Acquired', 'book-database' ); ?>">
 			<div class="bookdb-owned-edition-display-value">
 				<?php echo $edition->date_acquired ? bdb_format_mysql_date( $edition->date_acquired ) : '&ndash;' ?>
 			</div>
@@ -213,7 +217,7 @@ function bdb_owned_edition_entry_tr( $edition ) {
 				<input type="text" value="<?php echo esc_attr( bdb_format_mysql_date( $edition->date_acquired ) ); ?>">
 			</div>
 		</td>
-		<td class="bookdb-owned-edition-source">
+		<td class="bookdb-owned-edition-source" data-colname="<?php esc_attr_e( 'Source', 'book-database' ); ?>">
 			<div class="bookdb-owned-edition-display-value">
 				<?php
 				if ( ! empty( $edition->source ) ) {
@@ -237,7 +241,7 @@ function bdb_owned_edition_entry_tr( $edition ) {
 				?>
 			</div>
 		</td>
-		<td class="bookdb-owned-edition-signed">
+		<td class="bookdb-owned-edition-signed" data-colname="<?php esc_attr_e( 'Signed', 'book-database' ); ?>">
 			<div class="bookdb-owned-edition-display-value">
 				<?php echo ! empty( $edition->signed ) ? __( 'Yes', 'book-database' ) : '&ndash;'; ?>
 			</div>
@@ -246,7 +250,7 @@ function bdb_owned_edition_entry_tr( $edition ) {
 				<input type="checkbox" value="1" <?php checked( $edition->signed, 1 ); ?>>
 			</div>
 		</td>
-		<td>
+		<td data-colname="<?php esc_attr_e( 'Actions', 'book-database' ); ?>">
 			<button type="button" class="button bookdb-edit-owned-edition"><?php _e( 'Edit', 'book-database' ); ?></button>
 			<button type="button" class="button bookdb-delete-owned-edition"><?php _e( 'Remove', 'book-database' ); ?></button>
 		</td>

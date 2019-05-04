@@ -146,6 +146,19 @@ function bdb_series_edit_view( $series ) {
 	<div id="poststuff">
 		<div id="post-body" class="metabox-holder columns-2">
 			<div id="post-body-content">
+				<div id="postbox-container-2" class="postbox-container">
+					<?php do_action( 'book-database/series-edit/before-fields', $series ); ?>
+
+					<div class="postbox">
+						<h2><?php _e( 'Series Information', 'book-database' ); ?></h2>
+						<div class="inside">
+							<?php do_action( 'book-database/series-edit/fields', $series ); ?>
+						</div>
+					</div>
+
+					<?php do_action( 'book-database/series-edit/after-fields', $series ); ?>
+				</div>
+				
 				<div id="postbox-container-1" class="postbox-container">
 					<div id="side-sortables" class="meta-box-sortables ui-sortables">
 						<div id="submitdiv" class="postbox">
@@ -166,19 +179,6 @@ function bdb_series_edit_view( $series ) {
 
 						<?php do_action( 'book-database/series-edit/after-save-box', $series ); ?>
 					</div>
-				</div>
-
-				<div id="postbox-container-2" class="postbox-container">
-					<?php do_action( 'book-database/series-edit/before-fields', $series ); ?>
-
-					<div class="postbox">
-						<h2><?php _e( 'Series Information', 'book-database' ); ?></h2>
-						<div class="inside">
-							<?php do_action( 'book-database/series-edit/fields', $series ); ?>
-						</div>
-					</div>
-
-					<?php do_action( 'book-database/series-edit/after-fields', $series ); ?>
 				</div>
 			</div>
 		</div>

@@ -36,7 +36,7 @@ function bdb_book_reading_log_table( $book ) {
             <table class="wp-list-table widefat fixed posts">
                 <thead>
                 <tr>
-                    <th><?php _e( 'Date Started', 'book-database' ); ?></th>
+                    <th class="column-primary"><?php _e( 'Date Started', 'book-database' ); ?></th>
                     <th><?php _e( 'Date Finished', 'book-database' ); ?></th>
                     <th><?php _e( 'Review ID', 'book-database' ); ?></th>
                     <th><?php _e( 'User ID', 'book-database' ); ?></th>
@@ -54,7 +54,7 @@ function bdb_book_reading_log_table( $book ) {
 
 				} else {
 					?>
-                    <tr id="bookdb-no-reading-log-entries">
+                    <tr id="bookdb-no-reading-log-entries" class="no-items">
                         <td colspan="5"><?php _e( 'You haven\'t read this book yet!', 'book-database' ); ?></td>
                     </tr>
 					<?php
@@ -153,7 +153,7 @@ function bdb_reading_entry_tr( $entry ) {
 	}
 	?>
     <tr data-entry-id="<?php echo esc_attr( $entry->ID ); ?>">
-        <td class="bookdb-reading-log-date-started">
+        <td class="bookdb-reading-log-date-started column-primary" data-colname="<?php esc_attr_e( 'Date Started', 'book-database' ); ?>">
             <div class="bookdb-reading-log-display-value">
 				<?php echo $entry->date_started ? bdb_format_mysql_date( $entry->date_started ) : '&ndash;'; ?>
             </div>
@@ -161,8 +161,12 @@ function bdb_reading_entry_tr( $entry ) {
             <div class="bookdb-reading-log-edit-value">
                 <input type="text" value="<?php echo esc_attr( bdb_format_mysql_date( $entry->date_started ) ); ?>">
             </div>
+
+			<button type="button" class="toggle-row">
+				<span class="screen-reader-text"><?php _e( 'Show more details', 'book-database' ); ?></span>
+			</button>
         </td>
-        <td class="bookdb-reading-log-date-finished">
+        <td class="bookdb-reading-log-date-finished" data-colname="<?php esc_attr_e( 'Date Finished', 'book-database' ); ?>">
             <div class="bookdb-reading-log-display-value">
 				<?php echo $entry->date_finished ? bdb_format_mysql_date( $entry->date_finished ) : '&ndash;' ?>
             </div>
@@ -171,7 +175,7 @@ function bdb_reading_entry_tr( $entry ) {
                 <input type="text" value="<?php echo esc_attr( bdb_format_mysql_date( $entry->date_finished ) ); ?>">
             </div>
         </td>
-        <td class="bookdb-reading-log-review-id">
+        <td class="bookdb-reading-log-review-id" data-colname="<?php esc_attr_e( 'Review ID', 'book-database' ); ?>">
             <div class="bookdb-reading-log-display-value">
 				<?php
 				if ( $entry->review_id ) {
@@ -188,7 +192,7 @@ function bdb_reading_entry_tr( $entry ) {
                 <input type="number" value="<?php echo esc_attr( $review_id ); ?>">
             </div>
         </td>
-        <td class="bookdb-reading-log-user-id">
+        <td class="bookdb-reading-log-user-id" data-colname="<?php esc_attr_e( 'User ID', 'book-database' ); ?>">
             <div class="bookdb-reading-log-display-value">
 				<?php echo absint( $entry->user_id ); ?>
             </div>
@@ -197,7 +201,7 @@ function bdb_reading_entry_tr( $entry ) {
                 <input type="number" value="<?php echo esc_attr( $entry->user_id ); ?>">
             </div>
         </td>
-        <td class="bookdb-reading-log-complete">
+        <td class="bookdb-reading-log-complete" data-colname="<?php esc_attr_e( '% Complete', 'book-database' ); ?>">
             <div class="bookdb-reading-log-display-value">
 				<?php echo absint( $entry->complete ); ?>%
             </div>
@@ -206,7 +210,7 @@ function bdb_reading_entry_tr( $entry ) {
                 <input type="number" value="<?php echo esc_attr( $entry->complete ); ?>">
             </div>
         </td>
-        <td class="bookdb-reading-log-rating">
+        <td class="bookdb-reading-log-rating" data-colname="<?php esc_attr_e( 'Rating', 'book-database' ); ?>">
             <div class="bookdb-reading-log-display-value">
 				<?php
 				$rating = new BDB_Rating( $entry->rating );
@@ -225,7 +229,7 @@ function bdb_reading_entry_tr( $entry ) {
 				?>
             </div>
         </td>
-        <td>
+        <td data-colname="<?php esc_attr_e( 'Actions', 'book-database' ); ?>">
             <button type="button" class="button bookdb-edit-reading-entry"><?php _e( 'Edit', 'book-database' ); ?></button>
             <button type="button" class="button bookdb-delete-reading-entry"><?php _e( 'Remove', 'book-database' ); ?></button>
         </td>

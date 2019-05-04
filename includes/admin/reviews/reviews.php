@@ -163,7 +163,7 @@ function bdb_reviews_edit_view( $review ) {
 
 					<?php do_action( 'book-database/review-edit/after-fields', $review ); ?>
 				</div>
-				
+
 				<div id="postbox-container-1" class="postbox-container">
 					<div id="side-sortables" class="meta-box-sortables ui-sortables">
 						<div id="submitdiv" class="postbox">

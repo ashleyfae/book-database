@@ -42,6 +42,9 @@
 			$(document).on('click', '.bookdb-delete-reading-entry', this.deleteReadingEntry);
 			$(document).ready(this.associateReadingLog);
 			$(document).on('change', '#insert_reading_log', this.associateReadingLog);
+			// Currently Reading Widget
+			$( document ).on( 'click', '.bdb-currently-reading-widget-update-progress', this.updateReadingProgress );
+			$( document ).on( 'click', '.bdb-currently-reading-widget-finish-book', this.finishCurrentlyReadingBook );
 		},
 
 		/**
@@ -839,6 +842,88 @@
 					$('#bookdb-review-new-reading-log-fields').hide();
 					break;
 			}
+		},
+
+		/**
+		 * Update the progress of a "Currently Reading" book.
+		 *
+		 * @param e
+		 */
+		updateReadingProgress: function ( e ) {
+
+			var entry_id = $( this ).data( 'log' );
+
+			var percentage = prompt( book_database.l10n.enter_percentage );
+			var progress_wrap = $( this ).parent().find( '.bdb-currently-reading-progress-bar' );
+			var progress_number = $( this ).parent().find( '.bdb-currently-reading-progress-number' );
+
+			if ( percentage != null ) {
+				var data = {
+					action: 'bdb_update_reading_log_percentage',
+					nonce: book_database.nonce,
+					entry_id: entry_id,
+					percentage: percentage
+				};
+
+				$.ajax( {
+					type: 'POST',
+					url: ajaxurl,
+					data: data,
+					dataType: "json",
+					success: function ( response ) {
+
+						if ( response.success && response.data.percentage ) {
+							progress_wrap.css( 'width', percentage + '%' );
+							progress_number.text( percentage + '%' );
+						}
+
+					}
+				} ).fail( function ( response ) {
+					if ( window.console && window.console.log ) {
+						console.log( response );
+					}
+				} );
+			}
+
+		},
+
+		/**
+		 * Finish a "Currently Reading" book.
+		 *
+		 * @param e
+		 */
+		finishCurrentlyReadingBook: function ( e ) {
+
+			var entry_id = $( this ).data( 'log' );
+
+			if ( confirm( book_database.l10n.finish_book ) ) {
+
+				var data = {
+					action: 'bdb_finish_currently_reading',
+					nonce: book_database.nonce,
+					entry_id: entry_id
+				};
+
+				$.ajax( {
+					type: 'POST',
+					url: ajaxurl,
+					data: data,
+					dataType: "json",
+					success: function ( response ) {
+
+						if ( response.success && response.data.redirect ) {
+							window.location.href = response.data.redirect;
+						}
+
+					}
+				} ).fail( function ( response ) {
+					if ( window.console && window.console.log ) {
+						console.log( response );
+					}
+				} );
+
+			}
+
 		}
 
 	};

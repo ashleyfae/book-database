@@ -77,7 +77,9 @@ function bdb_load_admin_scripts( $hook ) {
 			'owned_edition_remove'  => esc_html__( 'Are you sure you wish to permanently delete this edition?', 'book-database' ),
 			'reading_entry_remove'  => esc_html__( 'Are you sure you wish to permanently delete this entry?', 'book-database' ),
 			'review_remove'         => esc_html__( 'Are you sure you wish to delete this review?', 'book-database' ),
-			'error_removing_review' => esc_html__( 'Error: Review ID not found.', 'book-database' )
+			'error_removing_review' => esc_html__( 'Error: Review ID not found.', 'book-database' ),
+			'enter_percentage'      => esc_html__( 'Enter your current percentage.', 'book-database' ),
+			'finish_book'           => __( 'Are you sure you\'d like to mark this book as finished? You will be redirected to the book page to set your rating.', 'book-database' )
 		)
 	) );
 }

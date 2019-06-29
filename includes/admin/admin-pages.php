@@ -58,6 +58,7 @@ function bdb_is_admin_page() {
 	$is_bdb_page = false;
 
 	$bdb_page_ids = array(
+		'dashboard',
 		'toplevel_page_bdb-books',
 		'book-library_page_bdb-series',
 		'book-library_page_bdb-reviews',

@@ -300,3 +300,91 @@ function bdb_delete_reading_entry() {
 }
 
 add_action( 'wp_ajax_bdb_delete_reading_entry', 'bdb_delete_reading_entry' );
+
+/**
+ * Ajax CB: Update reading progress
+ *
+ * @since 1.0
+ * @return void
+ */
+function bdb_update_reading_log_percentage() {
+
+	check_ajax_referer( 'book-database', 'nonce' );
+
+	$entry_id   = isset( $_POST['entry_id'] ) ? absint( $_POST['entry_id'] ) : false;
+	$percentage = isset( $_POST['percentage'] ) ? absint( $_POST['percentage'] ) : 0;
+
+	if ( empty( $entry_id ) ) {
+		wp_send_json_error( __( 'Error: Invalid entry ID.', 'book-database' ) );
+	}
+
+	$reading_entry = book_database()->reading_log->get_entry( $entry_id );
+
+	if ( empty( $reading_entry ) ) {
+		wp_send_json_error( __( 'Error: Invalid entry.', 'book-database' ) );
+	}
+
+	$data = wp_parse_args( array(
+		'complete' => absint( $percentage )
+	), (array) $reading_entry );
+
+	$success = bdb_insert_reading_entry( $data );
+
+	if ( false == $success ) {
+		wp_send_json_error( __( 'Error updating the reading entry.', 'book-database' ) );
+	}
+
+	wp_send_json_success( array(
+		'percentage' => $percentage
+	) );
+
+	exit;
+
+}
+
+add_action( 'wp_ajax_bdb_update_reading_log_percentage', 'bdb_update_reading_log_percentage' );
+
+/**
+ * Ajax CB: Mark "Currently Reading" book as complete.
+ *
+ * This sets the date completed to now and the percentage complete to 100.
+ *
+ * @since 1.0
+ * @return void
+ */
+function bdb_finish_currently_reading() {
+
+	check_ajax_referer( 'book-database', 'nonce' );
+
+	$entry_id = isset( $_POST['entry_id'] ) ? absint( $_POST['entry_id'] ) : false;
+
+	if ( empty( $entry_id ) ) {
+		wp_send_json_error( __( 'Error: Invalid entry ID.', 'book-database' ) );
+	}
+
+	$reading_entry = book_database()->reading_log->get_entry( $entry_id );
+
+	if ( empty( $reading_entry ) ) {
+		wp_send_json_error( __( 'Error: Invalid entry.', 'book-database' ) );
+	}
+
+	$data = wp_parse_args( array(
+		'date_finished' => current_time( 'mysql' ),
+		'complete'      => 100
+	), (array) $reading_entry );
+
+	$success = bdb_insert_reading_entry( $data );
+
+	if ( false == $success ) {
+		wp_send_json_error( __( 'Error updating the reading entry.', 'book-database' ) );
+	}
+
+	wp_send_json_success( array(
+		'redirect' => bdb_get_admin_page_edit_book( $data['book_id'] ) . '#bdb-book-reading-log'
+	) );
+
+	exit;
+
+}
+
+add_action( 'wp_ajax_bdb_finish_currently_reading', 'bdb_finish_currently_reading' );

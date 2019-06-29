@@ -281,6 +281,7 @@ if ( ! class_exists( 'Book_Database' ) ) :
 				require_once BDB_DIR . 'includes/admin/books/books.php';
 				require_once BDB_DIR . 'includes/admin/books/class-book-table.php';
 				require_once BDB_DIR . 'includes/admin/books/class-book-table-month.php';
+				require_once BDB_DIR . 'includes/admin/dashboard/widgets.php';
 				require_once BDB_DIR . 'includes/admin/modal/modal.php';
 				require_once BDB_DIR . 'includes/admin/modal/modal-ajax.php';
 				require_once BDB_DIR . 'includes/admin/modal/modal-button.php';

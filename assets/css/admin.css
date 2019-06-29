@@ -333,7 +333,8 @@
   flex-flow: row wrap;
   text-align: center; }
   .bdb-currently-reading-widget-list li {
-    flex: 0; }
+    flex: 0;
+    padding: 1em; }
 
 .bdb-currently-reading-progress {
   background: #f4f4f4;

@@ -210,7 +210,7 @@ function bdb_book_grid_shortcode( $atts, $content = '' ) {
 	$query_args['pub_year']          = $atts['pub-year'];
 	$query_args['orderby']           = $atts['orderby'];
 	$query_args['order']             = $atts['order'];
-	$query_args['number']            = intval( $atts['number'] );
+	$query_args['per_page']            = intval( $atts['number'] );
 	$query_args['return_books_only'] = false;
 
 	// Setup book publish date

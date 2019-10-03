@@ -374,7 +374,7 @@ function bdb_generate_alternative_book_title( $title ) {
 	} elseif ( 'A ' == substr( $title, 0, 2 ) ) {
 		$alternate_title = substr( $title, 2 ) . ', ' . esc_html__( 'A', 'book-database' );
 	} elseif ( 'An ' == substr( $title, 0, 3 ) ) {
-		$alternate_title = substr( $title, 3 ) . ', ' . esc_html__( 'Am', 'book-database' );
+		$alternate_title = substr( $title, 3 ) . ', ' . esc_html__( 'An', 'book-database' );
 	}
 
 	return apply_filters( 'book-database/book/generate-alternative-title', $alternate_title, $title );

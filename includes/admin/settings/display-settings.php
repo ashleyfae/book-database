@@ -1,126 +1,146 @@
 <?php
 /**
- * Display the admin options page.
+ * Display Settings
  *
  * @package   book-database
- * @copyright Copyright (c) 2017, Ashley Gibson
+ * @copyright Copyright (c) 2019, Ashley Gibson
  * @license   GPL2+
  */
 
-// Exit if accessed directly
-if ( ! defined( 'ABSPATH' ) ) {
-	exit;
-}
+namespace Book_Database;
 
 /**
- * Options Page
- *
- * Renders the options page contents.
- *
- * @since 1.0
- * @return void
+ * Render the settings page
  */
-function bdb_options_page() {
+function render_settings_page() {
 
-	$settings_tabs = bdb_get_settings_tabs();
-	$settings_tabs = empty( $settings_tabs ) ? array() : $settings_tabs;
-	$active_tab    = isset( $_GET['tab'] ) && array_key_exists( $_GET['tab'], $settings_tabs ) ? $_GET['tab'] : 'books';
-	$sections      = bdb_get_settings_tab_sections( $active_tab );
-	$key           = 'main';
-
-	if ( is_array( $sections ) ) {
-		$key = key( $sections );
-	}
-
-	$registered_sections = bdb_get_settings_tab_sections( $active_tab );
-	$section             = isset( $_GET['section'] ) && ! empty( $registered_sections ) && array_key_exists( $_GET['section'], $registered_sections ) ? $_GET['section'] : $key;
-	ob_start();
+	$tab  = ! empty( $_GET['tab'] ) ? $_GET['tab'] : 'books';
+	$base = admin_url( 'admin.php?page=bdb-settings' );
 	?>
-	<div class="wrap">
-		<h1 class="nav-tab-wrapper">
-			<?php
-			foreach ( bdb_get_settings_tabs() as $tab_id => $tab_name ) {
-				$tab_url = add_query_arg( array(
-					'settings-updated'  => false,
-					'tab'               => $tab_id,
-					'defaults-restored' => false
-				) );
+	<div id="bdb-settings-wrap" class="wrap">
+		<h1><?php _e( 'Book Database Settings', 'book-database' ); ?></h1>
 
-				// Remove the section from the tabs so we always end up at the main section
-				$tab_url = remove_query_arg( 'section', $tab_url );
-
-				// Add query arg to first section if there's only one and it's not 'main'.
-				// This is particularly needed for the add-ons tab where each add-on is given
-				// its own section.
-				$this_tabs_sections = bdb_get_settings_tab_sections( $tab_id );
-				if ( is_array( $this_tabs_sections ) && count( $this_tabs_sections ) == 1 && ! array_key_exists( 'main', $this_tabs_sections ) ) {
-					$section_keys = array_keys( $this_tabs_sections );
-					$tab_url      = add_query_arg( array(
-						'section' => $section_keys[0]
-					), $tab_url );
-				}
-
-				$active = $active_tab == $tab_id ? ' nav-tab-active' : '';
-				echo '<a href="' . esc_url( $tab_url ) . '" title="' . esc_attr( $tab_name ) . '" class="nav-tab' . $active . '">';
-				echo esc_html( $tab_name );
-				echo '</a>';
-			}
-			?>
-		</h1>
-
-		<?php
-		$number_of_sections = count( $sections );
-		$number             = 0;
-
-		if ( $number_of_sections > 1 ) {
-			echo '<div><ul class="subsubsub">';
-			foreach ( $sections as $section_id => $section_name ) {
-				echo '<li>';
-				$number ++;
-				$tab_url = add_query_arg( array(
-					'settings-updated'  => false,
-					'tab'               => $active_tab,
-					'section'           => $section_id,
-					'defaults-restored' => false
-				) );
-				$class   = '';
-				if ( $section == $section_id ) {
-					$class = 'current';
-				}
-				echo '<a class="' . $class . '" href="' . esc_url( $tab_url ) . '">' . $section_name . '</a>';
-				if ( $number != $number_of_sections ) {
-					echo ' | ';
-				}
-				echo '</li>';
-			}
-			echo '</ul></div>';
-		}
-		?>
+		<h2 class="nav-tab-wrapper">
+			<a href="<?php echo esc_url( $base ); ?>" title="<?php esc_attr_e( 'Books', 'book-database' ); ?>" class="nav-tab<?php echo $tab === 'books' ? ' nav-tab-active' : ''; ?>"><?php esc_html_e( 'Books', 'book-database' ); ?></a>
+			<a href="<?php echo esc_url( add_query_arg( 'tab', 'reviews', $base ) ); ?>" title="<?php esc_attr_e( 'Reviews', 'book-database' ); ?>" class="nav-tab<?php echo $tab === 'reviews' ? ' nav-tab-active' : ''; ?>"><?php esc_html_e( 'Reviews', 'book-database' ); ?></a>
+			<a href="<?php echo esc_url( add_query_arg( 'tab', 'misc', $base ) ); ?>" title="<?php esc_attr_e( 'Misc', 'book-database' ); ?>" class="nav-tab<?php echo $tab === 'misc' ? ' nav-tab-active' : ''; ?>"><?php esc_html_e( 'Misc', 'book-database' ); ?></a>
+			<?php do_action( 'book-database/settings/tabs' ); ?>
+		</h2>
 
 		<div id="tab_container">
-			<form method="post" action="options.php">
+			<form method="POST" action="options.php">
 				<table class="form-table">
 					<?php
-					settings_fields( 'bdb_settings' );
-					if ( 'main' === $section ) {
-						do_action( 'book-database/settings/tab/top', $active_tab );
+					switch ( $tab ) {
+
+						case 'books' :
+							?>
+							<tr>
+								<th scope="row"><?php _e( 'Book Layout', 'book-database' ); ?></th>
+								<td>
+									<div id="bdb-book-layout-builder">
+
+										<div id="bdb-enabled-book-settings">
+											<h3 class="bdb-no-sort"><?php _e( 'Enabled Fields', 'book-database' ); ?></h3>
+											<div id="bdb-enabled-book-settings-inner" class="bdb-sortable bdb-sorter-enabled-column">
+												<?php
+												foreach ( get_enabled_book_fields() as $key => $options ) {
+													format_admin_book_layout_option( $key, false );
+												}
+												?>
+											</div>
+										</div>
+
+										<div id="bdb-available-book-settings">
+											<h3 class="bdb-no-sort"><?php _e( 'Disabled Fields', 'book-database' ); ?></h3>
+											<div id="bdb-available-book-settings-inner" class="bdb-sortable">
+												<?php
+												foreach ( get_book_fields() as $key => $options ) {
+													if ( ! array_key_exists( $key, get_enabled_book_fields() ) ) {
+														format_admin_book_layout_option( $key, true );
+													}
+												}
+												?>
+											</div>
+										</div>
+
+									</div>
+								</td>
+							</tr><!--/book layout-->
+							<tr>
+								<th scope="row"><?php _e( 'Book Taxonomies', 'book-database' ); ?></th>
+								<td>
+									<table id="bdb-book-taxonomies" class="wp-list-table widefat fixed striped">
+										<thead>
+										<tr>
+											<th scope="col" class="column-primary"><?php _e( 'Name', 'book-database' ); ?></th>
+											<th scope="col"><?php _e( 'Slug', 'book-database' ); ?></th>
+											<th scope="col"><?php _e( 'Format', 'book-database' ); ?></th>
+											<th scope="col"><?php _e( 'Actions', 'book-database' ); ?></th>
+										</tr>
+										</thead>
+										<tbody>
+										</tbody>
+										<tfoot>
+										<tr>
+											<th><?php _e( 'Name', 'book-database' ); ?></th>
+											<th><?php _e( 'Slug', 'book-database' ); ?></th>
+											<th><?php _e( 'Format', 'book-database' ); ?></th>
+											<th><?php _e( 'Actions', 'book-database' ); ?></th>
+										</tr>
+										<tr id="bdb-new-book-taxonomy-fields">
+											<td data-th="<?php esc_attr_e( 'Name', 'book-database' ); ?>">
+												<label for="bdb-new-book-taxonomy-name" class="screen-reader-text"><?php _e( 'Enter a name for the taxonomy', 'book-database' ); ?></label>
+												<input type="text" id="bdb-new-book-taxonomy-name">
+											</td>
+											<td data-th="<?php esc_attr_e( 'Slug', 'book-database' ); ?>">
+												<label for="bdb-new-book-taxonomy-slug" class="screen-reader-text"><?php _e( 'Enter a unique slug for the taxonomy', 'book-database' ); ?></label>
+												<input type="text" id="bdb-new-book-taxonomy-slug">
+											</td>
+											<td data-th="<?php esc_attr_e( 'Format', 'book-database' ); ?>">
+												<label for="bdb-new-book-taxonomy-format" class="screen-reader-text"><?php _e( 'Select a format for the taxonomy terms', 'book-database' ); ?></label>
+												<select id="bdb-new-book-taxonomy-format">
+													<option value="text"><?php _e( 'Text', 'book-database' ); ?></option>
+													<option value="checkbox"><?php _e( 'Checkbox', 'book-database' ); ?></option>
+												</select>
+											</td>
+											<td data-th="<?php esc_attr_e( 'Actions', 'book-database' ); ?>">
+												<button class="button-primary"><?php _e( 'Add', 'book-database' ); ?></button>
+											</td>
+										</tr>
+										</tfoot>
+									</table>
+									<div id="bdb-book-taxonomies-errors" class="bdb-notice bdb-notice-error" style="display: none;"></div>
+								</td>
+							</tr>
+							<?php
+							break;
+
+						case 'reviews' :
+							// @todo
+							break;
+
+						case 'misc' :
+							// @todo
+							break;
+
+						default :
+							do_action( 'book-database/settings/tab/' . $tab );
+							break;
+
 					}
-					do_action( 'book-database/settings/tab/top/' . $active_tab . '_' . $section );
-					do_settings_sections( 'bdb_settings_' . $active_tab . '_' . $section );
-					do_action( 'book-database/settings/tab/bottom/' . $active_tab . '_' . $section );
 					?>
 				</table>
 
-				<div class="bookdb-settings-buttons">
-					<?php submit_button(); ?>
-
-					<p id="bookdb-reset-tab">
-						<button type="button" id="bookdb-reset-tab-button" name="bookdb-reset-defaults" class="button-secondary" data-current-tab="<?php echo esc_attr( $active_tab ); ?>" data-current-section="<?php echo esc_attr( $section ); ?>"><?php esc_attr_e( 'Reset Tab', 'book-database' ); ?></button>
-					</p>
+				<div class="bdb-settings-buttons">
+					<?php
+					settings_fields( 'bdb_settings' );
+					submit_button();
+					?>
 				</div>
 			</form>
-		</div><!-- #tab_container-->
-	</div><!-- .wrap -->
+		</div>
+	</div>
 	<?php
-	echo ob_get_clean();
+
 }

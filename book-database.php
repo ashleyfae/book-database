@@ -34,332 +34,293 @@
  * @license   GPL2+
  */
 
+namespace Book_Database;
+
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
-if ( ! class_exists( 'Book_Database' ) ) :
+if ( ! defined( 'BDB_VERSION' ) ) {
+	define( 'BDB_VERSION', '1.0' );
+}
+if ( ! defined( 'BDB_DIR' ) ) {
+	define( 'BDB_DIR', plugin_dir_path( __FILE__ ) );
+}
+if ( ! defined( 'BDB_URL' ) ) {
+	define( 'BDB_URL', plugin_dir_url( __FILE__ ) );
+}
+if ( ! defined( 'BDB_FILE' ) ) {
+	define( 'BDB_FILE', __FILE__ );
+}
+if ( ! defined( 'NOSE_GRAZE_STORE_URL' ) ) {
+	define( 'NOSE_GRAZE_STORE_URL', 'https://shop.nosegraze.com' );
+}
 
-	class Book_Database {
+final class Book_Database {
 
-		/**
-		 * Book_Database object.
-		 *
-		 * @var Book_Database Instance of the Book_Database class.
-		 * @access private
-		 * @since  1.0
-		 */
-		private static $instance;
+	/**
+	 * Instance of the Book_Database class.
+	 *
+	 * @var Book_Database
+	 */
+	private static $instance;
 
-		/**
-		 * BDB_DB_Reviews object
-		 *
-		 * @var BDB_DB_Reviews
-		 * @access public
-		 * @since  1.0
-		 */
-		public $reviews;
+	/**
+	 * Array of custom table objects
+	 *
+	 * @var array
+	 */
+	private $tables = array();
 
-		/**
-		 * @var BDB_DB_Review_Meta
-		 * @access public
-		 * @since  1.0
-		 */
-		public $review_meta;
+	/**
+	 * @var REST_API
+	 */
+	private $rest_api;
 
-		/**
-		 * @var BDB_DB_Books
-		 * @access public
-		 * @since  1.0
-		 */
-		public $books;
+	/**
+	 * Book_Database instance.
+	 *
+	 * @return Book_Database Instance of Book_Database class
+	 */
+	public static function instance() {
 
-		/**
-		 * @var BDB_DB_Book_Meta
-		 * @access public
-		 * @since  1.0
-		 */
-		public $book_meta;
-
-		/**
-		 * @var BDB_DB_owned_editions
-		 * @access public
-		 * @since  1.0
-		 */
-		public $owned_editions;
-
-		/**
-		 * @var BDB_DB_Series
-		 * @access public
-		 * @since  1.0
-		 */
-		public $series;
-
-		/**
-		 * @var BDB_DB_Book_Terms
-		 * @access public
-		 * @since  1.0
-		 */
-		public $book_terms;
-
-		/**
-		 * @var BDB_DB_Book_Term_Relationships
-		 * @access public
-		 * @since  1.0
-		 */
-		public $book_term_relationships;
-
-		/**
-		 * @var BDB_DB_Reading_Log
-		 * @access public
-		 * @since  1.1.0
-		 */
-		public $reading_log;
-
-		/**
-		 * @var BDB_HTML
-		 * @access public
-		 * @since  1.0
-		 */
-		public $html;
-
-		/**
-		 * Book_Database instance.
-		 *
-		 * Insures that only one instance of Book_Database exists at any one time.
-		 *
-		 * @uses   Book_Database::setup_constants() Set up the plugin constants.
-		 * @uses   Book_Database::includes() Include any required files.
-		 * @uses   Book_Database::load_textdomain() Load the language files.
-		 *
-		 * @access public
-		 * @since  1.0
-		 * @return Book_Database Instance of Book_Database class
-		 */
-		public static function instance() {
-
-			if ( ! isset( self::$instance ) && ! self::$instance instanceof Book_Database ) {
-				self::$instance = new Book_Database;
-				self::$instance->setup_constants();
-
-				add_action( 'plugins_loaded', array( self::$instance, 'load_textdomain' ) );
-
-				self::$instance->includes();
-
-				self::$instance->reviews                 = new BDB_DB_Reviews();
-				self::$instance->review_meta             = new BDB_DB_Review_Meta();
-				self::$instance->books                   = new BDB_DB_Books();
-				self::$instance->series                  = new BDB_DB_Series();
-				self::$instance->book_terms              = new BDB_DB_Book_Terms();
-				self::$instance->book_term_relationships = new BDB_DB_Book_Term_Relationships();
-				self::$instance->owned_editions          = new BDB_DB_Owned_Editions();
-				self::$instance->reading_log             = new BDB_DB_Reading_Log();
-				self::$instance->html                    = new BDB_HTML();
-			}
-
+		// Return if already instantiated
+		if ( self::is_instantiated() ) {
 			return self::$instance;
-
 		}
 
-		/**
-		 * Throw error on object clone.
-		 *
-		 * The whole idea of the singleton design pattern is that there is a single
-		 * object therefore, we don't want the object to be cloned.
-		 *
-		 * @access protected
-		 * @since  1.0
-		 * @return void
-		 */
-		public function __clone() {
-			// Cloning instances of the class is forbidden.
-			_doing_it_wrong( __FUNCTION__, __( 'Cheatin&#8217; huh?', 'book-database' ), '1.0' );
+		// Set up the singleton.
+		self::setup_instance();
+
+		// Bootstrap
+		self::$instance->setup_files();
+		self::$instance->setup_application();
+
+		register_activation_hook( __FILE__, array( self::$instance, 'install' ) );
+
+		return self::$instance;
+
+	}
+
+	/**
+	 * Whether the main class has been instantiated or not.
+	 *
+	 * @return bool
+	 */
+	private static function is_instantiated() {
+
+		// Return true if instance is correct class
+		if ( ! empty( self::$instance ) && ( self::$instance instanceof Book_Database ) ) {
+			return true;
 		}
 
-		/**
-		 * Disable unserializing of the class.
-		 *
-		 * @access protected
-		 * @since  1.0
-		 * @return void
-		 */
-		public function __wakeup() {
-			// Unserializing instances of the class is forbidden.
-			_doing_it_wrong( __FUNCTION__, __( 'Cheatin&#8217; huh?', 'book-database' ), '1.0' );
+		// Return false if not instantiated correctly
+		return false;
+
+	}
+
+	/**
+	 * Set up the singleton instance
+	 */
+	private static function setup_instance() {
+		self::$instance = new Book_Database();
+	}
+
+	/**
+	 * Include required files.
+	 *
+	 * @return void
+	 */
+	private function setup_files() {
+		$this->include_files();
+
+		// Admin
+		if ( is_admin() || ( defined( 'WP_CLI' ) && WP_CLI ) ) {
+			$this->include_admin();
+		} else {
+			$this->include_frontend();
 		}
+	}
 
-		/**
-		 * Setup plugin constants.
-		 *
-		 * @access private
-		 * @since  1.0
-		 * @return void
-		 */
-		private function setup_constants() {
+	/**
+	 * Include global files
+	 */
+	private function include_files() {
 
-			if ( ! defined( 'BDB_VERSION' ) ) {
-				define( 'BDB_VERSION', '1.0' );
+		require_once BDB_DIR . 'includes/abstract-class-base-object.php';
+		require_once BDB_DIR . 'includes/class-exception.php';
+
+		// Database engine
+		require_once BDB_DIR . 'includes/database/engine/base.php';
+		require_once BDB_DIR . 'includes/database/engine/table.php';
+		require_once BDB_DIR . 'includes/database/engine/query.php';
+		require_once BDB_DIR . 'includes/database/engine/column.php';
+		require_once BDB_DIR . 'includes/database/engine/row.php';
+		require_once BDB_DIR . 'includes/database/engine/schema.php';
+		require_once BDB_DIR . 'includes/database/engine/compare.php';
+		require_once BDB_DIR . 'includes/database/engine/date.php';
+
+		// Database - books
+		require_once BDB_DIR . 'includes/database/books/class-books-table.php';
+		require_once BDB_DIR . 'includes/database/books/class-books-schema.php';
+		require_once BDB_DIR . 'includes/database/books/class-books-query.php';
+
+		// Database - book_taxonomies
+		require_once BDB_DIR . 'includes/database/book-taxonomies/class-book-taxonomies-table.php';
+		require_once BDB_DIR . 'includes/database/book-taxonomies/class-book-taxonomies-schema.php';
+		require_once BDB_DIR . 'includes/database/book-taxonomies/class-book-taxonomies-query.php';
+
+		// Books
+		require_once BDB_DIR . 'includes/books/class-book.php';
+		require_once BDB_DIR . 'includes/books/book-functions.php';
+		require_once BDB_DIR . 'includes/books/book-layout-functions.php';
+
+		// Book Taxonomies
+		require_once BDB_DIR . 'includes/book-taxonomies/class-book-taxonomy.php';
+		require_once BDB_DIR . 'includes/book-taxonomies/book-taxonomy-functions.php';
+
+		// REST API
+		require_once BDB_DIR . 'includes/rest-api/class-rest-api.php';
+		require_once BDB_DIR . 'includes/rest-api/abstract-class-controller.php';
+		require_once BDB_DIR . 'includes/rest-api/v1/class-taxonomy-controller.php';
+
+		// Misc.
+		require_once BDB_DIR . 'includes/misc-functions.php';
+
+	}
+
+	/**
+	 * Include admin files
+	 */
+	private function include_admin() {
+
+		require_once BDB_DIR . 'includes/admin/abstract-class-list-table.php';
+		require_once BDB_DIR . 'includes/admin/admin-assets.php';
+		require_once BDB_DIR . 'includes/admin/admin-notices.php';
+		require_once BDB_DIR . 'includes/admin/admin-pages.php';
+
+		// Books
+		require_once BDB_DIR . 'includes/admin/books/book-actions.php';
+		require_once BDB_DIR . 'includes/admin/books/book-functions.php';
+		require_once BDB_DIR . 'includes/admin/books/books-page.php';
+
+		// Settings
+		require_once BDB_DIR . 'includes/admin/settings/book-layout-functions.php';
+		require_once BDB_DIR . 'includes/admin/settings/register-settings.php';
+		require_once BDB_DIR . 'includes/admin/settings/display-settings.php';
+
+	}
+
+	/**
+	 * Include front-end files
+	 */
+	private function include_frontend() {
+
+	}
+
+	/**
+	 * Set up custom database tables
+	 */
+	private function setup_application() {
+
+		self::$instance->tables = array(
+			'books'           => new Books_Table(),
+			'book_taxonomies' => new Book_Taxonomies_Table()
+		);
+
+		self::$instance->rest_api = new REST_API();
+
+	}
+
+	/**
+	 * Get a table object by its key
+	 *
+	 * @param string $table_key Table key.  One of:
+	 *                          'book_term_relationships',
+	 *                          'book_terms'
+	 *                          'books'
+	 *                          'owned_editions'
+	 *                          'reading_log'
+	 *                          'reviewmeta'
+	 *                          'reviews',
+	 *                          'series'
+	 *
+	 * @return \BerlinDB\Database\Table
+	 */
+	public function get_table( $table_key ) {
+		return array_key_exists( $table_key, self::$instance->tables ) ? self::$instance->tables[ $table_key ] : false;
+	}
+
+	/**
+	 * Run installation
+	 *
+	 *      - Install default taxonomies.
+	 */
+	public function install() {
+
+		$default_taxonomies = array(
+			'author' => array(
+				'slug'   => 'author',
+				'name'   => esc_html__( 'Author', 'book-database' ),
+				'format' => 'text' // text, checkbox
+			),
+			'publisher' => array(
+				'slug'   => 'publisher',
+				'name'   => esc_html__( 'Publisher', 'book-database' ),
+				'format' => 'text' // text, checkbox
+			),
+			'genre'     => array(
+				'slug'   => 'genre',
+				'name'   => esc_html__( 'Genre', 'book-database' ),
+				'format' => 'text'
+			),
+			'source'    => array(
+				'slug'   => 'source',
+				'name'   => esc_html__( 'Source', 'book-database' ),
+				'format' => 'checkbox'
+			)
+		);
+
+		foreach ( $default_taxonomies as $taxonomy ) {
+			try {
+				add_book_taxonomy( $taxonomy );
+			} catch ( Exception $e ) {
+
 			}
-			if ( ! defined( 'BDB_DIR' ) ) {
-				define( 'BDB_DIR', plugin_dir_path( __FILE__ ) );
-			}
-			if ( ! defined( 'BDB_URL' ) ) {
-				define( 'BDB_URL', plugin_dir_url( __FILE__ ) );
-			}
-			if ( ! defined( 'BDB_FILE' ) ) {
-				define( 'BDB_FILE', __FILE__ );
-			}
-			if ( ! defined( 'NOSE_GRAZE_STORE_URL' ) ) {
-				define( 'NOSE_GRAZE_STORE_URL', 'https://shop.nosegraze.com' );
-			}
-
-		}
-
-		/**
-		 * Include Required Files
-		 *
-		 * @access private
-		 * @since  1.0
-		 * @return void
-		 */
-		private function includes() {
-
-			global $bdb_options;
-
-			// Settings.
-			require_once BDB_DIR . 'includes/admin/settings/register-settings.php';
-			if ( empty( $bdb_options ) ) {
-				$bdb_options = bdb_get_settings();
-			}
-
-			require_once BDB_DIR . 'includes/database/class-bdb-db.php';
-			require_once BDB_DIR . 'includes/database/class-bdb-db-books.php';
-			require_once BDB_DIR . 'includes/database/class-bdb-db-book-terms.php';
-			require_once BDB_DIR . 'includes/database/class-bdb-db-book-term-relationships.php';
-			require_once BDB_DIR . 'includes/database/class-bdb-db-owned-editions.php';
-			require_once BDB_DIR . 'includes/database/class-bdb-db-reading-log.php';
-			require_once BDB_DIR . 'includes/database/class-bdb-db-reviews.php';
-			require_once BDB_DIR . 'includes/database/class-bdb-db-review-meta.php';
-			require_once BDB_DIR . 'includes/database/class-bdb-db-series.php';
-			require_once BDB_DIR . 'includes/indexes/class-bdb-review-index.php';
-			require_once BDB_DIR . 'includes/indexes/class-bdb-reviews-by-series.php';
-			require_once BDB_DIR . 'includes/indexes/class-bdb-reviews-by-tax.php';
-			require_once BDB_DIR . 'includes/indexes/class-bdb-reviews-by-title.php';
-			require_once BDB_DIR . 'includes/reading-log/class-bdb-reading-entry.php';
-			require_once BDB_DIR . 'includes/reading-log/class-bdb-reading-query.php';
-			require_once BDB_DIR . 'includes/reading-log/reading-functions.php';
-			require_once BDB_DIR . 'includes/assets.php';
-			require_once BDB_DIR . 'includes/book-functions.php';
-			require_once BDB_DIR . 'includes/book-layout.php';
-			require_once BDB_DIR . 'includes/class-bdb-analytics.php';
-			require_once BDB_DIR . 'includes/class-bdb-book.php';
-			require_once BDB_DIR . 'includes/class-bdb-book-query.php';
-			require_once BDB_DIR . 'includes/class-bdb-html.php';
-			require_once BDB_DIR . 'includes/class-bdb-rating.php';
-			require_once BDB_DIR . 'includes/class-bdb-review.php';
-			require_once BDB_DIR . 'includes/class-bdb-series.php';
-			require_once BDB_DIR . 'includes/content-filters.php';
-			require_once BDB_DIR . 'includes/error-tracking.php';
-			require_once BDB_DIR . 'includes/misc-functions.php';
-			require_once BDB_DIR . 'includes/rating-functions.php';
-			require_once BDB_DIR . 'includes/rewrites.php';
-			require_once BDB_DIR . 'includes/review-functions.php';
-			require_once BDB_DIR . 'includes/series-functions.php';
-			require_once BDB_DIR . 'includes/shortcodes.php';
-			require_once BDB_DIR . 'includes/template-functions.php';
-			require_once BDB_DIR . 'includes/term-functions.php';
-
-			if ( is_admin() ) {
-				require_once BDB_DIR . 'includes/admin/admin-actions.php';
-				require_once BDB_DIR . 'includes/admin/admin-pages.php';
-				require_once BDB_DIR . 'includes/admin/admin-assets.php';
-				require_once BDB_DIR . 'includes/admin/class-bdb-notices.php';
-				require_once BDB_DIR . 'includes/admin/analytics/analytics.php';
-				require_once BDB_DIR . 'includes/admin/analytics/analytics-ajax.php';
-				require_once BDB_DIR . 'includes/admin/books/book-actions.php';
-				require_once BDB_DIR . 'includes/admin/books/book-functions.php';
-				require_once BDB_DIR . 'includes/admin/books/books.php';
-				require_once BDB_DIR . 'includes/admin/books/class-book-table.php';
-				require_once BDB_DIR . 'includes/admin/books/class-book-table-month.php';
-				require_once BDB_DIR . 'includes/admin/dashboard/widgets.php';
-				require_once BDB_DIR . 'includes/admin/modal/modal.php';
-				require_once BDB_DIR . 'includes/admin/modal/modal-ajax.php';
-				require_once BDB_DIR . 'includes/admin/modal/modal-button.php';
-				require_once BDB_DIR . 'includes/admin/modal/shortcode-preview.php';
-				require_once BDB_DIR . 'includes/admin/owned-editions/owned-editions-actions.php';
-				require_once BDB_DIR . 'includes/admin/posts/meta-box.php';
-				require_once BDB_DIR . 'includes/admin/reading-log/reading-actions.php';
-				require_once BDB_DIR . 'includes/admin/reviews/review-actions.php';
-				require_once BDB_DIR . 'includes/admin/reviews/review-functions.php';
-				require_once BDB_DIR . 'includes/admin/reviews/reviews.php';
-				require_once BDB_DIR . 'includes/admin/series/series-actions.php';
-				require_once BDB_DIR . 'includes/admin/series/series-functions.php';
-				require_once BDB_DIR . 'includes/admin/series/series.php';
-				require_once BDB_DIR . 'includes/admin/settings/display-settings.php';
-				require_once BDB_DIR . 'includes/admin/terms/term-actions.php';
-				require_once BDB_DIR . 'includes/admin/terms/term-functions.php';
-				require_once BDB_DIR . 'includes/admin/terms/terms.php';
-			}
-
-			require_once BDB_DIR . 'includes/install.php';
-
-		}
-
-		/**
-		 * Loads the plugin language files.
-		 *
-		 * @access public
-		 * @since  1.0
-		 * @return void
-		 */
-		public function load_textdomain() {
-
-			$lang_dir = dirname( plugin_basename( BDB_FILE ) ) . '/languages/';
-			$lang_dir = apply_filters( 'book-database/languages-directory', $lang_dir );
-			load_plugin_textdomain( 'book-database', false, $lang_dir );
-
 		}
 
 	}
 
-endif;
+}
 
 
 /**
- * Require PHP 5.3
+ * Require PHP 5.6+
  */
-if ( version_compare( PHP_VERSION, '5.3', '<' ) ) {
-	if ( is_admin() ) {
-		/**
-		 * Insufficient PHP version notice.
-		 *
-		 * @since 3.2.8
-		 * @return void
-		 */
-		function bdb_insufficient_php_version() {
-			?>
-			<div class="notice notice-error">
-				<p><?php printf( __( 'Book Database requires PHP version 5.3 or greater. You have version %s. Please contact your web host to upgrade your version of PHP.', 'book-database' ), PHP_VERSION ); ?></p>
-			</div>
-			<?php
-		}
-
-		add_action( 'admin_notices', 'bdb_insufficient_php_version' );
-	}
-
-	return;
+/**
+ * Insufficient PHP version notice.
+ *
+ * @return void
+ */
+function insufficient_php_version() {
+	?>
+	<div class="notice notice-error">
+		<p><?php printf( __( 'Book Database requires PHP version 5.6 or greater. You have version %s. Please contact your web host to upgrade your version of PHP.', 'book-database' ), PHP_VERSION ); ?></p>
+	</div>
+	<?php
 }
 
 /**
  * Returns the main instance of Book_Database.
  *
- * @since 1.0
- * @return Book_Database
+ * @return Book_Database|void
  */
 function book_database() {
-	$instance = Book_Database::instance();
-
-	return $instance;
+	if ( version_compare( PHP_VERSION, '5.6', '>=' ) ) {
+		return Book_Database::instance();
+	} else {
+		add_action( 'admin_notices', __NAMESPACE__ . '\insufficient_php_version' );
+	}
 }
 
-book_database();
+add_action( 'plugins_loaded', __NAMESPACE__ . '\book_database', 4 );

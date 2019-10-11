@@ -1,0 +1,47 @@
+{
+  "name": "book-database",
+  "title": "Book Database",
+  "version": "1.0.0",
+  "description": "Maintain a database of books and reviews.",
+  "author": "Ashley Gibson",
+  "license": "GPL-2.0-or-later",
+  "keywords": [
+    "books",
+    "wordpress",
+    "wordpress-plugin"
+  ],
+  "homepage": "https://github.com/nosegraze/book-database#readme",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/nosegraze/book-database.git"
+  },
+  "bugs": {
+    "url": "https://github.com/nosegraze/book-database/issues"
+  },
+  "main": "webpack.config.js",
+  "devDependencies": {
+    "@wordpress/scripts": "3.4.0",
+    "css-loader": "^3.2.0",
+    "ignore-emit-webpack-plugin": "^2.0.2",
+    "mini-css-extract-plugin": "^0.8.0",
+    "node-sass": "^4.12.0",
+    "postcss-loader": "^3.0.0",
+    "postcss-preset-env": "^6.7.0",
+    "sass-loader": "^8.0.0",
+    "webpack": "^4.41.0",
+    "webpack-cli": "^3.3.9"
+  },
+  "scripts": {
+    "build": "wp-scripts build",
+    "dev": "wp-scripts start",
+    "check-engines": "wp-scripts check-engines",
+    "check-licenses": "wp-scripts check-licenses --production",
+    "i18n": "wp i18n make-pot . languages/book-database.pot --domain=book-database",
+    "build-css": "node-sass assets/sass -o assets/css --output-style=compressed",
+    "watch-css": "npm run build-css && npm run build-css -- -w"
+  },
+  "dependencies": {
+    "npm": "^6.12.0",
+    "sass": "^1.23.0"
+  }
+}

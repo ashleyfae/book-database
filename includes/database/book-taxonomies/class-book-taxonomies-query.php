@@ -62,7 +62,7 @@ class Book_Taxonomies_Query extends \BerlinDB\Database\Query {
 	 *
 	 * @var string
 	 */
-	protected $cache_group = 'books';
+	protected $cache_group = 'book_taxonomies';
 
 	/**
 	 * Query constructor.

@@ -78,6 +78,11 @@ final class Book_Database {
 	private $rest_api;
 
 	/**
+	 * @var HTML
+	 */
+	private $html;
+
+	/**
 	 * Book_Database instance.
 	 *
 	 * @return Book_Database Instance of Book_Database class
@@ -185,6 +190,7 @@ final class Book_Database {
 		require_once BDB_DIR . 'includes/rest-api/v1/class-taxonomy-controller.php';
 
 		// Misc.
+		require_once BDB_DIR . 'includes/class-html.php';
 		require_once BDB_DIR . 'includes/misc-functions.php';
 
 	}
@@ -203,6 +209,7 @@ final class Book_Database {
 		require_once BDB_DIR . 'includes/admin/books/book-actions.php';
 		require_once BDB_DIR . 'includes/admin/books/book-functions.php';
 		require_once BDB_DIR . 'includes/admin/books/books-page.php';
+		require_once BDB_DIR . 'includes/admin/books/edit-book-fields.php';
 
 		// Settings
 		require_once BDB_DIR . 'includes/admin/settings/book-layout-functions.php';
@@ -229,6 +236,7 @@ final class Book_Database {
 		);
 
 		self::$instance->rest_api = new REST_API();
+		self::$instance->html     = new HTML();
 
 	}
 
@@ -249,6 +257,15 @@ final class Book_Database {
 	 */
 	public function get_table( $table_key ) {
 		return array_key_exists( $table_key, self::$instance->tables ) ? self::$instance->tables[ $table_key ] : false;
+	}
+
+	/**
+	 * Get the HTML helper class
+	 *
+	 * @return HTML
+	 */
+	public function get_html() {
+		return $this->html;
 	}
 
 	/**
@@ -305,7 +322,7 @@ final class Book_Database {
 function insufficient_php_version() {
 	?>
 	<div class="notice notice-error">
-		<p><?php printf( __( 'Book Database requires PHP version 5.6 or greater. You have version %s. Please contact your web host to upgrade your version of PHP.', 'book-database' ), PHP_VERSION ); ?></p>
+		<p><?php printf( __( 'Book Database requires PHP version 7.0 or greater. You have version %s. Please contact your web host to upgrade your version of PHP.', 'book-database' ), PHP_VERSION ); ?></p>
 	</div>
 	<?php
 }
@@ -316,7 +333,7 @@ function insufficient_php_version() {
  * @return Book_Database|void
  */
 function book_database() {
-	if ( version_compare( PHP_VERSION, '5.6', '>=' ) ) {
+	if ( version_compare( PHP_VERSION, '7.0', '>=' ) ) {
 		return Book_Database::instance();
 	} else {
 		add_action( 'admin_notices', __NAMESPACE__ . '\insufficient_php_version' );

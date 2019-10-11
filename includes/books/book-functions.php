@@ -229,3 +229,35 @@ function get_books_admin_page_url( $args = array() ) {
 	return add_query_arg( $sanitized_args, admin_url( 'admin.php?page=bdb-books' ) );
 
 }
+
+/**
+ * Generate an "index title". This moves "The", "A", and "An" to the end of the title.
+ *
+ * Before: A History of Hobbits
+ * After: History of Hobbits, A
+ *
+ * @param string $original_title Title to convert.
+ *
+ * @return string
+ */
+function generate_book_index_title( $original_title ) {
+
+	$index_title = '';
+
+	if ( 'The ' === substr( $original_title, 0, 4 ) ) {
+		$index_title = substr( $original_title, 4 ) . ', ' . __( 'The', 'book-database' );
+	} elseif ( 'A ' === substr( $original_title, 0, 2 ) ) {
+		$index_title = substr( $original_title, 2 ) . ', ' . __( 'A', 'book-database' );
+	} elseif ( 'An ' === substr( $original_title, 0, 3 ) ) {
+		$index_title = substr( $original_title, 3 ) . ', ' . __( 'An', 'book-database' );
+	}
+
+	/**
+	 * Filters the generated index title.
+	 *
+	 * @param string $index_title    Newly created index title.
+	 * @param string $original_title Original book title.
+	 */
+	return apply_filters( 'book-database/book/generate-index-title', $index_title, $original_title );
+
+}

@@ -97,7 +97,22 @@ function get_book_fields() {
  */
 function book_layout_taxonomy_fields( $fields ) {
 
-	// @todo
+	$taxonomies = get_book_taxonomies( array(
+		'number' => 9999
+	) );
+
+	foreach ( $taxonomies as $taxonomy ) {
+		if ( isset( $fields[ $taxonomy->get_slug() ] ) ) {
+			continue;
+		}
+
+		$fields[ $taxonomy->get_id() ] = array(
+			'name'        => $taxonomy->get_name(),
+			'placeholder' => '[' . sanitize_key( $taxonomy->get_slug() ) . ']',
+			'label'       => sprintf( '<strong>%s:</strong> [%s]', esc_html( $taxonomy->get_name() ), esc_html( sanitize_key( $taxonomy->get_slug() ) ) ),
+			'linebreak'   => 'on'
+		);
+	}
 
 	return $fields;
 

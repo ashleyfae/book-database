@@ -45,6 +45,26 @@ class Book extends Base_Object {
 	}
 
 	/**
+	 * Get the cover image URL
+	 *
+	 * @param string $size Desired image size.
+	 *
+	 * @return string
+	 */
+	public function get_cover_url( $size = 'full' ) {
+
+		$url      = '';
+		$cover_id = $this->get_cover_id();
+
+		if ( ! empty( $cover_id ) ) {
+			$url = wp_get_attachment_image_url( $cover_id, $size );
+		}
+
+		return apply_filters( 'book-database/book/get/cover_url', $url, $cover_id, $this );
+
+	}
+
+	/**
 	 * Get the cover image HTML.
 	 *
 	 * @param string|array $size Desired image size.

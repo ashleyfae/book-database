@@ -23,6 +23,10 @@ var BDB_Book_Taxonomies = {
 		this.tableBody = $( '#bdb-book-taxonomies tbody' );
 		this.errorWrap = $( '#bdb-book-taxonomies-errors' );
 
+		if ( ! this.tableBody.length ) {
+			return;
+		}
+
 		$( '#bdb-new-book-taxonomy-name' ).on( 'keyup', this.generateSlug );
 		$( '#bdb-new-book-taxonomy-fields' ).on( 'click', 'button', this.addTaxonomy );
 		$( document ).on( 'click', '.bdb-update-book-taxonomy', this.updateTaxonomy );

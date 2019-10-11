@@ -52,3 +52,22 @@ function is_admin_page() {
 	return in_array( $screen->id, $bdb_admin_pages );
 
 }
+
+/**
+ * Add a `bdb-admin-page` class to all BDB admin pages.
+ *
+ * @param string $classes
+ *
+ * @return string
+ */
+function admin_body_class( $classes ) {
+
+	if ( is_admin_page() ) {
+		$classes .= ' bdb-admin-page ';
+	}
+
+	return $classes;
+
+}
+
+add_filter( 'admin_body_class', __NAMESPACE__ . '\admin_body_class' );

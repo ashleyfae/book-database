@@ -12,7 +12,6 @@ namespace Book_Database\REST_API\v1;
 use \Book_Database\REST_API\Controller;
 use \Book_Database\Exception;
 use function Book_Database\add_book_taxonomy;
-use function Book_Database\bdb_update_option;
 use function Book_Database\delete_book_taxonomy;
 use function Book_Database\get_book_taxonomies;
 use function Book_Database\get_book_taxonomy;
@@ -71,20 +70,13 @@ class Taxonomy extends Controller {
 	public function get_taxonomies( $request ) {
 
 		try {
-			$taxonomies = get_book_taxonomies( array(
-				'format'  => $request->get_param( 'format' ) ?? '',
-				'number'  => $request->get_param( 'number' ) ?? 20,
-				'offset'  => $request->get_param( 'offset' ) ?? 0,
-				'orderby' => $request->get_param( 'orderby' ) ?? 'date_created',
-				'order'   => $request->get_param( 'order' ) ?? 'ASC',
-				'search'  => $request->get_param( 'search' ) ?? '',
-				'fields'  => array(
-					'id',
-					'name',
-					'slug',
-					'format'
-				)
+			$args = wp_parse_args( $request->get_params(), array(
+				'orderby' => 'date_created',
+				'order'   => 'ASC',
+				'fields'  => array( 'id', 'name', 'slug', 'format' )
 			) );
+
+			$taxonomies = get_book_taxonomies( $args );
 
 			return new \WP_REST_Response( $taxonomies );
 		} catch ( Exception $e ) {
@@ -183,7 +175,7 @@ class Taxonomy extends Controller {
 	}
 
 	/**
-	 * Update an existing taxonomy
+	 * Delete a taxonomy
 	 *
 	 * @param \WP_REST_Request $request
 	 *

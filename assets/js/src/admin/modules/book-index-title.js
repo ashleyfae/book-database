@@ -50,8 +50,6 @@ var BDB_Book_Index_Title = {
 	/**
 	 * Create an index-friendly version of the entered book title and insert it as an
 	 * option in the <select> dropdown.
-	 *
-	 * @todo API here
 	 */
 	populateIndexTitles: function () {
 

@@ -175,6 +175,11 @@ final class Book_Database {
 		require_once BDB_DIR . 'includes/database/book-taxonomies/class-book-taxonomies-schema.php';
 		require_once BDB_DIR . 'includes/database/book-taxonomies/class-book-taxonomies-query.php';
 
+		// Database - book_terms
+		require_once BDB_DIR . 'includes/database/book-terms/class-book-terms-table.php';
+		require_once BDB_DIR . 'includes/database/book-terms/class-book-terms-schema.php';
+		require_once BDB_DIR . 'includes/database/book-terms/class-book-terms-query.php';
+
 		// Books
 		require_once BDB_DIR . 'includes/books/class-book.php';
 		require_once BDB_DIR . 'includes/books/book-functions.php';
@@ -184,9 +189,14 @@ final class Book_Database {
 		require_once BDB_DIR . 'includes/book-taxonomies/class-book-taxonomy.php';
 		require_once BDB_DIR . 'includes/book-taxonomies/book-taxonomy-functions.php';
 
+		// Book Terms
+		require_once BDB_DIR . 'includes/book-terms/class-book-term.php';
+		require_once BDB_DIR . 'includes/book-terms/book-term-functions.php';
+
 		// REST API
 		require_once BDB_DIR . 'includes/rest-api/class-rest-api.php';
 		require_once BDB_DIR . 'includes/rest-api/abstract-class-controller.php';
+		require_once BDB_DIR . 'includes/rest-api/v1/class-book-controller.php';
 		require_once BDB_DIR . 'includes/rest-api/v1/class-taxonomy-controller.php';
 
 		// Misc.
@@ -231,8 +241,9 @@ final class Book_Database {
 	private function setup_application() {
 
 		self::$instance->tables = array(
+			'book_taxonomies' => new Book_Taxonomies_Table(),
+			'book_terms'      => new Book_Terms_Table(),
 			'books'           => new Books_Table(),
-			'book_taxonomies' => new Book_Taxonomies_Table()
 		);
 
 		self::$instance->rest_api = new REST_API();
@@ -253,7 +264,7 @@ final class Book_Database {
 	 *                          'reviews',
 	 *                          'series'
 	 *
-	 * @return \BerlinDB\Database\Table
+	 * @return BerlinDB\Database\Table
 	 */
 	public function get_table( $table_key ) {
 		return array_key_exists( $table_key, self::$instance->tables ) ? self::$instance->tables[ $table_key ] : false;

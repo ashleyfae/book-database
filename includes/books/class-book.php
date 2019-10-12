@@ -172,4 +172,41 @@ class Book extends Base_Object {
 		return $this->buy_link;
 	}
 
+	/**
+	 * Returns all data associated with a book
+	 *
+	 * @return array
+	 */
+	public function get_data() {
+
+		$data = array(
+			'id'              => $this->get_id(),
+			'cover_id'        => $this->get_cover_id(),
+			'cover_url'       => $this->get_cover_url( 'full' ),
+			'title'           => $this->get_title(),
+			'index_title'     => $this->get_index_title(),
+			'author'          => '', // @todo
+			'series_id'       => $this->get_series_id(),
+			'series_name'     => '', // @todo
+			'series_position' => $this->get_series_position(),
+			'pub_date'        => $this->get_pub_date(),
+			'pages'           => $this->get_pages(),
+			'synopsis'        => $this->get_synopsis(),
+			'goodreads_url'   => $this->get_goodreads_url(),
+			'buy_link'        => $this->get_buy_link(),
+			'date_created'    => $this->get_date_created(),
+			'date_modified'   => $this->get_date_modified()
+		);
+
+		/**
+		 * Filters the data.
+		 *
+		 * @param array $data
+		 * @param int   $book_id
+		 * @param Book  $this
+		 */
+		return apply_filters( 'book-database/book/get/data', $data, $this->get_id(), $this );
+
+	}
+
 }

@@ -13,7 +13,7 @@ namespace Book_Database;
  * Class Books_Query
  * @package Book_Database
  */
-class Books_Query extends \BerlinDB\Database\Query {
+class Books_Query extends BerlinDB\Database\Query {
 
 	/**
 	 * Name of the table to query

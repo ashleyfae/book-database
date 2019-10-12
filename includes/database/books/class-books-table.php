@@ -14,7 +14,7 @@ namespace Book_Database;
  *
  * @package Book_Database
  */
-class Books_Table extends \BerlinDB\Database\Table {
+class Books_Table extends BerlinDB\Database\Table {
 
 	/**
 	 * @var string Table name
@@ -48,7 +48,7 @@ class Books_Table extends \BerlinDB\Database\Table {
 	 * Set up the database schema
 	 */
 	protected function set_schema() {
-		$this->schema = "id BIGINT(20) UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY,
+		$this->schema = "id bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY,
 			cover_id bigint(20) UNSIGNED NOT NULL DEFAULT 0,
 			title text NOT NULL,
 			index_title text NOT NULL,

@@ -27,7 +27,8 @@ function get_book_taxonomy( $taxonomy_id ) {
 /**
  * Get a single taxonomy by a column name/value combo
  *
- * @param int $taxonomy_id
+ * @param string $column_name
+ * @param mixed  $column_value
  *
  * @return Book_Taxonomy|false
  */
@@ -147,7 +148,7 @@ function add_book_taxonomy( $args ) {
 	$taxonomy_id = $query->add_item( $args );
 
 	if ( empty( $taxonomy_id ) ) {
-		throw new Exception( 'database_error', __( 'Failed toinsert new taxonomy into the database.', 'book-database' ), 500 );
+		throw new Exception( 'database_error', __( 'Failed to insert new taxonomy into the database.', 'book-database' ), 500 );
 	}
 
 	return absint( $taxonomy_id );

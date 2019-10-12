@@ -14,7 +14,7 @@ namespace Book_Database;
  *
  * @package Book_Database
  */
-class Book_Taxonomies_Table extends \BerlinDB\Database\Table {
+class Book_Taxonomies_Table extends BerlinDB\Database\Table {
 
 	/**
 	 * @var string Table name

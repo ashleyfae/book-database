@@ -132,11 +132,12 @@ function book_index_title_field( $book ) {
 		<?php endforeach; ?>
 	</select>
 	<input type="text" id="bdb-book-index-title-custom" class="regular-text" name="index_title_custom" value="<?php echo esc_attr( $index_title ); ?>">
+	<p class="description"><?php _e( 'Used when ordering in the review index and determining which letter the book title should fall under.', 'book-database' ); ?></p>
 	<?php
 
 	book_database()->get_html()->meta_row( array(
-		'label' => __( 'Book Title', 'book-database' ),
-		'id'    => 'bdb-book-title',
+		'label' => __( 'Index Title', 'book-database' ),
+		'id'    => 'bdb-book-index-title',
 		'field' => ob_get_clean()
 	) );
 

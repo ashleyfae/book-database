@@ -1,6 +1,6 @@
 <?php
 /**
- * Books Schema
+ * Book Terms Schema
  *
  * @package   book-database
  * @copyright Copyright (c) 2019, Ashley Gibson
@@ -10,11 +10,11 @@
 namespace Book_Database;
 
 /**
- * Class Books_Schema
+ * Class Book_Terms_Schema
  *
  * @package Book_Database
  */
-class Books_Schema extends BerlinDB\Database\Schema {
+class Book_Terms_Schema extends BerlinDB\Database\Schema {
 
 	/**
 	 * Array of database columns
@@ -34,85 +34,61 @@ class Books_Schema extends BerlinDB\Database\Schema {
 			'sortable' => true
 		),
 
-		// cover_id
+		// taxonomy
 		array(
-			'name'     => 'cover_id',
+			'name'     => 'taxonomy',
+			'type'     => 'varchar',
+			'length'   => '32',
+			'sortable' => true,
+		),
+
+		// name
+		array(
+			'name'       => 'name',
+			'type'       => 'varchar',
+			'length'     => '200',
+			'sortable'   => true,
+			'searchable' => true
+		),
+
+		// slug
+		array(
+			'name'       => 'slug',
+			'type'       => 'varchar',
+			'length'     => '200',
+			'sortable'   => true,
+			'searchable' => true
+		),
+
+		// description
+		array(
+			'name'       => 'description',
+			'type'       => 'longtext',
+			'searchable' => true
+		),
+
+		// image_id
+		array(
+			'name'     => 'image_id',
 			'type'     => 'bigint',
 			'length'   => '20',
 			'unsigned' => true,
-			'sortable' => true,
-			'default'  => 0
-		),
-
-		// title
-		array(
-			'name'       => 'title',
-			'type'       => 'text',
-			'sortable'   => true,
-			'searchable' => true,
-			'default'    => ''
-		),
-
-		// index_title
-		array(
-			'name'       => 'index_title',
-			'type'       => 'text',
-			'sortable'   => true,
-			'searchable' => true,
-			'default'    => ''
-		),
-
-		// series_id
-		array(
-			'name'     => 'series_id',
-			'type'     => 'bigint',
-			'length'   => '20',
-			'unsigned' => true,
-			'sortable' => true,
-			'default'  => 0
-		),
-
-		// series_position
-		array(
-			'name'     => 'series_position',
-			'type'     => 'float',
 			'sortable' => true
 		),
 
-		// pub_date
+		// links
 		array(
-			'name'       => 'pub_date',
-			'type'       => 'datetime',
-			'sortable'   => true,
-			'date_query' => true
+			'name'       => 'links',
+			'type'       => 'longtext',
 		),
 
-		// pages
+		// count
 		array(
-			'name'     => 'pages',
+			'name'     => 'count',
 			'type'     => 'bigint',
 			'length'   => '20',
 			'unsigned' => true,
-			'sortable' => true,
-			'default'  => null
-		),
-
-		// synopsis
-		array(
-			'name' => 'synopsis',
-			'type' => 'longtext',
-		),
-
-		// goodreads_url
-		array(
-			'name' => 'goodreads_url',
-			'type' => 'text',
-		),
-
-		// buy_link
-		array(
-			'name' => 'buy_link',
-			'type' => 'text',
+			'sortable' => true
 		),
 
 		// date_created

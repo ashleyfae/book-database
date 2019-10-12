@@ -14,7 +14,7 @@ namespace Book_Database;
  *
  * @package Book_Database
  */
-class Book_Taxonomies_Schema extends \BerlinDB\Database\Schema {
+class Book_Taxonomies_Schema extends BerlinDB\Database\Schema {
 
 	/**
 	 * Array of database columns

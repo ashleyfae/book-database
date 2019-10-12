@@ -164,6 +164,7 @@ final class Book_Database {
 		require_once BDB_DIR . 'includes/database/engine/schema.php';
 		require_once BDB_DIR . 'includes/database/engine/compare.php';
 		require_once BDB_DIR . 'includes/database/engine/date.php';
+		require_once BDB_DIR . 'includes/database/engine/tax.php';
 
 		// Database - books
 		require_once BDB_DIR . 'includes/database/books/class-books-table.php';

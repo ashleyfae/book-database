@@ -11,6 +11,8 @@
 namespace Book_Database\BerlinDB\Database;
 
 // Exit if accessed directly
+use Book_Database\BerlinDB\Database\Queries\Tax;
+
 defined( 'ABSPATH' ) || exit;
 
 /**
@@ -186,6 +188,14 @@ class Query extends Base {
 	 * @var   object|\WP_Meta_Query
 	 */
 	protected $meta_query = false;
+
+	/**
+	 * Tax query container.
+	 *
+	 * @since 1.0.0
+	 * @var Tax
+	 */
+	protected $tax_query = false;
 
 	/**
 	 * Date query container.
@@ -443,6 +453,7 @@ class Query extends Base {
 			'meta_query'        => null, // See WP_Meta_Query
 			'date_query'        => null, // See Queries\Date
 			'compare_query'     => null, // See Queries\Compare
+			'tax_query'         => null, // See Queries\Tax
 			'no_found_rows'     => true,
 
 			// Caching
@@ -657,15 +668,27 @@ class Query extends Base {
 	}
 
 	/**
+	 * Pass-through method to return a new Queries\Tax object.
+	 *
+	 * @param array $args See WP_Tax_Query
+	 *
+	 * @return Tax
+	 */
+	private function get_tax_query( $args = array() ) {
+		return new Queries\Tax( $args );
+	}
+
+	/**
 	 * Pass-through method to return a new Compare object.
 	 *
 	 * @since 1.0.0
 	 *
 	 * @param array $args See Compare
-	 * @return Compare
+	 *
+	 * @return Queries\Compare_Query
 	 */
 	private function get_compare_query( $args = array() ) {
-		return new Queries\Compare( $args );
+		return new Queries\Compare_Query( $args );
 	}
 
 	/**
@@ -1301,6 +1324,23 @@ class Query extends Base {
 		if ( ! empty( $date_query ) && is_array( $date_query ) ) {
 			$this->date_query    = $this->get_date_query( $date_query );
 			$where['date_query'] = preg_replace( $and, '', $this->date_query_sql );
+		}
+
+		// Maybe perform a tax query.
+		$tax_query = $this->query_vars['tax_query'];
+		if ( ! empty( $tax_query ) && is_array( $tax_query ) ) {
+			$this->tax_query = $this->get_tax_query( $tax_query );
+			$clauses         = $this->tax_query->get_sql( $this->table_alias, $this->get_primary_column_name() );
+
+			if ( false !== $clauses ) {
+
+				// Set join
+				$join .= ' ' . $clauses['join'];
+
+				// Remove " AND " from tax_query where clause
+				$where['tax_query'] = preg_replace( $and, '', $clauses['where'] );
+
+			}
 		}
 
 		// Set where and join clauses

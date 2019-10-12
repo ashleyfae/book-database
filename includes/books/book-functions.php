@@ -60,6 +60,7 @@ function get_book_by( $column_name, $column_value ) {
  * @type array        $date_created_query  Date query clauses to limit by. See WP_Date_Query. Default null.
  * @type array        $date_modified_query Date query clauses to limit by. See WP_Date_Query. Default null.
  * @type array        $date_query          Query all datetime columns together. See WP_Date_Query.
+ * @type array        $tax_query           Query for taxonomy terms. See WP_Tax_Query.
  * @type bool         $count               Whether to return an item count (true) or array of objects. Default false.
  * @type string       $fields              Item fields to return. Accepts any column known names  or empty
  *                                         (returns an array of complete item objects). Default empty.

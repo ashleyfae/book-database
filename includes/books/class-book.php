@@ -15,6 +15,8 @@ namespace Book_Database;
  */
 class Book extends Base_Object {
 
+	protected $authors;
+
 	protected $cover_id = 0;
 
 	protected $title = '';
@@ -34,6 +36,51 @@ class Book extends Base_Object {
 	protected $goodreads_url = '';
 
 	protected $buy_link = '';
+
+	/**
+	 * Get the authors of the book
+	 *
+	 * This returns an array of `Book_Term` objects.
+	 *
+	 * @param array $args Query args to override the defaults.
+	 *
+	 * @return Book_Term[]|array
+	 */
+	public function get_authors( $args = array() ) {
+
+		if ( ! isset( $this->authors ) ) {
+			$this->authors = get_book_authors( $this->get_id(), $args );
+		}
+
+		return $this->authors;
+
+	}
+
+	/**
+	 * Get the author names
+	 *
+	 * @param bool $implode True to return a comma-separated list, false to return an array.
+	 *
+	 * @return array|string
+	 */
+	public function get_author_names( $implode = false ) {
+
+		$author_names = array();
+		$author_terms = $this->get_authors();
+
+		if ( $author_terms ) {
+			foreach ( $author_terms as $author_term ) {
+				$author_names[] = $author_term->get_name();
+			}
+		}
+
+		if ( $implode ) {
+			$author_names = implode( ', ', $author_names );
+		}
+
+		return $author_names;
+
+	}
 
 	/**
 	 * Get the attachment ID for the cover image
@@ -122,6 +169,23 @@ class Book extends Base_Object {
 	 */
 	public function get_series_position() {
 		return $this->series_position;
+	}
+
+	/**
+	 * Get the name of the series
+	 *
+	 * @return string|false Series name on success, false on failure.
+	 */
+	public function get_series_name() {
+
+		$series = get_book_series_by( 'id', $this->get_series_id() );
+
+		if ( $series instanceof Series ) {
+			return $series->get_name();
+		}
+
+		return false;
+
 	}
 
 	/**

@@ -35,35 +35,145 @@ class Book extends Controller {
 		register_rest_route( $this->namespace, $this->rest_base, array(
 			'methods'             => \WP_REST_Server::READABLE,
 			'callback'            => array( $this, 'get_books' ),
-			'permission_callback' => array( $this, 'can_view' )
+			'permission_callback' => array( $this, 'can_view' ),
+			'args'                => array(
+				'search'  => array(
+					'default' => ''
+				),
+				'number'  => array(
+					'default'           => 20,
+					'sanitize_callback' => function ( $param, $request, $key ) {
+						return absint( $param );
+					}
+				),
+				'orderby' => array(
+					'default' => 'date_created'
+				),
+				'order'   => array(
+					'default' => 'ASC'
+				)
+			)
 		) );
 
 		// Add a new book.
 		register_rest_route( $this->namespace, $this->rest_base . '/add', array(
 			'methods'             => \WP_REST_Server::CREATABLE,
 			'callback'            => array( $this, 'add_book' ),
-			'permission_callback' => array( $this, 'can_edit' )
+			'permission_callback' => array( $this, 'can_edit' ),
+			'args'                => array(
+				'cover_id'        => array(
+					'default'           => 0,
+					'sanitize_callback' => function ( $param, $request, $key ) {
+						return absint( $param );
+					}
+				),
+				'title'           => array(
+					'required'          => true,
+					'sanitize_callback' => function ( $param, $request, $key ) {
+						return sanitize_text_field( $param );
+					}
+				),
+				'index_title'     => array(
+					'sanitize_callback' => function ( $param, $request, $key ) {
+						return sanitize_text_field( $param );
+					}
+				),
+				'series_id'       => array(
+					'default'           => 0,
+					'sanitize_callback' => function ( $param, $request, $key ) {
+						return absint( $param );
+					}
+				),
+				'series_position' => array(
+					'default' => null,
+				),
+				'pub_date'        => array(
+					'default'           => null,
+					'sanitize_callback' => function ( $param, $request, $key ) {
+						if ( empty( $param ) ) {
+							return null;
+						}
+
+						// Format date.
+						return date( 'Y-m-d H:i:s', strtotime( $param ) );
+					}
+				),
+				'pages'           => array(
+					'default'           => 0,
+					'sanitize_callback' => function ( $param, $request, $key ) {
+						return absint( $param );
+					}
+				),
+				'synopsis'        => array(
+					'default'           => '',
+					'sanitize_callback' => function ( $param, $request, $key ) {
+						return wp_kses_post( $param );
+					}
+				),
+				'goodreads_url'   => array(
+					'default'           => '',
+					'sanitize_callback' => function ( $param, $request, $key ) {
+						return ! empty( $param ) ? esc_url_raw( $param ) : '';
+					}
+				),
+				'buy_link'        => array(
+					'default'           => '',
+					'sanitize_callback' => function ( $param, $request, $key ) {
+						return ! empty( $param ) ? esc_url_raw( $param ) : '';
+					}
+				),
+			)
 		) );
 
 		// Update an existing book.
 		register_rest_route( $this->namespace, $this->rest_base . '/update/(?P<id>\d+)', array(
 			'methods'             => \WP_REST_Server::EDITABLE,
 			'callback'            => array( $this, 'update_book' ),
-			'permission_callback' => array( $this, 'can_edit' )
+			'permission_callback' => array( $this, 'can_edit' ),
+			'args'                => array(
+				'id' => array(
+					'required'          => true,
+					'validate_callback' => function ( $param, $request, $key ) {
+						return is_numeric( $param );
+					},
+					'sanitize_callback' => function ( $param, $request, $key ) {
+						return absint( $param );
+					}
+				)
+			)
 		) );
 
 		// Delete a book.
 		register_rest_route( $this->namespace, $this->rest_base . '/delete/(?P<id>\d+)', array(
 			'methods'             => \WP_REST_Server::DELETABLE,
 			'callback'            => array( $this, 'delete_book' ),
-			'permission_callback' => array( $this, 'can_edit' )
+			'permission_callback' => array( $this, 'can_edit' ),
+			'args'                => array(
+				'id' => array(
+					'required'          => true,
+					'validate_callback' => function ( $param, $request, $key ) {
+						return is_numeric( $param );
+					},
+					'sanitize_callback' => function ( $param, $request, $key ) {
+						return absint( $param );
+					}
+				)
+			)
 		) );
 
 		// Get the `index_title` version of a title
 		register_rest_route( $this->namespace, $this->rest_base . '/index-title', array(
 			'methods'             => \WP_REST_Server::READABLE,
 			'callback'            => array( $this, 'get_index_title' ),
-			'permission_callback' => array( $this, 'can_view' )
+			'permission_callback' => array( $this, 'can_view' ),
+			'args'                => array(
+				'title' => array(
+					'required'          => true,
+					'sanitize_callback' => function ( $param, $request, $key ) {
+						return sanitize_text_field( $param );
+					}
+				)
+			)
 		) );
 
 	}
@@ -75,7 +185,7 @@ class Book extends Controller {
 	 *
 	 * @return \WP_Error|\WP_REST_Response
 	 */
-	public function get_taxonomies( $request ) {
+	public function get_books( $request ) {
 
 		try {
 			$args = wp_parse_args( $request->get_params(), array(
@@ -137,10 +247,6 @@ class Book extends Controller {
 
 			$book_id = $request->get_param( 'id' );
 
-			if ( empty( $book_id ) ) {
-				throw new Exception( 'missing_required_parameter', __( 'A book ID is required.', 'book-database' ), 400 );
-			}
-
 			update_book( $book_id, $request->get_params() );
 
 			$book = get_book( $book_id );
@@ -166,10 +272,6 @@ class Book extends Controller {
 
 			$book_id = $request->get_param( 'id' );
 
-			if ( empty( $book_id ) ) {
-				throw new Exception( 'missing_required_parameter', __( 'A book ID is required.', 'book-database' ), 400 );
-			}
-
 			delete_book( $book_id );
 
 			return new \WP_REST_Response( true );
@@ -192,10 +294,6 @@ class Book extends Controller {
 		try {
 
 			$title = $request->get_param( 'title' );
-
-			if ( empty( $title ) ) {
-				throw new Exception( 'missing_required_parameter', __( 'A book title is required.', 'book-database' ), 400 );
-			}
 
 			return new \WP_REST_Response( generate_book_index_title( $title ) );
 

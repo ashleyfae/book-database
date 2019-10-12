@@ -16,6 +16,33 @@
         }
     }
 
+    .description {
+        color: #666;
+        display: block;
+        font: {
+            size: 13px;
+            style: italic;
+        }
+        margin: 2px 0 5px;
+    }
+
+    input[type="text"],
+    input[type="url"],
+    textarea {
+        &:not(.bdb-color-picker):not(.text-small) {
+            display: block;
+            width: 99%;
+        }
+    }
+
+    textarea {
+        min-height: 250px;
+    }
+
+    .regular-text {
+        max-width: 550px;
+    }
+
     @media (min-width: 900px) {
         clear: both;
         overflow: hidden;

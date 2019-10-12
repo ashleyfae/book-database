@@ -32,7 +32,7 @@ class Book_Taxonomies_Table extends BerlinDB\Database\Table {
 	protected $upgrades = array();
 
 	/**
-	 * Clients_Table constructor.
+	 * Book_Taxonomies_Table constructor.
 	 */
 	public function __construct() {
 		parent::__construct();

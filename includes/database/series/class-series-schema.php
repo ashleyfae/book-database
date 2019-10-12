@@ -1,6 +1,6 @@
 <?php
 /**
- * Book Terms Schema
+ * Series Schema Schema
  *
  * @package   book-database
  * @copyright Copyright (c) 2019, Ashley Gibson
@@ -10,11 +10,11 @@
 namespace Book_Database;
 
 /**
- * Class Book_Terms_Schema
+ * Class Series_Schema
  *
  * @package Book_Database
  */
-class Book_Terms_Schema extends BerlinDB\Database\Schema {
+class Series_Schema extends BerlinDB\Database\Schema {
 
 	/**
 	 * Array of database columns
@@ -32,14 +32,6 @@ class Book_Terms_Schema extends BerlinDB\Database\Schema {
 			'extra'    => 'auto_increment',
 			'primary'  => true,
 			'sortable' => true
-		),
-
-		// taxonomy
-		array(
-			'name'     => 'taxonomy',
-			'type'     => 'varchar',
-			'length'   => '32',
-			'sortable' => true,
 		),
 
 		// name
@@ -63,29 +55,13 @@ class Book_Terms_Schema extends BerlinDB\Database\Schema {
 
 		// description
 		array(
-			'name'       => 'description',
-			'type'       => 'longtext',
-			'searchable' => true
+			'name' => 'description',
+			'type' => 'longtext',
 		),
 
-		// image_id
+		// number_books
 		array(
-			'name'     => 'image_id',
-			'type'     => 'bigint',
-			'length'   => '20',
-			'unsigned' => true,
-			'sortable' => true
-		),
-
-		// links
-		array(
-			'name'       => 'links',
-			'type'       => 'longtext',
-		),
-
-		// count
-		array(
-			'name'     => 'count',
+			'name'     => 'number_books',
 			'type'     => 'bigint',
 			'length'   => '20',
 			'unsigned' => true,

@@ -38,7 +38,7 @@ class Books_Table extends BerlinDB\Database\Table {
 	);
 
 	/**
-	 * Clients_Table constructor.
+	 * Books_Table constructor.
 	 */
 	public function __construct() {
 		parent::__construct();

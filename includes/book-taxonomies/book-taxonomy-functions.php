@@ -51,6 +51,8 @@ function get_book_taxonomy_by( $column_name, $column_value ) {
  * @type array        $id__not_in          An array of item IDs to exclude. Default empty.
  * @type string       $name                Filter by name. Default empty.
  * @type string       $slug                Filter by slug. Default empty.
+ * @type array        $slug__in            Array of slugs to include. Default empty.
+ * @type array        $slug__not_in        Array of slugs to exclude. Default empty.
  * @type string       $format              Filter by format. Default empty.
  * @type array        $date_created_query  Date query clauses to limit by. See WP_Date_Query. Default null.
  * @type array        $date_modified_query Date query clauses to limit by. See WP_Date_Query. Default null.
@@ -110,8 +112,8 @@ function count_book_taxonomies( $args = array() ) {
  *
  * @param array $args   {
  *
- * @type string $id     Unique taxonomy ID/slug.
  * @type string $name   Taxonomy name.
+ * @type string $slug   Unique taxonomy slug. Omit to auto generate.
  * @type string $diplay Display type - either `text` or `checkbox`.
  * }
  *
@@ -130,17 +132,10 @@ function add_book_taxonomy( $args ) {
 		throw new Exception( 'missing_required_parameter', __( 'A taxonomy name is required.', 'book-database' ), 400 );
 	}
 
-	if ( empty( $args['slug'] ) ) {
-		throw new Exception( 'missing_required_parameter', __( 'A taxonomy slug is required.', 'book-database' ), 400 );
-	}
-
-	// Error if there's already a taxonomy with this ID.
-	if ( get_book_taxonomy_by( 'slug', $args['slug'] ) ) {
-		throw new Exception( 'taxonomy_slug_taken', __( 'There is already a taxonomy with this slug.', 'book-database' ), 400 );
-	}
+	// Generate a slug.
+	$args['slug'] = ! empty( $args['slug'] ) ? unique_book_slug( $args['slug'], 'book_taxonomy' ) : unique_book_slug( sanitize_title( $args['name'] ), 'book_taxonomy' );
 
 	// Sanitize.
-	$args['name']    = sanitize_text_field( $args['name'] );
 	$args['slug']    = sanitize_key( $args['slug'] );
 	$args['display'] = sanitize_text_field( wp_strip_all_tags( $args['display'] ) );
 

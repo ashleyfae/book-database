@@ -1,6 +1,6 @@
 <?php
 /**
- * Book terms Table
+ * Book Terms Table
  *
  * @package   book-database
  * @copyright Copyright (c) 2019, Ashley Gibson
@@ -38,7 +38,7 @@ class Book_Terms_Table extends BerlinDB\Database\Table {
 	);
 
 	/**
-	 * Clients_Table constructor.
+	 * Book_Terms_Table constructor.
 	 */
 	public function __construct() {
 		parent::__construct();
@@ -48,7 +48,7 @@ class Book_Terms_Table extends BerlinDB\Database\Table {
 	 * Set up the database schema
 	 */
 	protected function set_schema() {
-		$this->schema = "term_id bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY,
+		$this->schema = "id bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY,
 			taxonomy varchar(32) NOT NULL DEFAULT '',
 			name varchar(200) NOT NULL DEFAULT '',
 			slug varchar(200) NOT NULL DEFAULT '',
@@ -65,7 +65,7 @@ class Book_Terms_Table extends BerlinDB\Database\Table {
 	}
 
 	/**
-	 * If the old `wp_bdb_books_db_version` option exists, copy that value to our new version key.
+	 * If the old `wp_bdb_book_terms_db_version` option exists, copy that value to our new version key.
 	 * This will ensure new upgrades are processed on old installs.
 	 */
 	public function maybe_upgrade() {

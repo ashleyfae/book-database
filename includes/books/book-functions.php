@@ -261,3 +261,15 @@ function generate_book_index_title( $original_title ) {
 	return apply_filters( 'book-database/book/generate-index-title', $index_title, $original_title );
 
 }
+
+/**
+ * Get the author(s) of a book
+ *
+ * @param int   $book_id
+ * @param array $args
+ *
+ * @return Book_Term[]
+ */
+function get_book_authors( $book_id, $args = array() ) {
+	return get_attached_book_terms( $book_id, 'author', $args );
+}

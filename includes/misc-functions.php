@@ -67,7 +67,7 @@ function format_date( $date, $format = '' ) {
 	$format     = ! empty( $format ) ? $format : get_option( 'date_format' );
 	$local_date = get_date_from_gmt( $date, 'U' );
 
-	return date_i18n( $format, $local_date );
+	return date( $format, $local_date );
 
 }
 
@@ -80,15 +80,17 @@ function format_date( $date, $format = '' ) {
  * @see wp_unique_post_slug()
  *
  * @param string $slug     Desired slug.
- * @param string $taxonomy Accepts any taxonomy slug or `series`.
+ * @param string $taxonomy Accepts any taxonomy slug, `series`, or `book_taxonomy`.
  *
  * @return string A unique slug.
  */
-function unique_book_term_slug( $slug, $taxonomy = 'author' ) {
+function unique_book_slug( $slug, $taxonomy = 'author' ) {
 
 	// Check if this slug already exists.
 	if ( 'series' === $taxonomy ) {
-		$terms = get_series_by( 'slug', $slug );
+		$terms = get_book_series_by( 'slug', $slug );
+	} elseif ( 'book_taxonomy' === $taxonomy ) {
+		$terms = get_book_taxonomy_by( 'slug', $slug );
 	} else {
 		$terms = count_book_terms( array(
 			'taxonomy' => $taxonomy,
@@ -106,7 +108,9 @@ function unique_book_term_slug( $slug, $taxonomy = 'author' ) {
 			$alt_slug = _truncate_post_slug( $slug, 200 - ( strlen( $suffix ) + 1 ) ) . '-' . $suffix;
 
 			if ( 'series' === $taxonomy ) {
-				$terms = get_series_by( 'slug', $alt_slug );
+				$terms = get_book_series_by( 'slug', $alt_slug );
+			} elseif ( 'book_taxonomy' === $taxonomy ) {
+				$terms = get_book_taxonomy_by( 'slug', $alt_slug );
 			} else {
 				$terms = count_book_terms( array(
 					'taxonomy' => $taxonomy,

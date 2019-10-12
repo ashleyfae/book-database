@@ -41,6 +41,32 @@ function get_book_term_by( $column_name, $column_value ) {
 }
 
 /**
+ * Get a single book term by name and taxonomy.
+ *
+ * @param string $term_name Term name.
+ * @param string $taxonomy  Taxonomy slug.
+ *
+ * @return Book_Term|false
+ */
+function get_book_term_by_name_and_taxonomy( $term_name, $taxonomy, $args = array() ) {
+
+	$args = wp_parse_args( $args, array(
+		'number'   => 1,
+		'taxonomy' => $taxonomy,
+		'name'     => $term_name
+	) );
+
+	$terms = get_book_terms( $args );
+
+	if ( empty( $terms ) ) {
+		return false;
+	}
+
+	return reset( $terms );
+
+}
+
+/**
  * Query for book terms
  *
  * @param array       $args                {
@@ -147,7 +173,7 @@ function add_book_term( $args ) {
 	}
 
 	// Generate a slug.
-	$args['slug'] = ! empty( $args['slug'] ) ? unique_book_term_slug( $args['slug'], $args['taxonomy'] ) : unique_book_term_slug( sanitize_title( $args['name'], $args['taxonomy'] ) );
+	$args['slug'] = ! empty( $args['slug'] ) ? unique_book_slug( $args['slug'], $args['taxonomy'] ) : unique_book_slug( sanitize_title( $args['name'], $args['taxonomy'] ) );
 
 	$query   = new Book_Terms_Query();
 	$term_id = $query->add_item( $args );
@@ -181,7 +207,7 @@ function update_book_term( $term_id, $args = array() ) {
 
 	// If the slug is changing, let's re-generate it.
 	if ( isset( $args['slug'] ) && $args['slug'] != $term->get_slug() ) {
-		$args['slug'] = unique_book_term_slug( $args['slug'], $term->get_taxonomy() );
+		$args['slug'] = unique_book_slug( $args['slug'], $term->get_taxonomy() );
 	}
 
 	$query   = new Book_Terms_Query();
@@ -214,8 +240,45 @@ function delete_book_term( $term_id ) {
 		throw new Exception( 'database_error', __( 'Failed to delete the term.', 'book-database' ), 500 );
 	}
 
-	// @todo delete all the book-term-relationships for this term ID
+	/**
+	 * @var int[] $relationships
+	 */
+	$relationships = get_book_term_relationships( array(
+		'term_id' => $term_id,
+		'fields'  => 'id'
+	) );
+
+	if ( $relationships ) {
+		foreach ( $relationships as $relationship_id ) {
+			delete_book_term_relationship( $relationship_id );
+		}
+	}
 
 	return true;
+
+}
+
+/**
+ * Recalculate and update the count for a book term
+ *
+ * @param int $term_id ID of the term to update the count of.
+ *
+ * @return bool True on success, false on failure.
+ */
+function recalculate_book_term_count( $term_id ) {
+
+	$new_count = count_book_term_relationships( array(
+		'term_id' => $term_id
+	) );
+
+	try {
+		update_book_term( $term_id, array(
+			'count' => absint( $new_count )
+		) );
+
+		return true;
+	} catch ( Exception $e ) {
+		return false;
+	}
 
 }

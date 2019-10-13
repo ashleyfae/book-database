@@ -12,6 +12,7 @@ namespace Book_Database\BerlinDB\Database;
 
 // Exit if accessed directly
 use Book_Database\BerlinDB\Database\Queries\Tax;
+use Book_Database\BerlinDB\Database\Queries\Author;
 
 defined( 'ABSPATH' ) || exit;
 
@@ -196,6 +197,14 @@ class Query extends Base {
 	 * @var Tax
 	 */
 	protected $tax_query = false;
+
+	/**
+	 * Author query container.
+	 *
+	 * @since 1.0.0
+	 * @var Author
+	 */
+	protected $author_query = false;
 
 	/**
 	 * Date query container.
@@ -453,6 +462,7 @@ class Query extends Base {
 			'meta_query'        => null, // See WP_Meta_Query
 			'date_query'        => null, // See Queries\Date
 			'compare_query'     => null, // See Queries\Compare
+			'author_query'      => null, // See Queries\Author
 			'tax_query'         => null, // See Queries\Tax
 			'no_found_rows'     => true,
 
@@ -676,6 +686,17 @@ class Query extends Base {
 	 */
 	private function get_tax_query( $args = array() ) {
 		return new Queries\Tax( $args );
+	}
+
+	/**
+	 * Pass-through method to return a new Queries\Author object.
+	 *
+	 * @param array $args See WP_Tax_Query
+	 *
+	 * @return Tax
+	 */
+	private function get_author_query( $args = array() ) {
+		return new Queries\Author( $args );
 	}
 
 	/**
@@ -1324,6 +1345,23 @@ class Query extends Base {
 		if ( ! empty( $date_query ) && is_array( $date_query ) ) {
 			$this->date_query    = $this->get_date_query( $date_query );
 			$where['date_query'] = preg_replace( $and, '', $this->date_query_sql );
+		}
+
+		// Maybe perform an author query.
+		$author_query = $this->query_vars['author_query'];
+		if ( ! empty( $author_query ) && is_array( $author_query ) ) {
+			$this->author_query = $this->get_author_query( $author_query );
+			$clauses         = $this->author_query->get_sql( $this->table_alias, $this->get_primary_column_name() );
+
+			if ( false !== $clauses ) {
+
+				// Set join
+				$join .= ' ' . $clauses['join'];
+
+				// Remove " AND " from author_query where clause
+				$where['author_query'] = preg_replace( $and, '', $clauses['where'] );
+
+			}
 		}
 
 		// Maybe perform a tax query.

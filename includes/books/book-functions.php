@@ -54,17 +54,18 @@ function get_book_by( $column_name, $column_value ) {
  * @type string       $index_title         Filter by index title. Default empty.
  * @type int          $series_id           Filter by series ID. Default empty.
  * @type array        $series_id__in       An array of series IDs to include. Default empty.
- * @type array        $series_id__not_in   An array of series IDs to exclude. Default empty.
- * @type int|float    $series_position     Filter by position in the series. Default empty.
- * @type int          $pages               Filter by number of pages.
- * @type array        $date_created_query  Date query clauses to limit by. See WP_Date_Query. Default null.
- * @type array        $date_modified_query Date query clauses to limit by. See WP_Date_Query. Default null.
- * @type array        $date_query          Query all datetime columns together. See WP_Date_Query.
- * @type array        $tax_query           Query for taxonomy terms. See WP_Tax_Query.
- * @type bool         $count               Whether to return an item count (true) or array of objects. Default false.
- * @type string       $fields              Item fields to return. Accepts any column known names  or empty
+ * @type array     $series_id__not_in      An array of series IDs to exclude. Default empty.
+ * @type int|float $series_position        Filter by position in the series. Default empty.
+ * @type int       $pages                  Filter by number of pages.
+ * @type array     $date_created_query     Date query clauses to limit by. See WP_Date_Query. Default null.
+ * @type array     $date_modified_query    Date query clauses to limit by. See WP_Date_Query. Default null.
+ * @type array     $date_query             Query all datetime columns together. See WP_Date_Query.
+ * @type array     $author_query           Query for authors. See WP_Tax_Query.
+ * @type array     $tax_query              Query for taxonomy terms. See WP_Tax_Query.
+ * @type bool      $count                  Whether to return an item count (true) or array of objects. Default false.
+ * @type string    $fields                 Item fields to return. Accepts any column known names  or empty
  *                                         (returns an array of complete item objects). Default empty.
- * @type int          $number              Limit number of items to retrieve. Default 20.
+ * @type int       $number                 Limit number of items to retrieve. Default 20.
  * @type int          $offset              Number of items to offset the query. Used to build LIMIT clause. Default 0.
  * @type bool         $no_found_rows       Whether to disable the `SQL_CALC_FOUND_ROWS` query. Default true.
  * @type string|array $orderby             Accepts 'id', 'cover_id', 'title', 'index_title', 'series_id',
@@ -114,18 +115,21 @@ function count_books( $args = array() ) {
 /**
  * Add a new book
  *
- * @param array         $args            {
+ * @param array           $args            {
  *
- * @type int            $cover_id        Attachment ID of the book cover.
- * @type string         $title           Required. Title of the book.
- * @type string         $index_title     Title used in archives.
- * @type int            $series_id       ID of the series this book is part of.
- * @type int|float|null $series_position This book's position in the series.
- * @type string         $pub_date        The book's publication date, in MySQL / UTC format.
- * @type int            $pages           Number of pages in the book.
- * @type string         $synopsis        Synopsis.
- * @type string         $goodreads_url   Goodreads URL.
- * @type string         $buy_link        Link to purchase the book.
+ * @type int              $cover_id        Attachment ID of the book cover.
+ * @type string           $title           Required. Title of the book.
+ * @type string           $index_title     Title used in archives.
+ * @type array|int|string $authors         Single author name/ID or array of author names/IDs.
+ * @type int              $series_id       ID of the series this book is part of.
+ * @type int|float|null   $series_position This book's position in the series.
+ * @type string           $pub_date        The book's publication date, in MySQL / UTC format.
+ * @type int              $pages           Number of pages in the book.
+ * @type string           $synopsis        Synopsis.
+ * @type string           $goodreads_url   Goodreads URL.
+ * @type string           $buy_link        Link to purchase the book.
+ * @type array            $terms           Multi-dimensional array of terms to apply. Key is the taxonomy
+ *                                         and value is a single term name/ID or array of term names/IDs.
  * }
  *
  * @return int ID of the newly created book.
@@ -137,13 +141,15 @@ function add_book( $args = array() ) {
 		'cover_id'        => 0,
 		'title'           => '',
 		'index_title'     => '',
-		'series_id'       => 0,
+		'authors'         => '',
+		'series_id'       => null,
 		'series_position' => null,
 		'pub_date'        => '',
-		'pages'           => 0,
+		'pages'           => null,
 		'synopsis'        => '',
 		'goodreads_url'   => '',
-		'buy_link'        => ''
+		'buy_link'        => '',
+		'terms'           => array()
 	) );
 
 	if ( empty( $args['title'] ) ) {
@@ -155,6 +161,16 @@ function add_book( $args = array() ) {
 
 	if ( empty( $book_id ) ) {
 		throw new Exception( 'database_error', __( 'Failed to insert new book into the database.', 'book-database' ), 500 );
+	}
+
+	if ( ! empty( $args['authors'] ) ) {
+		set_book_authors( $book_id, $args['authors'] );
+	}
+
+	if ( ! empty( $args['terms'] ) ) {
+		foreach ( $args['terms'] as $taxonomy => $terms ) {
+			set_book_terms( $book_id, $terms, $taxonomy );
+		}
 	}
 
 	return absint( $book_id );
@@ -196,6 +212,8 @@ function update_book( $book_id, $args = array() ) {
  */
 function delete_book( $book_id ) {
 
+	global $wpdb;
+
 	$query   = new Books_Query();
 	$deleted = $query->delete_item( $book_id );
 
@@ -203,7 +221,15 @@ function delete_book( $book_id ) {
 		throw new Exception( 'database_error', __( 'Failed to delete the book.', 'book-database' ), 500 );
 	}
 
-	// @todo delete book term relationships
+	$ar_table = book_database()->get_table( 'book_author_relationships' )->get_table_name();
+	$bt_table = book_database()->get_table( 'book_term_relationships' )->get_table_name();
+
+	// Delete all book-author relationships for this book.
+	$wpdb->query( $wpdb->prepare( "DELETE FROM {$ar_table} WHERE book_id = %d", $book_id ) );
+
+	// Delete all book-term relationships for this book.
+	$wpdb->query( $wpdb->prepare( "DELETE FROM {$bt_table} WHERE book_id = %d", $book_id ) );
+
 	// @todo maybe delete owned editions
 	// @todo maybe delete reading logs
 	// @todo maybe delete reviews

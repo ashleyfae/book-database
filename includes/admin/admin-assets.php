@@ -16,14 +16,14 @@ namespace Book_Database;
  */
 function enqueue_admin_assets( $hook ) {
 
-	global $bdb_admin_pages;
-
 	if ( ! is_admin_page() ) {
 		return;
 	}
 
 	// CSS
 	wp_enqueue_style( 'book-database', BDB_URL . 'assets/css/admin-style.min.css', array(), time() );
+
+	wp_enqueue_media();
 
 	// JS
 	$deps = array( 'jquery', 'jquery-ui-sortable', 'suggest', 'wp-util' );

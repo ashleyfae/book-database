@@ -49,11 +49,11 @@ class Books_Table extends BerlinDB\Database\Table {
 	 */
 	protected function set_schema() {
 		$this->schema = "id bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY,
-			cover_id bigint(20) UNSIGNED NOT NULL DEFAULT 0,
+			cover_id bigint(20) UNSIGNED DEFAULT NULL,
 			title text NOT NULL,
 			index_title text NOT NULL,
-			series_id bigint(20) UNSIGNED NOT NULL DEFAULT 0,
-			series_position float,
+			series_id bigint(20) UNSIGNED DEFAULT NULL,
+			series_position float DEFAULT NULL,
 			pub_date datetime DEFAULT NULL,
 			pages bigint(20) UNSIGNED DEFAULT NULL,
 			synopsis longtext NOT NULL,

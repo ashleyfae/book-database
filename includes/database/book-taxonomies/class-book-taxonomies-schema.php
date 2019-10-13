@@ -40,7 +40,8 @@ class Book_Taxonomies_Schema extends BerlinDB\Database\Schema {
 			'type'       => 'varchar',
 			'length'     => '32',
 			'sortable'   => true,
-			'searchable' => true
+			'searchable' => true,
+			'validate'   => 'sanitize_text_field'
 		),
 
 		// slug
@@ -58,7 +59,8 @@ class Book_Taxonomies_Schema extends BerlinDB\Database\Schema {
 			'type'     => 'varchar',
 			'length'   => '32',
 			'sortable' => true,
-			'default'  => 'text'
+			'default'  => 'text',
+			'validate' => 'sanitize_text_field'
 		),
 
 		// date_created

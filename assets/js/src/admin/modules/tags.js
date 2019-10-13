@@ -29,6 +29,11 @@ var BDB_Tags = {
 		BDB_Tags.tag.each( function() {
 			let newTag = $( '.bdb-new-tag', $( this ) );
 			let taxonomy = $( this ).closest( '.bdb-tags-wrap' ).data( 'taxonomy' );
+			let apiURL = bdbVars.api_base + 'book-database/v1/book-term/suggest/?taxonomy=' + taxonomy + '&format=text&_wpnonce=' + bdbVars.api_nonce;
+
+			if ( 'author' === taxonomy ) {
+				apiURL = bdbVars.api_base + 'book-database/v1/author/suggest/?format=text&_wpnonce=' + bdbVars.api_nonce;
+			}
 
 			newTag.on( 'keyup', function( e ) {
 				if ( 13 === e.which ) {
@@ -42,10 +47,10 @@ var BDB_Tags = {
 
 					return false;
 				}
-			} ).suggest(  bdbVars.api_base + 'book-database/v1/book-term/suggest/?taxonomy=' + taxonomy + '&format=text&_wpnonce=' + bdbVars.api_nonce );
+			} ).suggest( apiURL );
 		} );
 
-		$( '#book-series-name' ).suggest( bdbVars.api_base + 'book-database/v1/series/suggest/' );
+		$( '#bdb-book-series-name' ).suggest( bdbVars.api_base + 'book-database/v1/series/suggest/?format=text&_wpnonce=' + bdbVars.api_nonce );
 
 		// Save tags on save/publish
 		$( '.bdb-admin-page > form' ).on( 'submit', function( e ) {

@@ -10,12 +10,16 @@
 namespace Book_Database\Admin\Fields;
 
 use Book_Database\Book;
+use Book_Database\Series;
 use function Book_Database\book_database;
 use function Book_Database\format_date;
 use function Book_Database\generate_book_index_title;
 use function Book_Database\get_attached_book_terms;
+use function Book_Database\get_book_series_by;
 use function Book_Database\get_book_taxonomies;
 use function Book_Database\get_book_terms;
+use function Book_Database\get_books;
+use function Book_Database\get_books_admin_page_url;
 use function Book_Database\get_enabled_book_fields;
 
 /**
@@ -72,7 +76,7 @@ function book_cover_field( $book ) {
 	?>
 	<img src="<?php echo esc_url( $cover_url ); ?>" alt="<?php esc_attr_e( 'Book cover', 'book-database' ); ?>" id="bdb-cover-image" style="<?php echo empty( $cover_url ) ? 'display: none;' : ''; ?>">
 
-	<div class="bdb-cover-image-fields" data-image="#bdb-cover-image" data-image-id="#bdb-cover-id">
+	<div class="bdb-cover-image-fields" data-image="#bdb-cover-image" data-image-id="#bdb-cover-id" data-image-size="large">
 		<button class="bdb-upload-image button"><?php esc_html_e( 'Upload Image', 'book-database' ); ?></button>
 		<button class="bdb-remove-image button" style="<?php echo empty( $cover_id ) ? 'display: none;' : ''; ?>"><?php esc_html_e( 'Remove Image', 'book-database' ); ?></button>
 	</div>
@@ -168,7 +172,7 @@ function book_author_field( $book ) {
 		<div class="jaxtag">
 			<div class="nojs-tags hide-if-js">
 				<label for="bdb-input-tag-author"><?php _e( 'Enter the name of the author(s)', 'book-database' ); ?></label>
-				<textarea name="book_terms[author]" data-taxonomy="author" rows="3" cols="20" id="bdb-input-tag-author"><?php echo esc_textarea( $authors ); ?></textarea>
+				<textarea name="authors" data-taxonomy="author" rows="3" cols="20" id="bdb-input-tag-author"><?php echo esc_textarea( $authors ); ?></textarea>
 			</div>
 			<div class="bdb-ajaxtag hide-if-no-js">
 				<p>
@@ -400,7 +404,7 @@ function book_taxonomy_fields( $book ) {
 			// "Tags"
 
 			?>
-			<div id="bdb-tags-<?php echo esc_attr( sanitize_html_class( $taxonomy->get_slug() ) ); ?>" class="bdb-tags-wrap" data-type="<?php echo esc_attr( $taxonomy->get_slug() ); ?>">
+			<div id="bdb-tags-<?php echo esc_attr( sanitize_html_class( $taxonomy->get_slug() ) ); ?>" class="bdb-tags-wrap" data-taxonomy="<?php echo esc_attr( $taxonomy->get_slug() ); ?>">
 				<div class="jaxtag">
 					<div class="nojs-tags hide-if-js">
 						<label for="bdb-input-tag-<?php echo esc_attr( sanitize_html_class( $taxonomy->get_slug() ) ); ?>"><?php printf( __( 'Enter the name of the %s', 'book-database' ), esc_html( $taxonomy->get_name() ) ); ?></label>
@@ -430,7 +434,7 @@ function book_taxonomy_fields( $book ) {
 }
 
 /**
- * Field: books by this author
+ * Field: books by this author button
  *
  * @param Book|false $book
  */
@@ -447,8 +451,92 @@ function books_by_author( $book ) {
 		return;
 	}
 
+	foreach ( $authors as $author ) {
+		$author_books = get_books( array(
+			'number'       => 30,
+			'author_query' => array(
+				array(
+					'field' => 'id',
+					'terms' => $author->get_id()
+				)
+			)
+		) );
 
+		if ( empty( $author_books ) || ( count( $author_books ) - 1 ) < 1 ) {
+			continue;
+		}
+		?>
+		<div class="postbox bdb-books-by-author">
+			<h2 class="hndle ui-sortable handle"><?php printf( __( 'Books by %s', 'book-database' ), esc_html( $author->get_name() ) ); ?></h2>
+			<div class="inside">
+				<a href="<?php echo esc_url( get_books_admin_page_url( array( 'author_id' => $author->get_id() ) ) ); ?>" class="button button-secondary"><?php printf( _n( 'View %s other book', 'View %s other books', ( count( $author_books ) - 1 ), 'book-database' ), ( count( $author_books ) - 1 ) ); ?></a>
+			</div>
+		</div>
+		<?php
+	}
 
 }
 
 add_action( 'book-database/book-edit/after-save-box', __NAMESPACE__ . '\books_by_author' );
+
+/**
+ * Field: other books in this series
+ *
+ * @todo Average rating
+ * @todo Link to Edit Series page
+ *
+ * @param Book|false $book
+ */
+function books_in_series( $book ) {
+
+	// Don't show when adding a new book.
+	if ( ! $book instanceof Book ) {
+		return;
+	}
+
+	$series_id = $book->get_series_id();
+
+	if ( empty( $series_id ) ) {
+		return;
+	}
+
+	$series = get_book_series_by( 'id', $series_id );
+	$books  = ( $series instanceof Series ) ? $series->get_books_in_series() : array();
+
+	if ( empty( $books ) ) {
+		return;
+	}
+
+	?>
+	<div class="postbox bdb-books-in-series">
+		<h2 class="hndle ui-sortable handle"><?php printf( __( '%s Series', 'book-database' ), esc_html( $series->get_name() ) ); ?></h2>
+		<div class="inside">
+			<?php
+			$average_rating = $series->get_average_rating();
+			if ( ! empty( $average_rating ) ) {
+				//$rating = new BDB_Rating( $average_rating );
+				//echo '<p>' . sprintf( __( 'Average Rating: %s', 'book-database' ), $rating->format_text() ) . '</p>';
+			}
+			?>
+
+			<div class="bdb-books-in-series-wrap">
+				<?php
+				$cover = array( 150, 300 );
+				foreach ( $books as $book ) {
+					$book_edit_url = get_books_admin_page_url( array(
+						'view'    => 'edit',
+						'book_id' => $book->get_id()
+					) );
+					echo '<a href="' . esc_url( $book_edit_url ) . '">' . $book->get_cover( $cover ) . '</a>';
+				}
+				?>
+			</div>
+
+			<a href="<?php echo esc_url( '#' ); ?>" class="button button-secondary"><?php _e( 'Edit Series', 'book-database' ) ?></a>
+		</div>
+	</div>
+	<?php
+
+}
+
+add_action( 'book-database/book-edit/after-save-box', __NAMESPACE__ . '\books_in_series' );

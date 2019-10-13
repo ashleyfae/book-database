@@ -40,11 +40,11 @@ class Book extends Base_Object {
 	/**
 	 * Get the authors of the book
 	 *
-	 * This returns an array of `Book_Term` objects.
+	 * This returns an array of `Author` objects.
 	 *
 	 * @param array $args Query args to override the defaults.
 	 *
-	 * @return Book_Term[]|array
+	 * @return Author[]|array
 	 */
 	public function get_authors( $args = array() ) {
 
@@ -168,7 +168,7 @@ class Book extends Base_Object {
 	 * @return int|float
 	 */
 	public function get_series_position() {
-		return $this->series_position;
+		return $this->series_position ?? null;
 	}
 
 	/**
@@ -206,7 +206,7 @@ class Book extends Base_Object {
 	 * @return int
 	 */
 	public function get_pages() {
-		return absint( $this->pages );
+		return ! empty( $this->pages ) ? absint( $this->pages ) : null;
 	}
 
 	/**

@@ -64,4 +64,31 @@ class Series extends Base_Object {
 		return absint( $this->number_books );
 	}
 
+	/**
+	 * Get the books in this series
+	 *
+	 * @param array $args
+	 *
+	 * @return Book[]
+	 */
+	public function get_books_in_series( $args = array() ) {
+
+		$args = wp_parse_args( $args, array(
+			'series_id' => $this->get_id(),
+			'number'    => 50
+		) );
+
+		return get_books( $args );
+
+	}
+
+	/**
+	 * Get the average rating of all books in this series
+	 *
+	 * @todo
+	 */
+	public function get_average_rating() {
+		return 0;
+	}
+
 }

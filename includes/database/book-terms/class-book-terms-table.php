@@ -53,7 +53,7 @@ class Book_Terms_Table extends BerlinDB\Database\Table {
 			name varchar(200) NOT NULL DEFAULT '',
 			slug varchar(200) NOT NULL DEFAULT '',
 			description longtext NOT NULL DEFAULT '',
-			image_id bigint(20) UNSIGNED NOT NULL DEFAULT 0,
+			image_id bigint(20) UNSIGNED DEFAULT NULL,
 			links longtext NOT NULL DEFAULT '',
 			count bigint(20) UNSIGNED NOT NULL DEFAULT 0,
 			date_created datetime NOT NULL DEFAULT '0000-00-00 00:00:00',

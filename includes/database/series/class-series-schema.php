@@ -40,7 +40,8 @@ class Series_Schema extends BerlinDB\Database\Schema {
 			'type'       => 'varchar',
 			'length'     => '200',
 			'sortable'   => true,
-			'searchable' => true
+			'searchable' => true,
+			'validate'   => 'sanitize_text_field'
 		),
 
 		// slug
@@ -55,8 +56,9 @@ class Series_Schema extends BerlinDB\Database\Schema {
 
 		// description
 		array(
-			'name' => 'description',
-			'type' => 'longtext',
+			'name'     => 'description',
+			'type'     => 'longtext',
+			'validate' => 'wp_kses_post'
 		),
 
 		// number_books

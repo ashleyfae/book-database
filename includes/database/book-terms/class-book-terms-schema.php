@@ -40,6 +40,7 @@ class Book_Terms_Schema extends BerlinDB\Database\Schema {
 			'type'     => 'varchar',
 			'length'   => '32',
 			'sortable' => true,
+			'validate' => 'sanitize_text_field'
 		),
 
 		// name
@@ -48,7 +49,8 @@ class Book_Terms_Schema extends BerlinDB\Database\Schema {
 			'type'       => 'varchar',
 			'length'     => '200',
 			'sortable'   => true,
-			'searchable' => true
+			'searchable' => true,
+			'validate'   => 'sanitize_text_field'
 		),
 
 		// slug
@@ -63,17 +65,21 @@ class Book_Terms_Schema extends BerlinDB\Database\Schema {
 
 		// description
 		array(
-			'name' => 'description',
-			'type' => 'longtext'
+			'name'     => 'description',
+			'type'     => 'longtext',
+			'validate' => 'wp_kses_post'
 		),
 
 		// image_id
 		array(
-			'name'     => 'image_id',
-			'type'     => 'bigint',
-			'length'   => '20',
-			'unsigned' => true,
-			'sortable' => true
+			'name'       => 'image_id',
+			'type'       => 'bigint',
+			'length'     => '20',
+			'unsigned'   => true,
+			'sortable'   => true,
+			'allow_null' => true,
+			'default'    => null,
+			'validate'   => '\Book_Database\BerlinDB\Sanitization\absint_allow_null'
 		),
 
 		// links

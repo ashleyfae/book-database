@@ -36,12 +36,14 @@ class Books_Schema extends BerlinDB\Database\Schema {
 
 		// cover_id
 		array(
-			'name'     => 'cover_id',
-			'type'     => 'bigint',
-			'length'   => '20',
-			'unsigned' => true,
-			'sortable' => true,
-			'default'  => 0
+			'name'       => 'cover_id',
+			'type'       => 'bigint',
+			'length'     => '20',
+			'unsigned'   => true,
+			'sortable'   => true,
+			'allow_null' => true,
+			'default'    => null,
+			'validate'   => '\Book_Database\BerlinDB\Sanitization\absint_allow_null'
 		),
 
 		// title
@@ -50,7 +52,8 @@ class Books_Schema extends BerlinDB\Database\Schema {
 			'type'       => 'text',
 			'sortable'   => true,
 			'searchable' => true,
-			'default'    => ''
+			'default'    => '',
+			'validate'   => 'sanitize_text_field'
 		),
 
 		// index_title
@@ -59,24 +62,30 @@ class Books_Schema extends BerlinDB\Database\Schema {
 			'type'       => 'text',
 			'sortable'   => true,
 			'searchable' => true,
-			'default'    => ''
+			'default'    => '',
+			'validate'   => 'sanitize_text_field'
 		),
 
 		// series_id
 		array(
-			'name'     => 'series_id',
-			'type'     => 'bigint',
-			'length'   => '20',
-			'unsigned' => true,
-			'sortable' => true,
-			'default'  => 0
+			'name'       => 'series_id',
+			'type'       => 'bigint',
+			'length'     => '20',
+			'unsigned'   => true,
+			'sortable'   => true,
+			'allow_null' => true,
+			'default'    => null,
+			'validate'   => '\Book_Database\BerlinDB\Sanitization\absint_allow_null'
 		),
 
 		// series_position
 		array(
-			'name'     => 'series_position',
-			'type'     => 'float',
-			'sortable' => true
+			'name'       => 'series_position',
+			'type'       => 'float',
+			'sortable'   => true,
+			'allow_null' => true,
+			'default'    => null,
+			'validate'   => '\Book_Database\BerlinDB\Sanitization\absint_allow_null'
 		),
 
 		// pub_date
@@ -89,30 +98,35 @@ class Books_Schema extends BerlinDB\Database\Schema {
 
 		// pages
 		array(
-			'name'     => 'pages',
-			'type'     => 'bigint',
-			'length'   => '20',
-			'unsigned' => true,
-			'sortable' => true,
-			'default'  => null
+			'name'       => 'pages',
+			'type'       => 'bigint',
+			'length'     => '20',
+			'unsigned'   => true,
+			'sortable'   => true,
+			'allow_null' => true,
+			'default'    => null,
+			'validate'   => '\Book_Database\BerlinDB\Sanitization\absint_allow_null'
 		),
 
 		// synopsis
 		array(
-			'name' => 'synopsis',
-			'type' => 'longtext',
+			'name'     => 'synopsis',
+			'type'     => 'longtext',
+			'validate' => 'wp_kses_post'
 		),
 
 		// goodreads_url
 		array(
-			'name' => 'goodreads_url',
-			'type' => 'text',
+			'name'     => 'goodreads_url',
+			'type'     => 'text',
+			'validate' => 'sanitize_text_field'
 		),
 
 		// buy_link
 		array(
-			'name' => 'buy_link',
-			'type' => 'text',
+			'name'     => 'buy_link',
+			'type'     => 'text',
+			'validate' => 'sanitize_text_field'
 		),
 
 		// date_created

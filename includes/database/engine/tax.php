@@ -6,7 +6,7 @@
  * @see \WP_Tax_Query
  *
  * @package     Database
- * @subpackage  Date
+ * @subpackage  Tax
  * @copyright   Copyright (c) 2019
  * @license     https://opensource.org/licenses/gpl-2.0.php GNU Public License
  * @since       1.0.0
@@ -32,14 +32,25 @@ use function Book_Database\get_book_terms;
 class Tax extends Base {
 
 	/**
+	 * Relationships table name
+	 *
 	 * @var string
 	 */
-	private $relationships_table_name;
+	protected $relationships_table_name;
 
 	/**
+	 * Terms table name
+	 *
 	 * @var string
 	 */
-	private $terms_table_name;
+	protected $terms_table_name;
+
+	/**
+	 * Name of the term ID column in the relationships table
+	 *
+	 * @var string
+	 */
+	protected $term_id_column_name;
 
 	/**
 	 * Array of taxonomy queries.
@@ -120,8 +131,7 @@ class Tax extends Base {
 	 * }
 	 */
 	public function __construct( $tax_query ) {
-		$this->relationships_table_name = book_database()->get_table('book_term_relationships')->get_table_name();
-		$this->terms_table_name         = book_database()->get_table('book_terms')->get_table_name();
+		$this->set_tables();
 
 		if ( isset( $tax_query['relation'] ) ) {
 			$this->relation = $this->sanitize_relation( $tax_query['relation'] );
@@ -130,6 +140,15 @@ class Tax extends Base {
 		}
 
 		$this->queries = $this->sanitize_query( $tax_query );
+	}
+
+	/**
+	 * Set tables used in queries
+	 */
+	protected function set_tables() {
+		$this->relationships_table_name = book_database()->get_table( 'book_term_relationships' )->get_table_name();
+		$this->terms_table_name         = book_database()->get_table( 'book_terms' )->get_table_name();
+		$this->term_id_column_name      = 'term_id';
 	}
 
 	/**
@@ -424,7 +443,7 @@ class Tax extends Base {
 				$join .= " ON ($this->primary_table.$this->primary_id_column = $alias.book_id)";
 			}
 
-			$where = "$alias.term_id $operator ($terms)";
+			$where = "$alias.{$this->term_id_column_name} $operator ($terms)";
 
 		} elseif ( 'NOT IN' == $operator ) {
 
@@ -437,7 +456,7 @@ class Tax extends Base {
 			$where = "$this->primary_table.$this->primary_id_column NOT IN (
 				SELECT book_id
 				FROM {$this->relationships_table_name}
-				WHERE term_id IN ($terms)
+				WHERE {$this->term_id_column_name} IN ($terms)
 			)";
 
 		} elseif ( 'AND' == $operator ) {
@@ -453,7 +472,7 @@ class Tax extends Base {
 			$where = "(
 				SELECT COUNT(1)
 				FROM {$this->relationships_table_name}
-				WHERE term_id IN ($terms)
+				WHERE {$this->term_id_column_name} IN ($terms)
 				AND book_id = $this->primary_table.$this->primary_id_column
 			) = $num_terms";
 
@@ -464,7 +483,7 @@ class Tax extends Base {
 				SELECT 1
 				FROM {$this->relationships_table_name}
 				INNER JOIN {$this->terms_table_name}
-				ON {$this->terms_table_name}.id = {$this->relationships_table_name}.term_id
+				ON {$this->terms_table_name}.id = {$this->relationships_table_name}.{$this->term_id_column_name}
 				WHERE {$this->terms_table_name}.taxonomy = %s
 				AND {$this->relationships_table_name}.book_id = $this->primary_table.$this->primary_id_column
 			)",
@@ -534,7 +553,7 @@ class Tax extends Base {
 	 *
 	 * @param array $query The single query. Passed by reference.
 	 */
-	private function clean_query( &$query ) {
+	protected function clean_query( &$query ) {
 		if ( empty( $query['taxonomy'] ) ) {
 			if ( 'term_id' !== $query['field'] ) {
 				$query = new \WP_Error( 'invalid_taxonomy', __( 'Invalid taxonomy.', 'book-database' ) );

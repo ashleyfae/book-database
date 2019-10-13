@@ -1,6 +1,6 @@
 <?php
 /**
- * Book Term Controller
+ * Author Controller
  *
  * @package   book-database
  * @copyright Copyright (c) 2019, Ashley Gibson
@@ -11,37 +11,34 @@ namespace Book_Database\REST_API\v1;
 
 use Book_Database\Exception;
 use Book_Database\REST_API\Controller;
-use function Book_Database\get_book_terms;
+use function Book_Database\get_book_authors;
 
 /**
- * Class Book_Term
+ * Class Author
  * @package Book_Database\REST_API\v1
  */
-class Book_Term extends Controller {
+class Author extends Controller {
 
-	protected $rest_base = 'book-term';
+	protected $rest_base = 'author';
 
 	/**
 	 * Register routes
 	 */
 	public function register_routes() {
 
-		// Suggest term names.
+		// Suggest author names.
 		register_rest_route( $this->namespace, $this->rest_base . '/suggest', array(
 			'methods'             => \WP_REST_Server::READABLE,
 			'callback'            => array( $this, 'suggest' ),
 			'permission_callback' => array( $this, 'can_view' ),
 			'args'                => array(
-				'taxonomy' => array(
-					'required' => true
-				),
-				'format'   => array(
+				'format' => array(
 					'default'           => 'array',
 					'validate_callback' => function ( $param, $request, $key ) {
 						return in_array( $param, array( 'text', 'array' ) );
 					}
 				),
-				'q'        => array(
+				'q'      => array(
 					'required'          => true,
 					'sanitize_callback' => function ( $param, $request, $key ) {
 						return wp_strip_all_tags( $param );
@@ -53,7 +50,7 @@ class Book_Term extends Controller {
 	}
 
 	/**
-	 * Suggest term names
+	 * Suggest author names
 	 *
 	 * @param \WP_REST_Request $request
 	 *
@@ -63,17 +60,11 @@ class Book_Term extends Controller {
 
 		try {
 
-			$format   = $request->get_param( 'format' ) ?? 'array';
-			$taxonomy = $request->get_param( 'taxonomy' );
+			$format = $request->get_param( 'format' ) ?? 'array';
 
-			if ( empty( $taxonomy ) ) {
-				throw new Exception( 'missing_required_parameter', __( 'A taxonomy slug is required.', 'book-database' ), 400 );
-			}
-
-			$names = get_book_terms( array(
-				'taxonomy' => $taxonomy,
-				'search'   => strtolower( $request->get_param( 'q' ) ),
-				'fields'   => 'name'
+			$names = get_book_authors( array(
+				'search' => strtolower( $request->get_param( 'q' ) ),
+				'fields' => 'name'
 			) );
 
 			if ( 'text' === $format ) {

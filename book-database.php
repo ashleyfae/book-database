@@ -165,6 +165,8 @@ final class Book_Database {
 		require_once BDB_DIR . 'includes/database/engine/compare.php';
 		require_once BDB_DIR . 'includes/database/engine/date.php';
 		require_once BDB_DIR . 'includes/database/engine/tax.php';
+		require_once BDB_DIR . 'includes/database/engine/author.php';
+		require_once BDB_DIR . 'includes/database/sanitization.php';
 
 		// Database - authors
 		require_once BDB_DIR . 'includes/database/authors/class-authors-table.php';
@@ -235,6 +237,7 @@ final class Book_Database {
 		// REST API
 		require_once BDB_DIR . 'includes/rest-api/class-rest-api.php';
 		require_once BDB_DIR . 'includes/rest-api/abstract-class-controller.php';
+		require_once BDB_DIR . 'includes/rest-api/v1/class-author-controller.php';
 		require_once BDB_DIR . 'includes/rest-api/v1/class-book-controller.php';
 		require_once BDB_DIR . 'includes/rest-api/v1/class-book-term-controller.php';
 		require_once BDB_DIR . 'includes/rest-api/v1/class-taxonomy-controller.php';

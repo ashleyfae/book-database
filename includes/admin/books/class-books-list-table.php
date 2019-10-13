@@ -214,8 +214,7 @@ class Books_List_Table extends List_Table {
 		// Filter by author ID.
 		$author_id = $this->get_request_var( 'author_id' );
 		if ( ! empty( $author_id ) ) {
-			$args['tax_query'][] = array(
-				'taxonomy' => 'author',
+			$args['author_id'][] = array(
 				'field'    => 'id',
 				'terms'    => absint( $author_id )
 			);

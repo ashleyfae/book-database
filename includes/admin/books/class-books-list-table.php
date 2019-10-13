@@ -149,11 +149,28 @@ class Books_List_Table extends List_Table {
 				break;
 
 			case 'author' :
-				// @todo
+				$authors = $item->get_authors();
+				if ( $authors ) {
+					$authors_array = array();
+
+					foreach ( $authors as $author ) {
+						$authors_array[] = '<a href="' . esc_url( add_query_arg( 'author_id', urlencode( $author->get_id() ), $this->get_base_url() ) ) . '">' . esc_html( $author->get_name() ) . '</a>';
+					}
+
+					$value = implode( ', ', $authors_array );
+				} else {
+					$value = '&ndash;';
+				}
 				break;
 
 			case 'series' :
-				// @todo
+				$series_id = $item->get_series_id();
+				if ( ! empty( $series_id ) ) {
+					$series = get_book_series_by( 'id', $series_id );
+					$value  = '<a href="' . esc_url( add_query_arg( 'series_id', urlencode( $series_id ), $this->get_base_url() ) ) . '">' . esc_html( sprintf( '%s #%s', $series->get_name(), $item->get_series_position() ) ) . '</a>';
+				} else {
+					$value = '&ndash;';
+				}
 				break;
 
 			case 'pub_date' :
@@ -187,11 +204,22 @@ class Books_List_Table extends List_Table {
 	public function get_object_data( $count = false ) {
 
 		$args = array(
-			'number'  => $this->per_page,
-			'offset'  => $this->get_offset(),
-			'orderby' => sanitize_text_field( $this->get_request_var( 'orderby', 'id' ) ),
-			'order'   => sanitize_text_field( $this->get_request_var( 'order', 'DESC' ) ),
+			'number'    => $this->per_page,
+			'offset'    => $this->get_offset(),
+			'orderby'   => sanitize_text_field( $this->get_request_var( 'orderby', 'id' ) ),
+			'order'     => sanitize_text_field( $this->get_request_var( 'order', 'DESC' ) ),
+			'tax_query' => array()
 		);
+
+		// Filter by author ID.
+		$author_id = $this->get_request_var( 'author_id' );
+		if ( ! empty( $author_id ) ) {
+			$args['tax_query'][] = array(
+				'taxonomy' => 'author',
+				'field'    => 'id',
+				'terms'    => absint( $author_id )
+			);
+		}
 
 		// Maybe add search.
 		$search = $this->get_search();

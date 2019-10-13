@@ -49,7 +49,7 @@ class Book extends Base_Object {
 	public function get_authors( $args = array() ) {
 
 		if ( ! isset( $this->authors ) ) {
-			$this->authors = get_book_authors( $this->get_id(), $args );
+			$this->authors = get_attached_book_authors( $this->get_id(), $args );
 		}
 
 		return $this->authors;

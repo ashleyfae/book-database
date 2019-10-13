@@ -233,7 +233,7 @@ function update_book_term( $term_id, $args = array() ) {
  */
 function delete_book_term( $term_id ) {
 
-	$query   = new Book_Taxonomies_Query();
+	$query   = new Book_Terms_Query();
 	$deleted = $query->delete_item( $term_id );
 
 	if ( ! $deleted ) {

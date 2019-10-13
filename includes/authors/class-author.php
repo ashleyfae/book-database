@@ -1,6 +1,6 @@
 <?php
 /**
- * Book Term
+ * Author Object
  *
  * @package   book-database
  * @copyright Copyright (c) 2019, Ashley Gibson
@@ -10,12 +10,10 @@
 namespace Book_Database;
 
 /**
- * Class Book_Term
+ * Class Author
  * @package Book_Database
  */
-class Book_Term extends Base_Object {
-
-	protected $taxonomy = '';
+class Author extends Base_Object {
 
 	protected $name = '';
 
@@ -23,23 +21,14 @@ class Book_Term extends Base_Object {
 
 	protected $description = '';
 
-	protected $image_id = 0;
+	protected $image_id = null;
 
-	protected $links = '';
+	protected $links = array();
 
-	protected $count = 0;
-
-	/**
-	 * Get the taxonomy slug
-	 *
-	 * @return string
-	 */
-	public function get_taxonomy() {
-		return $this->taxonomy;
-	}
+	protected $book_count = 0;
 
 	/**
-	 * Get the name of the term
+	 * Get the author's name
 	 *
 	 * @return string
 	 */
@@ -48,7 +37,7 @@ class Book_Term extends Base_Object {
 	}
 
 	/**
-	 * Get the term slug
+	 * Get the author slug
 	 *
 	 * @return string
 	 */
@@ -57,7 +46,7 @@ class Book_Term extends Base_Object {
 	}
 
 	/**
-	 * Get the description
+	 * Get the author description
 	 *
 	 * @return string
 	 */
@@ -71,25 +60,25 @@ class Book_Term extends Base_Object {
 	 * @return int
 	 */
 	public function get_image_id() {
-		return absint( $this->image_id );
+		return ! empty( $this->image_id ) ? absint( $this->image_id ) : 0;
 	}
 
 	/**
-	 * Get the term links
+	 * Get an array of author links
 	 *
-	 * @return string
+	 * @return array()
 	 */
 	public function get_links() {
 		return $this->links;
 	}
 
 	/**
-	 * Get the number of books associated with this term
+	 * Get the number of books by this author
 	 *
 	 * @return int
 	 */
-	public function get_count() {
-		return absint( $this->count );
+	public function get_book_count() {
+		return absint( $this->book_count );
 	}
 
 }

@@ -80,7 +80,7 @@ function format_date( $date, $format = '' ) {
  * @see wp_unique_post_slug()
  *
  * @param string $slug     Desired slug.
- * @param string $taxonomy Accepts any taxonomy slug, `series`, or `book_taxonomy`.
+ * @param string $taxonomy Accepts any taxonomy slug, `author`, `series`, or `book_taxonomy`.
  *
  * @return string A unique slug.
  */
@@ -91,6 +91,8 @@ function unique_book_slug( $slug, $taxonomy = 'author' ) {
 		$terms = get_book_series_by( 'slug', $slug );
 	} elseif ( 'book_taxonomy' === $taxonomy ) {
 		$terms = get_book_taxonomy_by( 'slug', $slug );
+	} elseif ( 'author' == $taxonomy ) {
+		$terms = get_book_author_by( 'slug', $slug );
 	} else {
 		$terms = count_book_terms( array(
 			'taxonomy' => $taxonomy,
@@ -111,6 +113,8 @@ function unique_book_slug( $slug, $taxonomy = 'author' ) {
 				$terms = get_book_series_by( 'slug', $alt_slug );
 			} elseif ( 'book_taxonomy' === $taxonomy ) {
 				$terms = get_book_taxonomy_by( 'slug', $alt_slug );
+			} elseif ( 'author' === $taxonomy ) {
+				$terms = get_book_author_by( 'slug', $alt_slug );
 			} else {
 				$terms = count_book_terms( array(
 					'taxonomy' => $taxonomy,

@@ -1,6 +1,6 @@
 <?php
 /**
- * Book Terms Schema
+ * Authors Schema
  *
  * @package   book-database
  * @copyright Copyright (c) 2019, Ashley Gibson
@@ -10,11 +10,11 @@
 namespace Book_Database;
 
 /**
- * Class Book_Terms_Schema
+ * Class Authors_Schema
  *
  * @package Book_Database
  */
-class Book_Terms_Schema extends BerlinDB\Database\Schema {
+class Authors_Schema extends BerlinDB\Database\Schema {
 
 	/**
 	 * Array of database columns
@@ -34,14 +34,6 @@ class Book_Terms_Schema extends BerlinDB\Database\Schema {
 			'sortable' => true
 		),
 
-		// taxonomy
-		array(
-			'name'     => 'taxonomy',
-			'type'     => 'varchar',
-			'length'   => '32',
-			'sortable' => true,
-		),
-
 		// name
 		array(
 			'name'       => 'name',
@@ -53,18 +45,17 @@ class Book_Terms_Schema extends BerlinDB\Database\Schema {
 
 		// slug
 		array(
-			'name'       => 'slug',
-			'type'       => 'varchar',
-			'length'     => '200',
-			'sortable'   => true,
-			'searchable' => true,
-			'validate'   => 'sanitize_key'
+			'name'     => 'slug',
+			'type'     => 'varchar',
+			'length'   => '200',
+			'sortable' => true,
+			'validate' => 'sanitize_key'
 		),
 
 		// description
 		array(
 			'name' => 'description',
-			'type' => 'longtext'
+			'type' => 'longtext',
 		),
 
 		// image_id
@@ -73,22 +64,24 @@ class Book_Terms_Schema extends BerlinDB\Database\Schema {
 			'type'     => 'bigint',
 			'length'   => '20',
 			'unsigned' => true,
-			'sortable' => true
+			'sortable' => true,
+			'default'  => null
 		),
 
 		// links
 		array(
-			'name'       => 'links',
-			'type'       => 'longtext',
+			'name' => 'links',
+			'type' => 'longtext',
 		),
 
-		// count
+		// book_count
 		array(
-			'name'     => 'count',
+			'name'     => 'book_count',
 			'type'     => 'bigint',
 			'length'   => '20',
 			'unsigned' => true,
-			'sortable' => true
+			'sortable' => true,
+			'default'  => 0
 		),
 
 		// date_created

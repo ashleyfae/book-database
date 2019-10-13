@@ -166,6 +166,16 @@ final class Book_Database {
 		require_once BDB_DIR . 'includes/database/engine/date.php';
 		require_once BDB_DIR . 'includes/database/engine/tax.php';
 
+		// Database - authors
+		require_once BDB_DIR . 'includes/database/authors/class-authors-table.php';
+		require_once BDB_DIR . 'includes/database/authors/class-authors-schema.php';
+		require_once BDB_DIR . 'includes/database/authors/class-authors-query.php';
+
+		// Database - book_author_relationships
+		require_once BDB_DIR . 'includes/database/book-author-relationships/class-book-author-relationships-table.php';
+		require_once BDB_DIR . 'includes/database/book-author-relationships/class-book-author-relationships-schema.php';
+		require_once BDB_DIR . 'includes/database/book-author-relationships/class-book-author-relationships-query.php';
+
 		// Database - books
 		require_once BDB_DIR . 'includes/database/books/class-books-table.php';
 		require_once BDB_DIR . 'includes/database/books/class-books-schema.php';
@@ -190,6 +200,15 @@ final class Book_Database {
 		require_once BDB_DIR . 'includes/database/series/class-series-table.php';
 		require_once BDB_DIR . 'includes/database/series/class-series-schema.php';
 		require_once BDB_DIR . 'includes/database/series/class-series-query.php';
+
+		// Authors
+		require_once BDB_DIR . 'includes/authors/class-author.php';
+		require_once BDB_DIR . 'includes/authors/author-functions.php';
+
+		// Book Author Relationships
+		require_once BDB_DIR . 'includes/book-author-relationships/class-book-author-relationship.php';
+		require_once BDB_DIR . 'includes/book-author-relationships/book-author-relationship-actions.php';
+		require_once BDB_DIR . 'includes/book-author-relationships/book-author-relationship-functions.php';
 
 		// Books
 		require_once BDB_DIR . 'includes/books/class-book.php';
@@ -223,6 +242,10 @@ final class Book_Database {
 		// Misc.
 		require_once BDB_DIR . 'includes/class-html.php';
 		require_once BDB_DIR . 'includes/misc-functions.php';
+
+		if ( defined( 'WP_CLI' ) && WP_CLI ) {
+			require_once BDB_DIR . 'includes/class-cli.php';
+		}
 
 	}
 
@@ -262,11 +285,13 @@ final class Book_Database {
 	private function setup_application() {
 
 		self::$instance->tables = array(
-			'book_taxonomies'         => new Book_Taxonomies_Table(),
-			'book_term_relationships' => new Book_Term_Relationships_Table(),
-			'book_terms'              => new Book_Terms_Table(),
-			'books'                   => new Books_Table(),
-			'series'                  => new Series_Table(),
+			'authors'                   => new Authors_Table(),
+			'book_author_relationships' => new Book_Author_Relationships_Table(),
+			'book_taxonomies'           => new Book_Taxonomies_Table(),
+			'book_term_relationships'   => new Book_Term_Relationships_Table(),
+			'book_terms'                => new Book_Terms_Table(),
+			'books'                     => new Books_Table(),
+			'series'                    => new Series_Table(),
 		);
 
 		self::$instance->rest_api = new REST_API();
@@ -278,6 +303,8 @@ final class Book_Database {
 	 * Get a table object by its key
 	 *
 	 * @param string $table_key Table key.  One of:
+	 *                          'authors',
+	 *                          'book_author_relationships',
 	 *                          'book_taxonomies',
 	 *                          'book_term_relationships',
 	 *                          'book_terms'
@@ -311,11 +338,6 @@ final class Book_Database {
 	public function install() {
 
 		$default_taxonomies = array(
-			'author' => array(
-				'slug'   => 'author',
-				'name'   => esc_html__( 'Author', 'book-database' ),
-				'format' => 'text' // text, checkbox
-			),
 			'publisher' => array(
 				'slug'   => 'publisher',
 				'name'   => esc_html__( 'Publisher', 'book-database' ),

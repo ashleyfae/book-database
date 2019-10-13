@@ -161,11 +161,6 @@ function add_book_taxonomy( $args ) {
  */
 function update_book_taxonomy( $taxonomy_id, $args = array() ) {
 
-	$args = wp_parse_args( $args, array(
-		'name'    => '',
-		'display' => 'text'
-	) );
-
 	// Slugs cannot be changed.
 	if ( isset( $args['slug'] ) ) {
 		throw new Exception( 'invalid_parameter', __( 'Taxonomy slugs cannot be changed.', 'book-database' ), 400 );
@@ -191,17 +186,6 @@ function update_book_taxonomy( $taxonomy_id, $args = array() ) {
  * @throws Exception
  */
 function delete_book_taxonomy( $taxonomy_id ) {
-
-	$taxonomy = get_book_taxonomy( $taxonomy_id );
-
-	if ( empty( $taxonomy ) ) {
-		return true;
-	}
-
-	// The `author` taxonomy cannot be deleted.
-	if ( 'author' === $taxonomy->get_slug() ) {
-		throw new Exception( 'invalid_item', __( 'The author taxonomy cannot be deleted.', 'book-database' ), 400 );
-	}
 
 	$query   = new Book_Taxonomies_Query();
 	$deleted = $query->delete_item( $taxonomy_id );

@@ -1,6 +1,6 @@
 <?php
 /**
- * Book Terms Schema
+ * Book Author Relationships Schema
  *
  * @package   book-database
  * @copyright Copyright (c) 2019, Ashley Gibson
@@ -10,11 +10,11 @@
 namespace Book_Database;
 
 /**
- * Class Book_Terms_Schema
+ * Class Book_Author_Relationships_Schema
  *
  * @package Book_Database
  */
-class Book_Terms_Schema extends BerlinDB\Database\Schema {
+class Book_Author_Relationships_Schema extends BerlinDB\Database\Schema {
 
 	/**
 	 * Array of database columns
@@ -34,57 +34,18 @@ class Book_Terms_Schema extends BerlinDB\Database\Schema {
 			'sortable' => true
 		),
 
-		// taxonomy
+		// author_id
 		array(
-			'name'     => 'taxonomy',
-			'type'     => 'varchar',
-			'length'   => '32',
-			'sortable' => true,
-		),
-
-		// name
-		array(
-			'name'       => 'name',
-			'type'       => 'varchar',
-			'length'     => '200',
-			'sortable'   => true,
-			'searchable' => true
-		),
-
-		// slug
-		array(
-			'name'       => 'slug',
-			'type'       => 'varchar',
-			'length'     => '200',
-			'sortable'   => true,
-			'searchable' => true,
-			'validate'   => 'sanitize_key'
-		),
-
-		// description
-		array(
-			'name' => 'description',
-			'type' => 'longtext'
-		),
-
-		// image_id
-		array(
-			'name'     => 'image_id',
+			'name'     => 'author_id',
 			'type'     => 'bigint',
 			'length'   => '20',
 			'unsigned' => true,
 			'sortable' => true
 		),
 
-		// links
+		// book_id
 		array(
-			'name'       => 'links',
-			'type'       => 'longtext',
-		),
-
-		// count
-		array(
-			'name'     => 'count',
+			'name'     => 'book_id',
 			'type'     => 'bigint',
 			'length'   => '20',
 			'unsigned' => true,

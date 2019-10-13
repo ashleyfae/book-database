@@ -9,6 +9,7 @@
 import { BDB_Book_Layout } from './modules/book-layout.js';
 import { BDB_Book_Index_Title } from './modules/book-index-title';
 import { BDB_Categories } from "./modules/categories";
+import { BDB_Delete_Objects } from "./modules/delete-objects";
 import { BDB_Media } from "./modules/media-upload";
 import { BDB_Tags } from './modules/tags';
 import { BDB_Book_Taxonomies } from './modules/taxonomies.js';
@@ -18,6 +19,7 @@ import { BDB_Book_Taxonomies } from './modules/taxonomies.js';
 	BDB_Book_Layout.init();
 	BDB_Book_Index_Title.init();
 	BDB_Categories.init();
+	BDB_Delete_Objects.init();
 	BDB_Media.init();
 	BDB_Tags.init();
 	BDB_Book_Taxonomies.init();

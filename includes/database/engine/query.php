@@ -11,6 +11,7 @@
 namespace Book_Database\BerlinDB\Database;
 
 // Exit if accessed directly
+use Book_Database\BerlinDB\Database\Queries\Series;
 use Book_Database\BerlinDB\Database\Queries\Tax;
 use Book_Database\BerlinDB\Database\Queries\Author;
 
@@ -189,6 +190,14 @@ class Query extends Base {
 	 * @var   object|\WP_Meta_Query
 	 */
 	protected $meta_query = false;
+
+	/**
+	 * Series query container.
+	 *
+	 * @since 1.0.0
+	 * @var Tax
+	 */
+	protected $series_query = false;
 
 	/**
 	 * Tax query container.
@@ -463,6 +472,7 @@ class Query extends Base {
 			'date_query'        => null, // See Queries\Date
 			'compare_query'     => null, // See Queries\Compare
 			'author_query'      => null, // See Queries\Author
+			'series_query'      => null, // See Queries\Series
 			'tax_query'         => null, // See Queries\Tax
 			'no_found_rows'     => true,
 
@@ -675,6 +685,17 @@ class Query extends Base {
 	 */
 	private function get_meta_query( $args = array() ) {
 		return new \WP_Meta_Query( $args );
+	}
+
+	/**
+	 * Pass-through method to return a new Queries\Series object.
+	 *
+	 * @param array $args See WP_Tax_Query
+	 *
+	 * @return Series
+	 */
+	private function get_series_query( $args = array() ) {
+		return new Queries\Series( $args );
 	}
 
 	/**
@@ -1000,6 +1021,8 @@ class Query extends Base {
 		// Setup request
 		$this->set_request_clauses( $clauses );
 		$this->set_request();
+
+		//error_log($this->request);
 
 		// Return count
 		if ( ! empty( $this->query_vars['count'] ) ) {
@@ -1360,6 +1383,23 @@ class Query extends Base {
 
 				// Remove " AND " from author_query where clause
 				$where['author_query'] = preg_replace( $and, '', $clauses['where'] );
+
+			}
+		}
+
+		// Maybe perform a series query.
+		$series_query = $this->query_vars['series_query'];
+		if ( ! empty( $series_query ) && is_array( $series_query ) ) {
+			$this->series_query = $this->get_series_query( $series_query );
+			$clauses         = $this->series_query->get_sql( $this->table_alias, 'series_id' );
+
+			if ( false !== $clauses ) {
+
+				// Set join
+				$join .= ' ' . $clauses['join'];
+
+				// Remove " AND " from series_query where clause
+				$where['series_query'] = preg_replace( $and, '', $clauses['where'] );
 
 			}
 		}

@@ -164,6 +164,7 @@ final class Book_Database {
 		require_once BDB_DIR . 'includes/database/engine/schema.php';
 		require_once BDB_DIR . 'includes/database/engine/compare.php';
 		require_once BDB_DIR . 'includes/database/engine/date.php';
+		require_once BDB_DIR . 'includes/database/engine/series.php';
 		require_once BDB_DIR . 'includes/database/engine/tax.php';
 		require_once BDB_DIR . 'includes/database/engine/author.php';
 		require_once BDB_DIR . 'includes/database/sanitization.php';
@@ -261,6 +262,11 @@ final class Book_Database {
 		require_once BDB_DIR . 'includes/admin/admin-assets.php';
 		require_once BDB_DIR . 'includes/admin/admin-notices.php';
 		require_once BDB_DIR . 'includes/admin/admin-pages.php';
+
+		// Authors
+		require_once BDB_DIR . 'includes/admin/authors/author-actions.php';
+		require_once BDB_DIR . 'includes/admin/authors/author-functions.php';
+		require_once BDB_DIR . 'includes/admin/authors/authors-page.php';
 
 		// Books
 		require_once BDB_DIR . 'includes/admin/books/book-actions.php';

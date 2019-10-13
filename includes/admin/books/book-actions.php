@@ -198,3 +198,32 @@ function process_update_book() {
 }
 
 add_action( 'admin_init', __NAMESPACE__ . '\process_update_book' );
+
+/**
+ * Process deleting a book
+ */
+function process_delete_book() {
+
+	if ( empty( $_GET['bdb_action'] ) || 'delete_book' !== $_GET['bdb_action'] ) {
+		return;
+	}
+
+	try {
+
+		if ( empty( $_GET['_wpnonce'] ) || ! wp_verify_nonce( $_GET['_wpnonce'], 'bdb_delete_book' ) || ! current_user_can( 'edit_posts' ) ) {
+			throw new Exception( 'permission_denied', __( 'You do not have permission to perform this action.', 'book-database' ), 403 );
+		}
+
+		if ( empty( $_GET['book_id'] ) ) {
+			throw new Exception( 'missing_required_parameter', __( 'Missing book ID.', 'book-database' ), 400 );
+		}
+
+		delete_book( absint( $_GET['book_id'] ) );
+
+	} catch ( Exception $e ) {
+		wp_die( $e->getMessage() );
+	}
+
+}
+
+add_action( 'admin_init', __NAMESPACE__ . '\process_delete_book' );

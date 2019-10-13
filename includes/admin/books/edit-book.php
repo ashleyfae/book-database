@@ -44,7 +44,7 @@ if ( ! empty( $_GET['view'] ) && 'edit' === $_GET['view'] && empty( $book ) ) {
 								<div id="major-publishing-actions">
 									<div id="delete-action">
 										<?php if ( $book ) : ?>
-											<a href="<?php echo esc_url( get_delete_book_url( $book->get_id() ) ); ?>"><?php _e( 'Delete Book', 'book-database' ); ?></a>
+											<a href="<?php echo esc_url( get_delete_book_url( $book->get_id() ) ); ?>" class="bdb-delete-item" data-object="<?php esc_attr_e( 'book', 'book-database' ); ?>"><?php _e( 'Delete Book', 'book-database' ); ?></a>
 										<?php endif; ?>
 									</div>
 									<div id="publishing-action">

@@ -64,6 +64,47 @@ class Author extends Base_Object {
 	}
 
 	/**
+	 * Get the author image URL
+	 *
+	 * @param string $size Desired image size.
+	 *
+	 * @return string
+	 */
+	public function get_image_url( $size = 'full' ) {
+
+		$url      = '';
+		$image_id = $this->get_image_id();
+
+		if ( ! empty( $image_id ) ) {
+			$url = wp_get_attachment_image_url( $image_id, $size );
+		}
+
+		return apply_filters( 'book-database/author/get/image_url', $url, $image_id, $this );
+
+	}
+
+	/**
+	 * Get the author image HTML.
+	 *
+	 * @param string|array $size Desired image size.
+	 * @param array        $args Arguments to use in `wp_get_attachment_image()`.
+	 *
+	 * @return string
+	 */
+	public function get_image( $size = 'full', $args = array() ) {
+
+		$image    = '';
+		$image_id = $this->get_image_id();
+
+		if ( $image_id ) {
+			$image = wp_get_attachment_image( absint( $image_id ), $size, false, $args );
+		}
+
+		return apply_filters( 'book-database/author/get/image', $image, $image_id, $this );
+
+	}
+
+	/**
 	 * Get an array of author links
 	 *
 	 * @return array()

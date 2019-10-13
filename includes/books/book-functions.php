@@ -54,18 +54,19 @@ function get_book_by( $column_name, $column_value ) {
  * @type string       $index_title         Filter by index title. Default empty.
  * @type int          $series_id           Filter by series ID. Default empty.
  * @type array        $series_id__in       An array of series IDs to include. Default empty.
- * @type array     $series_id__not_in      An array of series IDs to exclude. Default empty.
- * @type int|float $series_position        Filter by position in the series. Default empty.
- * @type int       $pages                  Filter by number of pages.
- * @type array     $date_created_query     Date query clauses to limit by. See WP_Date_Query. Default null.
- * @type array     $date_modified_query    Date query clauses to limit by. See WP_Date_Query. Default null.
- * @type array     $date_query             Query all datetime columns together. See WP_Date_Query.
- * @type array     $author_query           Query for authors. See WP_Tax_Query.
- * @type array     $tax_query              Query for taxonomy terms. See WP_Tax_Query.
- * @type bool      $count                  Whether to return an item count (true) or array of objects. Default false.
- * @type string    $fields                 Item fields to return. Accepts any column known names  or empty
+ * @type array        $series_id__not_in   An array of series IDs to exclude. Default empty.
+ * @type int|float    $series_position     Filter by position in the series. Default empty.
+ * @type int          $pages               Filter by number of pages.
+ * @type array        $date_created_query  Date query clauses to limit by. See WP_Date_Query. Default null.
+ * @type array        $date_modified_query Date query clauses to limit by. See WP_Date_Query. Default null.
+ * @type array        $date_query          Query all datetime columns together. See WP_Date_Query.
+ * @type array        $author_query        Query for authors. See WP_Tax_Query.
+ * @type array        $series_query        Query for series. See \Book_Database\BerlinDB\Database\Queries\Series.
+ * @type array        $tax_query           Query for taxonomy terms. See WP_Tax_Query.
+ * @type bool         $count               Whether to return an item count (true) or array of objects. Default false.
+ * @type string       $fields              Item fields to return. Accepts any column known names  or empty
  *                                         (returns an array of complete item objects). Default empty.
- * @type int       $number                 Limit number of items to retrieve. Default 20.
+ * @type int          $number              Limit number of items to retrieve. Default 20.
  * @type int          $offset              Number of items to offset the query. Used to build LIMIT clause. Default 0.
  * @type bool         $no_found_rows       Whether to disable the `SQL_CALC_FOUND_ROWS` query. Default true.
  * @type string|array $orderby             Accepts 'id', 'cover_id', 'title', 'index_title', 'series_id',

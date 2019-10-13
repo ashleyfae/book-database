@@ -115,7 +115,7 @@ class Books_List_Table extends List_Table {
 
 		$actions = array(
 			'edit'    => '<a href="' . esc_url( $edit_url ) . '">' . esc_html__( 'Edit', 'book-database' ) . '</a>',
-			'delete'  => '<span class="trash"><a href="' . esc_url( get_delete_book_url( $item->get_id() ) ) . '">' . esc_html__( 'Delete', 'book-database' ) . '</a></span>',
+			'delete'  => '<span class="trash"><a href="' . esc_url( get_delete_book_url( $item->get_id() ) ) . '" class="bdb-delete-item" data-object="' . esc_attr__( 'book', 'book-database' ) . '">' . esc_html__( 'Delete', 'book-database' ) . '</a></span>',
 			'book_id' => '<span class="bdb-id-col">' . sprintf( __( 'ID: %d', 'book-database' ), $item->get_id() ) . '</span>'
 		);
 
@@ -214,16 +214,44 @@ class Books_List_Table extends List_Table {
 		// Filter by author ID.
 		$author_id = $this->get_request_var( 'author_id' );
 		if ( ! empty( $author_id ) ) {
-			$args['author_id'][] = array(
+			$args['author_query'][] = array(
 				'field'    => 'id',
 				'terms'    => absint( $author_id )
 			);
 		}
 
-		// Maybe add search.
-		$search = $this->get_search();
+		// Maybe add book title search.
+		$search = $this->get_request_var( 'book_title' );
 		if ( ! empty( $search ) ) {
 			$args['search'] = $search;
+		}
+
+		// Maybe add author name search.
+		$author_name = $this->get_request_var( 'book_author' );
+		if ( ! empty( $author_name ) ) {
+			$args['author_query'][] = array(
+				'field' => 'search',
+				'terms' => sanitize_text_field( $author_name )
+			);
+		}
+
+		// Maybe add series search.
+		// @todo make this work
+		$series_name = $this->get_request_var( 'series_name' );
+		if ( ! empty( $series_name ) ) {
+			$args['series_query'][] = array(
+				'field' => 'search',
+				'terms' => sanitize_text_field( $series_name )
+			);
+		}
+
+		// Maybe add ISBN search.
+		$isbn = $this->get_request_var( 'isbn' );
+		if ( ! empty( $isbn ) ) {
+			$args['reading_log_query'][] = array(
+				'field' => 'isbn',
+				'terms' => sanitize_text_field( $isbn )
+			);
 		}
 
 		if ( $count ) {
@@ -325,7 +353,7 @@ class Books_List_Table extends List_Table {
 			return;
 		}
 
-		if ( ! wp_verify_nonce( $_REQUEST['_wpnonce'], 'bulk-books' ) ) {
+		if ( ! wp_verify_nonce( $_REQUEST['_wpnonce'], 'bulk-' . $this->_args['plural'] ) ) {
 			return;
 		}
 

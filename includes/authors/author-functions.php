@@ -244,3 +244,22 @@ function recalculate_author_book_count( $author_id ) {
 	}
 
 }
+
+/**
+ * Get the authors admin page URL.
+ *
+ * @param array $args Query args to append to the URL.
+ *
+ * @return string
+ */
+function get_authors_admin_page_url( $args = array() ) {
+
+	$sanitized_args = array();
+
+	foreach ( $args as $key => $value ) {
+		$sanitized_args[ sanitize_key( $key ) ] = urlencode( $value );
+	}
+
+	return add_query_arg( $sanitized_args, admin_url( 'admin.php?page=bdb-authors' ) );
+
+}

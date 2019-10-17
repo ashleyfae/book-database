@@ -27,6 +27,6 @@ namespace Book_Database;
 	</td>
 	<td class="bdb-book-taxonomy-actions">
 		<button type="button" class="button bdb-update-book-taxonomy"><?php _e('Update', 'book-database' ); ?></button>
-		<# if ( data.slug != 'author' ) { #><button type="button" class="button bdb-remove-book-taxonomy"><?php _e('Remove', 'book-database' ); ?></button><# } #>
+		<# if ( data.slug != 'publisher' && data.slug != 'genre' && data.slug != 'source' ) { #><button type="button" class="button bdb-remove-book-taxonomy"><?php _e('Remove', 'book-database' ); ?></button><# } #>
 	</td>
 </tr>

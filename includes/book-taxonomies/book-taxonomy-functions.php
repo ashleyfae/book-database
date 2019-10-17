@@ -187,6 +187,24 @@ function update_book_taxonomy( $taxonomy_id, $args = array() ) {
  */
 function delete_book_taxonomy( $taxonomy_id ) {
 
+	// Cannot delete protected taxonomies.
+	$taxonomy = get_book_taxonomy( $taxonomy_id );
+
+	if ( empty( $taxonomy ) ) {
+		return true;
+	}
+
+	$protected = array(
+		'publisher',
+		'genre',
+		'source'
+	);
+
+	// You cannot delete these protected taxonomies.
+	if ( in_array( $taxonomy->get_slug(), $protected ) ) {
+		throw new Exception( 'protected_taxonomy', sprintf( __( 'The %s taxonomy cannot be deleted.', 'book-database' ), $taxonomy->get_slug() ), 400 );
+	}
+
 	$query   = new Book_Taxonomies_Query();
 	$deleted = $query->delete_item( $taxonomy_id );
 

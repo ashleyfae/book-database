@@ -362,67 +362,9 @@ function book_taxonomy_fields( $book ) {
 
 		ob_start();
 
-		if ( 'checkbox' === $taxonomy->get_format() ) {
-
-			// "Categories"
-
-			// Get all terms EXCEPT the ones already checked.
-			$all_terms = get_book_terms( array(
-				'number'       => 300,
-				'taxonomy'     => $taxonomy->get_slug(),
-				'name__not_in' => $book_terms,
-				'fields'       => 'name',
-				'orderby'      => 'name',
-				'order'        => 'ASC'
-			) );
-
-			$final_terms = $book_terms + $all_terms;
-			?>
-			<div id="bdb-checkboxes-<?php echo esc_attr( sanitize_html_class( $taxonomy->get_slug() ) ); ?>" class="bdb-taxonomy-checkboxes" data-taxonomy="<?php echo esc_attr( $taxonomy->get_slug() ); ?>" data-name="<?php echo esc_attr( 'book_terms[' . $taxonomy->get_slug() . '][]' ); ?>">
-				<div class="bdb-checkbox-wrap">
-					<?php
-					foreach ( $final_terms as $term_name ) {
-						?>
-						<label for="<?php echo esc_attr( sanitize_html_class( sanitize_key( sprintf( '%s-%s', $taxonomy->get_slug(), $term_name ) ) ) ); ?>">
-							<input type="checkbox" id="<?php echo esc_attr( sanitize_html_class( sanitize_key( sprintf( '%s-%s', $taxonomy->get_slug(), $term_name ) ) ) ); ?>" class="bdb-checkbox" name="book_terms[<?php echo esc_attr( $taxonomy->get_slug() ); ?>][]" value="<?php echo esc_attr( $term_name ); ?>" <?php checked( in_array( $term_name, $book_terms ) ); ?>>
-							<?php echo esc_html( $term_name ); ?>
-						</label>
-						<?php
-					}
-					?>
-				</div>
-				<div class="bdb-new-checkbox-term">
-					<label for="bdb-new-checkbox-term-<?php echo esc_attr( sanitize_html_class( $taxonomy->get_slug() ) ); ?>" class="screen-reader-text"><?php printf( esc_html__( 'Enter the name of a new %s', 'book-database' ), esc_html( lcfirst( $taxonomy->get_name() ) ) ); ?></label>
-					<input type="text" id="bdb-new-checkbox-term-<?php echo esc_attr( sanitize_html_class( $taxonomy->get_slug() ) ); ?>" class="regular-text bdb-new-checkbox-term-value">
-					<input type="button" class="button" value="<?php esc_attr_e( 'Add', 'book-database' ); ?>">
-				</div>
-			</div>
-			<?php
-
-		} else {
-
-			// "Tags"
-
-			?>
-			<div id="bdb-tags-<?php echo esc_attr( sanitize_html_class( $taxonomy->get_slug() ) ); ?>" class="bdb-tags-wrap" data-taxonomy="<?php echo esc_attr( $taxonomy->get_slug() ); ?>">
-				<div class="jaxtag">
-					<div class="nojs-tags hide-if-js">
-						<label for="bdb-input-tag-<?php echo esc_attr( sanitize_html_class( $taxonomy->get_slug() ) ); ?>"><?php printf( __( 'Enter the name of the %s', 'book-database' ), esc_html( $taxonomy->get_name() ) ); ?></label>
-						<textarea name="book_terms[<?php echo esc_attr( $taxonomy->get_slug() ); ?>]" rows="3" cols="20" id="bdb-input-tag-<?php echo esc_attr( sanitize_html_class( $taxonomy->get_slug() ) ); ?>" data-taxonomy="<?php echo esc_attr( $taxonomy->get_slug() ); ?>"><?php echo esc_textarea( implode( ', ', $book_terms ) ); ?></textarea>
-					</div>
-					<div class="bdb-ajaxtag hide-if-no-js">
-						<p>
-							<label for="bdb-new-<?php echo esc_attr( sanitize_html_class( $taxonomy->get_slug() ) ); ?>-term" class="screen-reader-text"><?php printf( __( 'Enter the name of the %s', 'book-database' ), esc_html( $taxonomy->get_name() ) ); ?></label>
-							<input type="text" id="bdb-new-<?php echo esc_attr( sanitize_html_class( $taxonomy->get_slug() ) ); ?>-term" class="form-input-tip regular-text bdb-new-tag" size="16" autocomplete="off" value="">
-							<input type="button" class="button" value="<?php esc_attr_e( 'Add', 'book-database' ); ?>" tabindex="3">
-						</p>
-					</div>
-				</div>
-				<div class="bdb-tags-checklist"></div>
-			</div>
-			<?php
-
-		}
+		book_database()->get_html()->taxonomy_field( $taxonomy, array(
+			'selected' => $book_terms
+		) );
 
 		book_database()->get_html()->meta_row( array(
 			'label' => $taxonomy->get_name(),

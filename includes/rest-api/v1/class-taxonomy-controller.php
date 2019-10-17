@@ -109,16 +109,7 @@ class Taxonomy extends Controller {
 				throw new Exception( 'database_failure', __( 'Failed to retrieve new taxonomy from the database.', 'book-database' ), 500 );
 			}
 
-			$taxonomy_fields = array(
-				'id'            => $taxonomy->get_id(),
-				'name'          => $taxonomy->get_name(),
-				'slug'          => $taxonomy->get_slug(),
-				'format'        => $taxonomy->get_format(),
-				'date_created'  => $taxonomy->get_date_created(),
-				'date_modified' => $taxonomy->get_date_modified()
-			);
-
-			return new \WP_REST_Response( $taxonomy_fields );
+			return new \WP_REST_Response( $taxonomy->export_vars() );
 
 		} catch ( Exception $e ) {
 			return new \WP_REST_Response( $e->getMessage(), $e->getCode() );
@@ -157,16 +148,7 @@ class Taxonomy extends Controller {
 
 			$taxonomy = get_book_taxonomy( $id );
 
-			$taxonomy_fields = array(
-				'id'            => $taxonomy->get_id(),
-				'name'          => $taxonomy->get_name(),
-				'slug'          => $taxonomy->get_slug(),
-				'format'        => $taxonomy->get_format(),
-				'date_created'  => $taxonomy->get_date_created(),
-				'date_modified' => $taxonomy->get_date_modified()
-			);
-
-			return new \WP_REST_Response( $taxonomy_fields );
+			return new \WP_REST_Response( $taxonomy->export_vars() );
 
 		} catch ( Exception $e ) {
 			return new \WP_REST_Response( $e->getMessage(), $e->getCode() );

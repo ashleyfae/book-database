@@ -61,7 +61,26 @@ class Series extends Base_Object {
 	 * @return int
 	 */
 	public function get_number_books() {
+
+		if ( empty( $this->number_books ) ) {
+			$this->number_books = count_books( array( 'series_id' => $this->get_id() ) );
+		}
+
 		return absint( $this->number_books );
+
+	}
+
+	/**
+	 * Get the number of books in this series that have been read
+	 *
+	 * @todo
+	 *
+	 * @param array $args
+	 *
+	 * @return int
+	 */
+	public function get_number_books_read( $args = array() ) {
+		return absint( 0 );
 	}
 
 	/**

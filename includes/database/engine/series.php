@@ -56,7 +56,7 @@ class Series extends Base {
 	/**
 	 * Standard response when the query should not return any rows.
 	 *
-	 * @var string
+	 * @var array
 	 */
 	private static $no_results = array(
 		'join'  => array( '' ),

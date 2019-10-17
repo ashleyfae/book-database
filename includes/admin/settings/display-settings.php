@@ -80,6 +80,9 @@ function render_settings_page() {
 										</tr>
 										</thead>
 										<tbody>
+										<tr>
+											<td colspan="4"><?php _e( 'Loading...', 'book-database' ); ?></td>
+										</tr>
 										</tbody>
 										<tfoot>
 										<tr>

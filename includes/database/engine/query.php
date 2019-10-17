@@ -11,6 +11,8 @@
 namespace Book_Database\BerlinDB\Database;
 
 // Exit if accessed directly
+use Book_Database\BerlinDB\Database\Queries\Edition;
+use Book_Database\BerlinDB\Database\Queries\Reading_Log;
 use Book_Database\BerlinDB\Database\Queries\Series;
 use Book_Database\BerlinDB\Database\Queries\Tax;
 use Book_Database\BerlinDB\Database\Queries\Author;
@@ -222,6 +224,20 @@ class Query extends Base {
 	 * @var   object|Queries\Date
 	 */
 	protected $date_query = false;
+
+	/**
+	 * Edition query container.
+	 *
+	 * @var Edition|false
+	 */
+	protected $edition_query = false;
+
+	/**
+	 * Reading log query container
+	 *
+	 * @var Reading_Log|false
+	 */
+	protected $reading_log_query = false;
 
 	/**
 	 * Compare query container.
@@ -472,6 +488,8 @@ class Query extends Base {
 			'date_query'        => null, // See Queries\Date
 			'compare_query'     => null, // See Queries\Compare
 			'author_query'      => null, // See Queries\Author
+			'edition_query'     => null, // See Queries\Edition
+			'reading_log_query' => null, // See Queries\Reading_Log
 			'series_query'      => null, // See Queries\Series
 			'tax_query'         => null, // See Queries\Tax
 			'no_found_rows'     => true,
@@ -718,6 +736,32 @@ class Query extends Base {
 	 */
 	private function get_author_query( $args = array() ) {
 		return new Queries\Author( $args );
+	}
+
+	/**
+	 * Pass-through method to return a new Queries\Edition object.
+	 *
+	 * @param array  $args
+	 * @param string $table_name
+	 * @param string $column_name
+	 *
+	 * @return Edition
+	 */
+	private function get_edition_query( $args, $table_name, $column_name ) {
+		return new Queries\Edition( $args, $table_name, $column_name );
+	}
+
+	/**
+	 * Pass-through method to return a new Queries\Reading_Log object.
+	 *
+	 * @param array  $args
+	 * @param string $table_name
+	 * @param string $column_name
+	 *
+	 * @return Reading_Log
+	 */
+	private function get_reading_log_query( $args, $table_name, $column_name ) {
+		return new Queries\Reading_Log( $args, $table_name, $column_name );
 	}
 
 	/**
@@ -1022,7 +1066,7 @@ class Query extends Base {
 		$this->set_request_clauses( $clauses );
 		$this->set_request();
 
-		//error_log($this->request);
+		error_log( $this->request );
 
 		// Return count
 		if ( ! empty( $this->query_vars['count'] ) ) {
@@ -1374,7 +1418,7 @@ class Query extends Base {
 		$author_query = $this->query_vars['author_query'];
 		if ( ! empty( $author_query ) && is_array( $author_query ) ) {
 			$this->author_query = $this->get_author_query( $author_query );
-			$clauses         = $this->author_query->get_sql( $this->table_alias, $this->get_primary_column_name() );
+			$clauses            = $this->author_query->get_sql( $this->table_alias, $this->get_primary_column_name() );
 
 			if ( false !== $clauses ) {
 
@@ -1387,11 +1431,43 @@ class Query extends Base {
 			}
 		}
 
+		// Maybe perform an edition query.
+		$edition_query = $this->query_vars['edition_query'];
+		if ( ! empty( $edition_query ) && is_array( $edition_query ) ) {
+			$this->edition_query = $this->get_edition_query( $edition_query, $this->table_alias, $this->get_primary_column_name() );
+			$clauses             = $this->edition_query->get_sql();
+
+			if ( ! empty( $clauses ) ) {
+
+				// Set join.
+				$join .= ' ' . $clauses['join'];
+
+				$where['edition_query'] = $clauses['where'];
+
+			}
+		}
+
+		// Maybe perform a reading log query.
+		$reading_log_query = $this->query_vars['reading_log_query'];
+		if ( ! empty( $reading_log_query ) && is_array( $reading_log_query ) ) {
+			$this->reading_log_query = $this->get_reading_log_query( $reading_log_query, $this->table_alias, $this->get_primary_column_name() );
+			$clauses                 = $this->reading_log_query->get_sql();
+
+			if ( ! empty( $clauses ) ) {
+
+				// Set join.
+				$join .= ' ' . $clauses['join'];
+
+				$where['reading_log_query'] = $clauses['where'];
+
+			}
+		}
+
 		// Maybe perform a series query.
 		$series_query = $this->query_vars['series_query'];
 		if ( ! empty( $series_query ) && is_array( $series_query ) ) {
 			$this->series_query = $this->get_series_query( $series_query );
-			$clauses         = $this->series_query->get_sql( $this->table_alias, 'series_id' );
+			$clauses            = $this->series_query->get_sql( $this->table_alias, 'series_id' );
 
 			if ( false !== $clauses ) {
 

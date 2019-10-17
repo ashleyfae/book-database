@@ -92,4 +92,13 @@ abstract class Base_Object {
 		return ( ! empty( $this->date_modified ) && $formatted ) ? format_date( $this->date_modified, $format ) : $this->date_modified;
 	}
 
+	/**
+	 * Get all object properties as an array
+	 *
+	 * @return array
+	 */
+	public function export_vars() {
+		return get_object_vars( $this );
+	}
+
 }

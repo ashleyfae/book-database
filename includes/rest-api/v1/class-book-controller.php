@@ -79,9 +79,9 @@ class Book extends Controller {
 					}
 				),
 				'series_id'       => array(
-					'default'           => 0,
+					'default'           => null,
 					'sanitize_callback' => function ( $param, $request, $key ) {
-						return absint( $param );
+						return empty( $param ) ? null : absint( $param );
 					}
 				),
 				'series_position' => array(
@@ -101,7 +101,7 @@ class Book extends Controller {
 				'pages'           => array(
 					'default'           => 0,
 					'sanitize_callback' => function ( $param, $request, $key ) {
-						return absint( $param );
+						return empty( $param ) ? null : absint( $param );
 					}
 				),
 				'synopsis'        => array(
@@ -198,7 +198,7 @@ class Book extends Controller {
 			$book_data = array();
 
 			foreach ( $books as $book ) {
-				$book_data[ $book->get_id() ] = $book->get_data();
+				$book_data[] = $book->get_data();
 			}
 
 			return new \WP_REST_Response( $book_data );

@@ -64,7 +64,7 @@ if ( ! empty( $_GET['view'] ) && 'edit' === $_GET['view'] && empty( $book ) ) {
 	if ( $book instanceof Book ) {
 		wp_nonce_field( 'bdb_update_book', 'bdb_update_book_nonce' );
 		?>
-		<input type="hidden" name="book_id" value="<?php echo esc_attr( $book->get_id() ); ?>">
+		<input type="hidden" id="bdb-book-id" name="book_id" value="<?php echo esc_attr( $book->get_id() ); ?>">
 		<?php
 	} else {
 		wp_nonce_field( 'bdb_add_book', 'bdb_add_book_nonce' );

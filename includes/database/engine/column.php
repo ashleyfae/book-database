@@ -736,9 +736,13 @@ class Column extends Base {
 
 		// Handle "empty" values
 		if ( empty( $value ) || ( '0000-00-00 00:00:00' === $value ) ) {
-			$value = ! empty( $this->default )
-				? $this->default
-				: '0000-00-00 00:00:00';
+			if ( $this->allow_null && is_null( $value ) ) {
+				$value = null;
+			} else {
+				$value = ! empty( $this->default )
+					? $this->default
+					: '0000-00-00 00:00:00';
+			}
 
 			// Convert to MySQL datetime format via date() && strtotime
 		} elseif ( function_exists( 'date' ) ) {
@@ -766,6 +770,10 @@ class Column extends Base {
 	 * @return float
 	 */
 	public function validate_decimal( $value = 0, $decimals = 9 ) {
+
+		if ( $this->allow_null && is_null( $value ) ) {
+			return null;
+		}
 
 		// Protect against non-numeric values
 		if ( ! is_numeric( $value ) ) {

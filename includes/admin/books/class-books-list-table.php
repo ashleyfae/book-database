@@ -235,22 +235,30 @@ class Books_List_Table extends List_Table {
 			);
 		}
 
+		// Filter by series ID.
+		$series_id = $this->get_request_var( 'series_id' );
+		if ( ! empty( $series_id ) ) {
+			$args['series_id'] = absint( $series_id );
+		}
+
 		// Maybe add series search.
-		// @todo make this work
 		$series_name = $this->get_request_var( 'series_name' );
 		if ( ! empty( $series_name ) ) {
 			$args['series_query'][] = array(
-				'field' => 'search',
-				'terms' => sanitize_text_field( $series_name )
+				'field'  => 'search',
+				'series' => sanitize_text_field( $series_name )
 			);
 		}
 
 		// Maybe add ISBN search.
 		$isbn = $this->get_request_var( 'isbn' );
 		if ( ! empty( $isbn ) ) {
-			$args['reading_log_query'][] = array(
-				'field' => 'isbn',
-				'terms' => sanitize_text_field( $isbn )
+			$args['edition_query'] = array(
+				array(
+					'field'    => 'isbn',
+					'value'    => sanitize_text_field( $isbn ),
+					'operator' => 'LIKE'
+				)
 			);
 		}
 

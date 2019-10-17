@@ -167,6 +167,9 @@ final class Book_Database {
 		require_once BDB_DIR . 'includes/database/engine/series.php';
 		require_once BDB_DIR . 'includes/database/engine/tax.php';
 		require_once BDB_DIR . 'includes/database/engine/author.php';
+		require_once BDB_DIR . 'includes/database/engine/join.php';
+		require_once BDB_DIR . 'includes/database/engine/edition.php';
+		require_once BDB_DIR . 'includes/database/engine/reading-log.php';
 		require_once BDB_DIR . 'includes/database/sanitization.php';
 
 		// Database - authors
@@ -198,6 +201,16 @@ final class Book_Database {
 		require_once BDB_DIR . 'includes/database/book-terms/class-book-terms-table.php';
 		require_once BDB_DIR . 'includes/database/book-terms/class-book-terms-schema.php';
 		require_once BDB_DIR . 'includes/database/book-terms/class-book-terms-query.php';
+
+		// Database - owned_editions
+		require_once BDB_DIR . 'includes/database/editions/class-editions-table.php';
+		require_once BDB_DIR . 'includes/database/editions/class-editions-schema.php';
+		require_once BDB_DIR . 'includes/database/editions/class-editions-query.php';
+
+		// Database - reading_log
+		require_once BDB_DIR . 'includes/database/reading-logs/class-reading-logs-table.php';
+		require_once BDB_DIR . 'includes/database/reading-logs/class-reading-logs-schema.php';
+		require_once BDB_DIR . 'includes/database/reading-logs/class-reading-logs-query.php';
 
 		// Database - series
 		require_once BDB_DIR . 'includes/database/series/class-series-table.php';
@@ -231,6 +244,14 @@ final class Book_Database {
 		require_once BDB_DIR . 'includes/book-terms/class-book-term.php';
 		require_once BDB_DIR . 'includes/book-terms/book-term-functions.php';
 
+		// Editions
+		require_once BDB_DIR . 'includes/editions/class-edition.php';
+		require_once BDB_DIR . 'includes/editions/edition-functions.php';
+
+		// Series
+		require_once BDB_DIR . 'includes/reading-logs/class-reading-log.php';
+		require_once BDB_DIR . 'includes/reading-logs/reading-log-functions.php';
+
 		// Series
 		require_once BDB_DIR . 'includes/series/class-series.php';
 		require_once BDB_DIR . 'includes/series/series-functions.php';
@@ -241,7 +262,9 @@ final class Book_Database {
 		require_once BDB_DIR . 'includes/rest-api/v1/class-author-controller.php';
 		require_once BDB_DIR . 'includes/rest-api/v1/class-book-controller.php';
 		require_once BDB_DIR . 'includes/rest-api/v1/class-book-term-controller.php';
+		require_once BDB_DIR . 'includes/rest-api/v1/class-edition-controller.php';
 		require_once BDB_DIR . 'includes/rest-api/v1/class-taxonomy-controller.php';
+		require_once BDB_DIR . 'includes/rest-api/v1/class-utility-controller.php';
 
 		// Misc.
 		require_once BDB_DIR . 'includes/class-html.php';
@@ -274,6 +297,14 @@ final class Book_Database {
 		require_once BDB_DIR . 'includes/admin/books/books-page.php';
 		require_once BDB_DIR . 'includes/admin/books/edit-book-fields.php';
 
+		// Editions
+		require_once BDB_DIR . 'includes/admin/editions/edition-actions.php';
+
+		// Series
+		require_once BDB_DIR . 'includes/admin/series/series-actions.php';
+		require_once BDB_DIR . 'includes/admin/series/series-functions.php';
+		require_once BDB_DIR . 'includes/admin/series/series-page.php';
+
 		// Settings
 		require_once BDB_DIR . 'includes/admin/settings/book-layout-functions.php';
 		require_once BDB_DIR . 'includes/admin/settings/register-settings.php';
@@ -300,6 +331,8 @@ final class Book_Database {
 			'book_term_relationships'   => new Book_Term_Relationships_Table(),
 			'book_terms'                => new Book_Terms_Table(),
 			'books'                     => new Books_Table(),
+			'editions'                  => new Editions_Table(),
+			'reading_log'               => new Reading_Logs_Table(),
 			'series'                    => new Series_Table(),
 		);
 

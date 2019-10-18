@@ -148,6 +148,11 @@ class Series_List_Table extends List_Table {
 				$value = '<a href="' . esc_url( $book_url ) . '" title="' . esc_attr__( 'View all books in this series', 'book-database' ) . '">' . sprintf( '%d/%d', $read, $total ) . '</a>';
 				break;
 
+			case 'rating' :
+				$rating = new Rating( $item->get_average_rating() );
+				$value  = $rating->format_html_stars();
+				break;
+
 		}
 
 		return $value;

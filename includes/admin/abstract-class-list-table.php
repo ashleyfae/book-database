@@ -219,16 +219,20 @@ abstract class List_Table extends \WP_List_Table {
 		// Is all selected?
 		$class = in_array( $current, array( '', 'all' ), true ) ? ' class="current"' : '';
 
-		// All
-		$count = '&nbsp;<span class="count">(' . esc_attr( $this->counts['total'] ) . ')</span>';
-		$label = __( 'All', 'rcp' ) . $count;
-		$views = array(
-			'all' => sprintf( '<a href="%s"%s>%s</a>', $url, $class, $label ),
-		);
-
-		// Remove total from counts array
 		$counts = $this->counts;
-		unset( $counts['total'] );
+		$views = array();
+
+		if ( isset( $this->counts['total'] ) ) {
+			// All
+			$count = '&nbsp;<span class="count">(' . esc_attr( $this->counts['total'] ) . ')</span>';
+			$label = __( 'All', 'rcp' ) . $count;
+			$views = array(
+				'all' => sprintf( '<a href="%s"%s>%s</a>', $url, $class, $label ),
+			);
+
+			// Remove total from counts array
+			unset( $counts['total'] );
+		}
 
 		// Loop through statuses.
 		if ( ! empty( $counts ) ) {

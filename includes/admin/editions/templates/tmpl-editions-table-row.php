@@ -60,7 +60,7 @@ $sources = get_book_terms( array(
 
 		<div class="bdb-table-edit-value">
 			<label for="bdb-edition-date-acquired-{{ data.id }}" class="screen-reader-text"><?php _e( 'Date you acquired this edition', 'book-database' ); ?></label>
-			<input type="text" id="bdb-edition-date-acquired-{{ data.id }}" value="{{ data.date_acquired_formatted }}">
+			<input type="text" id="bdb-edition-date-acquired-{{ data.id }}" class="bdb-datepicker" value="{{ data.date_acquired }}">
 		</div>
 	</td>
 

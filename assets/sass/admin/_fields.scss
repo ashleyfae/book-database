@@ -35,11 +35,26 @@
         }
     }
 
+    input[type="number"] {
+        display: inline-block;
+        width: auto;
+    }
+
+    .bdb-input-suffix {
+        background: #f2f2f2;
+        border: 1px solid #ddd;
+        border-left: none;
+        font-size: 14px;
+        margin: 0 0 0 -6px;
+        padding: 4px 8px 3px;
+    }
+
     textarea {
         min-height: 250px;
     }
 
-    .regular-text {
+    .regular-text,
+    .bdb-datepicker {
         max-width: 550px;
     }
 

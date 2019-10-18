@@ -178,7 +178,9 @@ class Books_List_Table extends List_Table {
 				break;
 
 			case 'rating' :
-				// @todo
+				$rating         = new Rating( $item->get_average_rating() );
+				$rounded_rating = $rating->round_rating();
+				$value          = '<a href="' . esc_url( add_query_arg( 'rating', urlencode( $rounded_rating ), $this->get_base_url() ) ) . '" title="' . esc_attr( sprintf( __( 'All %s star books', 'book-database' ), $rounded_rating ) ) . '">' . $rating->format_html_stars() . '</a>';
 				break;
 
 		}
@@ -208,7 +210,7 @@ class Books_List_Table extends List_Table {
 			'offset'    => $this->get_offset(),
 			'orderby'   => sanitize_text_field( $this->get_request_var( 'orderby', 'id' ) ),
 			'order'     => sanitize_text_field( $this->get_request_var( 'order', 'DESC' ) ),
-			'tax_query' => array()
+			'tax_query' => array(),
 		);
 
 		// Filter by author ID.
@@ -217,6 +219,15 @@ class Books_List_Table extends List_Table {
 			$args['author_query'][] = array(
 				'field'    => 'id',
 				'terms'    => absint( $author_id )
+			);
+		}
+
+		// Filter by term ID.
+		$term_id = $this->get_request_var( 'term_id' );
+		if ( ! empty( $term_id ) ) {
+			$args['tax_query'][] = array(
+				'field' => 'id',
+				'terms' => absint( $term_id )
 			);
 		}
 
@@ -253,11 +264,63 @@ class Books_List_Table extends List_Table {
 		// Maybe add ISBN search.
 		$isbn = $this->get_request_var( 'isbn' );
 		if ( ! empty( $isbn ) ) {
-			$args['edition_query'] = array(
+			$args['edition_query'][] = array(
+				'field'    => 'isbn',
+				'value'    => sanitize_text_field( $isbn ),
+				'operator' => 'LIKE'
+			);
+		}
+
+		// Filter by format.
+		$format = $this->get_request_var( 'format_filter' );
+		if ( ! empty( $format ) ) {
+			$args['edition_query'][] = array(
+				'field' => 'format',
+				'value' => sanitize_text_field( $format )
+			);
+		}
+
+		// Filter by ownership status.
+		$edition = $this->get_request_var( 'owned_status_filter' );
+		if ( ! empty( $edition ) ) {
+			switch ( $edition ) {
+				case 'owned' :
+					$args['edition_query'][] = array(
+						'field' => 'date_acquired',
+						'value' => array(
+							'after' => '0000-00-00 00:00:00'
+						)
+					);
+					break;
+
+				case 'unowned' :
+					$owned_book_ids = get_editions( array(
+						'number'  => 9999,
+						'fields'  => 'book_id',
+						'groupby' => 'book_id'
+					) );
+
+					if ( $owned_book_ids ) {
+						$args['id__not_in'] = $owned_book_ids;
+					}
+					break;
+
+				case 'signed' :
+					$args['edition_query'][] = array(
+						'field' => 'signed',
+						'value' => 1
+					);
+					break;
+			}
+		}
+
+		// Filter by rating.
+		$rating = $this->get_request_var( 'rating', null );
+		if ( null !== $rating ) {
+			$args['reading_log_query'] = array(
 				array(
-					'field'    => 'isbn',
-					'value'    => sanitize_text_field( $isbn ),
-					'operator' => 'LIKE'
+					'field' => 'rating',
+					'value' => floatval( $rating )
 				)
 			);
 		}
@@ -342,7 +405,9 @@ class Books_List_Table extends List_Table {
 			<label for="bdb-filter-by-format" class="screen-reader-text"><?php _e( 'Filter by format', 'book-database' ); ?></label>
 			<select id="bdb-filter-by-format" name="format_filter">
 				<option value="" <?php selected( empty( $format_filter ) ); ?>><?php _e( 'All Formats', 'book-database' ); ?></option>
-				<?php // @todo loop through formats ?>
+				<?php foreach ( get_book_formats() as $format_key => $format_name ) : ?>
+					<option value="<?php echo esc_attr( $format_key ); ?>" <?php selected( $format_filter, $format_key ); ?>><?php echo esc_html( $format_name ); ?></option>
+				<?php endforeach; ?>
 			</select>
 
 			<input type="submit" name="filter_action" id="post-query-submit" class="button" value="<?php esc_attr_e( 'Filter', 'book-database' ); ?>">

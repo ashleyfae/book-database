@@ -237,6 +237,31 @@ class Book extends Base_Object {
 	}
 
 	/**
+	 * Get the average rating from all reading logs associated with this book
+	 *
+	 * @return int|float|null
+	 */
+	public function get_average_rating() {
+
+		global $wpdb;
+
+		$log_table = book_database()->get_table( 'reading_log' )->get_table_name();
+
+		$query   = $wpdb->prepare( "SELECT ROUND( AVG( rating ), 2 ) FROM {$log_table} WHERE book_id = %d AND rating IS NOT NULL", $this->get_id() );
+		$average = $wpdb->get_var( $query );
+
+		/**
+		 * Filters the average rating for a book.
+		 *
+		 * @param int|float|null $average Average rating.
+		 * @param int            $book_id ID of the book.
+		 * @param Book           $this    Book object.
+		 */
+		return apply_filters( 'book-database/book/get/average-rating', $average, $this->get_id(), $this );
+
+	}
+
+	/**
 	 * Returns all data associated with a book
 	 *
 	 * @return array
@@ -251,7 +276,7 @@ class Book extends Base_Object {
 			'index_title'     => $this->get_index_title(),
 			'author'          => '', // @todo
 			'series_id'       => $this->get_series_id(),
-			'series_name'     => '', // @todo
+			'series_name'     => $this->get_series_name(),
 			'series_position' => $this->get_series_position(),
 			'pub_date'        => $this->get_pub_date(),
 			'pages'           => $this->get_pages(),

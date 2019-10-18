@@ -88,9 +88,9 @@ class Book_Terms_Schema extends BerlinDB\Database\Schema {
 			'type'       => 'longtext',
 		),
 
-		// count
+		// book_count
 		array(
-			'name'     => 'count',
+			'name'     => 'book_count',
 			'type'     => 'bigint',
 			'length'   => '20',
 			'unsigned' => true,

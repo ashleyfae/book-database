@@ -84,7 +84,7 @@ class CLI extends \WP_CLI_Command {
 								'description' => $old_author->get_description(),
 								'image_id'    => $old_author->get_image_id(),
 								'links'       => $old_author->get_links(),
-								'book_count'  => $old_author->get_count()
+								'book_count'  => $old_author->get_book_count()
 							) );
 						}
 

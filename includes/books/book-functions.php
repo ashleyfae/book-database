@@ -222,8 +222,10 @@ function delete_book( $book_id ) {
 		throw new Exception( 'database_error', __( 'Failed to delete the book.', 'book-database' ), 500 );
 	}
 
-	$ar_table = book_database()->get_table( 'book_author_relationships' )->get_table_name();
-	$bt_table = book_database()->get_table( 'book_term_relationships' )->get_table_name();
+	$ar_table  = book_database()->get_table( 'book_author_relationships' )->get_table_name();
+	$bt_table  = book_database()->get_table( 'book_term_relationships' )->get_table_name();
+	$ed_table  = book_database()->get_table( 'editions' )->get_table_name();
+	$log_table = book_database()->get_table( 'reading_log' )->get_table_name();
 
 	// Delete all book-author relationships for this book.
 	$wpdb->query( $wpdb->prepare( "DELETE FROM {$ar_table} WHERE book_id = %d", $book_id ) );
@@ -231,8 +233,12 @@ function delete_book( $book_id ) {
 	// Delete all book-term relationships for this book.
 	$wpdb->query( $wpdb->prepare( "DELETE FROM {$bt_table} WHERE book_id = %d", $book_id ) );
 
-	// @todo maybe delete owned editions
-	// @todo maybe delete reading logs
+	// Delete all editions of this book.
+	$wpdb->query( $wpdb->prepare( "DELETE FROM {$ed_table} WHERE book_id = %d", $book_id ) );
+
+	// Delete all reading logs of this book.
+	$wpdb->query( $wpdb->prepare( "DELETE FROM {$log_table} WHERE book_id = %d", $book_id ) );
+
 	// @todo maybe delete reviews
 
 	return true;

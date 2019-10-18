@@ -11,6 +11,7 @@
 namespace Book_Database\BerlinDB\Database;
 
 // Exit if accessed directly
+use Book_Database\BerlinDB\Database\Queries\Compare_Query;
 use Book_Database\BerlinDB\Database\Queries\Edition;
 use Book_Database\BerlinDB\Database\Queries\Reading_Log;
 use Book_Database\BerlinDB\Database\Queries\Series;
@@ -243,7 +244,7 @@ class Query extends Base {
 	 * Compare query container.
 	 *
 	 * @since 1.0.0
-	 * @var   object|Queries\Compare
+	 * @var   object|Compare_Query
 	 */
 	protected $compare_query = false;
 
@@ -1066,7 +1067,7 @@ class Query extends Base {
 		$this->set_request_clauses( $clauses );
 		$this->set_request();
 
-		error_log( $this->request );
+		//error_log( $this->request );
 
 		// Return count
 		if ( ! empty( $this->query_vars['count'] ) ) {

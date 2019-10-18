@@ -142,7 +142,7 @@ abstract class Join extends Base {
 			'where' => ''
 		);
 
-		$sql['join']  = " INNER JOIN {$this->joined_table_name} ed ON ed.{$this->joined_table_column} = {$this->primary_table_name}.{$this->primary_column} ";
+		$sql['join']  = " INNER JOIN {$this->joined_table_name} {$this->joined_table_alias} ON {$this->joined_table_alias}.{$this->joined_table_column} = {$this->primary_table_name}.{$this->primary_column} ";
 		$sql['where'] = $this->parse_where();
 
 		return $sql;

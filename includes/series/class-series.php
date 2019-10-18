@@ -107,7 +107,17 @@ class Series extends Base_Object {
 	 * @todo
 	 */
 	public function get_average_rating() {
-		return 0;
+
+		global $wpdb;
+
+		$log_table  = book_database()->get_table( 'reading_log' )->get_table_name();
+		$book_table = book_database()->get_table( 'books' )->get_table_name();
+
+		$query   = $wpdb->prepare( "SELECT ROUND( AVG( rating ), 2 ) FROM {$log_table} log INNER JOIN {$book_table} b ON log.book_id = b.id WHERE series_id = %d AND rating IS NOT NULL", $this->get_id() );
+		$average = $wpdb->get_var( $query );
+
+		return $average;
+
 	}
 
 }

@@ -10,6 +10,8 @@
 namespace Book_Database;
 
 /**
+ * Add a table of editions to the Edit Book page
+ *
  * @param Book|false $book
  */
 function editions_table( $book ) {
@@ -69,7 +71,7 @@ function editions_table( $book ) {
 				<div class="bdb-meta-row">
 					<label for="bdb-new-edition-date-acquired"><?php _e( 'Date Acquired', 'book-database' ); ?></label>
 					<div class="bdb-meta-value">
-						<input type="text" id="bdb-new-edition-date-acquired" value="<?php echo esc_attr( format_date( current_time( 'mysql', true ) ) ); ?>" class="regular-text">
+						<input type="text" id="bdb-new-edition-date-acquired" value="<?php echo esc_attr( format_date( current_time( 'mysql', true ), 'Y-m-d' ) ); ?>" class="bdb-datepicker">
 						<p class="description"><?php _e( 'Date you acquired the book.', 'book-database' ); ?></p>
 					</div>
 				</div>

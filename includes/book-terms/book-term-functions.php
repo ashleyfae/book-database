@@ -81,7 +81,7 @@ function get_book_term_by_name_and_taxonomy( $term_name, $taxonomy, $args = arra
  * @type string       $name                Filter by name. Default empty.
  * @type string       $slug                Filter by slug. Default empty.
  * @type int          $image_id            Filter by image ID. Default empty.
- * @type int          $count               Filter by count. Default empty.
+ * @type int          $book_count          Filter by book count. Default empty.
  * @type array        $date_created_query  Date query clauses to limit by. See WP_Date_Query. Default null.
  * @type array        $date_modified_query Date query clauses to limit by. See WP_Date_Query. Default null.
  * @type array        $date_query          Query all datetime columns together. See WP_Date_Query.
@@ -92,7 +92,7 @@ function get_book_term_by_name_and_taxonomy( $term_name, $taxonomy, $args = arra
  * @type int          $offset              Number of items to offset the query. Used to build LIMIT clause. Default 0.
  * @type bool         $no_found_rows       Whether to disable the `SQL_CALC_FOUND_ROWS` query. Default true.
  * @type string|array $orderby             Accepts 'id', 'taxonomy', 'name', 'slug', 'image_id',
- *                                         'count', 'date_created', and 'date_modified'. Also accepts false,
+ *                                         'book_count', 'date_created', and 'date_modified'. Also accepts false,
  *                                         an empty array, or 'none' to disable `ORDER BY` clause. Default 'id'.
  * @type string       $order               How to order results. Accepts 'ASC', 'DESC'. Default 'DESC'.
  * @type string       $search              Search term(s) to retrieve matching items for. Default empty.
@@ -145,7 +145,7 @@ function count_book_terms( $args = array() ) {
  * @type string $description Term description.
  * @type int    $image_id    ID of the attachment.
  * @type string $links       Term links.
- * @type int    $count       Number of books associated with this term.
+ * @type int    $book_count  Number of books associated with this term.
  * }
  *
  * @return int
@@ -160,7 +160,7 @@ function add_book_term( $args ) {
 		'description' => '',
 		'image_id'    => 0,
 		'links'       => '',
-		'count'       => 0
+		'book_count'  => 0
 	) );
 
 	// Taxonomy and name are required.
@@ -273,12 +273,31 @@ function recalculate_book_term_count( $term_id ) {
 
 	try {
 		update_book_term( $term_id, array(
-			'count' => absint( $new_count )
+			'book_count' => absint( $new_count )
 		) );
 
 		return true;
 	} catch ( Exception $e ) {
 		return false;
 	}
+
+}
+
+/**
+ * Get the series admin page URL.
+ *
+ * @param array $args Query args to append to the URL.
+ *
+ * @return string
+ */
+function get_book_terms_admin_page_url( $args = array() ) {
+
+	$sanitized_args = array();
+
+	foreach ( $args as $key => $value ) {
+		$sanitized_args[ sanitize_key( $key ) ] = urlencode( $value );
+	}
+
+	return add_query_arg( $sanitized_args, admin_url( 'admin.php?page=bdb-terms' ) );
 
 }

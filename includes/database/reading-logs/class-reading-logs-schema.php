@@ -46,12 +46,14 @@ class Reading_Logs_Schema extends BerlinDB\Database\Schema {
 
 		// review_id
 		array(
-			'name'     => 'review_id',
-			'type'     => 'bigint',
-			'length'   => '20',
-			'unsigned' => true,
-			'sortable' => true,
-			'default'  => 0
+			'name'       => 'review_id',
+			'type'       => 'bigint',
+			'length'     => '20',
+			'unsigned'   => true,
+			'sortable'   => true,
+			'allow_null' => true,
+			'default'    => null,
+			'validate'   => '\Book_Database\BerlinDB\Sanitization\absint_allow_null'
 		),
 
 		// user_id
@@ -96,12 +98,13 @@ class Reading_Logs_Schema extends BerlinDB\Database\Schema {
 
 		// rating
 		array(
-			'name'     => 'rating',
-			'type'     => 'decimal',
-			'length'   => '4,2',
-			'unsigned' => true,
-			'sortable' => true,
-			'default'  => null
+			'name'       => 'rating',
+			'type'       => 'decimal',
+			'length'     => '4,2',
+			'unsigned'   => true,
+			'sortable'   => true,
+			'allow_null' => true,
+			'default'    => null
 		),
 
 		// date_modified

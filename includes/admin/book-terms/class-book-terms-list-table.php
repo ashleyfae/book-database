@@ -1,6 +1,6 @@
 <?php
 /**
- * Authors Admin Table
+ * Book Terms Admin Table
  *
  * @package   book-database
  * @copyright Copyright (c) 2019, Ashley Gibson
@@ -10,21 +10,34 @@
 namespace Book_Database;
 
 /**
- * Class Authors_List_Table
+ * Class Book_Terms_List_Table
  * @package Book_Database
  */
-class Authors_List_Table extends List_Table {
+class Book_Terms_List_Table extends List_Table {
+
+	protected $default_taxonomy;
 
 	/**
-	 * Authors_List_Table constructor.
+	 * Book_Terms_List_Table constructor.
 	 */
 	public function __construct() {
 
 		parent::__construct( array(
-			'singular' => 'author',
-			'plural'   => 'authors',
+			'singular' => 'book_term',
+			'plural'   => 'book_terms',
 			'ajax'     => false
 		) );
+
+		$taxonomies = get_book_taxonomies( array(
+			'number'  => 1,
+			'orderby' => 'name',
+			'order'   => 'ASC',
+			'fields'  => 'name'
+		) );
+
+		if ( ! empty( $taxonomies ) ) {
+			$this->default_taxonomy = reset( $taxonomies );
+		}
 
 		$this->get_counts();
 
@@ -36,7 +49,7 @@ class Authors_List_Table extends List_Table {
 	 * @return string Base URL.
 	 */
 	public function get_base_url() {
-		return get_authors_admin_page_url();
+		return get_book_terms_admin_page_url();
 	}
 
 	/**
@@ -73,9 +86,23 @@ class Authors_List_Table extends List_Table {
 	 * Get the counts
 	 */
 	public function get_counts() {
-		$this->counts = array(
-			'total' => count_book_authors()
-		);
+
+		$counts     = array();
+		$taxonomies = get_book_taxonomies( array(
+			'fields'  => 'slug',
+			'orderby' => 'name',
+			'order'   => 'ASC'
+		) );
+
+		foreach ( $taxonomies as $taxonomy ) {
+			/**
+			 * @var string $taxonomy
+			 */
+			$counts[ $taxonomy ] = count_book_terms( array( 'taxonomy' => $taxonomy ) );
+		}
+
+		$this->counts = $counts;
+
 	}
 
 	/**
@@ -101,19 +128,19 @@ class Authors_List_Table extends List_Table {
 	/**
 	 * Render the "Name" column.
 	 *
-	 * @param Author $item
+	 * @param Book_Term $item
 	 */
 	public function column_name( $item ) {
 
-		$edit_url = get_authors_admin_page_url( array(
-			'view'      => 'edit',
-			'author_id' => $item->get_id()
+		$edit_url = get_book_terms_admin_page_url( array(
+			'view'    => 'edit',
+			'term_id' => $item->get_id()
 		) );
 
 		$actions = array(
 			'edit'    => '<a href="' . esc_url( $edit_url ) . '">' . esc_html__( 'Edit', 'book-database' ) . '</a>',
-			'delete'  => '<span class="trash"><a href="' . esc_url( get_delete_author_url( $item->get_id() ) ) . '" class="bdb-delete-item" data-object="' . esc_attr__( 'author', 'book-database' ) . '">' . esc_html__( 'Delete', 'book-database' ) . '</a></span>',
-			'book_id' => '<span class="bdb-id-col">' . sprintf( __( 'ID: %d', 'book-database' ), $item->get_id() ) . '</span>'
+			'delete'  => '<span class="trash"><a href="' . esc_url( get_delete_book_term_url( $item->get_id() ) ) . '" class="bdb-delete-item" data-object="' . esc_attr__( 'book_term', 'book-database' ) . '">' . esc_html__( 'Delete', 'book-database' ) . '</a></span>',
+			'term_id' => '<span class="bdb-id-col">' . sprintf( __( 'ID: %d', 'book-database' ), $item->get_id() ) . '</span>'
 		);
 
 		return '<strong><a href="' . esc_url( $edit_url ) . '" class="row-title">' . esc_html( $item->get_name() ) . '</a></strong>' . $this->row_actions( $actions );
@@ -123,8 +150,8 @@ class Authors_List_Table extends List_Table {
 	/**
 	 * Renders most of the columns in the list table
 	 *
-	 * @param Author $item
-	 * @param string $column_name
+	 * @param Book_Term $item
+	 * @param string    $column_name
 	 *
 	 * @return string Column value.
 	 */
@@ -144,7 +171,7 @@ class Authors_List_Table extends List_Table {
 
 			case 'book_count' :
 				$book_url = get_books_admin_page_url( array(
-					'author_id' => $item->get_id()
+					'term_id' => $item->get_id()
 				) );
 				$value    = '<a href="' . esc_url( $book_url ) . '">' . esc_html( $item->get_book_count() ) . '</a>';
 				break;
@@ -159,7 +186,7 @@ class Authors_List_Table extends List_Table {
 	 * Message to be displayed when there are no items
 	 */
 	public function no_items() {
-		esc_html_e( 'No authors found.', 'book-database' );
+		esc_html_e( 'No terms found.', 'book-database' );
 	}
 
 	/**
@@ -172,10 +199,11 @@ class Authors_List_Table extends List_Table {
 	public function get_object_data( $count = false ) {
 
 		$args = array(
-			'number'  => $this->per_page,
-			'offset'  => $this->get_offset(),
-			'orderby' => sanitize_text_field( $this->get_request_var( 'orderby', 'id' ) ),
-			'order'   => sanitize_text_field( $this->get_request_var( 'order', 'DESC' ) ),
+			'taxonomy' => $this->get_status( $this->default_taxonomy ),
+			'number'   => $this->per_page,
+			'offset'   => $this->get_offset(),
+			'orderby'  => sanitize_text_field( $this->get_request_var( 'orderby', 'id' ) ),
+			'order'    => sanitize_text_field( $this->get_request_var( 'order', 'DESC' ) ),
 		);
 
 		// Maybe add search.
@@ -185,9 +213,9 @@ class Authors_List_Table extends List_Table {
 		}
 
 		if ( $count ) {
-			return count_book_authors( $args );
+			return count_book_terms( $args );
 		} else {
-			return get_book_authors( $args );
+			return get_book_terms( $args );
 		}
 
 	}
@@ -206,7 +234,7 @@ class Authors_List_Table extends List_Table {
 			return;
 		}
 
-		$ids = wp_parse_id_list( (array) $this->get_request_var( 'author_id', false ) );
+		$ids = wp_parse_id_list( (array) $this->get_request_var( 'term_id', false ) );
 
 		// Bail if no IDs
 		if ( empty( $ids ) ) {
@@ -215,12 +243,12 @@ class Authors_List_Table extends List_Table {
 
 		try {
 
-			foreach ( $ids as $author_id ) {
+			foreach ( $ids as $term_id ) {
 
 				switch ( $this->current_action() ) {
 
 					case 'delete' :
-						delete_book_author( $author_id );
+						delete_book_term( $term_id );
 						break;
 
 				}
@@ -252,7 +280,7 @@ class Authors_List_Table extends List_Table {
 
 		switch ( $action ) {
 			case 'delete' :
-				$message = _n( '1 author deleted.', sprintf( '%d authors deleted', $number ), $number, 'book-database' );
+				$message = _n( '1 term deleted.', sprintf( '%d terms deleted', $number ), $number, 'book-database' );
 				break;
 		}
 
@@ -265,6 +293,66 @@ class Authors_List_Table extends List_Table {
 		</div>
 		<?php
 
+	}
+
+	/**
+	 * Retrieve the view types
+	 *
+	 * @return array $views All the views available
+	 */
+	public function get_views() {
+
+		// Get the current status
+		$current = $this->get_status( $this->default_taxonomy );
+
+		// Args to remove
+		$remove = array( 'bdb_message', 'status', 'paged', '_wpnonce' );
+
+		// Base URL
+		$url = remove_query_arg( $remove, $this->get_base_url() );
+
+		// Is all selected?
+		$class = in_array( $current, array( '', 'all' ), true ) ? ' class="current"' : '';
+
+		$counts = $this->counts;
+		$views  = array();
+
+		if ( isset( $this->counts['total'] ) ) {
+			// All
+			$count = '&nbsp;<span class="count">(' . esc_attr( $this->counts['total'] ) . ')</span>';
+			$label = __( 'All', 'rcp' ) . $count;
+			$views = array(
+				'all' => sprintf( '<a href="%s"%s>%s</a>', $url, $class, $label ),
+			);
+
+			// Remove total from counts array
+			unset( $counts['total'] );
+		}
+
+		// Loop through statuses.
+		if ( ! empty( $counts ) ) {
+			foreach ( $counts as $status => $count ) {
+				$taxonomy = get_book_taxonomy_by( 'slug', $status );
+
+				if ( ! $taxonomy instanceof Book_Taxonomy ) {
+					continue;
+				}
+
+				$count_url = add_query_arg( array(
+					'status' => $status,
+					'paged'  => false,
+				), $url );
+
+				$class = ( $current === $status ) ? ' class="current"' : '';
+
+				$count = '&nbsp;<span class="count">(' . absint( $this->counts[ $status ] ) . ')</span>';
+
+				$label            = ( $taxonomy->get_name() ) . $count;
+				$views[ $status ] = sprintf( '<a href="%s"%s>%s</a>', $count_url, $class, $label );
+			}
+		}
+
+		return $views;
 	}
 
 }

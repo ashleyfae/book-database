@@ -27,7 +27,7 @@ class Book_Term extends Base_Object {
 
 	protected $links = '';
 
-	protected $count = 0;
+	protected $book_count = 0;
 
 	/**
 	 * Get the taxonomy slug
@@ -88,8 +88,8 @@ class Book_Term extends Base_Object {
 	 *
 	 * @return int
 	 */
-	public function get_count() {
-		return absint( $this->count );
+	public function get_book_count() {
+		return absint( $this->book_count );
 	}
 
 }

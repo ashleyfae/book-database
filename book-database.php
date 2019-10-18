@@ -256,6 +256,10 @@ final class Book_Database {
 		require_once BDB_DIR . 'includes/series/class-series.php';
 		require_once BDB_DIR . 'includes/series/series-functions.php';
 
+		// Ratings
+		require_once BDB_DIR . 'includes/ratings/class-rating.php';
+		require_once BDB_DIR . 'includes/ratings/rating-functions.php';
+
 		// REST API
 		require_once BDB_DIR . 'includes/rest-api/class-rest-api.php';
 		require_once BDB_DIR . 'includes/rest-api/abstract-class-controller.php';
@@ -263,6 +267,7 @@ final class Book_Database {
 		require_once BDB_DIR . 'includes/rest-api/v1/class-book-controller.php';
 		require_once BDB_DIR . 'includes/rest-api/v1/class-book-term-controller.php';
 		require_once BDB_DIR . 'includes/rest-api/v1/class-edition-controller.php';
+		require_once BDB_DIR . 'includes/rest-api/v1/class-reading-log-controller.php';
 		require_once BDB_DIR . 'includes/rest-api/v1/class-taxonomy-controller.php';
 		require_once BDB_DIR . 'includes/rest-api/v1/class-utility-controller.php';
 
@@ -291,6 +296,11 @@ final class Book_Database {
 		require_once BDB_DIR . 'includes/admin/authors/author-functions.php';
 		require_once BDB_DIR . 'includes/admin/authors/authors-page.php';
 
+		// Book Terms
+		require_once BDB_DIR . 'includes/admin/book-terms/book-term-actions.php';
+		require_once BDB_DIR . 'includes/admin/book-terms/book-term-functions.php';
+		require_once BDB_DIR . 'includes/admin/book-terms/book-terms-page.php';
+
 		// Books
 		require_once BDB_DIR . 'includes/admin/books/book-actions.php';
 		require_once BDB_DIR . 'includes/admin/books/book-functions.php';
@@ -299,6 +309,9 @@ final class Book_Database {
 
 		// Editions
 		require_once BDB_DIR . 'includes/admin/editions/edition-actions.php';
+
+		// Reading Logs
+		require_once BDB_DIR . 'includes/admin/reading-logs/reading-log-actions.php';
 
 		// Series
 		require_once BDB_DIR . 'includes/admin/series/series-actions.php';

@@ -24,7 +24,7 @@ class Book_Terms_Table extends BerlinDB\Database\Table {
 	/**
 	 * @var int Database version in format {YYYY}{MM}{DD}{1}
 	 */
-	protected $version = 201910126;
+	protected $version = 201910181;
 
 	/**
 	 * @var array Upgrades to perform
@@ -34,7 +34,8 @@ class Book_Terms_Table extends BerlinDB\Database\Table {
 		'201910123' => 201910123,
 		'201910124' => 201910124,
 		'201910125' => 201910125,
-		'201910126' => 201910126
+		'201910126' => 201910126,
+		'201910181' => 201910181
 	);
 
 	/**
@@ -55,7 +56,7 @@ class Book_Terms_Table extends BerlinDB\Database\Table {
 			description longtext NOT NULL DEFAULT '',
 			image_id bigint(20) UNSIGNED DEFAULT NULL,
 			links longtext NOT NULL DEFAULT '',
-			count bigint(20) UNSIGNED NOT NULL DEFAULT 0,
+			book_count bigint(20) UNSIGNED NOT NULL DEFAULT 0,
 			date_created datetime NOT NULL DEFAULT '0000-00-00 00:00:00',
 			date_modified datetime NOT NULL DEFAULT '0000-00-00 00:00:00',
 			UNIQUE KEY id_type_name (id, taxonomy, name),
@@ -170,6 +171,20 @@ class Book_Terms_Table extends BerlinDB\Database\Table {
 		if ( $result ) {
 			$result = $this->get_db()->query( "ALTER TABLE {$this->table_name} ADD UNIQUE KEY id_type_name (id, taxonomy, name), ADD UNIQUE KEY id_type_slug (id, taxonomy, slug), ADD INDEX taxonomy (taxonomy)" );
 		}
+
+		return $this->is_success( $result );
+
+	}
+
+	/**
+	 * Upgrade to version 201910181
+	 *      - Change `count` to `book_count`
+	 *
+	 * @return bool
+	 */
+	protected function __201910181() {
+
+		$result = $this->get_db()->query( "ALTER TABLE {$this->table_name} CHANGE `count` `book_count` bigint(20) UNSIGNED NOT NULL DEFAULT 0" );
 
 		return $this->is_success( $result );
 

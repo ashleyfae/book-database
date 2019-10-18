@@ -771,7 +771,7 @@ class Column extends Base {
 	 */
 	public function validate_decimal( $value = 0, $decimals = 9 ) {
 
-		if ( $this->allow_null && is_null( $value ) ) {
+		if ( $this->allow_null && ( is_null( $value ) || '' === $value ) ) {
 			return null;
 		}
 

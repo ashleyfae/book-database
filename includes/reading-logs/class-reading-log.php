@@ -96,7 +96,7 @@ class Reading_Log extends Base_Object {
 			$percentage = 0;
 		}
 
-		return round( $percentage * 100 );
+		return round( $percentage * 100, 2 );
 	}
 
 	/**
@@ -124,6 +124,22 @@ class Reading_Log extends Base_Object {
 	 */
 	public function get_rating() {
 		return $this->rating;
+	}
+
+	/**
+	 * Export vars
+	 *
+	 * @return array
+	 */
+	public function export_vars() {
+
+		$vars = parent::export_vars();
+
+		$vars['is_complete'] = $this->is_complete();
+		$vars['is_dnf']      = $this->is_dnf();
+
+		return $vars;
+
 	}
 
 }

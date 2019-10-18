@@ -10,6 +10,7 @@
 namespace Book_Database\Admin\Fields;
 
 use Book_Database\Book;
+use Book_Database\Rating;
 use Book_Database\Series;
 use function Book_Database\book_database;
 use function Book_Database\format_date;
@@ -456,8 +457,8 @@ function books_in_series( $book ) {
 			<?php
 			$average_rating = $series->get_average_rating();
 			if ( ! empty( $average_rating ) ) {
-				//$rating = new BDB_Rating( $average_rating );
-				//echo '<p>' . sprintf( __( 'Average Rating: %s', 'book-database' ), $rating->format_text() ) . '</p>';
+				$rating = new Rating( $average_rating );
+				echo '<p>' . sprintf( __( 'Average Rating: %s', 'book-database' ), $rating->format_text() ) . '</p>';
 			}
 			?>
 

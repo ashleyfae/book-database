@@ -32,7 +32,7 @@ class Utility extends Controller {
 			'permission_callback' => array( $this, 'can_edit' ),
 			'args'                => array(
 				'date' => array(
-					'required' => true
+					'default' => ''
 				),
 			)
 		) );
@@ -65,11 +65,11 @@ class Utility extends Controller {
 
 			$date = $request->get_param( 'date' );
 
-			if ( empty( $date ) ) {
-				throw new Exception( 'missing_required_parameter', __( 'A date ID is required.', 'book-database' ), 400 );
+			if ( ! empty( $date ) ) {
+				$date = get_gmt_from_date( $date );
 			}
 
-			return new \WP_REST_Response( get_gmt_from_date( $date ) );
+			return new \WP_REST_Response( $date );
 
 		} catch ( Exception $e ) {
 			return new \WP_REST_Response( $e->getMessage(), $e->getCode() );

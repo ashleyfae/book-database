@@ -1,6 +1,7 @@
 /* global $, bdbVars, wp */
 
 import { apiRequest, spinButton, unspinButton } from 'utils';
+import { dateLocalToUTC, dateUTCtoLocal } from "./dates";
 
 /**
  * Editions
@@ -54,9 +55,14 @@ var BDB_Editions = {
 			} else {
 				$( '#bdb-book-editions-empty' ).remove();
 				$.each( response, function( key, edition ) {
+					edition.date_acquired_formatted = dateUTCtoLocal( edition.date_acquired, 'display' );
+					edition.date_acquired           = dateUTCtoLocal( edition.date_acquired );
+
 					BDB_Editions.tableBody.append( BDB_Editions.rowTemplate( edition ) );
 				} );
 			}
+
+			$( document ).trigger( 'bdb_editions_loaded' );
 
 		} ).catch( function( error ) {
 			BDB_Editions.errorWrap.empty().append( error ).show();
@@ -71,7 +77,9 @@ var BDB_Editions = {
 	 */
 	toggleNewEditionFields: function ( e ) {
 
-		e.preventDefault();
+		if ( 'undefined' !== typeof e ) {
+			e.preventDefault();
+		}
 
 		$( '#bdb-new-edition-fields' ).slideToggle();
 
@@ -91,29 +99,31 @@ var BDB_Editions = {
 		BDB_Editions.errorWrap.empty().hide();
 
 		let args = {
-			book_id: $( '#bdb-book-id' ).val(),
+			book_id: BDB_Editions.bookID,
 			isbn: $( '#bdb-new-edition-isbn' ).val(),
 			format: $( '#bdb-new-edition-format' ).val(),
-			date_acquired: $( '#bdb-new-edition-date-acquired' ).val(),
+			date_acquired: dateLocalToUTC( $( '#bdb-new-edition-date-acquired' ).val() ),
 			source_id: $( '#bdb-checkboxes-source-edition' ).find( 'input:checked' ).val(),
 			signed: $( '#bdb-new-edition-signed' ).prop( 'checked' )
 		};
 
-		apiRequest( 'v1/utility/convert-date', { date: args.date_acquired }, 'POST' ).then( function( dateResponse ) {
-			args.date_acquired = dateResponse;
+		apiRequest( 'v1/edition/add', args, 'POST' ).then( function( apiResponse ) {
 
-			console.log(args);
-
-			return apiRequest( 'v1/edition/add', args, 'POST' );
-		} ).then( function( response ) {
+			apiResponse.date_acquired_formatted = dateUTCtoLocal( apiResponse.date_acquired, 'display' );
+			apiResponse.date_acquired           = dateUTCtoLocal( apiResponse.date_acquired );
 
 			$( '#bdb-book-editions-empty' ).remove();
-			BDB_Editions.tableBody.append( BDB_Editions.rowTemplate( response ) );
+			BDB_Editions.tableBody.append( BDB_Editions.rowTemplate( apiResponse ) );
 
 			// Wipe new field values.
 			let newFieldsWrap = $( '#bdb-new-edition-fields' );
 			newFieldsWrap.find( 'input[type="text"]' ).val( '' );
 			newFieldsWrap.find( 'input[type="checkbox"]' ).prop( 'checked', false );
+
+			BDB_Editions.toggleNewEditionFields();
+
+			// Trigger event.
+			$( document ).trigger( 'bdb_edition_added', apiResponse );
 
 		} ).catch( function( errorMessage ) {
 			BDB_Editions.errorWrap.append( errorMessage ).show();
@@ -138,7 +148,7 @@ var BDB_Editions = {
 		wrap.find( '.bdb-table-display-value' ).hide();
 		wrap.find( '.bdb-table-edit-value' ).show();
 
-		button.removeClass( 'bdb-edition-toggle-editable' ).addClass( 'bdb-update-edition button-primary' ).text( 'Save' );
+		button.removeClass( 'bdb-edition-toggle-editable' ).addClass( 'bdb-update-edition button-primary' ).text( bdbVars.save );
 
 	},
 
@@ -161,17 +171,19 @@ var BDB_Editions = {
 		let args = {
 			isbn: wrap.find( '.bdb-edition-isbn input' ).val(),
 			format: wrap.find( '.bdb-edition-format select' ).val(),
-			date_acquired: wrap.find( '.bdb-edition-date-acquired input' ).val(),
+			date_acquired: dateLocalToUTC( wrap.find( '.bdb-edition-date-acquired input' ).val() ),
 			source_id: wrap.find( '.bdb-edition-source select' ).val(),
 			signed: wrap.find( '.bdb-edition-signed input[type="checkbox"]' ).prop( 'checked' )
 		};
 
-		apiRequest( 'v1/utility/convert-date', { date: args.date_acquired }, 'POST' ).then( function( dateResponse ) {
-			args.date_acquired = dateResponse;
+		apiRequest( 'v1/edition/update/' + wrap.data( 'id' ), args, 'POST' ).then( function( apiResponse ) {
 
-			return apiRequest( 'v1/edition/update/' + wrap.data( 'id' ), args, 'POST' );
-		} ).then( function( apiResponse ) {
+			apiResponse.date_acquired_formatted = dateUTCtoLocal( apiResponse.date_acquired, 'display' );
+			apiResponse.date_acquired           = dateUTCtoLocal( apiResponse.date_acquired );
+
 			wrap.replaceWith( BDB_Editions.rowTemplate( apiResponse ) );
+			$( document ).trigger( 'bdb_edition_updated', apiResponse );
+
 		} ).catch( function( errorMessage ) {
 			BDB_Editions.errorWrap.append( errorMessage ).show();
 		} ).finally( function() {

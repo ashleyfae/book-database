@@ -84,10 +84,14 @@ class Edition extends Base_Object {
 		return ! empty( $this->signed );
 	}
 
+	/**
+	 * Export properties
+	 *
+	 * @return array
+	 */
 	public function export_vars() {
-		$vars                            = parent::export_vars();
-		$vars['date_acquired_formatted'] = $this->get_date_acquired( true );
-		$vars['format_name']             = get_book_formats()[ $this->get_format() ] ?? '';
+		$vars                = parent::export_vars();
+		$vars['format_name'] = get_book_formats()[ $this->get_format() ] ?? '';
 
 		if ( $this->get_source_id() ) {
 			$source = get_book_term( $this->get_source_id() );

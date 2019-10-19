@@ -11,6 +11,7 @@
 namespace Book_Database\BerlinDB\Database;
 
 // Exit if accessed directly
+use Book_Database\BerlinDB\Database\Queries\Book;
 use Book_Database\BerlinDB\Database\Queries\Compare_Query;
 use Book_Database\BerlinDB\Database\Queries\Edition;
 use Book_Database\BerlinDB\Database\Queries\Reading_Log;
@@ -225,6 +226,13 @@ class Query extends Base {
 	 * @var   object|Queries\Date
 	 */
 	protected $date_query = false;
+
+	/**
+	 * Book query container
+	 *
+	 * @var Book|false
+	 */
+	protected $book_query = false;
 
 	/**
 	 * Edition query container.
@@ -488,6 +496,7 @@ class Query extends Base {
 			'meta_query'        => null, // See WP_Meta_Query
 			'date_query'        => null, // See Queries\Date
 			'compare_query'     => null, // See Queries\Compare
+			'book_query'        => null, // See Queries\Book
 			'author_query'      => null, // See Queries\Author
 			'edition_query'     => null, // See Queries\Edition
 			'reading_log_query' => null, // See Queries\Reading_Log
@@ -729,6 +738,19 @@ class Query extends Base {
 	}
 
 	/**
+	 * Pass-through method to return a new Queries\Book object.
+	 *
+	 * @param array  $args
+	 * @param string $table_name
+	 * @param string $column_name
+	 *
+	 * @return Book
+	 */
+	private function get_book_query( $args, $table_name, $column_name ) {
+		return new Queries\Book( $args, $table_name, $column_name );
+	}
+
+	/**
 	 * Pass-through method to return a new Queries\Author object.
 	 *
 	 * @param array $args See WP_Tax_Query
@@ -845,6 +867,42 @@ class Query extends Base {
 	 */
 	private function get_primary_column_name() {
 		return $this->get_column_field( array( 'primary' => true ), 'name', 'id' );
+	}
+
+	/**
+	 * Get the column in this table to join with the book column.
+	 *
+	 * @return string Default "id".
+	 */
+	protected function get_author_query_join_column_name() {
+		return $this->get_primary_column_name();
+	}
+
+	/**
+	 * Get the column in this table to join with the book column.
+	 *
+	 * @return string Default "book_id".
+	 */
+	protected function get_book_query_join_column_name() {
+		return 'book_id';
+	}
+
+	/**
+	 * Get the column in this table to join with the reading log column.
+	 *
+	 * @return string Default "id".
+	 */
+	protected function get_reading_log_query_join_column_name() {
+		return $this->get_primary_column_name();
+	}
+
+	/**
+	 * Get the column in this table to join with the taxonomy terms column.
+	 *
+	 * @return string Default "id".
+	 */
+	protected function get_tax_query_join_column_name() {
+		return $this->get_primary_column_name();
 	}
 
 	/**
@@ -1419,7 +1477,7 @@ class Query extends Base {
 		$author_query = $this->query_vars['author_query'];
 		if ( ! empty( $author_query ) && is_array( $author_query ) ) {
 			$this->author_query = $this->get_author_query( $author_query );
-			$clauses            = $this->author_query->get_sql( $this->table_alias, $this->get_primary_column_name() );
+			$clauses            = $this->author_query->get_sql( $this->table_alias, $this->get_author_query_join_column_name() );
 
 			if ( false !== $clauses ) {
 
@@ -1428,6 +1486,22 @@ class Query extends Base {
 
 				// Remove " AND " from author_query where clause
 				$where['author_query'] = preg_replace( $and, '', $clauses['where'] );
+
+			}
+		}
+
+		// Maybe perform a book query.
+		$book_query = $this->query_vars['book_query'];
+		if ( ! empty( $book_query ) && is_array( $book_query ) ) {
+			$this->book_query = $this->get_book_query( $book_query, $this->table_alias, $this->get_book_query_join_column_name() );
+			$clauses             = $this->book_query->get_sql();
+
+			if ( ! empty( $clauses ) ) {
+
+				// Set join.
+				$join .= ' ' . $clauses['join'];
+
+				$where['book_query'] = $clauses['where'];
 
 			}
 		}
@@ -1451,7 +1525,7 @@ class Query extends Base {
 		// Maybe perform a reading log query.
 		$reading_log_query = $this->query_vars['reading_log_query'];
 		if ( ! empty( $reading_log_query ) && is_array( $reading_log_query ) ) {
-			$this->reading_log_query = $this->get_reading_log_query( $reading_log_query, $this->table_alias, $this->get_primary_column_name() );
+			$this->reading_log_query = $this->get_reading_log_query( $reading_log_query, $this->table_alias, $this->get_reading_log_query_join_column_name() );
 			$clauses                 = $this->reading_log_query->get_sql();
 
 			if ( ! empty( $clauses ) ) {
@@ -1485,7 +1559,7 @@ class Query extends Base {
 		$tax_query = $this->query_vars['tax_query'];
 		if ( ! empty( $tax_query ) && is_array( $tax_query ) ) {
 			$this->tax_query = $this->get_tax_query( $tax_query );
-			$clauses         = $this->tax_query->get_sql( $this->table_alias, $this->get_primary_column_name() );
+			$clauses         = $this->tax_query->get_sql( $this->table_alias, $this->get_tax_query_join_column_name() );
 
 			if ( false !== $clauses ) {
 

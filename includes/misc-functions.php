@@ -65,9 +65,9 @@ function bdb_update_option( $key, $value ) {
 function format_date( $date, $format = '' ) {
 
 	$format     = ! empty( $format ) ? $format : get_option( 'date_format' );
-	$local_date = get_date_from_gmt( $date, 'U' );
+	$local_date = get_date_from_gmt( $date, 'Y-m-d H:i:s' );
 
-	return date( $format, $local_date );
+	return date( $format, strtotime( $local_date ) );
 
 }
 

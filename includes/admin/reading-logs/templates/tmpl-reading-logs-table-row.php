@@ -51,9 +51,9 @@ namespace Book_Database;
 	<td class="bdb-reading-log-review-id" data-th="<?php esc_attr_e( 'Review ID', 'book-database' ); ?>">
 		<div class="bdb-table-display-value">
 			<# if ( data.review_id && '0' !== data.review_id ) { #>
-			<a href="&review_id={{ data.review_id }}">{{ data.review_id }} <?php _e( '(Edit)', 'book-database' ); ?></a>
+			<a href="<?php echo esc_url( get_reviews_admin_page_url( array( 'view' => 'edit' ) ) ); ?>&review_id={{ data.review_id }}">{{ data.review_id }} <?php _e( '(Edit)', 'book-database' ); ?></a>
 			<# } else { #>
-			<a href="&reading_log_id={{ data.id }}"><?php _e( 'Add Review', 'book-database' ); ?>
+			<a href="<?php echo esc_url( get_reviews_admin_page_url( array( 'view' => 'add' ) ) ); ?>&book_id={{ data.book_id }}&reading_log_id={{ data.id }}"><?php _e( 'Add Review', 'book-database' ); ?>
 			<# } #>
 		</div>
 

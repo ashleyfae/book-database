@@ -168,6 +168,7 @@ final class Book_Database {
 		require_once BDB_DIR . 'includes/database/engine/tax.php';
 		require_once BDB_DIR . 'includes/database/engine/author.php';
 		require_once BDB_DIR . 'includes/database/engine/join.php';
+		require_once BDB_DIR . 'includes/database/engine/book.php';
 		require_once BDB_DIR . 'includes/database/engine/edition.php';
 		require_once BDB_DIR . 'includes/database/engine/reading-log.php';
 		require_once BDB_DIR . 'includes/database/sanitization.php';
@@ -212,6 +213,11 @@ final class Book_Database {
 		require_once BDB_DIR . 'includes/database/reading-logs/class-reading-logs-schema.php';
 		require_once BDB_DIR . 'includes/database/reading-logs/class-reading-logs-query.php';
 
+		// Database - reviews
+		require_once BDB_DIR . 'includes/database/reviews/class-reviews-table.php';
+		require_once BDB_DIR . 'includes/database/reviews/class-reviews-schema.php';
+		require_once BDB_DIR . 'includes/database/reviews/class-reviews-query.php';
+
 		// Database - series
 		require_once BDB_DIR . 'includes/database/series/class-series-table.php';
 		require_once BDB_DIR . 'includes/database/series/class-series-schema.php';
@@ -248,17 +254,21 @@ final class Book_Database {
 		require_once BDB_DIR . 'includes/editions/class-edition.php';
 		require_once BDB_DIR . 'includes/editions/edition-functions.php';
 
-		// Series
+		// Ratings
+		require_once BDB_DIR . 'includes/ratings/class-rating.php';
+		require_once BDB_DIR . 'includes/ratings/rating-functions.php';
+
+		// Reading Logs
 		require_once BDB_DIR . 'includes/reading-logs/class-reading-log.php';
 		require_once BDB_DIR . 'includes/reading-logs/reading-log-functions.php';
+
+		// Reviews
+		require_once BDB_DIR . 'includes/reviews/class-review.php';
+		require_once BDB_DIR . 'includes/reviews/review-functions.php';
 
 		// Series
 		require_once BDB_DIR . 'includes/series/class-series.php';
 		require_once BDB_DIR . 'includes/series/series-functions.php';
-
-		// Ratings
-		require_once BDB_DIR . 'includes/ratings/class-rating.php';
-		require_once BDB_DIR . 'includes/ratings/rating-functions.php';
 
 		// REST API
 		require_once BDB_DIR . 'includes/rest-api/class-rest-api.php';
@@ -313,6 +323,12 @@ final class Book_Database {
 		// Reading Logs
 		require_once BDB_DIR . 'includes/admin/reading-logs/reading-log-actions.php';
 
+		// Reviews
+		require_once BDB_DIR . 'includes/admin/reviews/review-actions.php';
+		require_once BDB_DIR . 'includes/admin/reviews/review-fields.php';
+		require_once BDB_DIR . 'includes/admin/reviews/review-functions.php';
+		require_once BDB_DIR . 'includes/admin/reviews/reviews-page.php';
+
 		// Series
 		require_once BDB_DIR . 'includes/admin/series/series-actions.php';
 		require_once BDB_DIR . 'includes/admin/series/series-functions.php';
@@ -346,6 +362,7 @@ final class Book_Database {
 			'books'                     => new Books_Table(),
 			'editions'                  => new Editions_Table(),
 			'reading_log'               => new Reading_Logs_Table(),
+			'reviews'                   => new Reviews_Table(),
 			'series'                    => new Series_Table(),
 		);
 

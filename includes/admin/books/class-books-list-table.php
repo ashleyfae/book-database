@@ -380,8 +380,6 @@ class Books_List_Table extends List_Table {
 	/**
 	 * Render extra content between bulk actions and pagination
 	 *
-	 * @todo make these filters work
-	 *
 	 * @param string $which
 	 */
 	protected function extra_tablenav( $which ) {

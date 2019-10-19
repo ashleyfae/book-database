@@ -124,6 +124,11 @@ function process_delete_author() {
 
 		delete_book_author( absint( $_GET['author_id'] ) );
 
+		wp_safe_redirect( get_authors_admin_page_url( array(
+			'bdb_message' => 'author_deleted'
+		) ) );
+		exit;
+
 	} catch ( Exception $e ) {
 		wp_die( $e->getMessage() );
 	}

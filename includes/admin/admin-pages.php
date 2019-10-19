@@ -29,10 +29,10 @@ function register_admin_pages() {
 	$bdb_admin_pages['reviews'] = add_submenu_page( 'bdb-books', __( 'Reviews', 'book-database' ), __( 'Reviews', 'book-database' ), 'edit_posts', 'bdb-reviews', __NAMESPACE__ . '\render_book_reviews_page' );
 
 	// Terms
-	$bdb_admin_pages['reviews'] = add_submenu_page( 'bdb-books', __( 'Terms', 'book-database' ), __( 'Terms', 'book-database' ), 'edit_posts', 'bdb-terms', __NAMESPACE__ . '\render_book_terms_page' );
+	$bdb_admin_pages['terms'] = add_submenu_page( 'bdb-books', __( 'Terms', 'book-database' ), __( 'Terms', 'book-database' ), 'edit_posts', 'bdb-terms', __NAMESPACE__ . '\render_book_terms_page' );
 
 	// Analytics
-	$bdb_admin_pages['reviews'] = add_submenu_page( 'bdb-books', __( 'Analytics', 'book-database' ), __( 'Analytics', 'book-database' ), 'manage_options', 'bdb-analytics', __NAMESPACE__ . '\render_analytics_page' );
+	$bdb_admin_pages['analytics'] = add_submenu_page( 'bdb-books', __( 'Analytics', 'book-database' ), __( 'Analytics', 'book-database' ), 'manage_options', 'bdb-analytics', __NAMESPACE__ . '\render_analytics_page' );
 
 	// Settings
 	$bdb_admin_pages['settings'] = add_submenu_page( 'bdb-books', __( 'Settings', 'book-database' ), __( 'Settings', 'book-database' ), 'manage_options', 'bdb-settings', __NAMESPACE__ . '\render_settings_page' );

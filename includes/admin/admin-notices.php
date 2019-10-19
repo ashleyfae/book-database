@@ -29,6 +29,7 @@ function display_admin_notices() {
 	$objects = array(
 		'author' => __( 'Author', 'book-database' ),
 		'book'   => __( 'Book', 'book-database' ),
+		'review' => __( 'Review', 'book-database' ),
 		'series' => __( 'Series', 'book-database' ),
 		'term'   => __( 'Term', 'book-database' )
 	);

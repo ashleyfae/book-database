@@ -63,6 +63,8 @@ function get_book_by( $column_name, $column_value ) {
  * @type array        $author_query        Query for authors. See WP_Tax_Query.
  * @type array        $series_query        Query for series. See \Book_Database\BerlinDB\Database\Queries\Series.
  * @type array        $tax_query           Query for taxonomy terms. See WP_Tax_Query.
+ * @type array        $edition_query       Query for editions. See \Book_Database\BerlinDB\Database\Queries\Edition.
+ * @type array        $reading_log_query   Query for reading logs. See \Book_Database\BerlinDB\Database\Queries\Reading_Log.
  * @type bool         $count               Whether to return an item count (true) or array of objects. Default false.
  * @type string       $fields              Item fields to return. Accepts any column known names  or empty
  *                                         (returns an array of complete item objects). Default empty.
@@ -118,7 +120,7 @@ function count_books( $args = array() ) {
  *
  * @param array           $args            {
  *
- * @type int              $cover_id        Attachment ID of the book cover.
+ * @type int              $cover_id        Optional. Attachment ID of the book cover.
  * @type string           $title           Required. Title of the book.
  * @type string           $index_title     Title used in archives.
  * @type array|int|string $authors         Single author name/ID or array of author names/IDs.
@@ -226,6 +228,7 @@ function delete_book( $book_id ) {
 	$bt_table  = book_database()->get_table( 'book_term_relationships' )->get_table_name();
 	$ed_table  = book_database()->get_table( 'editions' )->get_table_name();
 	$log_table = book_database()->get_table( 'reading_log' )->get_table_name();
+	$rev_table = book_database()->get_table( 'reviews' )->get_table_name();
 
 	// Delete all book-author relationships for this book.
 	$wpdb->query( $wpdb->prepare( "DELETE FROM {$ar_table} WHERE book_id = %d", $book_id ) );
@@ -239,7 +242,8 @@ function delete_book( $book_id ) {
 	// Delete all reading logs of this book.
 	$wpdb->query( $wpdb->prepare( "DELETE FROM {$log_table} WHERE book_id = %d", $book_id ) );
 
-	// @todo maybe delete reviews
+	// Delete all reviews of this book.
+	$wpdb->query( $wpdb->prepare( "DELETE FROM {$rev_table} WHERE book_id = %d", $book_id ) );
 
 	return true;
 

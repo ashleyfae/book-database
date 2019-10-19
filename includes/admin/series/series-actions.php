@@ -124,6 +124,11 @@ function process_delete_series() {
 
 		delete_book_series( absint( $_GET['series_id'] ) );
 
+		wp_safe_redirect( get_series_admin_page_url( array(
+			'bdb_message' => 'series_deleted'
+		) ) );
+		exit;
+
 	} catch ( Exception $e ) {
 		wp_die( $e->getMessage() );
 	}

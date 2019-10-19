@@ -39,6 +39,7 @@ function enqueue_admin_assets( $hook ) {
 		'confirm_delete_book'        => __( 'Are you sure you want to delete this book?', 'book-database' ),
 		'confirm_delete_edition'     => __( 'Are you sure you want to delete this edition?', 'book-database' ),
 		'confirm_delete_reading_log' => __( 'Are you sure you want to delete this reading log?', 'book-database' ),
+		'confirm_delete_review'      => __( 'Are you sure you want to delete this review?', 'book-database' ),
 		'confirm_delete_series'      => __( 'Are you sure you want to delete this series?', 'book-database' ),
 		'confirm_delete_taxonomy'    => __( 'Are you sure you want to delete this taxonomy?', 'book-database' ),
 		'error_required_fields'      => esc_html__( 'Please fill out all the required fields.', 'book-database' ),

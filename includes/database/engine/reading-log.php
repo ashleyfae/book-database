@@ -53,4 +53,12 @@ class Reading_Log extends Join {
 		'date_modified'
 	);
 
+	public function __construct( $args = array(), $primary_table_name = '', $primary_column = '' ) {
+		parent::__construct( $args, $primary_table_name, $primary_column );
+
+		if ( false !== strpos( $this->primary_table_name, 'bdb_rev' ) ) {
+			$this->joined_table_column = 'review_id';
+		}
+	}
+
 }

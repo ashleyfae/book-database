@@ -220,6 +220,11 @@ function process_delete_book() {
 
 		delete_book( absint( $_GET['book_id'] ) );
 
+		wp_safe_redirect( get_books_admin_page_url( array(
+			'bdb_message' => 'book_deleted'
+		) ) );
+		exit;
+
 	} catch ( Exception $e ) {
 		wp_die( $e->getMessage() );
 	}

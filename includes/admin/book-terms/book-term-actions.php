@@ -126,6 +126,11 @@ function process_delete_book_term() {
 
 		delete_book_term( absint( $_GET['term_id'] ) );
 
+		wp_safe_redirect( get_book_terms_admin_page_url( array(
+			'bdb_message' => 'term_deleted'
+		) ) );
+		exit;
+
 	} catch ( Exception $e ) {
 		wp_die( $e->getMessage() );
 	}

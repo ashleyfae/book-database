@@ -206,11 +206,12 @@ class Books_List_Table extends List_Table {
 	public function get_object_data( $count = false ) {
 
 		$args = array(
-			'number'    => $this->per_page,
-			'offset'    => $this->get_offset(),
-			'orderby'   => sanitize_text_field( $this->get_request_var( 'orderby', 'id' ) ),
-			'order'     => sanitize_text_field( $this->get_request_var( 'order', 'DESC' ) ),
-			'tax_query' => array(),
+			'id__not_in' => array(),
+			'number'     => $this->per_page,
+			'offset'     => $this->get_offset(),
+			'orderby'    => sanitize_text_field( $this->get_request_var( 'orderby', 'id' ) ),
+			'order'      => sanitize_text_field( $this->get_request_var( 'order', 'DESC' ) ),
+			'tax_query'  => array(),
 		);
 
 		// Filter by author ID.
@@ -280,6 +281,52 @@ class Books_List_Table extends List_Table {
 			);
 		}
 
+		// Filter by read / unread status.
+		$read_status = $this->get_request_var( 'read_status_filter' );
+		if ( ! empty( $read_status ) ) {
+			switch ( $read_status ) {
+				case 'reading' :
+					$args['reading_log_query'][] = array(
+						'field' => 'date_started',
+						'value' => array(
+							'after' => '0000-00-00 00:00:00'
+						)
+					);
+					$args['reading_log_query'][] = array(
+						'field' => 'date_finished',
+						'value' => null
+					);
+					break;
+
+				case 'read' :
+					$args['reading_log_query'][] = array(
+						'field' => 'date_started',
+						'value' => array(
+							'after' => '0000-00-00 00:00:00'
+						)
+					);
+					$args['reading_log_query'][] = array(
+						'field' => 'date_finished',
+						'value' => array(
+							'after' => '0000-00-00 00:00:00'
+						)
+					);
+					break;
+
+				case 'unread' :
+					$read_book_ids = get_reading_logs( array(
+						'number'  => 9999,
+						'fields'  => 'book_id',
+						'groupby' => 'book_id'
+					) );
+
+					if ( $read_book_ids ) {
+						$args['id__not_in'] = $args['id__not_in'] + $read_book_ids;
+					}
+					break;
+			}
+		}
+
 		// Filter by ownership status.
 		$edition = $this->get_request_var( 'owned_status_filter' );
 		if ( ! empty( $edition ) ) {
@@ -301,7 +348,7 @@ class Books_List_Table extends List_Table {
 					) );
 
 					if ( $owned_book_ids ) {
-						$args['id__not_in'] = $owned_book_ids;
+						$args['id__not_in'] = $args['id__not_in'] + $owned_book_ids;
 					}
 					break;
 
@@ -388,13 +435,22 @@ class Books_List_Table extends List_Table {
 			return;
 		}
 
+		$read_filter   = $this->get_request_var( 'read_status_filter', '' );
 		$owned_filter  = $this->get_request_var( 'owned_status_filter', '' );
 		$format_filter = $this->get_request_var( 'format_filter', '' );
 		?>
 		<div class="alignleft actions">
+			<label for="bdb-filter-by-read" class="screen-reader-text"><?php _e( 'Filter by read or unread', 'book-database' ); ?></label>
+			<select id="bdb-filter-by-read" name="read_status_filter">
+				<option value="" <?php selected( empty( $read_filter ) ); ?>><?php _e( 'Read &amp; Unread', 'book-database' ); ?></option>
+				<option value="reading" <?php selected( $read_filter, 'reading' ); ?>><?php _e( 'Currently Reading', 'book-database' ); ?></option>
+				<option value="read" <?php selected( $read_filter, 'read' ); ?>><?php _e( 'Read', 'book-database' ); ?></option>
+				<option value="unread" <?php selected( $read_filter, 'unread' ); ?>><?php _e( 'Unread', 'book-database' ); ?></option>
+			</select>
+
 			<label for="bdb-filter-by-owned" class="screen-reader-text"><?php _e( 'Filter by owned', 'book-database' ); ?></label>
 			<select id="bdb-filter-by-owned" name="owned_status_filter">
-				<option value="" <?php selected( empty( $owned_filter ) ); ?>><?php _e( 'All Books', 'book-database' ); ?></option>
+				<option value="" <?php selected( empty( $owned_filter ) ); ?>><?php _e( 'Owned &amp; Unowned', 'book-database' ); ?></option>
 				<option value="owned" <?php selected( $owned_filter, 'owned' ); ?>><?php _e( 'Owned Books', 'book-database' ); ?></option>
 				<option value="signed" <?php selected( $owned_filter, 'signed' ); ?>><?php _e( 'Signed Books', 'book-database' ); ?></option>
 				<option value="unowned" <?php selected( $owned_filter, 'unowned' ); ?>><?php _e( 'Unowned Books', 'book-database' ); ?></option>

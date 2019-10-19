@@ -64,6 +64,10 @@ class Rating {
 
 		$rating = $this->rating;
 
+		if ( is_null( $rating ) ) {
+			return null;
+		}
+
 		if ( ! array_key_exists( (string) $rating, $this->available_ratings ) ) {
 			$rating = round( $this->rating * 2 ) / 2;
 		}

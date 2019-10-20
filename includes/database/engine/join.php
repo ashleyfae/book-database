@@ -174,6 +174,7 @@ abstract class Join extends Base {
 				continue;
 			}
 
+			$column      = $this->joined_table_alias . '.' . $column;
 			$operator    = $this->sanitize_operator( $condition['operator'] ?? '=' );
 			$placeholder = is_int( $condition['value'] ) ? '%d' : '%s';
 			$value       = 'LIKE' === $operator ? '%' . $this->get_db()->esc_like( $condition['value'] ) . '%' : $condition['value'];

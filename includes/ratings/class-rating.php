@@ -22,8 +22,18 @@ class Rating {
 	 */
 	protected $rating;
 
+	/**
+	 * Highest possible rating
+	 *
+	 * @var float|int
+	 */
 	protected $max;
 
+	/**
+	 * Available ratings
+	 *
+	 * @var array
+	 */
 	protected $available_ratings;
 
 	/**
@@ -53,6 +63,15 @@ class Rating {
 	 */
 	public function get_rating() {
 		return $this->rating;
+	}
+
+	/**
+	 * Get the highest possible rating
+	 *
+	 * @return float|int
+	 */
+	public function get_max_rating() {
+		return $this->max;
 	}
 
 	/**

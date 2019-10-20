@@ -234,6 +234,7 @@ final class Book_Database {
 
 		// Books
 		require_once BDB_DIR . 'includes/books/class-book.php';
+		require_once BDB_DIR . 'includes/books/class-book-layout.php';
 		require_once BDB_DIR . 'includes/books/book-functions.php';
 		require_once BDB_DIR . 'includes/books/book-layout-functions.php';
 
@@ -273,6 +274,7 @@ final class Book_Database {
 		// REST API
 		require_once BDB_DIR . 'includes/rest-api/class-rest-api.php';
 		require_once BDB_DIR . 'includes/rest-api/abstract-class-controller.php';
+		require_once BDB_DIR . 'includes/rest-api/v1/class-analytics-controller.php';
 		require_once BDB_DIR . 'includes/rest-api/v1/class-author-controller.php';
 		require_once BDB_DIR . 'includes/rest-api/v1/class-book-controller.php';
 		require_once BDB_DIR . 'includes/rest-api/v1/class-book-term-controller.php';
@@ -282,8 +284,12 @@ final class Book_Database {
 		require_once BDB_DIR . 'includes/rest-api/v1/class-utility-controller.php';
 
 		// Misc.
+		require_once BDB_DIR . 'includes/class-analytics.php';
+		require_once BDB_DIR . 'includes/class-book-reviews-query.php';
 		require_once BDB_DIR . 'includes/class-html.php';
 		require_once BDB_DIR . 'includes/misc-functions.php';
+		require_once BDB_DIR . 'includes/rewrites.php';
+		require_once BDB_DIR . 'includes/shortcodes.php';
 
 		if ( defined( 'WP_CLI' ) && WP_CLI ) {
 			require_once BDB_DIR . 'includes/class-cli.php';
@@ -300,6 +306,9 @@ final class Book_Database {
 		require_once BDB_DIR . 'includes/admin/admin-assets.php';
 		require_once BDB_DIR . 'includes/admin/admin-notices.php';
 		require_once BDB_DIR . 'includes/admin/admin-pages.php';
+
+		// Analytics
+		require_once BDB_DIR . 'includes/admin/analytics/analytics-page.php';
 
 		// Authors
 		require_once BDB_DIR . 'includes/admin/authors/author-actions.php';
@@ -406,9 +415,13 @@ final class Book_Database {
 	 * Run installation
 	 *
 	 *      - Install default taxonomies.
+	 *      - Add rewrite tags/rules and flush
 	 */
 	public function install() {
 
+		/**
+		 * Add default taxonomies.
+		 */
 		$default_taxonomies = array(
 			'publisher' => array(
 				'slug'   => 'publisher',
@@ -434,6 +447,13 @@ final class Book_Database {
 
 			}
 		}
+
+		/**
+		 * Add rewrite tags/rules and flush
+		 */
+		add_rewrite_tags();
+		add_rewrite_rules();
+		flush_rewrite_rules( true );
 
 	}
 

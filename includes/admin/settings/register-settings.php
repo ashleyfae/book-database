@@ -76,7 +76,7 @@ function sanitize_settings( $data ) {
 
 						$sanitized_book_field = array();
 
-						$sanitized_book_field['label']     = ! empty( $book_field['label'] ) ? sanitize_textarea_field( $book_field['label'] ) : '';
+						$sanitized_book_field['label']     = ! empty( $book_field['label'] ) ? $book_field['label'] : '';
 						$sanitized_book_field['linebreak'] = $book_field['linebreak'] ?? false;
 						$sanitized_book_field['alignment'] = ( ! empty( $book_field['alignment'] ) && array_key_exists( $book_field['alignment'], get_book_cover_alignment_options() ) ) ? sanitize_text_field( $book_field['alignment'] ) : 'left';
 						$sanitized_book_field['size'] = ( ! empty( $book_field['size'] ) && array_key_exists( $book_field['size'], get_book_cover_image_sizes() ) ) ? sanitize_text_field( $book_field['size'] ) : 'full';
@@ -84,6 +84,10 @@ function sanitize_settings( $data ) {
 						$sanitized[ $key ][ $book_field_key ] = $sanitized_book_field;
 					}
 				}
+				break;
+
+			case 'reviews_page' :
+				$sanitized[ $key ] = absint( $value );
 				break;
 		}
 	}

@@ -72,7 +72,7 @@ function get_book_taxonomy_by( $column_name, $column_value ) {
  * @type bool         $update_cache        Whether to prime the cache for found items. Default false.
  * }
  *
- * @return Book_Taxonomy[] Array of Book_Taxonomy objects.
+ * @return Book_Taxonomy[]|array Array of Book_Taxonomy objects.
  */
 function get_book_taxonomies( $args = array() ) {
 

@@ -130,3 +130,61 @@ function unique_book_slug( $slug, $taxonomy = 'author' ) {
 	return apply_filters( 'book-database/unique-slug', $new_slug, $slug, $taxonomy );
 
 }
+
+/**
+ * Whether or not terms should link to the archive
+ *
+ * Disable with this:
+ *      `add_filter( 'book-database/link-terms', '__return_false' );`
+ *
+ * @return bool
+ */
+function link_book_terms() {
+	return apply_filters( 'book-database/link-terms', true );
+}
+
+/**
+ * Get the term archive link
+ *
+ * @param Author|Book_Term|Series|Rating $term
+ *
+ * @return bool
+ */
+function get_book_term_link( $term ) {
+
+	if ( ! is_object( $term ) ) {
+		return false;
+	}
+
+	$slug     = method_exists( $term, 'get_slug' ) ? $term->get_slug() : '';
+	$taxonomy = '';
+
+	if ( $term instanceof Author ) {
+		$taxonomy = 'author';
+	} elseif ( $term instanceof Book_Term ) {
+		$taxonomy = $term->get_taxonomy();
+	} elseif ( $term instanceof Series ) {
+		$taxonomy = 'series';
+	} elseif ( $term instanceof Rating ) {
+		$taxonomy = 'rating';
+		$slug     = $term->get_rating();
+	}
+
+	if ( empty( $taxonomy ) || empty( $slug ) ) {
+		return false;
+	}
+
+	$base_url  = untrailingslashit( get_reviews_page_url() );
+	$final_url = sprintf( '%1$s/%2$s/%3$s/', $base_url, urlencode( $taxonomy ), urlencode( $slug ) );
+
+	/**
+	 * Filters the term archive URL.
+	 *
+	 * @param string                         $final_url Final archive URL.
+	 * @param string                         $slug      Term slug.
+	 * @param string                         $taxonomy  Term taxonomy / type.
+	 * @param Author|Book_Term|Series|Rating $term      Term object.
+	 */
+	return apply_filters( 'book-database/term-archive-link', $final_url, $slug, $taxonomy, $term );
+
+}

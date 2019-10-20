@@ -120,7 +120,30 @@ function render_settings_page() {
 							break;
 
 						case 'reviews' :
-							// @todo
+							?>
+							<tr>
+								<th scope="row">
+									<label for="bdb-settings-reviews-page"><?php _e( 'Reviews Page', 'book-database' ); ?></label>
+								</th>
+								<td>
+									<?php
+									$reviews_page = bdb_get_option( 'reviews_page' );
+									$pages        = get_pages();
+									?>
+									<select id="bdb-settings-reviews-page" name="bdb_settings[reviews_page]">
+										<option value="" <?php selected( empty( $reviews_page ) ); ?>><?php _e( 'Select a Page', 'book-database' ); ?></option>
+										<?php foreach ( $pages as $page ) : ?>
+											<option value="<?php echo esc_attr( $page->ID ); ?>" <?php selected( $page->ID, $reviews_page ); ?>><?php echo esc_html( $page->post_title ); ?></option>
+										<?php endforeach; ?>
+									</select>
+									<?php if ( ! empty( $reviews_page ) ) : ?>
+										<a href="<?php echo esc_url( get_permalink( $reviews_page ) ); ?>" class="button"><?php _e( 'View Page', 'book-database' ); ?></a>
+										<a href="<?php echo esc_url( add_query_arg( 'post', urlencode( $reviews_page ), admin_url( 'post.php?action=edit' ) ) ); ?>" class="button"><?php _e( 'Edit Page', 'book-database' ); ?></a>
+									<?php endif; ?>
+									<p class="description"><?php printf( __( 'Page containing the %s shortcode.', 'book-database' ), '<code>[book-reviews]</code>' ); ?></p>
+								</td>
+							</tr>
+							<?php
 							break;
 
 						case 'misc' :

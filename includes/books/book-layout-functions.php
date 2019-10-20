@@ -45,7 +45,7 @@ function get_book_fields() {
 		'pub_date'      => array(
 			'name'        => __( 'Pub Date', 'book-database' ),
 			'placeholder' => '[pub_date]',
-			'label'       => sprintf( __( ' on %s', 'book-database' ), '[pub_date]' ),
+			'label'       => sprintf( __( '<strong>Publication Date:</strong> %s', 'book-database' ), '[pub_date]' ),
 			'linebreak'   => 'on'
 		),
 		'pages'         => array(
@@ -106,7 +106,7 @@ function book_layout_taxonomy_fields( $fields ) {
 			continue;
 		}
 
-		$fields[ $taxonomy->get_id() ] = array(
+		$fields[ $taxonomy->get_slug() ] = array(
 			'name'        => $taxonomy->get_name(),
 			'placeholder' => '[' . sanitize_key( $taxonomy->get_slug() ) . ']',
 			'label'       => sprintf( '<strong>%s:</strong> [%s]', esc_html( $taxonomy->get_name() ), esc_html( sanitize_key( $taxonomy->get_slug() ) ) ),

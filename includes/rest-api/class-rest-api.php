@@ -27,6 +27,7 @@ class REST_API {
 	 */
 	public function register_routes() {
 		$controllers = array(
+			'\Book_Database\REST_API\v1\Analytics',
 			'\Book_Database\REST_API\v1\Author',
 			'\Book_Database\REST_API\v1\Book',
 			'\Book_Database\REST_API\v1\Book_Term',

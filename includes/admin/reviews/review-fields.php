@@ -9,6 +9,7 @@
 
 namespace Book_Database\Admin\Reviews\Fields;
 
+use Book_Database\Book_Layout;
 use Book_Database\Rating;
 use Book_Database\Reading_Log;
 use Book_Database\Review;
@@ -258,6 +259,7 @@ function book_info( $review ) {
 		return;
 	}
 
+	$reading_log   = get_reading_log_by( 'review_id', $review->get_id() );
 	$book          = get_book( $review->get_book_id() );
 	$edit_book_url = get_books_admin_page_url( array( 'view' => 'edit', 'book_id' => $book->get_id() ) );
 	?>
@@ -265,7 +267,15 @@ function book_info( $review ) {
 		<h2><?php _e( 'Book Information', 'book-database' ); ?></h2>
 		<div class="inside">
 			<div id="bdb-book-associated-with-review">
-				<?php // @todo book info ?>
+				<?php
+				$layout = new Book_Layout( $book );
+
+				if ( ! empty( $reading_log ) ) {
+					$layout->set_rating( $reading_log->get_rating() );
+				}
+
+				echo $layout->get_html();
+				?>
 				<a href="<?php echo esc_url( $edit_book_url ); ?>" class="button"><?php _e( 'Edit book in admin panel', 'book-database' ); ?></a>
 			</div>
 		</div>

@@ -97,6 +97,8 @@ var BDB_Book_Taxonomies = {
 		BDB_Book_Taxonomies.checkRequiredFields( args ).then( function( requirementsResponse ) {
 			return apiRequest( 'v1/taxonomy/add', args, 'POST' );
 		} ).then( function( apiResponse ) {
+			$( '#bdb-book-taxonomies-empty' ).remove();
+
 			BDB_Book_Taxonomies.tableBody.append( BDB_Book_Taxonomies.rowTemplate( apiResponse ) );
 
 			// Wipe field values.

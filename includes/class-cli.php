@@ -50,7 +50,9 @@ class CLI extends \WP_CLI_Command {
 		$start   = time();
 
 		$books = get_books( array(
-			'number' => absint( $number )
+			'number'  => absint( $number ),
+			'orderby' => 'id',
+			'order'   => 'ASC'
 		) );
 
 		$old_author_count = count_book_terms( array(

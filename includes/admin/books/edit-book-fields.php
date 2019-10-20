@@ -61,7 +61,7 @@ function hook_fields() {
 
 }
 
-add_action( 'admin_init', __NAMESPACE__ . '\hook_fields' );
+add_action( 'book-database/book-edit/before-information-fields', __NAMESPACE__ . '\hook_fields' );
 
 /**
  * Field: book cover

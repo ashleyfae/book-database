@@ -27,7 +27,7 @@ class Book_Author_Relationships_Query extends BerlinDB\Database\Query {
 	 *
 	 * @var string
 	 */
-	protected $table_alias = 'bar';
+	protected $table_alias = 'ar';
 
 	/**
 	 * Name of class used to set up the database schema

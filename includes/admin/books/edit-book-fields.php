@@ -13,6 +13,7 @@ use Book_Database\Book;
 use Book_Database\Rating;
 use Book_Database\Series;
 use function Book_Database\book_database;
+use function Book_Database\count_books;
 use function Book_Database\format_date;
 use function Book_Database\generate_book_index_title;
 use function Book_Database\get_attached_book_terms;
@@ -395,7 +396,7 @@ function books_by_author( $book ) {
 	}
 
 	foreach ( $authors as $author ) {
-		$author_books = get_books( array(
+		$author_books = count_books( array(
 			'number'       => 30,
 			'author_query' => array(
 				array(
@@ -405,14 +406,14 @@ function books_by_author( $book ) {
 			)
 		) );
 
-		if ( empty( $author_books ) || ( count( $author_books ) - 1 ) < 1 ) {
+		if ( empty( $author_books ) || ( $author_books - 1 ) < 1 ) {
 			continue;
 		}
 		?>
 		<div class="postbox bdb-books-by-author">
 			<h2 class="hndle ui-sortable handle"><?php printf( __( 'Books by %s', 'book-database' ), esc_html( $author->get_name() ) ); ?></h2>
 			<div class="inside">
-				<a href="<?php echo esc_url( get_books_admin_page_url( array( 'author_id' => $author->get_id() ) ) ); ?>" class="button button-secondary"><?php printf( _n( 'View %s other book', 'View %s other books', ( count( $author_books ) - 1 ), 'book-database' ), ( count( $author_books ) - 1 ) ); ?></a>
+				<a href="<?php echo esc_url( get_books_admin_page_url( array( 'author_id' => $author->get_id() ) ) ); ?>" class="button button-secondary"><?php printf( _n( 'View %s other book', 'View %s other books', ( $author_books - 1 ), 'book-database' ), ( $author_books - 1 ) ); ?></a>
 			</div>
 		</div>
 		<?php

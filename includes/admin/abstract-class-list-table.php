@@ -56,7 +56,7 @@ abstract class List_Table extends \WP_List_Table {
 	 */
 	protected function set_per_page() {
 
-		$per_page      = 30;
+		$per_page      = 20;
 		$user_id       = get_current_user_id();
 		$screen        = get_current_screen();
 		$screen_option = $screen->get_option( 'per_page', 'option' );

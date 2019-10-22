@@ -9,6 +9,7 @@
 
 namespace Book_Database\REST_API\v1;
 
+use Book_Database\Books_Query;
 use Book_Database\Exception;
 use Book_Database\REST_API\Controller;
 use function Book_Database\add_book;
@@ -31,15 +32,12 @@ class Book extends Controller {
 	 */
 	public function register_routes() {
 
-		// Get all books.
-		register_rest_route( $this->namespace, $this->rest_base, array(
+		// Get all books. (this is /books)
+		register_rest_route( $this->namespace, $this->rest_base . 's', array(
 			'methods'             => \WP_REST_Server::READABLE,
 			'callback'            => array( $this, 'get_books' ),
 			'permission_callback' => array( $this, 'can_view' ),
 			'args'                => array(
-				'search'  => array(
-					'default' => ''
-				),
 				'number'  => array(
 					'default'           => 20,
 					'sanitize_callback' => function ( $param, $request, $key ) {
@@ -47,7 +45,7 @@ class Book extends Controller {
 					}
 				),
 				'orderby' => array(
-					'default' => 'date_created'
+					'default' => 'book.date_created'
 				),
 				'order'   => array(
 					'default' => 'ASC'
@@ -189,19 +187,14 @@ class Book extends Controller {
 
 		try {
 			$args = wp_parse_args( $request->get_params(), array(
-				'orderby' => 'date_created',
+				'orderby' => 'book.date_created',
 				'order'   => 'ASC'
 			) );
 
-			$books = get_books( $args );
+			$query = new Books_Query();
+			$books = $query->get_books( $args );
 
-			$book_data = array();
-
-			foreach ( $books as $book ) {
-				$book_data[] = $book->get_data();
-			}
-
-			return new \WP_REST_Response( $book_data );
+			return new \WP_REST_Response( $books );
 		} catch ( Exception $e ) {
 			return new \WP_REST_Response( $e->getMessage(), $e->getCode() );
 		}

@@ -27,7 +27,7 @@ class Series_Query extends BerlinDB\Database\Query {
 	 *
 	 * @var string
 	 */
-	protected $table_alias = 's';
+	protected $table_alias = 'series';
 
 	/**
 	 * Name of class used to set up the database schema

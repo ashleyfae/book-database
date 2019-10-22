@@ -87,7 +87,7 @@ abstract class Join extends Base {
 	);
 
 	/**
-	 * Edition constructor.
+	 * Join constructor.
 	 *
 	 * @param array  $args               {
 	 *                                   Query arguments.

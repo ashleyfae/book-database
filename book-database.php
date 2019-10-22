@@ -171,6 +171,7 @@ final class Book_Database {
 		require_once BDB_DIR . 'includes/database/engine/book.php';
 		require_once BDB_DIR . 'includes/database/engine/edition.php';
 		require_once BDB_DIR . 'includes/database/engine/reading-log.php';
+		require_once BDB_DIR . 'includes/database/engine/class-where-clause.php';
 		require_once BDB_DIR . 'includes/database/sanitization.php';
 
 		// Database - authors

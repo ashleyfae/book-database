@@ -27,7 +27,7 @@ class Authors_Query extends BerlinDB\Database\Query {
 	 *
 	 * @var string
 	 */
-	protected $table_alias = 'a';
+	protected $table_alias = 'author';
 
 	/**
 	 * Name of class used to set up the database schema

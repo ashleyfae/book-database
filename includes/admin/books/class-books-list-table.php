@@ -61,14 +61,15 @@ class Books_List_Table extends List_Table {
 	/**
 	 * Get the sortable columns
 	 *
-	 * @todo Maybe add rating.
-	 *
 	 * @return array
 	 */
 	public function get_sortable_columns() {
 		return array(
 			'title'    => array( 'title', true ),
+			'author'   => array( 'author', true ),
+			'series'   => array( 'series', true ),
 			'pub_date' => array( 'pub_date', true ),
+			'rating'   => array( 'rating', true ),
 		);
 	}
 
@@ -102,31 +103,46 @@ class Books_List_Table extends List_Table {
 	}
 
 	/**
+	 * Render the checkbox column.
+	 *
+	 * @param Object $object
+	 *
+	 * @return string
+	 */
+	public function column_cb( $object ) {
+		return sprintf(
+			'<input type="checkbox" name="%1$s[]" value="%2$s" />',
+			$this->_args['singular'] . '_id',
+			$object->id
+		);
+	}
+
+	/**
 	 * Render the "Title" column.
 	 *
-	 * @param Book $item
+	 * @param Object $item
 	 */
 	public function column_title( $item ) {
 
 		$edit_url = get_books_admin_page_url( array(
 			'view'    => 'edit',
-			'book_id' => $item->get_id()
+			'book_id' => $item->id
 		) );
 
 		$actions = array(
 			'edit'    => '<a href="' . esc_url( $edit_url ) . '">' . esc_html__( 'Edit', 'book-database' ) . '</a>',
-			'delete'  => '<span class="trash"><a href="' . esc_url( get_delete_book_url( $item->get_id() ) ) . '" class="bdb-delete-item" data-object="' . esc_attr__( 'book', 'book-database' ) . '">' . esc_html__( 'Delete', 'book-database' ) . '</a></span>',
-			'book_id' => '<span class="bdb-id-col">' . sprintf( __( 'ID: %d', 'book-database' ), $item->get_id() ) . '</span>'
+			'delete'  => '<span class="trash"><a href="' . esc_url( get_delete_book_url( $item->id ) ) . '" class="bdb-delete-item" data-object="' . esc_attr__( 'book', 'book-database' ) . '">' . esc_html__( 'Delete', 'book-database' ) . '</a></span>',
+			'book_id' => '<span class="bdb-id-col">' . sprintf( __( 'ID: %d', 'book-database' ), $item->id ) . '</span>'
 		);
 
-		return '<strong><a href="' . esc_url( $edit_url ) . '" class="row-title">' . esc_html( $item->get_title() ) . '</a></strong>' . $this->row_actions( $actions );
+		return '<strong><a href="' . esc_url( $edit_url ) . '" class="row-title">' . esc_html( $item->title ) . '</a></strong>' . $this->row_actions( $actions );
 
 	}
 
 	/**
 	 * Renders most of the columns in the list table
 	 *
-	 * @param Book   $item
+	 * @param Object $item
 	 * @param string $column_name
 	 *
 	 * @return string Column value.
@@ -134,27 +150,31 @@ class Books_List_Table extends List_Table {
 	public function column_default( $item, $column_name ) {
 
 		$value = '';
+		$book  = new Book( $item );
 
 		$edit_url = get_books_admin_page_url( array(
 			'view'    => 'edit',
-			'book_id' => $item->get_id()
+			'book_id' => $book->get_id()
 		) );
 
 		switch ( $column_name ) {
 
 			case 'cover' :
-				if ( $item->get_cover_id() ) {
-					$value = '<a href="' . esc_url( $edit_url ) . '">' . $item->get_cover( 'thumbnail' ) . '</a>';
+				if ( $book->get_cover_id() ) {
+					$value = '<a href="' . esc_url( $edit_url ) . '">' . $book->get_cover( 'thumbnail' ) . '</a>';
 				}
 				break;
 
 			case 'author' :
-				$authors = $item->get_authors();
-				if ( $authors ) {
+				if ( ! empty( $item->author_id ) ) {
+					$author_names  = ! empty( $item->author_name ) ? explode( ',', $item->author_name ) : array();
+					$author_ids    = ! empty( $item->author_id ) ? explode( ',', $item->author_id ) : array();
 					$authors_array = array();
 
-					foreach ( $authors as $author ) {
-						$authors_array[] = '<a href="' . esc_url( add_query_arg( 'author_id', urlencode( $author->get_id() ), $this->get_base_url() ) ) . '">' . esc_html( $author->get_name() ) . '</a>';
+					foreach ( $author_names as $key => $author_name ) {
+						$author_id       = isset( $author_ids[ $key ] ) ? absint( $author_ids[ $key ] ) : 0;
+						$url             = ! empty( $author_id ) ? add_query_arg( 'author_id', urlencode( $author_id ), $this->get_base_url() ) : $this->get_base_url();
+						$authors_array[] = '<a href="' . esc_url( $url ) . '">' . esc_html( trim( $author_name ) ) . '</a>';
 					}
 
 					$value = implode( ', ', $authors_array );
@@ -164,23 +184,26 @@ class Books_List_Table extends List_Table {
 				break;
 
 			case 'series' :
-				$series_id = $item->get_series_id();
-				if ( ! empty( $series_id ) ) {
-					$series = get_book_series_by( 'id', $series_id );
-					$value  = '<a href="' . esc_url( add_query_arg( 'series_id', urlencode( $series_id ), $this->get_base_url() ) ) . '">' . esc_html( sprintf( '%s #%s', $series->get_name(), $item->get_series_position() ) ) . '</a>';
+				if ( ! empty( $item->series_id ) && ! empty( $item->series_name ) ) {
+					$name  = isset( $item->series_position ) ? sprintf( '%s #%s', $item->series_name, $item->series_position ) : $item->series_name;
+					$value = '<a href="' . esc_url( add_query_arg( 'series_id', urlencode( $item->series_id ), $this->get_base_url() ) ) . '">' . esc_html( $name ) . '</a>';
 				} else {
 					$value = '&ndash;';
 				}
 				break;
 
 			case 'pub_date' :
-				$value = $item->get_pub_date( true );
+				$value = $book->get_pub_date( true );
 				break;
 
 			case 'rating' :
-				$rating         = new Rating( $item->get_average_rating() );
-				$rounded_rating = $rating->round_rating();
-				$value          = '<a href="' . esc_url( add_query_arg( 'rating', urlencode( $rounded_rating ), $this->get_base_url() ) ) . '" title="' . esc_attr( sprintf( __( 'All %s star books', 'book-database' ), $rounded_rating ) ) . '">' . $rating->format_html_stars() . '</a>';
+				if ( isset( $item->avg_rating ) ) {
+					$rating         = new Rating( $item->avg_rating );
+					$rounded_rating = $rating->round_rating();
+					$value          = '<a href="' . esc_url( add_query_arg( 'rating', urlencode( $rounded_rating ), $this->get_base_url() ) ) . '" title="' . esc_attr( sprintf( __( 'All %s star books', 'book-database' ), $rounded_rating ) ) . '">' . $rating->format_html_stars() . '</a>';
+				} else {
+					$value = '&ndash;';
+				}
 				break;
 
 		}
@@ -209,17 +232,19 @@ class Books_List_Table extends List_Table {
 			'id__not_in' => array(),
 			'number'     => $this->per_page,
 			'offset'     => $this->get_offset(),
-			'orderby'    => sanitize_text_field( $this->get_request_var( 'orderby', 'id' ) ),
+			'orderby'    => sanitize_text_field( $this->get_request_var( 'orderby', 'book.id' ) ),
 			'order'      => sanitize_text_field( $this->get_request_var( 'order', 'DESC' ) ),
+			'book_query' => array(),
 			'tax_query'  => array(),
+			'count'      => $count
 		);
 
 		// Filter by author ID.
 		$author_id = $this->get_request_var( 'author_id' );
 		if ( ! empty( $author_id ) ) {
 			$args['author_query'][] = array(
-				'field'    => 'id',
-				'terms'    => absint( $author_id )
+				'field' => 'id',
+				'terms' => absint( $author_id )
 			);
 		}
 
@@ -233,32 +258,41 @@ class Books_List_Table extends List_Table {
 		}
 
 		// Maybe add book title search.
-		$search = $this->get_request_var( 'book_title' );
-		if ( ! empty( $search ) ) {
-			$args['search'] = $search;
+		$book_title = $this->get_request_var( 'book_title' );
+		if ( ! empty( $book_title ) ) {
+			$args['book_query'][] = array(
+				'field'    => 'title',
+				'value'    => sanitize_text_field( $book_title ),
+				'operator' => 'LIKE'
+			);
 		}
 
 		// Maybe add author name search.
 		$author_name = $this->get_request_var( 'book_author' );
 		if ( ! empty( $author_name ) ) {
 			$args['author_query'][] = array(
-				'field' => 'search',
-				'terms' => sanitize_text_field( $author_name )
+				'field'    => 'name',
+				'value'    => sanitize_text_field( $author_name ),
+				'operator' => 'LIKE'
 			);
 		}
 
 		// Filter by series ID.
 		$series_id = $this->get_request_var( 'series_id' );
 		if ( ! empty( $series_id ) ) {
-			$args['series_id'] = absint( $series_id );
+			$args['book_query'][] = array(
+				'field' => 'series_id',
+				'value' => absint( $series_id ),
+			);
 		}
 
 		// Maybe add series search.
 		$series_name = $this->get_request_var( 'series_name' );
 		if ( ! empty( $series_name ) ) {
 			$args['series_query'][] = array(
-				'field'  => 'search',
-				'series' => sanitize_text_field( $series_name )
+				'field'    => 'name',
+				'value'    => sanitize_text_field( $series_name ),
+				'operator' => 'LIKE'
 			);
 		}
 
@@ -372,11 +406,24 @@ class Books_List_Table extends List_Table {
 			);
 		}
 
-		if ( $count ) {
-			return count_books( $args );
+		// Fix orderby
+		if ( 'author' === $args['orderby'] ) {
+			$args['orderby'] = 'author.name';
+		} elseif ( 'title' === $args['orderby'] ) {
+			$args['orderby'] = 'book.title';
+		} elseif ( 'series' === $args['orderby'] ) {
+			$args['orderby'] = 'series.name';
+		} elseif ( 'pub_date' === $args['orderby'] ) {
+			$args['orderby'] = 'book.pub_date';
+		} elseif ( 'rating' === $args['orderby'] ) {
+			$args['orderby'] = 'avg_rating.rating';
 		} else {
-			return get_books( $args );
+			$args['orderby'] = 'book.id';
 		}
+
+		$query = new Books_Query();
+
+		return $query->get_books( $args );
 
 	}
 

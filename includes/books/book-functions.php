@@ -43,6 +43,29 @@ function get_book_by( $column_name, $column_value ) {
 /**
  * Query for books
  *
+ * Note: An alternative to this function is Books_Query::get_books().
+ * @see Books_Query::get_books()
+ *
+ * Here's how they differ:
+ *
+ * ==> get_books()
+ *      - Always returns `Book` objects.
+ *      - Will join on the other tables if queries are passed in, but columns from those tables are
+ *        never actually returned. So you can filter, but not select/orderby.
+ *      - Once you have a `Book` object you will have to do additional queries to get author/series
+ *        information becuase it's stored in a different table.
+ *      - Integrates with WP_Object_Cache.
+ *
+ * ==> Books_Query::get_books()
+ *      - Returns a generic object.
+ *      - Always joins on the author and series table so that information is retrieved at the same time.
+ *      - By default also joins on the reading log table and returns the average rating for the book.
+ *      - No WP_Object_Cache support.
+ *
+ * As an example, I prefer to use Books_Query::get_books() on the admin list table because I want to
+ * have 20 results per page and each page ALWAYS includes author, series, and rating details. Using
+ * Books_Query::get_books() is therefore faster because you only need one query.
+ *
  * @param array       $args                {
  *                                         Query arguments to override the defaults.
  *

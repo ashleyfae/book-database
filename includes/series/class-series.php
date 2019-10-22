@@ -73,14 +73,20 @@ class Series extends Base_Object {
 	/**
 	 * Get the number of books in this series that have been read
 	 *
-	 * @todo
-	 *
-	 * @param array $args
-	 *
 	 * @return int
 	 */
-	public function get_number_books_read( $args = array() ) {
-		return absint( 0 );
+	public function get_number_books_read() {
+
+		global $wpdb;
+
+		$log_table  = book_database()->get_table( 'reading_log' )->get_table_name();
+		$book_table = book_database()->get_table( 'books' )->get_table_name();
+
+		$query       = $wpdb->prepare( "SELECT COUNT(*) FROM {$log_table} log INNER JOIN {$book_table} b ON log.book_id = b.id WHERE series_id = %d AND date_finished IS NOT NULL", $this->get_id() );
+		$number_read = $wpdb->get_var( $query );
+
+		return absint( $number_read );
+
 	}
 
 	/**
@@ -103,8 +109,6 @@ class Series extends Base_Object {
 
 	/**
 	 * Get the average rating of all books in this series
-	 *
-	 * @todo
 	 */
 	public function get_average_rating() {
 

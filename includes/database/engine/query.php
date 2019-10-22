@@ -439,7 +439,7 @@ class Query extends Base {
 	 */
 	private function set_prefix() {
 		$this->table_name  = $this->apply_prefix( $this->table_name       );
-		$this->table_alias = $this->apply_prefix( $this->table_alias      );
+		//$this->table_alias = $this->apply_prefix( $this->table_alias      );
 		$this->cache_group = $this->apply_prefix( $this->cache_group, '-' );
 	}
 
@@ -848,13 +848,22 @@ class Query extends Base {
 	}
 
 	/**
+	 * Get the table alias
+	 *
+	 * @return string
+	 */
+	public function get_table_alias() {
+		return $this->table_alias;
+	}
+
+	/**
 	 * Return array of column names
 	 *
 	 * @since 1.0.0
 	 *
 	 * @return array
 	 */
-	private function get_column_names() {
+	public function get_column_names() {
 		return array_flip( $this->get_columns( array(), 'and', 'name' ) );
 	}
 

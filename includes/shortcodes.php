@@ -138,8 +138,28 @@ function book_reviews_shortcode( $atts, $content = '' ) {
 			<a href="<?php echo esc_url( get_permalink() ); ?>" class="bdb-reset-search-filters"><?php _e( 'Clear filters &times;', 'book-database' ); ?></a>
 		</div>
 	</form>
+	<div id="bdb-reviews">
+		<?php
+		$reviews = $query->get_reviews();
+
+		if ( ! empty( $reviews ) ) {
+			echo '<div class="bdb-review-list-number-results">' . sprintf( _n( '%s review found', '%s reviews found', $query->total_results, 'book-database' ), $query->total_results ) . '</div>';
+			echo '<div class="bdb-book-reviews-list">';
+			foreach ( $reviews as $review ) {
+				//include $template;
+			}
+			echo '</div>';
+		} else {
+			?>
+			<p><?php _e( 'No reviews found.', 'book-database' ); ?></p>
+			<?php
+		}
+		?>
+		<nav class="bdb-reviews-list-pagination pagination">
+			<?php $query->get_pagination(); ?>
+		</nav>
+	</div>
 	<?php
-	$reviews = $query->get_reviews();
 
 	return ob_get_clean();
 

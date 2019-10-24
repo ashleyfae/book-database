@@ -244,7 +244,7 @@ class Books_List_Table extends List_Table {
 		if ( ! empty( $author_id ) ) {
 			$args['author_query'][] = array(
 				'field' => 'id',
-				'terms' => absint( $author_id )
+				'value' => absint( $author_id )
 			);
 		}
 

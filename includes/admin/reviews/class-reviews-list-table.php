@@ -47,6 +47,7 @@ class Reviews_List_Table extends List_Table {
 	public function get_columns() {
 		$columns = array(
 			'cb'             => '<input type="checkbox">',
+			'cover'          => esc_html__( 'Cover', 'book-database' ),
 			'book_title'     => esc_html__( 'Book Title', 'book-database' ),
 			'book_author'    => esc_html__( 'Book Author', 'book-database' ),
 			'reviewer'       => esc_html__( 'Reviewer', 'book-database' ),
@@ -65,8 +66,11 @@ class Reviews_List_Table extends List_Table {
 	 */
 	public function get_sortable_columns() {
 		return array(
-			'date_written'   => array( 'date_written', true ),
-			'date_published' => array( 'date_published', true ),
+			'book_title'     => array( 'book.title', true ),
+			'book_author'    => array( 'author.name', true ),
+			'rating'         => array( 'log.rating', true ),
+			'date_written'   => array( 'review.date_written', true ),
+			'date_published' => array( 'review.date_published', true ),
 		);
 	}
 
@@ -100,66 +104,104 @@ class Reviews_List_Table extends List_Table {
 	}
 
 	/**
+	 * Render the checkbox column.
+	 *
+	 * @param object $object
+	 *
+	 * @return string
+	 */
+	public function column_cb( $object ) {
+		return sprintf(
+			'<input type="checkbox" name="%1$s[]" value="%2$s" />',
+			$this->_args['singular'] . '_id',
+			$object->id
+		);
+	}
+
+	/**
 	 * Render the "Book Title" column.
 	 *
-	 * @param Review $item
+	 * @param object $item
 	 */
 	public function column_book_title( $item ) {
 
+		$review = new Review( $item );
+
 		$edit_url = get_reviews_admin_page_url( array(
 			'view'      => 'edit',
-			'review_id' => $item->get_id()
+			'review_id' => $review->get_id()
 		) );
-
-		$book = get_book( $item->get_book_id() );
 
 		$actions = array(
 			'edit'      => '<a href="' . esc_url( $edit_url ) . '">' . esc_html__( 'Edit', 'book-database' ) . '</a>',
-			'delete'    => '<span class="trash"><a href="' . esc_url( get_delete_review_url( $item->get_id() ) ) . '" class="bdb-delete-item" data-object="' . esc_attr__( 'review', 'book-database' ) . '">' . esc_html__( 'Delete', 'book-database' ) . '</a></span>',
-			'review_id' => '<span class="bdb-id-col">' . sprintf( __( 'ID: %d', 'book-database' ), $item->get_id() ) . '</span>'
+			'delete'    => '<span class="trash"><a href="' . esc_url( get_delete_review_url( $review->get_id() ) ) . '" class="bdb-delete-item" data-object="' . esc_attr__( 'review', 'book-database' ) . '">' . esc_html__( 'Delete', 'book-database' ) . '</a></span>',
+			'review_id' => '<span class="bdb-id-col">' . sprintf( __( 'ID: %d', 'book-database' ), $review->get_id() ) . '</span>'
 		);
 
-		return '<strong><a href="' . esc_url( $edit_url ) . '" class="row-title">' . esc_html( $book->get_title() ) . '</a></strong>' . $this->row_actions( $actions );
+		return '<strong><a href="' . esc_url( $edit_url ) . '" class="row-title">' . esc_html( $item->book_title ) . '</a></strong>' . $this->row_actions( $actions );
 
 	}
 
 	/**
 	 * Renders most of the columns in the list table
 	 *
-	 * @param Review $item
+	 * @param object $item
 	 * @param string $column_name
 	 *
 	 * @return string Column value.
 	 */
 	public function column_default( $item, $column_name ) {
 
-		$value = '';
-
-		$authors = get_attached_book_authors( $item->get_book_id(), array( 'fields' => 'name' ) );
+		$value  = '';
+		$review = new Review( $item );
+		$book   = new Book( array(
+			'id'              => $item->book_id ?? 0,
+			'cover_id'        => $item->book_cover_id ?? null,
+			'title'           => $item->book_title ?? '',
+			'pub_date'        => $item->book_pub_date ?? '',
+			'series_position' => $item->series_position ?? ''
+		) );
 
 		switch ( $column_name ) {
 
-			case 'book_author' :
-				$author_links = array();
+			case 'cover' :
+				if ( $book->get_cover_id() ) {
+					$edit_url = get_reviews_admin_page_url( array(
+						'view'      => 'edit',
+						'review_id' => $review->get_id()
+					) );
 
-				foreach ( $authors as $author_name ) {
-					$link           = add_query_arg( 'book_author', urlencode( $author_name ), $this->get_base_url() );
-					$author_links[] = '<a href="' . esc_url( $link ) . '">' . esc_html( $author_name ) . '</a>';
+					$value = '<a href="' . esc_url( $edit_url ) . '">' . $book->get_cover( 'thumbnail' ) . '</a>';
 				}
-				$value = implode( ', ', $author_links );
+				break;
+
+			case 'book_author' :
+				if ( ! empty( $item->author_id ) ) {
+					$author_names  = ! empty( $item->author_name ) ? explode( ',', $item->author_name ) : array();
+					$author_ids    = ! empty( $item->author_id ) ? explode( ',', $item->author_id ) : array();
+					$authors_array = array();
+
+					foreach ( $author_names as $key => $author_name ) {
+						$author_id       = isset( $author_ids[ $key ] ) ? absint( $author_ids[ $key ] ) : 0;
+						$url             = ! empty( $author_id ) ? add_query_arg( 'author_id', urlencode( $author_id ), $this->get_base_url() ) : $this->get_base_url();
+						$authors_array[] = '<a href="' . esc_url( $url ) . '">' . esc_html( trim( $author_name ) ) . '</a>';
+					}
+
+					$value = implode( ', ', $authors_array );
+				} else {
+					$value = '&ndash;';
+				}
 				break;
 
 			case 'reviewer' :
-				$user  = get_userdata( $item->get_user_id() );
-				$name  = $user instanceof \WP_User ? $user->display_name : sprintf( __( 'ID #%d', 'book-database' ), $item->get_user_id() );
-				$value = '<a href="' . esc_url( add_query_arg( 'user_id', urlencode( $item->get_user_id() ), $this->get_base_url() ) ) . '">' . esc_html( $name ) . '</a>';
+				$user  = get_userdata( $review->get_user_id() );
+				$name  = $user instanceof \WP_User ? $user->display_name : sprintf( __( 'ID #%d', 'book-database' ), $review->get_user_id() );
+				$value = '<a href="' . esc_url( add_query_arg( 'user_id', urlencode( $review->get_user_id() ), $this->get_base_url() ) ) . '">' . esc_html( $name ) . '</a>';
 				break;
 
 			case 'rating' :
-				$reading_log = get_reading_log_by( 'review_id', $item->get_id() );
-
-				if ( $reading_log instanceof Reading_Log && ! is_null( $reading_log->get_rating() ) ) {
-					$rating = new Rating( $reading_log->get_rating() );
+				if ( ! is_null( $item->rating ) ) {
+					$rating = new Rating( $item->rating );
 					$value  = '<a href="' . esc_url( add_query_arg( 'rating', urlencode( $rating->round_rating() ), $this->get_base_url() ) ) . '">' . $rating->format_html_stars() . '</a>';
 				} else {
 					$value = '&ndash;';
@@ -167,11 +209,11 @@ class Reviews_List_Table extends List_Table {
 				break;
 
 			case 'date_written' :
-				$value = $item->get_date_written( true );
+				$value = $review->get_date_written( true );
 				break;
 
 			case 'date_published' :
-				$value = $item->get_date_published() ? $item->get_date_published( true ) : '&ndash;';
+				$value = $review->get_date_published() ? $review->get_date_published( true ) : '&ndash;';
 				break;
 
 		}
@@ -192,27 +234,26 @@ class Reviews_List_Table extends List_Table {
 	 *
 	 * @param bool $count Whether or not to get objects (false) or just count the total number (true).
 	 *
-	 * @return array|int
+	 * @return object[]|int
 	 */
 	public function get_object_data( $count = false ) {
 
 		$args = array(
-			'number'  => $this->per_page,
-			'offset'  => $this->get_offset(),
-			'orderby' => sanitize_text_field( $this->get_request_var( 'orderby', 'id' ) ),
-			'order'   => sanitize_text_field( $this->get_request_var( 'order', 'DESC' ) ),
+			'number'            => $this->per_page,
+			'offset'            => $this->get_offset(),
+			'orderby'           => sanitize_text_field( $this->get_request_var( 'orderby', 'review.id' ) ),
+			'order'             => sanitize_text_field( $this->get_request_var( 'order', 'DESC' ) ),
+			'author_query'      => array(),
+			'book_query'        => array(),
+			'reading_log_query' => array(),
+			'series_query'      => array(),
+			'count'             => $count
 		);
 
 		// Maybe filter by user ID.
 		$user_id = $this->get_request_var( 'user_id' );
 		if ( ! empty( $user_id ) ) {
 			$args['user_id'] = absint( $user_id );
-		}
-
-		// Maybe add search.
-		$search = $this->get_search();
-		if ( ! empty( $search ) ) {
-			$args['search'] = $search;
 		}
 
 		// Maybe add book title search.
@@ -229,8 +270,37 @@ class Reviews_List_Table extends List_Table {
 		$book_author = $this->get_request_var( 'book_author' );
 		if ( ! empty( $book_author ) ) {
 			$args['author_query'][] = array(
-				'field' => 'search',
-				'terms' => array( sanitize_text_field( $book_author ) ),
+				'field'    => 'name',
+				'value'    => sanitize_text_field( $book_author ),
+				'operator' => 'LIKE'
+			);
+		}
+
+		// Filter by author ID.
+		$author_id = $this->get_request_var( 'author_id' );
+		if ( ! empty( $author_id ) ) {
+			$args['author_query'][] = array(
+				'field' => 'id',
+				'value' => absint( $author_id )
+			);
+		}
+
+		// Filter by series ID.
+		$series_id = $this->get_request_var( 'series_id' );
+		if ( ! empty( $series_id ) ) {
+			$args['book_query'][] = array(
+				'field' => 'series_id',
+				'value' => absint( $series_id ),
+			);
+		}
+
+		// Maybe add series search.
+		$series_name = $this->get_request_var( 'series_name' );
+		if ( ! empty( $series_name ) ) {
+			$args['series_query'][] = array(
+				'field'    => 'name',
+				'value'    => sanitize_text_field( $series_name ),
+				'operator' => 'LIKE'
 			);
 		}
 
@@ -243,11 +313,9 @@ class Reviews_List_Table extends List_Table {
 			);
 		}
 
-		if ( $count ) {
-			return count_reviews( $args );
-		} else {
-			return get_reviews( $args );
-		}
+		$query = new Reviews_Query();
+
+		return $query->get_reviews( $args );
 
 	}
 

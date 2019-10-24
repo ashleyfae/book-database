@@ -81,7 +81,7 @@ class Books_Query extends BerlinDB\Database\Query {
 	 *
 	 * @param array $args
 	 *
-	 * @return array|int
+	 * @return object[]|int
 	 */
 	public function get_books( $args = array() ) {
 
@@ -140,22 +140,22 @@ class Books_Query extends BerlinDB\Database\Query {
 		if ( ! empty( $args['author_query'] ) ) {
 			$clause_engine->set_table_query( new Authors_Query() );
 			$clause_engine->set_args( $args['author_query'] );
-			$where = $where + $clause_engine->get_clauses();
+			$where = array_merge( $where, $clause_engine->get_clauses() );
 		}
 
 		// Book query
 		if ( ! empty( $args['book_query'] ) ) {
 			$clause_engine->set_table_query( $this );
 			$clause_engine->set_args( $args['book_query'] );
-			$where = $where + $clause_engine->get_clauses();
+			$where = array_merge( $where, $clause_engine->get_clauses() );
 		}
 
 		// Edition query
 		if ( ! empty( $args['edition_query'] ) ) {
-			$join['reading_log_query'] = "INNER JOIN {$tbl_ed} AS ed ON (book.id = ed.book_id)";
+			$join['edition_query'] = "INNER JOIN {$tbl_ed} AS ed ON (book.id = ed.book_id)";
 			$clause_engine->set_table_query( new Editions_Query() );
 			$clause_engine->set_args( $args['edition_query'] );
-			$where = $where + $clause_engine->get_clauses();
+			$where = array_merge( $where, $clause_engine->get_clauses() );
 		}
 
 		// Reading log query
@@ -163,14 +163,14 @@ class Books_Query extends BerlinDB\Database\Query {
 			$join['reading_log_query'] = "INNER JOIN {$tbl_log} AS log ON (book.id = log.book_id)";
 			$clause_engine->set_table_query( new Reading_Logs_Query() );
 			$clause_engine->set_args( $args['reading_log_query'] );
-			$where = $where + $clause_engine->get_clauses();
+			$where = array_merge( $where, $clause_engine->get_clauses() );
 		}
 
 		// Series query
 		if ( ! empty( $args['series_query'] ) ) {
 			$clause_engine->set_table_query( new Series_Query() );
 			$clause_engine->set_args( $args['series_query'] );
-			$where = $where + $clause_engine->get_clauses();
+			$where = array_merge( $where, $clause_engine->get_clauses() );
 		}
 
 		// Tax query
@@ -219,6 +219,14 @@ class Books_Query extends BerlinDB\Database\Query {
 
 	}
 
+	/**
+	 * Validate the orderby
+	 *
+	 * @param string $orderby Desired orderby.
+	 * @param array  $args    Query arguments.
+	 *
+	 * @return string
+	 */
 	protected function validate_orderby( $orderby, $args = array() ) {
 
 		$valid_orderbys = array(

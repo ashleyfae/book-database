@@ -24,48 +24,27 @@ use \Book_Database\BerlinDB\Database\Queries\Tax as Tax_Query;
 class Book_Reviews_Query {
 
 	/**
-	 * @var string `wp_bdb_reviews` table alias.
-	 */
-	protected $table_alias = 'review';
-
-	/**
 	 * @var int Current page number.
 	 */
 	protected $current_page = 1;
 
 	/**
-	 * @var array Whitelist of "orderby" columns.
+	 * @var int Number of results per page.
 	 */
-	protected $orderby_whitelist = array(
-		'author.name', // Book author
-		'book.title', // Book title
-		'log.date_finished', // Date finished reading
-		'review.date_published', // Date review was written
-		'book.pages', // Number of pages in the book
-		'book.pub_date', // Book publication date
-		'log.rating' // Rating
-	);
+	protected $per_page = 20;
 
 	/**
 	 * @var array Query arguments.
 	 */
 	protected $args = array(
-		'orderby' => 'date_published',
+		'orderby' => 'review.date_published',
 		'order'   => 'DESC'
 	);
 
 	/**
 	 * @var int Total number of results.
 	 */
-	protected $total_results = 0;
-
-	/**
-	 * @var array Query clauses.
-	 */
-	protected $clauses = array(
-		'join'  => array(),
-		'where' => array()
-	);
+	public $total_results = 0;
 
 	/**
 	 * Book_Reviews_Query constructor.
@@ -86,6 +65,7 @@ class Book_Reviews_Query {
 
 		$this->args['number'] = $args['per_page'] ?? 20;
 		$this->args['offset'] = ( $this->current_page * $this->args['number'] ) - $this->args['number'];
+		$this->per_page       = $this->args['number'];
 
 		// Book title.
 		if ( ! empty( $_GET['title'] ) ) {
@@ -99,14 +79,19 @@ class Book_Reviews_Query {
 		// Author
 		if ( ! empty( $_GET['author'] ) ) {
 			$this->args['author_query'][] = array(
-				'field' => 'search',
-				'terms' => array( sanitize_text_field( wp_strip_all_tags( urldecode( $_GET['author'] ) ) ) ),
+				'field'    => 'name',
+				'value'    => array( sanitize_text_field( wp_strip_all_tags( urldecode( $_GET['author'] ) ) ) ),
+				'operator' => 'LIKE'
 			);
 		}
 
 		// Series
 		if ( ! empty( $_GET['series'] ) ) {
-			// @todo
+			$this->args['series_query'][] = array(
+				'field'    => 'name',
+				'value'    => sanitize_text_field( wp_strip_all_tags( urldecode( $_GET['series'] ) ) ),
+				'operator' => 'LIKE'
+			);
 		}
 
 		// Rating
@@ -130,15 +115,21 @@ class Book_Reviews_Query {
 
 		// Review Year
 		if ( ! empty( $_GET['review_year'] ) && is_numeric( $_GET['review_year'] ) ) {
-			$this->args['date_written_query'] = array(
-				'year' => absint( $_GET['review_year'] )
+			$this->args['review_query'][] = array(
+				'field' => 'date_published',
+				'value' => array(
+					'year' => absint( $_GET['review_year'] )
+				)
 			);
 		}
 
 		// Hide Future Reviews
 		if ( ! empty( $args['hide_future'] ) ) {
-			$this->args['date_published_query'] = array(
-				'before' => current_time( 'mysql' )
+			$this->args['review_query'][] = array(
+				'field' => 'date_published',
+				'value' => array(
+					'before' => current_time( 'mysql' )
+				)
 			);
 		}
 
@@ -154,7 +145,7 @@ class Book_Reviews_Query {
 
 		// Orderby
 		if ( ! empty( $_GET['orderby'] ) ) {
-			$this->args['orderby'] = $this->sanitize_orderby( $_GET['orderby'] );
+			$this->args['orderby'] = wp_strip_all_tags( $_GET['orderby'] );
 		}
 
 		/**
@@ -167,9 +158,14 @@ class Book_Reviews_Query {
 			switch ( $wp_query->query_vars['book_tax'] ) {
 
 				case 'series' :
-					// @todo actual series query
-					$this->args['orderby'] = 'book.pub_date';
-					$this->args['order']   = 'ASC';
+					$this->args['series_query'] = array(
+						array(
+							'field' => 'slug',
+							'value' => array( sanitize_text_field( wp_strip_all_tags( $wp_query->query_vars['book_term'] ) ) ),
+						)
+					);
+					$this->args['orderby']      = 'book.pub_date';
+					$this->args['order']        = 'ASC';
 					break;
 
 				case 'rating' :
@@ -187,7 +183,7 @@ class Book_Reviews_Query {
 					$this->args['author_query'] = array(
 						array(
 							'field' => 'slug',
-							'terms' => array( sanitize_text_field( wp_strip_all_tags( $wp_query->query_vars['book_term'] ) ) ),
+							'value' => array( sanitize_text_field( wp_strip_all_tags( $wp_query->query_vars['book_term'] ) ) ),
 						)
 					);
 					break;
@@ -206,160 +202,30 @@ class Book_Reviews_Query {
 	}
 
 	/**
-	 * Sanitizes the desired "orderby" value
-	 *
-	 * @param string $orderby
-	 *
-	 * @return string Column to order by.
-	 */
-	protected function sanitize_orderby( $orderby ) {
-
-		$orderby = wp_strip_all_tags( $orderby );
-
-		return in_array( $orderby, $this->orderby_whitelist ) ? $orderby : 'review.date_published';
-
-	}
-
-	/**
-	 * Parse the `where` clause and build an array of joins and where conditions.
-	 *
-	 * @return array
-	 */
-	protected function parse_where() {
-
-		global $wpdb;
-
-		$join = $where = array();
-		$and  = '/^\s*AND\s*/';
-
-		// Author Query
-		if ( ! empty( $this->args['author_query'] ) ) {
-			$author_query         = new Author_Query( $this->args['author_query'] );
-			$author_query_clauses = $author_query->get_sql( $this->table_alias, 'book_id' );
-
-			if ( ! empty( $author_query_clauses ) ) {
-				$join['author_query']  = $author_query_clauses['join'];
-				$where['author_query'] = preg_replace( $and, '', $author_query_clauses['where'] );
-			}
-		}
-
-		// Book Query
-		if ( ! empty( $this->args['book_query'] ) ) {
-			$book_query         = new Book_Query( $this->args['book_query'], $this->table_alias, 'book_id' );
-			$book_query_clauses = $book_query->get_sql();
-
-			if ( ! empty( $book_query_clauses ) ) {
-				$join['book_query']  = $book_query_clauses['join'];
-				$where['book_query'] = preg_replace( $and, '', $book_query_clauses['where'] );
-			}
-		}
-
-		// Reading Log Query
-		if ( ! empty( $this->args['reading_log_query'] ) ) {
-			$reading_log_query         = new Reading_Log_Query( $this->args['reading_log_query'], $this->table_alias, 'book_id' );
-			$reading_log_query_clauses = $reading_log_query->get_sql();
-
-			if ( ! empty( $author_query_clauses ) ) {
-				$join['reading_log_query']  = $reading_log_query_clauses['join'];
-				$where['reading_log_query'] = preg_replace( $and, '', $reading_log_query_clauses['where'] );
-			}
-		}
-
-		// Tax Query
-		if ( ! empty( $this->args['tax_query'] ) ) {
-			$tax_query         = new Tax_Query( $this->args['tax_query'] );
-			$tax_query_clauses = $tax_query->get_sql( $this->table_alias, 'book_id' );
-
-			if ( ! empty( $tax_query_clauses ) ) {
-				$join['tax_query']  = $tax_query_clauses['join'];
-				$where['tax_query'] = preg_replace( $and, '', $tax_query_clauses['where'] );
-			}
-		}
-
-		/**
-		 * Normal columns
-		 */
-
-		// Filter by user ID
-		if ( ! empty( $this->args['user_id'] ) ) {
-			$where['user_id'] = $wpdb->prepare( "`user_id` = %d", absint( $this->args['user_id'] ) );
-		}
-
-		// Date Written Query
-		if ( ! empty( $this->args['date_written_query'] ) ) {
-			$date_written_query  = new Date_Query( $this->args['date_written_query'], 'review.date_written' );
-			$date_written_clause = $date_written_query->get_sql();
-
-			if ( ! empty( $date_written_clause ) ) {
-				$where['date_written_query'] = preg_replace( $and, '', $date_written_clause );
-			}
-		}
-
-		// Date Published Query
-		if ( ! empty( $this->args['date_published_query'] ) ) {
-			$date_published_query  = new Date_Query( $this->args['date_published_query'], 'review.date_published' );
-			$date_published_clause = $date_published_query->get_sql();
-
-			if ( ! empty( $date_published_clause ) ) {
-				$where['date_published_query'] = preg_replace( $and, '', $date_published_clause );
-			}
-		}
-
-		/**
-		 * Ensure we always join with the books table.
-		 */
-		if ( empty( $join['book_query'] ) ) {
-			//$book_table         = book_database()->get_table( 'books' )->get_table_name();
-			//$join['book_query'] = " INNER JOIN {$book_table} book ON book.id = review.book_id ";
-		}
-
-		$this->clauses['join']  = $join;
-		$this->clauses['where'] = $where;
-
-		return $this->clauses;
-
-	}
-
-	/**
 	 * Get the reviews
 	 *
-	 * @return Review[]
+	 * @return object[]
 	 */
 	public function get_reviews() {
-		$this->total_results = count_reviews( $this->args );
-		var_dump( get_reviews( $this->args ) );
 
-		return;
+		$query   = new Reviews_Query();
+		$reviews = $query->get_reviews( $this->args );
 
-		global $wpdb;
+		$this->total_results = count( $reviews );
 
-		$review_table = book_database()->get_table( 'reviews' )->get_table_name();
+		return $reviews;
 
-		$clauses = $this->parse_where();
-		$join    = implode( ' ', $clauses['join'] );
-		$where   = implode( ' AND ', $clauses['where'] );
+	}
 
-		if ( ! empty( $where ) ) {
-			$where = ' AND ' . $where;
-		}
-		var_dump( $clauses );
-
-		$offset = '';
-		if ( $this->args['offset'] > 0 ) {
-			$offset = $wpdb->prepare( "OFFSET %D", $this->args['offset'] );
-		}
-
-		$query = $wpdb->prepare(
-			"SELECT review.*, book.* FROM {$review_table} review {$join} {$where} ORDER BY {$this->args['orderby']} {$this->args['order']} LIMIT %d {$offset}",
-			$this->args['number']
-		);
-
-		print_r( $query );
-
-		$reviews = $wpdb->get_results( $query );
-
-		var_dump( $reviews );
-
+	public function get_pagination() {
+		return paginate_links( array(
+			'base'      => add_query_arg( 'bdbpage', '%#%' ),
+			'format'    => '',
+			'prev_text' => __( '&laquo;' ),
+			'next_text' => __( '&raquo;' ),
+			'total'     => ceil( $this->total_results / $this->per_page ),
+			'current'   => $this->current_page
+		) );
 	}
 
 }

@@ -9,13 +9,18 @@
 
 namespace Book_Database;
 
-use Never5\DownloadMonitor\Dependencies\Psr\Log\NullLogger;
-
 /**
  * Class Books_List_Table
  * @package Book_Database
  */
 class Books_List_Table extends List_Table {
+
+	/**
+	 * Mode
+	 *
+	 * @var string
+	 */
+	protected $mode = 'list';
 
 	/**
 	 * Books_List_Table constructor.
@@ -29,6 +34,7 @@ class Books_List_Table extends List_Table {
 		) );
 
 		$this->get_counts();
+		$this->modes = $this->get_modes();
 
 	}
 
@@ -38,7 +44,7 @@ class Books_List_Table extends List_Table {
 	 * @return string Base URL.
 	 */
 	public function get_base_url() {
-		return get_books_admin_page_url();
+		return add_query_arg( 'mode', urlencode( $this->mode ), get_books_admin_page_url() );
 	}
 
 	/**
@@ -81,6 +87,18 @@ class Books_List_Table extends List_Table {
 	public function get_counts() {
 		$this->counts = array(
 			'total' => count_books()
+		);
+	}
+
+	/**
+	 * Get the possible list table modes
+	 *
+	 * @return array
+	 */
+	public function get_modes() {
+		return array(
+			'list'  => esc_html__( 'List', 'book-database' ),
+			'month' => esc_html__( 'Month', 'book-database' )
 		);
 	}
 
@@ -222,13 +240,13 @@ class Books_List_Table extends List_Table {
 	}
 
 	/**
-	 * Retrieve object data.
+	 * Get query args
 	 *
-	 * @param bool $count Whether or not to get objects (false) or just count the total number (true).
+	 * @param bool $count
 	 *
-	 * @return array|int
+	 * @return array
 	 */
-	public function get_object_data( $count = false ) {
+	protected function get_query_args( $count = false ) {
 
 		$args = array(
 			'id__not_in' => array(),
@@ -415,9 +433,22 @@ class Books_List_Table extends List_Table {
 			$args['orderby'] = 'book.id';
 		}
 
+		return $args;
+
+	}
+
+	/**
+	 * Retrieve object data.
+	 *
+	 * @param bool $count Whether or not to get objects (false) or just count the total number (true).
+	 *
+	 * @return array|int
+	 */
+	public function get_object_data( $count = false ) {
+
 		$query = new Books_Query();
 
-		return $query->get_books( $args );
+		return $query->get_books( $this->get_query_args( $count ) );
 
 	}
 
@@ -481,6 +512,8 @@ class Books_List_Table extends List_Table {
 		$format_filter = $this->get_request_var( 'format_filter', '' );
 		?>
 		<div class="alignleft actions">
+			<?php do_action( 'book-database/books-table/extra-tablenav/filters/before' ); ?>
+
 			<label for="bdb-filter-by-read" class="screen-reader-text"><?php _e( 'Filter by read or unread', 'book-database' ); ?></label>
 			<select id="bdb-filter-by-read" name="read_status_filter">
 				<option value="" <?php selected( empty( $read_filter ) ); ?>><?php _e( 'Read &amp; Unread', 'book-database' ); ?></option>
@@ -581,6 +614,42 @@ class Books_List_Table extends List_Table {
 		?>
 		<div class="notice notice-<?php echo esc_attr( sanitize_html_class( $class ) ); ?>">
 			<p><?php echo esc_html( $message ); ?></p>
+		</div>
+		<?php
+
+	}
+
+	/**
+	 * Display the view switcher
+	 *
+	 * @param string $current_mode
+	 */
+	public function view_switcher( $current_mode = '' ) {
+
+		?>
+		<div class="view-switch">
+			<div class="filter-items">
+				<?php
+				foreach ( $this->modes as $mode => $title ) {
+					// Get the URL for the mode.
+					$url = $this->get_base_url();
+					if ( 'list' == $mode ) {
+						$url = remove_query_arg( 'mode', $url );
+					}
+					// Setup classes.
+					$classes = array( 'view-' . $mode );
+					if ( empty( $this->mode ) || ( $this->mode === $mode ) ) {
+						$classes[] = 'current';
+					}
+					?>
+					<a href="<?php echo esc_url( $url ); ?>" class="<?php echo esc_attr( implode( ' ', $classes ) ); ?>" id="view-switch-<?php echo esc_attr( $mode ); ?>" title="<?php echo esc_attr( $title ); ?>">
+						<span class="screen-reader-text"><?php echo esc_html( $title ); ?></span>
+					</a>
+					<?php
+				}
+				?>
+				<input type="hidden" name="mode" value="<?php echo esc_attr( $this->mode ); ?>">
+			</div>
 		</div>
 		<?php
 

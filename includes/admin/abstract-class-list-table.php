@@ -139,7 +139,7 @@ abstract class List_Table extends \WP_List_Table {
 		?>
 		<div class="tablenav <?php echo esc_attr( $which ); ?>">
 
-			<?php if ( $this->has_items() ) : ?>
+			<?php if ( $this->has_items() && count( $this->get_bulk_actions() ) > 0 ) : ?>
 				<div class="alignleft actions bulkactions">
 					<?php $this->bulk_actions( $which ); ?>
 				</div>
@@ -220,7 +220,7 @@ abstract class List_Table extends \WP_List_Table {
 		$class = in_array( $current, array( '', 'all' ), true ) ? ' class="current"' : '';
 
 		$counts = $this->counts;
-		$views = array();
+		$views  = array();
 
 		if ( isset( $this->counts['total'] ) ) {
 			// All

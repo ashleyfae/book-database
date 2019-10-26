@@ -26,9 +26,22 @@ function render_books_page() {
 			break;
 
 		default :
+			$mode = $_GET['mode'] ?? 'list';
+
 			require_once BDB_DIR . 'includes/admin/books/class-books-list-table.php';
 
-			$list_table = new Books_List_Table();
+			switch ( $mode ) {
+				case 'month' :
+					require_once BDB_DIR . 'includes/admin/books/class-monthly-books-list-table.php';
+					$list_table = new Monthly_Books_List_Table();
+					break;
+
+				default :
+					$list_table = new Books_List_Table();
+					break;
+
+			}
+
 			$list_table->prepare_items();
 			?>
 			<div class="wrap">
@@ -41,7 +54,7 @@ function render_books_page() {
 					<input type="hidden" name="page" value="bdb-books"/>
 					<div class="wp-filter">
 						<?php
-						//$list_table->view_switcher();
+						$list_table->view_switcher();
 						$list_table->search_box( __( 'Search books', 'book-database' ), 'bdb_search_books' );
 						?>
 					</div>

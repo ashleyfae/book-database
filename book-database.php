@@ -311,6 +311,7 @@ final class Book_Database {
 		require_once BDB_DIR . 'includes/admin/admin-pages.php';
 
 		// Analytics
+		require_once BDB_DIR . 'includes/admin/analytics/analytics-actions.php';
 		require_once BDB_DIR . 'includes/admin/analytics/analytics-page.php';
 
 		// Authors

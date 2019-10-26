@@ -9,8 +9,20 @@ import { BDB_Datepicker } from './datepicker';
  */
 var BDB_Analytics = {
 
-	batches: [
-		[ 'number-books-finished', 'number-dnf', 'number-new-books', 'number-rereads', 'number-pages-read', 'reading-track' ]
+	/**
+	 * Selected date range value
+	 */
+	range: 'this-year',
+
+	batches: [],
+
+	numbers: [
+		'number-books-finished', 'number-dnf', 'number-new-books', 'number-rereads', 'number-pages-read', 'reading-track',
+		'number-reviews', 'avg-rating', 'number-different-series', 'number-standalones', 'number-authors'
+	],
+
+	tables: [
+		'rating-breakdown', 'pages-breakdown'
 	],
 
 	/**
@@ -21,7 +33,19 @@ var BDB_Analytics = {
 			return;
 		}
 
-		$( '#bdb-date-range' ).on( 'change', this.setRanges );
+		$( '.bdb-taxonomy-breakdown' ).each( function() {
+			let id = $( this ).attr( 'id' ).replace( 'bdb-', '' );
+			BDB_Analytics.tables.push( id );
+		} );
+
+		console.log(BDB_Analytics.tables);
+
+		BDB_Analytics.batches = [
+			BDB_Analytics.numbers,
+			BDB_Analytics.tables
+		];
+
+		$( '#bdb-range' ).on( 'change', this.setRanges );
 		$( '#bdb-date-range button' ).on( 'click', function ( e ) {
 			e.preventDefault();
 
@@ -36,7 +60,9 @@ var BDB_Analytics = {
 	 */
 	setRanges: function ( e ) {
 
-		if ( 'custom' === $( this ).val() ) {
+		BDB_Analytics.range = $( this ).val();
+
+		if ( 'custom' === BDB_Analytics.range ) {
 
 			$( '#bdb-start' ).val( '' ).attr( 'type', 'text' ).addClass( 'bdb-datepicker' );
 			$( '#bdb-end' ).val( '' ).attr( 'type', 'text' ).addClass( 'bdb-datepicker' );
@@ -53,13 +79,23 @@ var BDB_Analytics = {
 
 	},
 
-	getStats: function () {
+	/**
+	 * Get the HTML string to insert into the DOM to indicate the stat is loading.
+	 *
+	 * @returns {string}
+	 */
+	getLoadingString: function () {
+		return '<div id="bdb-circleG"><div id="bdb-circleG_1" class="bdb-circleG"></div><div id="bdb-circleG_2" class="bdb-circleG"></div><div id="bdb-circleG_3" class="bdb-circleG"></div></div>';
+	},
 
-		let loading = '<div id="circleG"><div id="circleG_1" class="circleG"></div><div id="circleG_2" class="circleG"></div><div id="circleG_3" class="circleG"></div></div>';
+	/**
+	 * Get the stats for the provided date range
+	 */
+	getStats: function () {
 
 		// Empty the results and set up spinners.
 		$( '.bdb-result' ).empty();
-		$( '.bdb-loading' ).html( loading ).show();
+		$( '.bdb-loading' ).html( BDB_Analytics.getLoadingString() ).show();
 
 		for ( let i = 0; i < BDB_Analytics.batches.length; i++ ) {
 
@@ -71,7 +107,35 @@ var BDB_Analytics = {
 
 			apiRequest( 'v1/analytics', args, 'GET' ).then( function( apiResponse ) {
 
+				$.each( apiResponse, function( statKey, statValue ) {
+					let wrap = $( '#bdb-' + statKey );
 
+					// Set up format for "on track to read".
+					if ( 'reading-track' === statKey ) {
+						if ( 'this-month' === BDB_Analytics.range ) {
+							statValue = bdbVars.on_track_month.replace( '%d', statValue );
+						} else if ( 'this-year' === BDB_Analytics.range ) {
+							statValue = bdbVars.on_track_year.replace( '%d', statValue );
+						} else {
+							statValue = '';
+						}
+					}
+
+					// Check for an Underscore.js template.
+					if ( Array === statValue.constructor && document.getElementById( 'tmpl-bdb-analytics-' + statKey + '-table-row' ) ) {
+						let template = wp.template( 'bdb-analytics-' + statKey + '-table-row' );
+						let html = '';
+
+						$.each( statValue, function( statItemKey, statItem ) {
+							html += template( statItem );
+						} );
+
+						statValue = html;
+					}
+
+					wrap.find( '.bdb-result' ).empty().append( statValue );
+					wrap.find( '.bdb-loading' ).empty().hide();
+				} )
 
 			} ).catch( function( error ) {
 

@@ -73,9 +73,13 @@ class Analytics extends Controller {
 
 			foreach ( $stat_types as $stat_type ) {
 				$method = 'get_' . str_replace( '-', '_', $stat_type );
+				$args   = array();
 
 				if ( method_exists( $analytics, $method ) ) {
 					$stats[ $stat_type ] = call_user_func( array( $analytics, $method ) );
+				} elseif ( false !== strpos( $stat_type, 'taxonomy' ) ) {
+					preg_match( '/(?<=taxonomy-)(.*)(?=-breakdown)/', $stat_type, $matches );
+					$stats[ $stat_type ] = call_user_func( array( $analytics, 'get_taxonomy_breakdown' ), $matches[0] );
 				} else {
 					$stats[ $stat_type ] = null;
 				}

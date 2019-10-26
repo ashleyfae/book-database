@@ -45,6 +45,8 @@ function enqueue_admin_assets( $hook ) {
 		'error_required_fields'      => esc_html__( 'Please fill out all the required fields.', 'book-database' ),
 		'generic_error'              => esc_html__( 'An unexpected error has occurred.', 'book-database' ),
 		'is_admin'                   => is_admin(),
+		'on_track_month'             => esc_html__( 'On track to read %d books this month.', 'book-database' ),
+		'on_track_year'              => esc_html__( 'On track to read %d books this year.', 'book-database' ),
 		'please_wait'                => esc_html__( 'Please wait...', 'book-database' ),
 		'save'                       => esc_html__( 'Save', 'book-database' ),
 		'stars'                      => esc_html__( 'Stars', 'book-database' )

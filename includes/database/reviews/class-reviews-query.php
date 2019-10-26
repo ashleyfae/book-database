@@ -209,7 +209,8 @@ class Reviews_Query extends BerlinDB\Database\Query {
 		// Tax query
 		if ( ! empty( $args['tax_query'] ) ) {
 			$tax_query          = new Tax( $args['tax_query'] );
-			$clauses            = $tax_query->get_sql( $this->table_alias, 'review.book_id' );
+			$clauses            = $tax_query->get_sql( $this->table_alias, 'book_id' );
+			$join['tax_query']  = $clauses['join'];
 			$where['tax_query'] = preg_replace( '/^\s*AND\s*/', '', $clauses['where'] );
 		}
 

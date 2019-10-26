@@ -24,7 +24,7 @@ class Reviews_Table extends BerlinDB\Database\Table {
 	/**
 	 * @var int Database version in format {YYYY}{MM}{DD}{1}
 	 */
-	protected $version = 201910185;
+	protected $version = 201910261;
 
 	/**
 	 * @var array Upgrades to perform
@@ -34,7 +34,8 @@ class Reviews_Table extends BerlinDB\Database\Table {
 		'201910182' => 201910182,
 		'201910183' => 201910183,
 		'201910184' => 201910184,
-		'201910185' => 201910185
+		'201910185' => 201910185,
+		'201910261' => 201910261
 	);
 
 	/**
@@ -154,7 +155,7 @@ class Reviews_Table extends BerlinDB\Database\Table {
 			$result = $this->get_db()->query( "ALTER TABLE {$this->table_name} ADD COLUMN date_modified datetime NOT NULL DEFAULT '0000-00-00 00:00:00'" );
 		}
 
-		return $result;
+		return $this->is_success( $result );
 
 	}
 
@@ -172,7 +173,25 @@ class Reviews_Table extends BerlinDB\Database\Table {
 		$result = $this->get_db()->query( "ALTER TABLE {$this->table_name} MODIFY post_id bigint(20) UNSIGNED DEFAULT NULL" );
 		$result = $this->get_db()->query( "ALTER TABLE {$this->table_name} MODIFY user_id bigint(20) UNSIGNED NOT NULL DEFAULT 0 AFTER book_id" );
 
-		return $result;
+		return $this->is_success( $result );
+
+	}
+
+	/**
+	 * Upgrade to version 201910261
+	 *      - Drop column `rating`
+	 *
+	 * @return bool
+	 */
+	protected function __201910261() {
+
+		if ( $this->column_exists( 'rating' ) ) {
+			$result = $this->get_db()->query( "ALTER TABLE {$this->table_name} DROP COLUMN `rating`" );
+		} else {
+			$result = true;
+		}
+
+		return $this->is_success( $result );
 
 	}
 

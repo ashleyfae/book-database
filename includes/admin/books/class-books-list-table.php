@@ -9,6 +9,8 @@
 
 namespace Book_Database;
 
+use Never5\DownloadMonitor\Dependencies\Psr\Log\NullLogger;
+
 /**
  * Class Books_List_Table
  * @package Book_Database
@@ -348,15 +350,7 @@ class Books_List_Table extends List_Table {
 					break;
 
 				case 'unread' :
-					$read_book_ids = get_reading_logs( array(
-						'number'  => 9999,
-						'fields'  => 'book_id',
-						'groupby' => 'book_id'
-					) );
-
-					if ( $read_book_ids ) {
-						$args['id__not_in'] = $args['id__not_in'] + $read_book_ids;
-					}
+					$args['unread'] = true;
 					break;
 			}
 		}

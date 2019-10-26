@@ -116,22 +116,42 @@ class Where_Clause {
 
 			$column      = $this->column_prefix . $column;
 			$operator    = $this->sanitize_operator( $condition['operator'] ?? '=' );
+			$type        = ! empty( $condition['type'] ) ? strtoupper( $condition['type'] ) : 'TEXT';
 			$placeholder = is_int( $condition['value'] ) ? '%d' : '%s';
 			$value       = 'LIKE' === $operator ? '%' . $wpdb->esc_like( $condition['value'] ) . '%' : $condition['value'];
 
-			if ( is_null( $value ) ) {
-				// If the value is null, then we check that directly.
-				$where[] = "{$column} {$operator} NULL";
-			} elseif ( false !== strpos( $column, 'date' ) ) {
-				// Perform a date query if the column name contains "date".
-				$date_query = new Date( $value, $column );
-				$date_sql   = $date_query->get_sql();
+			if ( in_array( $operator, array( 'IN', 'NOT IN' ) ) ) {
 
-				// Remove "AND".
-				$where[] = preg_replace( $and, '', $date_sql );
+				$values             = is_array( $value ) ? $value : array( $value );
+				$value_placeholder  = 'NUMERIC' === $type ? '%d' : '%s';
+				$value_placeholders = array_fill( 0, count( $values ), $value_placeholder );
+				$placeholder_string = implode( ', ', $value_placeholders );
+
+				if ( 'NUMERIC' === $type ) {
+					$sanitized_values = array_map( 'absint', $values );
+				} else {
+					$sanitized_values = array_map( 'wp_strip_all_tags', $values );
+				}
+
+				$where[] = $wpdb->prepare( "{$column} {$operator} ( {$placeholder_string} )", $sanitized_values );
+
 			} else {
-				// Otherwise, properly prepare.
-				$where[] = $wpdb->prepare( " {$column} {$operator} {$placeholder} ", $value );
+
+				if ( is_null( $value ) ) {
+					// If the value is null, then we check that directly.
+					$where[] = "{$column} {$operator} NULL";
+				} elseif ( false !== strpos( $column, 'date' ) ) {
+					// Perform a date query if the column name contains "date".
+					$date_query = new Date( $value, $column );
+					$date_sql   = $date_query->get_sql();
+
+					// Remove "AND".
+					$where[] = preg_replace( $and, '', $date_sql );
+				} else {
+					// Otherwise, properly prepare.
+					$where[] = $wpdb->prepare( " {$column} {$operator} {$placeholder} ", $value );
+				}
+
 			}
 		}
 
@@ -154,7 +174,9 @@ class Where_Clause {
 			'>=',
 			'<',
 			'<=',
-			'LIKE'
+			'LIKE',
+			'IN',
+			'NOT IN'
 		);
 
 		$operator = strtoupper( $operator );

@@ -48,9 +48,10 @@ add_shortcode( 'book', __NAMESPACE__ . '\book_shortcode' );
 function book_reviews_shortcode( $atts, $content = '' ) {
 
 	$atts = shortcode_atts( array(
-		'hide_future' => true,
-		'per_page'    => 20,
-		'filters'     => 'book_title book_author book_series rating genre publisher review_year orderby order'
+		'hide-future' => true,
+		'per-page'    => 20,
+		'filters'     => 'book_title book_author book_series rating genre publisher review_year orderby order',
+		'cover-size'  => 'medium'
 	), $atts, 'book-reviews' );
 
 	$query   = new Book_Reviews_Query( $atts );
@@ -59,80 +60,119 @@ function book_reviews_shortcode( $atts, $content = '' ) {
 	ob_start();
 	?>
 	<form id="bdb-filter-book-reviews" action="<?php echo esc_url( get_permalink() ); ?>" method="GET">
-		<?php foreach ( $filters as $filter ) : ?>
-			<div class="bdb-filter-option">
-				<?php
-				switch ( $filter ) {
-					case 'book_title' :
-						?>
-						<label for="bdb-book-title"><?php _e( 'Book Title', 'book-database' ); ?></label>
-						<input type="text" id="bdb-book-title" name="title" value="<?php echo ! empty( $_GET['title'] ) ? esc_attr( wp_strip_all_tags( $_GET['title'] ) ) : ''; ?>">
-						<?php
-						break;
-
-					case 'book_author' :
-						?>
-						<label for="bdb-book-author"><?php _e( 'Book Author', 'book-database' ); ?></label>
-						<input type="text" id="bdb-book-author" name="author" value="<?php echo ! empty( $_GET['author'] ) ? esc_attr( wp_strip_all_tags( $_GET['author'] ) ) : ''; ?>">
-						<?php
-						break;
-
-					case 'book_series' :
-						?>
-						<label for="bdb-book-series"><?php _e( 'Book Series', 'book-database' ); ?></label>
-						<input type="text" id="bdb-book-series" name="series" value="<?php echo ! empty( $_GET['series'] ) ? esc_attr( wp_strip_all_tags( $_GET['series'] ) ) : ''; ?>">
-						<?php
-						break;
-
-					case 'rating' :
-						$selected_rating = $_GET['rating'] ?? 'any';
-						?>
-						<label for="bdb-book-rating"><?php _e( 'Rating', 'book-database' ); ?></label>
-						<select id="bdb-book-rating" name="rating">
-							<option value="any" <?php selected( $selected_rating, 'any' ); ?>><?php _e( 'Any', 'book-database' ); ?></option>
-							<?php foreach ( get_available_ratings() as $rating_value => $rating ) :
-								$rating_object = new Rating( $rating_value );
-								?>
-								<option value="<?php echo esc_attr( $rating_value ); ?>" <?php selected( $selected_rating, $rating_value ); ?>><?php echo esc_html( $rating_object->format_text() ); ?></option>
-							<?php endforeach; ?>
-						</select>
-						<?php
-						break;
-
-					case 'review_year' :
-						break;
-
-					case 'orderby' :
-						$orderby = $_GET['orderby'] ?? 'review.date_published';
-						?>
-						<label for="bdb-orderby"><?php _e( 'Order By', 'book-database' ); ?></label>
-						<select id="bdb-orderby" name="orderby">
-							<option value="author.name" <?php selected( $orderby, 'author.name' ); ?>><?php _e( 'Author Name', 'book-database' ); ?></option>
-							<option value="book.title" <?php selected( $orderby, 'book.title' ); ?>><?php _e( 'Book Title', 'book-database' ); ?></option>
-							<option value="book.pub_date" <?php selected( $orderby, 'book.pub_date' ); ?>><?php _e( 'Book Publish Date', 'book-database' ); ?></option>
-							<option value="log.date_finished" <?php selected( $orderby, 'log.date_finished' ); ?>><?php _e( 'Date Read', 'book-database' ); ?></option>
-							<option value="review.date_published" <?php selected( $orderby, 'review.date_published' ); ?>><?php _e( 'Date Reviewed', 'book-database' ); ?></option>
-							<option value="book.pages" <?php selected( $orderby, 'book.pages' ); ?>><?php _e( 'Number of Pages', 'book-database' ); ?></option>
-							<option value="log.rating" <?php selected( $orderby, 'log.rating' ); ?>><?php _e( 'Rating', 'book-database' ); ?></option>
-						</select>
-						<?php
-						break;
-
-					case 'order' :
-						break;
-
-					// Taxonomies
-					default :
-						$taxonomy = get_book_taxonomy_by( $filter, 'slug' );
-
-						if ( ! $taxonomy instanceof Book_Taxonomy ) {
+		<div class="bdb-filters">
+			<?php foreach ( $filters as $filter ) : ?>
+				<div class="bdb-filter-option">
+					<?php
+					switch ( $filter ) {
+						case 'book_title' :
+							?>
+							<label for="bdb-book-title"><?php _e( 'Book Title', 'book-database' ); ?></label>
+							<input type="text" id="bdb-book-title" name="title" value="<?php echo ! empty( $_GET['title'] ) ? esc_attr( wp_strip_all_tags( $_GET['title'] ) ) : ''; ?>">
+							<?php
 							break;
-						}
-						break;
-				}
-				?>
-			</div>
-		<?php endforeach; ?>
+
+						case 'book_author' :
+							?>
+							<label for="bdb-book-author"><?php _e( 'Book Author', 'book-database' ); ?></label>
+							<input type="text" id="bdb-book-author" name="author" value="<?php echo ! empty( $_GET['author'] ) ? esc_attr( wp_strip_all_tags( $_GET['author'] ) ) : ''; ?>">
+							<?php
+							break;
+
+						case 'book_series' :
+							?>
+							<label for="bdb-book-series"><?php _e( 'Book Series', 'book-database' ); ?></label>
+							<input type="text" id="bdb-book-series" name="series" value="<?php echo ! empty( $_GET['series'] ) ? esc_attr( wp_strip_all_tags( $_GET['series'] ) ) : ''; ?>">
+							<?php
+							break;
+
+						case 'rating' :
+							$selected_rating = $_GET['rating'] ?? 'any';
+							?>
+							<label for="bdb-book-rating"><?php _e( 'Rating', 'book-database' ); ?></label>
+							<select id="bdb-book-rating" name="rating">
+								<option value="any" <?php selected( $selected_rating, 'any' ); ?>><?php _e( 'Any', 'book-database' ); ?></option>
+								<?php foreach ( get_available_ratings() as $rating_value => $rating ) :
+									$rating_object = new Rating( $rating_value );
+									?>
+									<option value="<?php echo esc_attr( $rating_value ); ?>" <?php selected( $selected_rating, $rating_value ); ?>><?php echo esc_html( $rating_object->format_text() ); ?></option>
+								<?php endforeach; ?>
+							</select>
+							<?php
+							break;
+
+						case 'review_year' :
+							$years = get_review_years( 'published' );
+							$selected_year = $_GET['review_year'] ?? 'any';
+							?>
+							<label for="bdb-book-review-year"><?php _e( 'Review Year', 'book-database' ); ?></label>
+							<select id="bdb-book-review-year" name="review_year">
+								<option value="any" <?php selected( $selected_year, 'any' ); ?>><?php _e( 'Any', 'book-database' ); ?></option>
+								<?php foreach ( $years as $year ) : ?>
+									<option value="<?php echo esc_attr( $year ); ?>" <?php selected( $selected_year, $year ); ?>><?php echo esc_html( $year ); ?></option>
+								<?php endforeach; ?>
+							</select>
+							<?php
+							break;
+
+						case 'orderby' :
+							$orderby = $_GET['orderby'] ?? 'review.date_published';
+							?>
+							<label for="bdb-orderby"><?php _e( 'Order By', 'book-database' ); ?></label>
+							<select id="bdb-orderby" name="orderby">
+								<option value="author.name" <?php selected( $orderby, 'author.name' ); ?>><?php _e( 'Author Name', 'book-database' ); ?></option>
+								<option value="book.title" <?php selected( $orderby, 'book.title' ); ?>><?php _e( 'Book Title', 'book-database' ); ?></option>
+								<option value="book.pub_date" <?php selected( $orderby, 'book.pub_date' ); ?>><?php _e( 'Book Publish Date', 'book-database' ); ?></option>
+								<option value="log.date_finished" <?php selected( $orderby, 'log.date_finished' ); ?>><?php _e( 'Date Read', 'book-database' ); ?></option>
+								<option value="review.date_published" <?php selected( $orderby, 'review.date_published' ); ?>><?php _e( 'Date Reviewed', 'book-database' ); ?></option>
+								<option value="book.pages" <?php selected( $orderby, 'book.pages' ); ?>><?php _e( 'Number of Pages', 'book-database' ); ?></option>
+								<option value="log.rating" <?php selected( $orderby, 'log.rating' ); ?>><?php _e( 'Rating', 'book-database' ); ?></option>
+							</select>
+							<?php
+							break;
+
+						case 'order' :
+							$order = $_GET['order'] ?? 'DESC';
+							?>
+							<label for="bdb-order"><?php _e( 'Order', 'book-database' ); ?></label>
+							<select id="bdb-order" name="order">
+								<option value="ASC" <?php selected( $order, 'ASC' ); ?>><?php _e( 'ASC (1, 2, 3; a, b, c)', 'book-database' ); ?></option>
+								<option value="DESC" <?php selected( $order, 'DESC' ); ?>><?php _e( 'DESC (3, 2, 1; c, b, a)', 'book-database' ); ?></option>
+							</select>
+							<?php
+							break;
+
+						// Taxonomies
+						default :
+							$taxonomy = get_book_taxonomy_by( 'slug', $filter );
+
+							if ( ! $taxonomy instanceof Book_Taxonomy ) {
+								break;
+							}
+
+							$terms = get_book_terms( array(
+								'taxonomy' => $taxonomy->get_slug(),
+								'number'   => 50,
+								'orderby'  => 'name',
+								'order'    => 'ASC'
+							) );
+
+							$selected_term = $_GET[ $taxonomy->get_slug() ] ?? 'any';
+							?>
+							<label for="bdb-<?php echo esc_attr( $taxonomy->get_slug() ); ?>"><?php echo esc_html( $taxonomy->get_name() ) ?></label>
+							<select id="bdb-<?php echo esc_attr( $taxonomy->get_slug() ); ?>" name="<?php echo esc_attr( $taxonomy->get_slug() ); ?>">
+								<option value="any" <?php selected( $selected_term, 'any' ); ?>><?php _e( 'Any', 'book-database' ); ?></option>
+								<?php foreach ( $terms as $term ) : ?>
+									<option value="<?php echo esc_attr( $term->get_id() ); ?>" <?php selected( $selected_term, $term->get_id() ); ?>><?php echo esc_html( $term->get_name() ); ?></option>
+								<?php endforeach; ?>
+							</select>
+							<?php
+							break;
+					}
+					?>
+				</div>
+			<?php endforeach; ?>
+		</div>
 		<div class="bdb-filter-actions">
 			<button type="submit"><?php _e( 'Filter', 'book-database' ); ?></button>
 			<a href="<?php echo esc_url( get_permalink() ); ?>" class="bdb-reset-search-filters"><?php _e( 'Clear filters &times;', 'book-database' ); ?></a>
@@ -140,13 +180,28 @@ function book_reviews_shortcode( $atts, $content = '' ) {
 	</form>
 	<div id="bdb-reviews">
 		<?php
-		$reviews = $query->get_reviews();
+		$reviews  = $query->get_results();
+		$template = get_book_template_part( 'shortcode-book-reviews-entry', '', false );
 
 		if ( ! empty( $reviews ) ) {
-			echo '<div class="bdb-review-list-number-results">' . sprintf( _n( '%s review found', '%s reviews found', $query->total_results, 'book-database' ), $query->total_results ) . '</div>';
-			echo '<div class="bdb-book-reviews-list">';
-			foreach ( $reviews as $review ) {
-				//include $template;
+			echo '<div class="bdb-review-list-number-results bdb-book-grid-number-results">' . sprintf( _n( '%s review found', '%s reviews found', $query->total_results, 'book-database' ), $query->total_results ) . '</div>';
+			echo '<div class="bdb-book-reviews-list bdb-book-grid">';
+			foreach ( $reviews as $review_data ) {
+				$review      = new Review( $review_data );
+				$book        = new Book( array(
+					'id'              => $review_data->book_id ?? 0,
+					'cover_id'        => $review_data->book_cover_id ?? null,
+					'title'           => $review_data->book_title ?? '',
+					'pub_date'        => $review_data->book_pub_date ?? '',
+					'series_position' => $review_data->series_position ?? ''
+				) );
+				$reading_log = new Reading_Log( array(
+					'date_started'        => $review_data->date_started_reading ?? null,
+					'date_finished'       => $review_data->date_finished_reading ?? null,
+					'percentage_complete' => $review_data->percentage_complete ?? null,
+					'rating'              => $review_data->rating ?? null
+				) );
+				include $template;
 			}
 			echo '</div>';
 		} else {
@@ -155,8 +210,8 @@ function book_reviews_shortcode( $atts, $content = '' ) {
 			<?php
 		}
 		?>
-		<nav class="bdb-reviews-list-pagination pagination">
-			<?php $query->get_pagination(); ?>
+		<nav class="bdb-pagination bookdb-reviews-list-pagination pagination">
+			<?php echo $query->get_pagination(); ?>
 		</nav>
 	</div>
 	<?php
@@ -166,3 +221,70 @@ function book_reviews_shortcode( $atts, $content = '' ) {
 }
 
 add_shortcode( 'book-reviews', __NAMESPACE__ . '\book_reviews_shortcode' );
+
+/**
+ * Book grid
+ *
+ * Similar to `[book-reviews]` but filtering is done via shortcode attributes instead of
+ * a front-end form. It also focuses on books rather than reviews.
+ *
+ * @param array  $atts    Shortcode attributes.
+ * @param string $content Shortcode content.
+ *
+ * @return string
+ */
+function book_grid_shortcode( $atts, $content = '' ) {
+
+	$default_atts = array(
+		'author'              => '',
+		'series'              => '',
+		'rating'              => '',
+		'pub-date-after'      => '',
+		'pub-date-before'     => '',
+		'pub-year'            => '',
+		'read-status'         => '',
+		'show-ratings'        => false,
+		'show-goodreads-link' => false,
+		'orderby'             => 'book.id',
+		'order'               => 'DESC',
+		'cover-size'          => 'large',
+		'per-page'            => 20,
+	);
+
+	foreach ( get_book_taxonomies( array( 'fields' => 'slug' ) ) as $tax_slug ) {
+		$default_atts[ $tax_slug ] = '';
+	}
+
+	$atts  = shortcode_atts( $default_atts, $atts, 'book-grid' );
+	$query = new Book_Grid_Query( $atts );
+
+	ob_start();
+	?>
+	<div id="bdb-books">
+		<?php
+		$books    = $query->get_results();
+		$template = get_book_template_part( 'shortcode-book-grid-entry', '', false );
+
+		if ( ! empty( $books ) ) {
+			echo '<div class="bdb-book-list-number-results bdb-book-grid-number-results">' . sprintf( _n( '%s book found', '%s books found', $query->total_results, 'book-database' ), $query->total_results ) . '</div>';
+			echo '<div class="bdb-book-list bdb-book-grid">';
+			foreach ( $books as $book_data ) {
+				$book = new Book( $book_data );
+				include $template;
+			}
+			echo '</div>';
+		} else {
+			?>
+			<p><?php _e( 'No books found.', 'book-database' ); ?></p>
+			<?php
+		}
+		?>
+		<nav class="bdb-pagination bdb-book-grid-pagination pagination">
+			<?php echo $query->get_pagination(); ?>
+		</nav>
+	</div>
+	<?php
+
+}
+
+add_shortcode( 'book-grid', __NAMESPACE__ . '\book_grid_shortcode' );

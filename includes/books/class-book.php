@@ -262,6 +262,30 @@ class Book extends Base_Object {
 	}
 
 	/**
+	 * Whether or not the book has a term attached.
+	 *
+	 * @param string|int $term_name_or_id Term name or ID.
+	 * @param string     $taxonomy        Taxonomy slug.
+	 *
+	 * @return bool
+	 */
+	public function has_term( $term_name_or_id, $taxonomy ) {
+
+		$args = array();
+
+		if ( is_numeric( $term_name_or_id ) ) {
+			$args['fields'] = 'id';
+		} else {
+			$args['fields'] = 'name';
+		}
+
+		$terms = get_attached_book_terms( $this->get_id(), $taxonomy, $args );
+
+		return in_array( $term_name_or_id, $terms );
+
+	}
+
+	/**
 	 * Returns all data associated with a book
 	 *
 	 * @return array

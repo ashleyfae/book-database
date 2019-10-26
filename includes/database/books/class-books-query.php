@@ -92,6 +92,7 @@ class Books_Query extends BerlinDB\Database\Query {
 			'reading_log_query' => array(),
 			'edition_query'     => array(),
 			'tax_query'         => array(),
+			'unread'            => false,
 			'orderby'           => 'book.id',
 			'order'             => 'DESC',
 			'include_rating'    => true,
@@ -166,6 +167,13 @@ class Books_Query extends BerlinDB\Database\Query {
 			$where = array_merge( $where, $clause_engine->get_clauses() );
 		}
 
+		// Unread books only
+		// This is a bit "special" because we need a weird left join.
+		if ( ! empty( $args['unread'] ) ) {
+			$join['unread_query'] = "LEFT JOIN {$tbl_log} as ulog ON (book.id = ulog.book_id)";
+			$where[]              = 'ulog.book_id IS NULL';
+		}
+
 		// Series query
 		if ( ! empty( $args['series_query'] ) ) {
 			$clause_engine->set_table_query( new Series_Query() );
@@ -176,7 +184,7 @@ class Books_Query extends BerlinDB\Database\Query {
 		// Tax query
 		if ( ! empty( $args['tax_query'] ) ) {
 			$tax_query          = new Tax( $args['tax_query'] );
-			$clauses            = $tax_query->get_sql( $this->table_alias, 'book.id' );
+			$clauses            = $tax_query->get_sql( $this->table_alias, 'id' );
 			$where['tax_query'] = preg_replace( '/^\s*AND\s*/', '', $clauses['where'] );
 		}
 

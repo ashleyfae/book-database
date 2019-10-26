@@ -2,7 +2,7 @@
 /**
  * Book Reviews Query
  *
- * Used in the `[book_reviews]` shortcode.
+ * Used in the `[book-reviews]` shortcode.
  *
  * @package   book-database
  * @copyright Copyright (c) 2019, Ashley Gibson
@@ -10,12 +10,6 @@
  */
 
 namespace Book_Database;
-
-use \Book_Database\BerlinDB\Database\Queries\Author as Author_Query;
-use \Book_Database\BerlinDB\Database\Queries\Book as Book_Query;
-use \Book_Database\BerlinDB\Database\Queries\Date as Date_Query;
-use \Book_Database\BerlinDB\Database\Queries\Reading_Log as Reading_Log_Query;
-use \Book_Database\BerlinDB\Database\Queries\Tax as Tax_Query;
 
 /**
  * Class Book_Reviews_Query
@@ -63,7 +57,7 @@ class Book_Reviews_Query {
 	 */
 	protected function parse_args( $args = array() ) {
 
-		$this->args['number'] = $args['per_page'] ?? 20;
+		$this->args['number'] = $args['per-page'] ?? 20;
 		$this->args['offset'] = ( $this->current_page * $this->args['number'] ) - $this->args['number'];
 		$this->per_page       = $this->args['number'];
 
@@ -95,7 +89,7 @@ class Book_Reviews_Query {
 		}
 
 		// Rating
-		if ( ! empty( $_GET['rating'] ) && is_numeric( $_GET['rating'] ) ) {
+		if ( isset( $_GET['rating'] ) && is_numeric( $_GET['rating'] ) ) {
 			$this->args['reading_log_query'][] = array(
 				'field' => 'rating',
 				'value' => floatval( $_GET['rating'] )
@@ -104,7 +98,7 @@ class Book_Reviews_Query {
 
 		// Taxonomies
 		foreach ( get_book_taxonomies( array( 'fields' => 'slug' ) ) as $taxonomy_slug ) {
-			if ( ! empty( $_GET[ $taxonomy_slug ] ) ) {
+			if ( ! empty( $_GET[ $taxonomy_slug ] ) && 'any' !== $_GET[ $taxonomy_slug ] ) {
 				$this->args['tax_query'][] = array(
 					'taxonomy' => sanitize_text_field( $taxonomy_slug ),
 					'field'    => 'id',
@@ -124,7 +118,7 @@ class Book_Reviews_Query {
 		}
 
 		// Hide Future Reviews
-		if ( ! empty( $args['hide_future'] ) ) {
+		if ( ! empty( $args['hide-future'] ) ) {
 			$this->args['review_query'][] = array(
 				'field' => 'date_published',
 				'value' => array(
@@ -146,6 +140,11 @@ class Book_Reviews_Query {
 		// Orderby
 		if ( ! empty( $_GET['orderby'] ) ) {
 			$this->args['orderby'] = wp_strip_all_tags( $_GET['orderby'] );
+		}
+
+		// Order
+		if ( ! empty( $_GET['order'] ) ) {
+			$this->args['order'] = 'ASC' === $_GET['order'] ? 'ASC' : 'DESC';
 		}
 
 		/**
@@ -206,17 +205,24 @@ class Book_Reviews_Query {
 	 *
 	 * @return object[]
 	 */
-	public function get_reviews() {
+	public function get_results() {
 
 		$query   = new Reviews_Query();
 		$reviews = $query->get_reviews( $this->args );
 
-		$this->total_results = count( $reviews );
+		$count_args          = $this->args;
+		$count_args['count'] = true;
+		$this->total_results = $query->get_reviews( $count_args );
 
 		return $reviews;
 
 	}
 
+	/**
+	 * Get pagination
+	 *
+	 * @return string
+	 */
 	public function get_pagination() {
 		return paginate_links( array(
 			'base'      => add_query_arg( 'bdbpage', '%#%' ),

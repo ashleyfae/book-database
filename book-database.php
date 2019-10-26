@@ -287,10 +287,12 @@ final class Book_Database {
 		// Misc.
 		require_once BDB_DIR . 'includes/class-analytics.php';
 		require_once BDB_DIR . 'includes/class-book-reviews-query.php';
+		require_once BDB_DIR . 'includes/class-book-grid-query.php';
 		require_once BDB_DIR . 'includes/class-html.php';
 		require_once BDB_DIR . 'includes/misc-functions.php';
 		require_once BDB_DIR . 'includes/rewrites.php';
 		require_once BDB_DIR . 'includes/shortcodes.php';
+		require_once BDB_DIR . 'includes/template-functions.php';
 
 		if ( defined( 'WP_CLI' ) && WP_CLI ) {
 			require_once BDB_DIR . 'includes/class-cli.php';
@@ -355,7 +357,7 @@ final class Book_Database {
 	 * Include front-end files
 	 */
 	private function include_frontend() {
-
+		require_once BDB_DIR . 'includes/assets.php';
 	}
 
 	/**

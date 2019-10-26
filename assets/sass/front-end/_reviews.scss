@@ -1,0 +1,25 @@
+#bdb-filter-book-reviews {
+    margin: 0 0 1.5em;
+}
+
+.bdb-reset-search-filters {
+    display: inline-block;
+    margin-left: 1em;
+}
+
+.bdb-filter-option {
+    margin: 0 0 1.5em;
+}
+
+@media (min-width: 768px) {
+    .bdb-filters {
+        display: flex;
+        flex-flow: row wrap;
+        margin: 0 -10px;
+    }
+
+    .bdb-filter-option {
+        flex: 0 33.3%;
+        padding: 0 10px;
+    }
+}

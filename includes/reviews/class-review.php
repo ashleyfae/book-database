@@ -15,18 +15,39 @@ namespace Book_Database;
  */
 class Review extends Base_Object {
 
+	/**
+	 * @var int ID of the associated book.
+	 */
 	protected $book_id = 0;
 
+	/**
+	 * @var int|null ID of the associated blog post.
+	 */
 	protected $post_id = null;
 
+	/**
+	 * @var int ID of the user who wrote the review.
+	 */
 	protected $user_id = 0;
 
+	/**
+	 * @var string External URL to the review.
+	 */
 	protected $url = '';
 
+	/**
+	 * @var string Review content.
+	 */
 	protected $review = '';
 
+	/**
+	 * @var string Date the review was written.
+	 */
 	protected $date_written = '';
 
+	/**
+	 * @var string|null Date the review was published.
+	 */
 	protected $date_published = null;
 
 	/**
@@ -71,6 +92,17 @@ class Review extends Base_Object {
 	}
 
 	/**
+	 * Whether or not this is an external review
+	 *
+	 * Will return true if `url` is filled out.
+	 *
+	 * @return bool
+	 */
+	public function is_external() {
+		return ! empty( $this->get_url() );
+	}
+
+	/**
 	 * Get the review text
 	 *
 	 * @return string
@@ -101,6 +133,71 @@ class Review extends Base_Object {
 	 */
 	public function get_date_published( $formatted = false, $format = '' ) {
 		return ( ! empty( $this->date_published ) && $formatted ) ? format_date( $this->date_published, $format ) : $this->date_published;
+	}
+
+	/**
+	 * Get the review permalink
+	 *
+	 * Returns the URL to the external review if provided, otherwise the URL to the post where
+	 * the review is located. Returns false if all else fails.
+	 *
+	 * @param bool $use_id      Whether or not to build the URL with the post ID (ugly permalinks).
+	 * @param bool $id_appended Whether or not to includle a "skip-to" the book ID.
+	 *
+	 * @return string|false
+	 */
+	public function get_permalink( $use_id = true, $id_appended = true ) {
+
+		$url = false;
+
+		if ( $this->is_external() ) {
+			$url = $this->get_url();
+		} elseif ( $this->get_post_id() && $use_id ) {
+			$url = add_query_arg( array( 'p' => urlencode( $this->get_post_id() ) ), home_url( '/' ) );
+		} elseif ( $this->get_post_id() ) {
+			$url = get_permalink( $this->get_post_id() );
+		}
+
+		if ( $id_appended && ! empty( $url ) && ! $this->is_external() ) {
+			$url .= '#book-' . urlencode( $this->get_id() );
+		}
+
+		/**
+		 * Filters the review permalink.
+		 *
+		 * @param string|false $url         URL to the review.
+		 * @param bool         $use_id      Whether or not to build the URL with the post ID (ugly permalinks).
+		 * @param bool         $id_appended Whether or not to includle a "skip-to" the book ID.
+		 * @param Review       $this        Review object.
+		 */
+		return apply_filters( 'book-database/review/get/permalink', $url, $use_id, $id_appended, $this );
+
+	}
+
+	/**
+	 * Whether or not the review has been published
+	 *
+	 * Returns `true` if the review is external, or if the review published date is in the past.
+	 * Returns `false` f the review is associated with a post and that post is not "published".
+	 *
+	 * @return bool
+	 */
+	public function is_published() {
+
+		if ( $this->is_external() ) {
+			return true;
+		}
+
+		if ( $this->get_post_id() ) {
+			$post = get_post( $this->get_post_id() );
+
+			if ( $post instanceof \WP_Post && 'publish' !== $post->post_status ) {
+				return false;
+			}
+		}
+
+		return ( $this->get_date_published( true, 'U' ) <= current_time( 'timestamp' ) );
+
 	}
 
 }

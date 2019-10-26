@@ -245,8 +245,29 @@ function get_reviewer_user_ids() {
 
 	$review_table = book_database()->get_table( 'reviews' )->get_table_name();
 
-	$results = $wpdb->get_col( "SELECT DISTINCT user_id FROM {$review_table}"  );
+	$results = $wpdb->get_col( "SELECT DISTINCT user_id FROM {$review_table}" );
 
 	return $results;
+
+}
+
+/**
+ * Returns an array of all the years that reviews have been written/published in.
+ *
+ * @param string $type  Date type - either `written` or `published`.
+ * @param string $order Either ASC or DESC.
+ *
+ * @return array
+ */
+function get_review_years( $type = 'written', $order = 'DESC' ) {
+
+	global $wpdb;
+
+	$review_table = book_database()->get_table( 'reviews' )->get_table_name();
+	$date_type    = 'written' === $type ? 'date_written' : 'date_published';
+	$order        = 'DESC' === $order ? 'DESC' : 'ASC';
+	$years        = $wpdb->get_col( "SELECT DISTINCT YEAR( {$date_type} ) FROM {$review_table} WHERE {$date_type} IS NOT NULL ORDER BY {$date_type} {$order}" );
+
+	return $years;
 
 }

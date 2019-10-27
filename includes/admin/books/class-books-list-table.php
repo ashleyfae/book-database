@@ -220,7 +220,16 @@ class Books_List_Table extends List_Table {
 				if ( isset( $item->avg_rating ) ) {
 					$rating         = new Rating( $item->avg_rating );
 					$rounded_rating = $rating->round_rating();
-					$value          = '<a href="' . esc_url( add_query_arg( 'rating', urlencode( $rounded_rating ), $this->get_base_url() ) ) . '" title="' . esc_attr( sprintf( __( 'All %s star books', 'book-database' ), $rounded_rating ) ) . '">' . $rating->format_html_stars() . '</a>';
+					$classes        = array();
+
+					if ( ! is_null( $item->avg_rating ) ) {
+						$classes[] = 'bdb-rating';
+						$classes[] = 'bdb-' . $rating->format_html_class();
+					}
+
+					$classes = array_map( 'sanitize_html_class', $classes );
+
+					$value = '<a href="' . esc_url( add_query_arg( 'rating', urlencode( $rounded_rating ), $this->get_base_url() ) ) . '" class="' . esc_attr( implode( ' ', $classes ) ) . '" title="' . esc_attr( sprintf( __( 'All %s star books', 'book-database' ), $rounded_rating ) ) . '">' . $rating->format_html_stars() . '</a>';
 				} else {
 					$value = '&ndash;';
 				}

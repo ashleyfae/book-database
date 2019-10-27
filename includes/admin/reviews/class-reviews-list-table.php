@@ -202,7 +202,17 @@ class Reviews_List_Table extends List_Table {
 			case 'rating' :
 				if ( ! is_null( $item->rating ) ) {
 					$rating = new Rating( $item->rating );
-					$value  = '<a href="' . esc_url( add_query_arg( 'rating', urlencode( $rating->round_rating() ), $this->get_base_url() ) ) . '">' . $rating->format_html_stars() . '</a>';
+
+					$classes = array();
+
+					if ( ! is_null( $item->rating ) ) {
+						$classes[] = 'bdb-rating';
+						$classes[] = 'bdb-' . $rating->format_html_class();
+					}
+
+					$classes = array_map( 'sanitize_html_class', $classes );
+
+					$value = '<a href="' . esc_url( add_query_arg( 'rating', urlencode( $rating->round_rating() ), $this->get_base_url() ) ) . '" class="' . esc_attr( implode( ' ', $classes ) ) . '" title="' . esc_attr( sprintf( __( 'All %s star reviews', 'book-database' ), $rating->round_rating() ) ) . '">' . $rating->format_html_stars() . '</a>';
 				} else {
 					$value = '&ndash;';
 				}

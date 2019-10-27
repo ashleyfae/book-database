@@ -605,6 +605,8 @@ class Analytics {
 	/**
 	 * Get a list of reviews written
 	 *
+	 * Limited to 20 results.
+	 *
 	 * @return object[]|array
 	 */
 	public function get_reviews_written() {
@@ -630,6 +632,13 @@ class Analytics {
 
 	}
 
+	/**
+	 * Get a list of books that have been read but not reviewed
+	 *
+	 * Limited to 20 results.
+	 *
+	 * @return object[]|array
+	 */
 	public function get_read_not_reviewed() {
 
 		$query = $this->wpdb->prepare(

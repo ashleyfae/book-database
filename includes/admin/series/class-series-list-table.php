@@ -149,8 +149,17 @@ class Series_List_Table extends List_Table {
 				break;
 
 			case 'rating' :
-				$rating = new Rating( $item->get_average_rating() );
-				$value  = $rating->format_html_stars();
+				$rating  = new Rating( $item->get_average_rating() );
+				$classes = array();
+
+				if ( ! is_null( $item->get_average_rating() ) ) {
+					$classes[] = 'bdb-rating';
+					$classes[] = 'bdb-' . $rating->format_html_class();
+				}
+
+				$classes = array_map( 'sanitize_html_class', $classes );
+
+				$value = '<span class="' . esc_attr( implode( ' ', $classes ) ) . '">' . $rating->format_html_stars() . '</span>';
 				break;
 
 		}

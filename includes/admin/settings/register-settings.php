@@ -48,6 +48,7 @@ function load_settings_templates() {
 	}
 
 }
+
 add_action( 'admin_footer', __NAMESPACE__ . '\load_settings_templates' );
 
 /**
@@ -79,7 +80,7 @@ function sanitize_settings( $data ) {
 						$sanitized_book_field['label']     = ! empty( $book_field['label'] ) ? $book_field['label'] : '';
 						$sanitized_book_field['linebreak'] = $book_field['linebreak'] ?? false;
 						$sanitized_book_field['alignment'] = ( ! empty( $book_field['alignment'] ) && array_key_exists( $book_field['alignment'], get_book_cover_alignment_options() ) ) ? sanitize_text_field( $book_field['alignment'] ) : 'left';
-						$sanitized_book_field['size'] = ( ! empty( $book_field['size'] ) && array_key_exists( $book_field['size'], get_book_cover_image_sizes() ) ) ? sanitize_text_field( $book_field['size'] ) : 'full';
+						$sanitized_book_field['size']      = ( ! empty( $book_field['size'] ) && array_key_exists( $book_field['size'], get_book_cover_image_sizes() ) ) ? sanitize_text_field( $book_field['size'] ) : 'full';
 
 						$sanitized[ $key ][ $book_field_key ] = $sanitized_book_field;
 					}
@@ -87,6 +88,8 @@ function sanitize_settings( $data ) {
 				break;
 
 			case 'reviews_page' :
+			case 'sync_published_date' :
+			case 'delete_on_uninstall' :
 				$sanitized[ $key ] = absint( $value );
 				break;
 		}

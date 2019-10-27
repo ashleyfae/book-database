@@ -143,11 +143,32 @@ function render_settings_page() {
 									<p class="description"><?php printf( __( 'Page containing the %s shortcode.', 'book-database' ), '<code>[book-reviews]</code>' ); ?></p>
 								</td>
 							</tr>
+							<tr>
+								<th scope="row">
+									<label for="bdb-settings-sync-review-publish-date"><?php _e( 'Sync Review Publish Date', 'book-database' ); ?></label>
+								</th>
+								<td>
+									<input type="hidden" name="bdb_settings[sync_published_date]" value="0">
+									<input type="checkbox" id="bdb-settings-sync-review-publish-date" name="bdb_settings[sync_published_date]" value="1" <?php checked( bdb_get_option( 'sync_published_date' ), 1 ); ?>>
+									<span class="description"><?php _e( 'If checked, reviews connected to a post will have their publish date synced to the post\'s publish date.', 'book-database' ); ?></span>
+								</td>
+							</tr>
 							<?php
 							break;
 
 						case 'misc' :
-							// @todo
+							?>
+							<tr>
+								<th scope="row">
+									<label for="bdb-settings-delete-uninstall"><?php _e( 'Delete on Uninstall', 'book-database' ); ?></label>
+								</th>
+								<td>
+									<input type="hidden" name="bdb_settings[delete_on_uninstall]" value="0">
+									<input type="checkbox" id="bdb-settings-delete-uninstall" name="bdb_settings[delete_on_uninstall]" value="1" <?php checked( bdb_get_option( 'delete_on_uninstall' ), 1 ); ?>>
+									<span class="description"><?php _e( 'Check this box if you would like Book Database to completely remove all of its data when the plugin is deleted. This will permanently remove all book, review, and reading log information.', 'book-database' ); ?></span>
+								</td>
+							</tr>
+							<?php
 							break;
 
 						default :

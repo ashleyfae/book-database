@@ -65,12 +65,9 @@ class CLI extends \WP_CLI_Command {
 
 		foreach ( $books as $book ) {
 
-			WP_CLI::log( sprintf( __( 'Locating authors for book #%d - %s', 'book-database' ), $book->get_id(), $book->get_title() ) );
-
 			$old_authors = get_attached_book_terms( $book->get_id(), 'author' );
 
 			foreach ( $old_authors as $old_author ) {
-				WP_CLI::log( sprintf( __( 'Migrating author: %s', 'book-database' ), $old_author->get_name() ) );
 
 				if ( ! $dry_run ) {
 					try {

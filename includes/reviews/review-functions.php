@@ -43,52 +43,30 @@ function get_review_by( $column_name, $column_value ) {
 /**
  * Query for reviews
  *
- * @param array       $args                 {
+ * @param array $args                       {
  *                                          Query arguments to override the defaults.
  *
- * @type int          $id                   An item ID to only return that item. Default empty.
- * @type array        $id__in               An array of item IDs to include. Default empty.
- * @type array        $id__not_in           An array of item IDs to exclude. Default empty.
- * @type int          $book_id              Filter by book ID. Default empty.
- * @type array        $book_id__in          An array of book IDs to include. Default empty.
- * @type array        $book_id__not_in      An array of book IDs to exclude. Default empty.
- * @type array        $post_id              Filter by post ID. Default empty.
- * @type array        $post_id__in          An array of post IDs to include. Default empty.
- * @type int          $user_id              Filter by user ID. Default empty.
- * @type array        $user_id__in          An array of user IDs to include. Default empty.
- * @type array        $user_id__not_in      An array of user IDs to exclude. Default empty.
- * @type array        $date_written_query   Date query clauses to limit by. See WP_Date_Query. Default null.
- * @type array        $date_published_query Date query clauses to limit by. See WP_Date_Query. Default null.
- * @type array        $date_created_query   Date query clauses to limit by. See WP_Date_Query. Default null.
- * @type array        $date_modified_query  Date query clauses to limit by. See WP_Date_Query. Default null.
- * @type array        $date_query           Query all datetime columns together. See WP_Date_Query.
- * @type array        $reading_log_query    Query for series. See \Book_Database\BerlinDB\Database\Queries\Reading_Log.
- * @type array        $tax_query            Query for taxonomy terms. See WP_Tax_Query.
- * @type bool         $count                Whether to return an item count (true) or array of objects. Default false.
- * @type string       $fields               Item fields to return. Accepts any column known names  or empty
- *                                          (returns an array of complete item objects). Default empty.
- * @type int          $number               Limit number of items to retrieve. Default 20.
- * @type int          $offset               Number of items to offset the query. Used to build LIMIT clause. Default 0.
- * @type bool         $no_found_rows        Whether to disable the `SQL_CALC_FOUND_ROWS` query. Default true.
- * @type string|array $orderby              Accepts 'id', 'book_id', 'post_id', 'user_id', 'date_written',
- *                                          'date_published', 'date_created', and 'date_modified'. Also accepts false,
- *                                          an empty array, or 'none' to disable `ORDER BY` clause. Default 'id'.
- * @type string       $order                How to order results. Accepts 'ASC', 'DESC'. Default 'DESC'.
- * @type string       $search               Search term(s) to retrieve matching items for. Default empty.
- * @type bool         $update_cache         Whether to prime the cache for found items. Default false.
+ * @type array  $author_query               Filter based on author fields/values.
+ * @type array  $book_query                 Filter based on book fields/values.
+ * @type array  $series_query               Filter based on series fields/values.
+ * @type array  $reading_log_query          Filter based on reading log fields/values.
+ * @type array  $review_query               Filter based on review fields/values.
+ * @type array  $edition_query              Filter based on edition fields/values.
+ * @type array  $tax_query                  Filter based on taxonomy fields/values.
+ * @type string $orderby                    Field to order by. Must contain table alias prefix. Default `review.id`.
+ * @type string $order                      How to order the results.
+ * @type int    $number                     Number of results.
+ * @type int    $offset                     Offset the results.
+ * @type bool   $count                      Whether or not to only return a count. Default false.
  * }
  *
- * @return Review[] Array of Review objects.
+ * @return object[] Array of database objects.
  */
 function get_reviews( $args = array() ) {
 
-	$args = wp_parse_args( $args, array(
-		'number' => 20
-	) );
-
 	$query = new Reviews_Query();
 
-	return $query->query( $args );
+	return $query->get_reviews( $args );
 
 }
 
@@ -209,7 +187,11 @@ function delete_review( $review_id ) {
 		}
 	}
 
-	// @todo delete all review meta
+	// Delete all review meta.
+	global $wpdb;
+	$tbl_meta = book_database()->get_table( 'review_meta' )->get_table_name();
+	$query    = $wpdb->prepare( "DELETE FROM {$tbl_meta} WHERE bdb_review_id = %d", $review_id );
+	$wpdb->query( $query );
 
 	return true;
 
@@ -270,4 +252,15 @@ function get_review_years( $type = 'written', $order = 'DESC' ) {
 
 	return $years;
 
+}
+
+/**
+ * Returns an array of post types that you can add reviews to
+ *
+ * @return array
+ */
+function get_review_post_types() {
+	$post_types = array( 'post' );
+
+	return apply_filters( 'book-database/review-post-types', $post_types );
 }

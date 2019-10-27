@@ -35,6 +35,8 @@ module.exports = {
 		// JS
 		admin: './assets/js/src/admin/index.js',
 
+		"admin-global": './assets/js/src/admin/global.js',
+
 		// CSS
 		"admin-style": './assets/sass/admin.scss',
 		"front-end": './assets/sass/front-end.scss'

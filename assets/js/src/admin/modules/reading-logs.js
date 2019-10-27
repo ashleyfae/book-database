@@ -1,7 +1,7 @@
 /* global $, bdbVars, wp */
 
 import { apiRequest, spinButton, unspinButton } from 'utils';
-import {dateLocalToUTC, dateUTCtoLocal} from "./dates";
+import { dateLocalToUTC, dateUTCtoLocal } from "./dates";
 
 /**
  * Editions

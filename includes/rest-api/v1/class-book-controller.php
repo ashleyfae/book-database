@@ -132,7 +132,9 @@ class Book extends Controller {
 				'id' => array(
 					'required'          => true,
 					'validate_callback' => function ( $param, $request, $key ) {
-						return is_numeric( $param );
+						$book = get_book( $param );
+
+						return ! empty( $book );
 					},
 					'sanitize_callback' => function ( $param, $request, $key ) {
 						return absint( $param );
@@ -150,7 +152,9 @@ class Book extends Controller {
 				'id' => array(
 					'required'          => true,
 					'validate_callback' => function ( $param, $request, $key ) {
-						return is_numeric( $param );
+						$book = get_book( $param );
+
+						return ! empty( $book );
 					},
 					'sanitize_callback' => function ( $param, $request, $key ) {
 						return absint( $param );

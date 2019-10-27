@@ -87,7 +87,8 @@ function get_book_by( $column_name, $column_value ) {
  * @type array        $series_query        Query for series. See \Book_Database\BerlinDB\Database\Queries\Series.
  * @type array        $tax_query           Query for taxonomy terms. See WP_Tax_Query.
  * @type array        $edition_query       Query for editions. See \Book_Database\BerlinDB\Database\Queries\Edition.
- * @type array        $reading_log_query   Query for reading logs. See \Book_Database\BerlinDB\Database\Queries\Reading_Log.
+ * @type array        $reading_log_query   Query for reading logs. See
+ *       \Book_Database\BerlinDB\Database\Queries\Reading_Log.
  * @type bool         $count               Whether to return an item count (true) or array of objects. Default false.
  * @type string       $fields              Item fields to return. Accepts any column known names  or empty
  *                                         (returns an array of complete item objects). Default empty.
@@ -247,11 +248,13 @@ function delete_book( $book_id ) {
 		throw new Exception( 'database_error', __( 'Failed to delete the book.', 'book-database' ), 500 );
 	}
 
-	$ar_table  = book_database()->get_table( 'book_author_relationships' )->get_table_name();
-	$bt_table  = book_database()->get_table( 'book_term_relationships' )->get_table_name();
-	$ed_table  = book_database()->get_table( 'editions' )->get_table_name();
-	$log_table = book_database()->get_table( 'reading_log' )->get_table_name();
-	$rev_table = book_database()->get_table( 'reviews' )->get_table_name();
+	$ar_table       = book_database()->get_table( 'book_author_relationships' )->get_table_name();
+	$bt_table       = book_database()->get_table( 'book_term_relationships' )->get_table_name();
+	$ed_table       = book_database()->get_table( 'editions' )->get_table_name();
+	$log_table      = book_database()->get_table( 'reading_log' )->get_table_name();
+	$rev_table      = book_database()->get_table( 'reviews' )->get_table_name();
+	$rev_meta_table = book_database()->get_table( 'review_meta' )->get_table_name();
+	$bmeta_table    = book_database()->get_table( 'book_meta' )->get_table_name();
 
 	// Delete all book-author relationships for this book.
 	$wpdb->query( $wpdb->prepare( "DELETE FROM {$ar_table} WHERE book_id = %d", $book_id ) );
@@ -265,8 +268,11 @@ function delete_book( $book_id ) {
 	// Delete all reading logs of this book.
 	$wpdb->query( $wpdb->prepare( "DELETE FROM {$log_table} WHERE book_id = %d", $book_id ) );
 
-	// Delete all reviews of this book.
-	$wpdb->query( $wpdb->prepare( "DELETE FROM {$rev_table} WHERE book_id = %d", $book_id ) );
+	// Delete all reviews & review meta of this book.
+	$wpdb->query( $wpdb->prepare( "DELETE review, meta FROM {$rev_table} AS review LEFT JOIN {$rev_meta_table} AS meta ON( review.id = meta.bdb_review_id ) WHERE book_id = %d", $book_id ) );
+
+	// Delete all book meta.
+	$wpdb->query( $wpdb->prepare( "DELETE FROM {$bmeta_table} WHERE bdb_book_id = %d", $book_id ) );
 
 	return true;
 

@@ -285,6 +285,7 @@ final class Book_Database {
 		require_once BDB_DIR . 'includes/rest-api/v1/class-book-term-controller.php';
 		require_once BDB_DIR . 'includes/rest-api/v1/class-edition-controller.php';
 		require_once BDB_DIR . 'includes/rest-api/v1/class-reading-log-controller.php';
+		require_once BDB_DIR . 'includes/rest-api/v1/class-review-controller.php';
 		require_once BDB_DIR . 'includes/rest-api/v1/class-taxonomy-controller.php';
 		require_once BDB_DIR . 'includes/rest-api/v1/class-utility-controller.php';
 
@@ -336,6 +337,9 @@ final class Book_Database {
 
 		// Editions
 		require_once BDB_DIR . 'includes/admin/editions/edition-actions.php';
+
+		// Posts
+		require_once BDB_DIR . 'includes/admin/posts/post-actions.php';
 
 		// Reading Logs
 		require_once BDB_DIR . 'includes/admin/reading-logs/reading-log-actions.php';

@@ -4,7 +4,7 @@
  *
  * Helper class for building WHERE clauses.
  *
- * @package   nosegraze
+ * @package   book-database
  * @copyright Copyright (c) 2019, Ashley Gibson
  * @license   GPL2+
  */

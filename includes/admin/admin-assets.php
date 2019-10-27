@@ -12,6 +12,8 @@ namespace Book_Database;
 /**
  * Enqueue admin assets
  *
+ * These assets are only loaded on BDB admin pages.
+ *
  * @param string $hook
  */
 function enqueue_admin_assets( $hook ) {
@@ -57,3 +59,46 @@ function enqueue_admin_assets( $hook ) {
 }
 
 add_action( 'admin_enqueue_scripts', __NAMESPACE__ . '\enqueue_admin_assets' );
+
+/**
+ * Enqueue admin assets
+ *
+ * These assets are loaded on more "public" admin pages.
+ *
+ * @param string $hook
+ */
+function enqueue_admin_post_assets( $hook ) {
+
+	$hooks = array(
+		'edit.php',
+		'post.php',
+		'post-new.php',
+		'index.php'
+	);
+
+	if ( ! in_array( $hook, $hooks ) ) {
+		return;
+	}
+
+	$deps = array( 'jquery', 'wp-util' );
+	wp_enqueue_script( 'book-database-global', BDB_URL . 'assets/js/build/admin-global.min.js', $deps, time(), true );
+
+	$localized = array(
+		'api_base'                          => esc_url_raw( rest_url() ),
+		'api_nonce'                         => wp_create_nonce( 'wp_rest' ),
+		'by'                                => esc_html__( 'by', 'book-database' ),
+		'confirm_delete_review'             => __( 'Are you sure you want to delete this review? This will permanently delete the review record from the database.', 'book-database' ),
+		'confirm_remove_review_association' => __( 'Are you sure you want to disassociate this review from this post? Note: the review itself will not be deleted, it will just no longer be linked with this post.', 'book-database' ),
+		'error_required_fields'             => esc_html__( 'Please fill out all the required fields.', 'book-database' ),
+		'generic_error'                     => esc_html__( 'An unexpected error has occurred.', 'book-database' ),
+		'no_books'                          => esc_html__( 'No books found.', 'book-database' ),
+		'please_wait'                       => esc_html__( 'Please wait...', 'book-database' ),
+		'stars'                             => esc_html__( 'Stars', 'book-database' ),
+		'unknown'                           => esc_html__( 'unknown', 'book-database' )
+	);
+
+	wp_localize_script( 'book-database-global', 'bdbVars', $localized );
+
+}
+
+add_action( 'admin_enqueue_scripts', __NAMESPACE__ . '\enqueue_admin_post_assets' );

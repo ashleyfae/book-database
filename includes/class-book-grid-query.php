@@ -4,7 +4,7 @@
  *
  * Used in the `[book-grid]` shortcode.
  *
- * @package   nosegraze
+ * @package   book-database
  * @copyright Copyright (c) 2019, Ashley Gibson
  * @license   GPL2+
  */

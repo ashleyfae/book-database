@@ -91,9 +91,10 @@ class Books_Schema extends BerlinDB\Database\Schema {
 		// pub_date
 		array(
 			'name'       => 'pub_date',
-			'type'       => 'datetime',
+			'type'       => 'date',
 			'sortable'   => true,
-			'date_query' => true
+			'date_query' => true,
+			'validate'   => '\Book_Database\BerlinDB\Sanitization\validate_date'
 		),
 
 		// pages

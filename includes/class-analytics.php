@@ -538,7 +538,7 @@ class Analytics {
 	}
 
 	public function get_taxonomy_breakdown( $taxonomy ) {
-		
+
 	}
 
 }

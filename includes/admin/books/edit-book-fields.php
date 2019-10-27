@@ -234,7 +234,8 @@ function book_pub_date_field( $book ) {
 	$pub_date = ! empty( $book ) ? $book->get_pub_date( true ) : '';
 
 	if ( empty( $pub_date ) && ! empty( $_GET['pub_date'] ) ) {
-		$pub_date = format_date( $_GET['pub_date'] );
+		$format   = ! empty( $format ) ? $format : get_option( 'date_format' );
+		$pub_date = date( $format, strtotime( $_GET['pub_date'] ) );
 	}
 
 	ob_start();

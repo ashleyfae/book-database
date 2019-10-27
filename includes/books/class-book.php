@@ -192,12 +192,22 @@ class Book extends Base_Object {
 	 * Get the book's publication date
 	 *
 	 * @param bool   $formatted Whether or not to format the result for display.
+	 *                          Unlike other dates, this DOES NOT convert the date
+	 *                          to local time. We keep it in UTC always.
 	 * @param string $format    Format to display in. Defaults to site format.
 	 *
 	 * @return string
 	 */
 	public function get_pub_date( $formatted = false, $format = '' ) {
-		return ( ! empty( $this->pub_date ) && $formatted ) ? format_date( $this->pub_date, $format ) : $this->pub_date;
+
+		if ( empty( $this->pub_date ) || ! $formatted ) {
+			return $this->pub_date;
+		}
+
+		$format = ! empty( $format ) ? $format : get_option( 'date_format' );
+
+		return date( $format, strtotime( $this->pub_date ) );
+
 	}
 
 	/**

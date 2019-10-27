@@ -24,7 +24,7 @@ class Books_Table extends BerlinDB\Database\Table {
 	/**
 	 * @var int Database version in format {YYYY}{MM}{DD}{1}
 	 */
-	protected $version = 201910096;
+	protected $version = 201910271;
 
 	/**
 	 * @var array Upgrades to perform
@@ -34,7 +34,8 @@ class Books_Table extends BerlinDB\Database\Table {
 		'201910093' => 201910093,
 		'201910094' => 201910094,
 		'201910095' => 201910095,
-		'201910096' => 201910096
+		'201910096' => 201910096,
+		'201910271' => 201910271
 	);
 
 	/**
@@ -54,7 +55,7 @@ class Books_Table extends BerlinDB\Database\Table {
 			index_title text NOT NULL,
 			series_id bigint(20) UNSIGNED DEFAULT NULL,
 			series_position float DEFAULT NULL,
-			pub_date datetime DEFAULT NULL,
+			pub_date date DEFAULT NULL,
 			pages bigint(20) UNSIGNED DEFAULT NULL,
 			synopsis longtext NOT NULL,
 			goodreads_url text NOT NULL,
@@ -162,6 +163,20 @@ class Books_Table extends BerlinDB\Database\Table {
 		$result = $this->get_db()->query( "ALTER TABLE {$this->table_name} ADD INDEX title( title(64) )" );
 
 		return $result;
+
+	}
+
+	/**
+	 * Upgrade to version 201910271
+	 *      - Convert `pub_date` to a DATE field
+	 *
+	 * @return bool
+	 */
+	protected function __201910271() {
+
+		$result = $this->get_db()->query( "ALTER TABLE {$this->table_name} MODIFY pub_date date DEFAULT NULL" );
+
+		return $this->is_success( $result );
 
 	}
 

@@ -19,3 +19,20 @@ namespace Book_Database\BerlinDB\Sanitization;
 function absint_allow_null( $value ) {
 	return '' === $value ? null : absint( $value );
 }
+
+/**
+ * Validate a date value
+ *
+ * @param string|null $value
+ *
+ * @return string|null
+ */
+function validate_date( $value ) {
+
+	if ( empty( $value ) ) {
+		return null;
+	}
+
+	return date( 'Y-m-d', strtotime( $value ) );
+
+}

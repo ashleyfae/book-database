@@ -1,4 +1,4 @@
-#bdb-review-analytics-wrap {
+#bdb-book-analytics-wrap {
     * {
         -webkit-box-sizing: border-box;
         -moz-box-sizing: border-box;
@@ -35,7 +35,7 @@
 }
 
 @media (min-width: 1200px) {
-    #bdb-review-analytics-metrics {
+    #bdb-book-analytics-metrics {
         display: flex;
         flex-flow: row wrap;
         margin: 0 -20px;
@@ -53,36 +53,6 @@
 
         > div {
             flex: 1;
-        }
-    }
-}
-
-// Book List
-#book-list,
-#read-not-reviewed {
-    .book-rating {
-        display: inline-block;
-        min-width: 60px;
-
-        &.five-stars,
-        &.four-half-stars,
-        &.four-stars {
-            color: #090;
-        }
-
-        &.three-half-stars,
-        &.three-stars,
-        &.two-half-stars {
-            color: #da9d1c;
-        }
-
-        &.two-stars,
-        &.one-half-stars,
-        &.one-star,
-        &.half-star,
-        &.zero-stars,
-        &.dnf {
-            color: #c00;
         }
     }
 }

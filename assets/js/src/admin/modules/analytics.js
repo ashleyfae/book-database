@@ -1,6 +1,6 @@
 /* global $, bdbVars, wp */
 
-import { dateLocalToUTC } from "./dates";
+import {dateLocalToUTC, dateUTCtoLocal} from "./dates";
 import { apiRequest, spinButton, unspinButton } from 'utils';
 import { BDB_Datepicker } from './datepicker';
 
@@ -22,7 +22,8 @@ var BDB_Analytics = {
 	],
 
 	tables: [
-		'rating-breakdown', 'pages-breakdown'
+		'rating-breakdown', 'pages-breakdown',
+		'reviews-written', 'read-not-reviewed'
 	],
 
 	/**
@@ -102,7 +103,10 @@ var BDB_Analytics = {
 			let args = {
 				start_date: dateLocalToUTC( $( '#bdb-start' ).val() ),
 				end_date: dateLocalToUTC( $( '#bdb-end' ).val() ),
-				stats: BDB_Analytics.batches[ i ]
+				stats: BDB_Analytics.batches[ i ],
+				args: {
+					rating_format: 'text'
+				}
 			};
 
 			apiRequest( 'v1/analytics', args, 'GET' ).then( function( apiResponse ) {
@@ -121,9 +125,25 @@ var BDB_Analytics = {
 						}
 					}
 
+					// Date conversions.
+					if ( 'reviews-written' === statKey && Array === statValue.constructor ) {
+						$.each( statValue, function( statItemKey, statItem ) {
+							statValue[ statItemKey ].date_written_formatted = dateUTCtoLocal( statItem.date_written, 'display' );
+						} );
+					}
+					if ( 'read-not-reviewed' === statKey && Array === statValue.constructor ) {
+						$.each( statValue, function( statItemKey, statItem ) {
+							statValue[ statItemKey ].date_finished_formatted = dateUTCtoLocal( statItem.date_finished, 'display' );
+						} );
+					}
+
 					// Check for an Underscore.js template.
-					if ( Array === statValue.constructor && document.getElementById( 'tmpl-bdb-analytics-' + statKey + '-table-row' ) ) {
-						let template = wp.template( 'bdb-analytics-' + statKey + '-table-row' );
+					let templateID = statKey;
+					if ( templateID.includes( 'taxonomy-' ) ) {
+						templateID = 'taxonomy-breakdown';
+					}
+					if ( Array === statValue.constructor && document.getElementById( 'tmpl-bdb-analytics-' + templateID + '-table-row' ) ) {
+						let template = wp.template( 'bdb-analytics-' + templateID + '-table-row' );
 						let html = '';
 
 						$.each( statValue, function( statItemKey, statItem ) {

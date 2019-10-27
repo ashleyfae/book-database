@@ -220,7 +220,55 @@ function render_analytics_page() {
 
 			<!-- Column 3 -->
 			<div class="bdb-analytics-column">
+				<!-- Reviews Written -->
+				<div class="bdb-metric">
+					<div class="bdb-metric-inner">
+						<div id="bdb-reviews-written">
+							<p class="top-text"><?php _e( 'Reviews Written (20 max)' ); ?></p>
+							<table>
+								<thead>
+								<tr>
+									<th><?php _e( 'Rating', 'book-database' ); ?></th>
+									<th><?php _e( 'Book', 'book-database' ); ?></th>
+									<th><?php _e( 'Date Written', 'book-database' ); ?></th>
+								</tr>
+								</thead>
+								<tbody class="bdb-result">
+								<tr>
+									<td colspan="4">
+										<div class="bdb-loading"></div>
+									</td>
+								</tr>
+								</tbody>
+							</table>
+						</div>
+					</div>
+				</div><!--/ Reviews Written-->
 
+				<!-- Read But Not Reviewed -->
+				<div class="bdb-metric">
+					<div class="bdb-metric-inner">
+						<div id="bdb-read-not-reviewed">
+							<p class="top-text"><?php _e( 'Read But Not Reviewed (20 max)' ); ?></p>
+							<table>
+								<thead>
+								<tr>
+									<th><?php _e( 'Rating', 'book-database' ); ?></th>
+									<th><?php _e( 'Book', 'book-database' ); ?></th>
+									<th><?php _e( 'Date Finished', 'book-database' ); ?></th>
+								</tr>
+								</thead>
+								<tbody class="bdb-result">
+								<tr>
+									<td colspan="4">
+										<div class="bdb-loading"></div>
+									</td>
+								</tr>
+								</tbody>
+							</table>
+						</div>
+					</div>
+				</div><!--/ Read But Not Reviewed -->
 			</div>
 
 		</div>

@@ -26,6 +26,11 @@ class Analytics {
 	protected $end_date = '';
 
 	/**
+	 * @var array Arguments.
+	 */
+	protected $args = array();
+
+	/**
 	 * @var \wpdb
 	 */
 	protected $wpdb;
@@ -53,12 +58,15 @@ class Analytics {
 	 * @param string $start_date
 	 * @param string $end_date
 	 */
-	public function __construct( $start_date, $end_date ) {
+	public function __construct( $start_date, $end_date, $args = array() ) {
 
 		global $wpdb;
 
 		$this->start_date = $start_date;
 		$this->end_date   = $end_date;
+		$this->args       = wp_parse_args( $args, array(
+			'rating_format' => null
+		) );
 		$this->wpdb       = $wpdb;
 		$this->tables     = array(
 			'authors'     => book_database()->get_table( 'authors' )->get_table_name(),
@@ -127,7 +135,16 @@ class Analytics {
 		/**
 		 * Number of books DNF
 		 */
-		$query = $this->wpdb->prepare( "SELECT COUNT(*) FROM {$this->tables['reading_log']} WHERE date_started >= %s AND date_finished <= %s AND date_finished IS NOT NULL AND percentage_complete < 1", $this->start_date, $this->end_date );
+		$query = $this->wpdb->prepare(
+			"SELECT COUNT(*)
+				FROM {$this->tables['reading_log']}
+				WHERE date_started >= %s
+				AND date_finished <= %s
+				AND date_finished IS NOT NULL
+				AND percentage_complete < 1",
+			$this->start_date,
+			$this->end_date
+		);
 
 		$this->log( $query, __METHOD__ . '\dnf' );
 
@@ -292,6 +309,11 @@ class Analytics {
 
 	}
 
+	/**
+	 * Query for reviews written during this period
+	 *
+	 * @return object[]
+	 */
 	public function query_reviews() {
 
 		if ( ! is_null( $this->reviews ) ) {
@@ -299,7 +321,7 @@ class Analytics {
 		}
 
 		$query = $this->wpdb->prepare(
-			"SELECT DISTINCT review.id, review.date_written, log.rating as rating, book.id as book_id, book.title as book_title, GROUP_CONCAT(author.name SEPARATOR ', ') as author_name
+			"SELECT DISTINCT review.id, review.date_written, log.rating AS rating, book.id AS book_id, book.title AS book_title, GROUP_CONCAT(author.name SEPARATOR ', ') AS author_name
 				FROM {$this->tables['reviews']} AS review 
 				LEFT JOIN {$this->tables['reading_log']} AS log ON ( review.id = log.review_id )
 				INNER JOIN {$this->tables['books']} AS book ON ( review.book_id = book.id )
@@ -476,8 +498,9 @@ class Analytics {
 		}
 
 		foreach ( $temp_array as $key => $value ) {
+			$rating        = new Rating( $key );
 			$final_array[] = array(
-				'rating'       => get_available_ratings()[ $key ] ?? $key,
+				'rating'       => 'none' === $key ? 'none' : $rating->format( $this->args['rating_format'] ),
 				'number_books' => $value
 			);
 		}
@@ -537,7 +560,110 @@ class Analytics {
 
 	}
 
+	/**
+	 * Get taxonomy breakdown
+	 *
+	 * For each term: number of books read, average rating, and term name.
+	 *
+	 * @param string $taxonomy Taxonomy slug
+	 *
+	 * @return array|object|null
+	 */
 	public function get_taxonomy_breakdown( $taxonomy ) {
+
+		$query = $this->wpdb->prepare(
+			"SELECT COUNT( log.id ) AS number_books_read, ROUND( AVG( log.rating ), 2 ) AS average_rating, COUNT( review.id ) AS number_reviews, term.name AS term_name
+			FROM {$this->tables['reading_log']} AS log 
+			LEFT JOIN {$this->tables['reviews']} AS review ON ( review.id = log.review_id )
+			INNER JOIN {$this->tables['term_r']} AS tr ON ( tr.book_id = log.book_id )
+			INNER JOIN {$this->tables['book_terms']} AS term ON ( term.id = tr.term_id )
+			WHERE date_finished >= %s 
+			AND date_finished <= %s 
+			AND date_finished IS NOT NULL 
+			AND term.taxonomy = %s 
+			GROUP BY term.taxonomy, term.name 
+			ORDER BY term.name ASC",
+			$this->start_date,
+			$this->end_date,
+			$taxonomy
+		);
+
+		$this->log( $query, __NAMESPACE__ );
+
+		$results = $this->wpdb->get_results( $query );
+
+		// Format rating.
+		foreach ( $results as $key => $result ) {
+			$rating                          = new Rating( $result->average_rating );
+			$results[ $key ]->average_rating = $rating->format( $this->args['rating_format'] );
+		}
+
+		return $results;
+
+	}
+
+	/**
+	 * Get a list of reviews written
+	 *
+	 * @return object[]|array
+	 */
+	public function get_reviews_written() {
+
+		$reviews = $this->query_reviews();
+
+		if ( ! is_array( $reviews ) ) {
+			return null;
+		}
+
+		// Limit results to 20.
+		if ( count( $reviews ) > 20 ) {
+			$reviews = array_slice( $reviews, 0, 20 );
+		}
+
+		foreach ( $reviews as $key => $review ) {
+			$rating                        = new Rating( $review->rating );
+			$reviews[ $key ]->rating       = $rating->format_html_stars();
+			$reviews[ $key ]->rating_class = $rating->format_html_class();
+		}
+
+		return $reviews;
+
+	}
+
+	public function get_read_not_reviewed() {
+
+		$query = $this->wpdb->prepare(
+			"SELECT DISTINCT log.id, log.date_started, log.date_finished, log.rating, log.percentage_complete, book.id AS book_id, book.title AS book_title, GROUP_CONCAT(author.name SEPARATOR ', ') AS author_name
+			FROM {$this->tables['reading_log']} AS log 
+			INNER JOIN {$this->tables['books']} AS book ON ( log.book_id = book.id )
+			LEFT JOIN {$this->tables['author_r']} AS ar ON ( log.book_id = ar.book_id )
+			INNER JOIN {$this->tables['authors']} AS author ON ( ar.author_id = author.id )
+			WHERE date_finished >= %s 
+			AND date_finished <= %s 
+			AND date_finished IS NOT NULL 
+			AND review_id IS NULL 
+			GROUP BY book.id 
+			ORDER BY log.date_finished DESC 
+			LIMIT 20",
+			$this->start_date,
+			$this->end_date
+		);
+
+		$this->log( $query, __METHOD__ );
+
+		$books = $this->wpdb->get_results( $query );
+
+		if ( ! is_array( $books ) ) {
+			return null;
+		}
+
+		foreach ( $books as $key => $book ) {
+			$rating                      = new Rating( $book->rating );
+			$books[ $key ]->rating       = $rating->format_html_stars();
+			$books[ $key ]->rating_class = $rating->format_html_class();
+		}
+
+		return $books;
 
 	}
 

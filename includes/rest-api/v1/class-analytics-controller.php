@@ -50,6 +50,15 @@ class Analytics extends Controller {
 					'sanitize_callback' => function ( $param, $request, $key ) {
 						return empty( $param ) ? array() : array_map( 'sanitize_text_field', $param );
 					},
+				),
+				'args'       => array(
+					'default'           => array(),
+					'validate_callback' => function ( $param, $request, $key ) {
+						return empty( $param ) || is_array( $param );
+					},
+					'sanitize_callback' => function ( $param, $request, $key ) {
+						return empty( $param ) ? array() : array_map( 'sanitize_text_field', $param );
+					},
 				)
 			)
 		) );
@@ -69,11 +78,10 @@ class Analytics extends Controller {
 
 			$stat_types = $request->get_param( 'stats' );
 			$stats      = array();
-			$analytics  = new \Book_Database\Analytics( $request->get_param( 'start_date' ), $request->get_param( 'end_date' ) );
+			$analytics  = new \Book_Database\Analytics( $request->get_param( 'start_date' ), $request->get_param( 'end_date' ), $request->get_param( 'args' ) );
 
 			foreach ( $stat_types as $stat_type ) {
 				$method = 'get_' . str_replace( '-', '_', $stat_type );
-				$args   = array();
 
 				if ( method_exists( $analytics, $method ) ) {
 					$stats[ $stat_type ] = call_user_func( array( $analytics, $method ) );

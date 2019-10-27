@@ -24,7 +24,7 @@ class Reading_Logs_Table extends BerlinDB\Database\Table {
 	/**
 	 * @var int Database version in format {YYYY}{MM}{DD}{1}
 	 */
-	protected $version = 201910142;
+	protected $version = 201910271;
 
 	/**
 	 * @var array Upgrades to perform
@@ -33,7 +33,8 @@ class Reading_Logs_Table extends BerlinDB\Database\Table {
 		'201910132' => 201910132,
 		'201910133' => 201910133,
 		'201910141' => 201910141,
-		'201910142' => 201910142
+		'201910142' => 201910142,
+		'201910271' => 201910271
 	);
 
 	/**
@@ -170,6 +171,25 @@ class Reading_Logs_Table extends BerlinDB\Database\Table {
 		$result = $this->get_db()->query( "UPDATE {$this->table_name} SET rating = NULL WHERE rating = 'dnf'" );
 
 		$result = $this->get_db()->query( "ALTER TABLE {$this->table_name} MODIFY rating decimal(4,2) DEFAULT NULL" );
+
+		return $this->is_success( $result );
+
+	}
+
+	/**
+	 * Upgrade to version 201910271
+	 *      - Allow null for `review_id`
+	 *      - Update to change all `0` values to `null`.
+	 *
+	 * @return bool
+	 */
+	protected function __201910271() {
+
+		$result = $this->get_db()->query( "ALTER TABLE {$this->table_name} MODIFY review_id bigint(20) UNSIGNED DEFAULT NULL" );
+
+		if ( $this->is_success( $result ) ) {
+			$result = $this->get_db()->query( "UPDATE {$this->table_name} SET review_id = NULL WHERE review_id = 0" );
+		}
 
 		return $this->is_success( $result );
 

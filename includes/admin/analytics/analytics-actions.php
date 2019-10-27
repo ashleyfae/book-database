@@ -22,7 +22,7 @@ function load_analytics_templates() {
 		return;
 	}
 
-	$templates = array( 'rating-breakdown', 'pages-breakdown', 'taxonomy-breakdown' );
+	$templates = array( 'rating-breakdown', 'pages-breakdown', 'taxonomy-breakdown', 'reviews-written', 'read-not-reviewed' );
 
 	foreach ( $templates as $template ) {
 		?>

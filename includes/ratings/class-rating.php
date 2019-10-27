@@ -96,13 +96,34 @@ class Rating {
 	}
 
 	/**
+	 * Format the rating
+	 *
+	 * @param string $format
+	 *
+	 * @return float|int|null
+	 */
+	public function format( $format = 'text' ) {
+
+		$rating = $this->round_rating();
+
+		if ( is_null( $format ) ) {
+			return $rating;
+		} elseif ( method_exists( $this, 'format_' . $format ) ) {
+			return call_user_func( array( $this, 'format_' . $format ) );
+		} else {
+			return $rating;
+		}
+
+	}
+
+	/**
 	 * Format as text (with "Star(s)" appended)
 	 *
 	 * @return string
 	 */
 	public function format_text() {
 
-		$text = $this->round_rating();
+		$text = ! is_null( $this->rating ) ? $this->rating * 1 : null;
 
 		if ( null === $text ) {
 			$text = '&ndash;';

@@ -15,7 +15,7 @@ namespace Book_Database;
 		<# if ( 'none' == data.rating ) { #>
 			&ndash;
 		<# } else { #>
-			{{ data.rating }}
+			{{{ data.rating }}}
 		<# } #>
 	</td>
 	<td data-th="<?php esc_attr_e('Number of Books', 'book-database'); ?>">

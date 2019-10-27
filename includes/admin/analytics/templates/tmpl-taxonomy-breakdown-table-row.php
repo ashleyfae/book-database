@@ -15,12 +15,16 @@ namespace Book_Database;
 		{{ data.term_name }}
 	</td>
 	<td data-th="<?php esc_attr_e('Books Read', 'book-database'); ?>">
-		{{ data.number_books }}
+		{{ data.number_books_read }}
 	</td>
 	<td data-th="<?php esc_attr_e('Reviews Written', 'book-database'); ?>">
 		{{ data.number_reviews }}
 	</td>
 	<td data-th="<?php esc_attr_e('Average Rating', 'book-database'); ?>">
-		{{ data.average_rating }}
+		<# if ( null == data.average_rating ) { #>
+		&ndash;
+		<# } else { #>
+		{{{ data.average_rating }}}
+		<# } #>
 	</td>
 </tr>

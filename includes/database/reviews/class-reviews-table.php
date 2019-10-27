@@ -124,7 +124,7 @@ class Reviews_Table extends BerlinDB\Database\Table {
 	 */
 	protected function __201910183() {
 
-		$result = $this->get_db()->query( "SHOW INDEX FROM {$this->table_name} WHERE Key_name = 'date_writtenid'" );
+		$result = $this->get_db()->query( "SHOW INDEX FROM {$this->table_name} WHERE Key_name = 'date_written_id'" );
 
 		if ( ! $result ) {
 			$result = $this->get_db()->query( "ALTER TABLE {$this->table_name} ADD INDEX date_written_id (date_written, id)" );

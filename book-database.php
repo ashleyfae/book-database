@@ -188,6 +188,7 @@ final class Book_Database {
 		require_once BDB_DIR . 'includes/database/books/class-books-table.php';
 		require_once BDB_DIR . 'includes/database/books/class-books-schema.php';
 		require_once BDB_DIR . 'includes/database/books/class-books-query.php';
+		require_once BDB_DIR . 'includes/database/books/class-book-meta-table.php';
 
 		// Database - book_taxonomies
 		require_once BDB_DIR . 'includes/database/book-taxonomies/class-book-taxonomies-table.php';
@@ -218,6 +219,7 @@ final class Book_Database {
 		require_once BDB_DIR . 'includes/database/reviews/class-reviews-table.php';
 		require_once BDB_DIR . 'includes/database/reviews/class-reviews-schema.php';
 		require_once BDB_DIR . 'includes/database/reviews/class-reviews-query.php';
+		require_once BDB_DIR . 'includes/database/reviews/class-review-meta-table.php';
 
 		// Database - series
 		require_once BDB_DIR . 'includes/database/series/class-series-table.php';
@@ -238,6 +240,7 @@ final class Book_Database {
 		require_once BDB_DIR . 'includes/books/class-book-layout.php';
 		require_once BDB_DIR . 'includes/books/book-functions.php';
 		require_once BDB_DIR . 'includes/books/book-layout-functions.php';
+		require_once BDB_DIR . 'includes/books/book-meta.php';
 
 		// Book Taxonomies
 		require_once BDB_DIR . 'includes/book-taxonomies/class-book-taxonomy.php';
@@ -267,6 +270,7 @@ final class Book_Database {
 		// Reviews
 		require_once BDB_DIR . 'includes/reviews/class-review.php';
 		require_once BDB_DIR . 'includes/reviews/review-functions.php';
+		require_once BDB_DIR . 'includes/reviews/review-meta.php';
 
 		// Series
 		require_once BDB_DIR . 'includes/series/class-series.php';
@@ -373,9 +377,11 @@ final class Book_Database {
 			'book_term_relationships'   => new Book_Term_Relationships_Table(),
 			'book_terms'                => new Book_Terms_Table(),
 			'books'                     => new Books_Table(),
+			'book_meta'                 => new Book_Meta_Table(),
 			'editions'                  => new Editions_Table(),
 			'reading_log'               => new Reading_Logs_Table(),
 			'reviews'                   => new Reviews_Table(),
+			'review_meta'               => new Review_Meta_Table(),
 			'series'                    => new Series_Table(),
 		);
 
@@ -394,10 +400,11 @@ final class Book_Database {
 	 *                          'book_term_relationships',
 	 *                          'book_terms'
 	 *                          'books'
-	 *                          'owned_editions'
+	 *                          'book_meta',
+	 *                          'editions'
 	 *                          'reading_log'
-	 *                          'reviewmeta'
 	 *                          'reviews',
+	 *                          'review_meta',
 	 *                          'series'
 	 *
 	 * @return BerlinDB\Database\Table|false

@@ -215,13 +215,11 @@ class Reading_Log extends Controller {
 					}
 				),
 				'date_started'        => array(
-					'default'           => '',
 					'sanitize_callback' => function ( $param, $request, $key ) {
 						return sanitize_text_field( $param );
 					}
 				),
 				'date_finished'       => array(
-					'default'           => '',
 					'sanitize_callback' => function ( $param, $request, $key ) {
 						return sanitize_text_field( $param );
 					}

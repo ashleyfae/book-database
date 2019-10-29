@@ -335,6 +335,9 @@ final class Book_Database {
 		require_once BDB_DIR . 'includes/admin/books/books-page.php';
 		require_once BDB_DIR . 'includes/admin/books/edit-book-fields.php';
 
+		// Dashboard
+		require_once BDB_DIR . 'includes/admin/dashboard/widgets.php';
+
 		// Editions
 		require_once BDB_DIR . 'includes/admin/editions/edition-actions.php';
 

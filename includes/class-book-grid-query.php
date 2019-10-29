@@ -28,6 +28,8 @@ class Book_Grid_Query extends Book_Reviews_Query {
 		$this->args['offset']         = ( $this->current_page * $this->args['number'] ) - $this->args['number'];
 		$this->per_page               = $this->args['number'];
 		$this->args['include_rating'] = ! empty( $atts['show-ratings'] );
+		$this->args['orderby']        = $atts['orderby'];
+		$this->args['order']          = 'ASC' === strtoupper( $atts['order'] ) ? 'ASC' : 'DESC';
 
 		if ( ! empty( $atts['author'] ) ) {
 			$this->args['author_query'] = array(

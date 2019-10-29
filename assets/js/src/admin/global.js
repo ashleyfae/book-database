@@ -9,10 +9,12 @@
  * @license GPL2+
  */
 
+import { BDB_Dashboard_Widgets } from "./modules/dashboard-widgets";
 import { BDB_Post_Metabox } from "./modules/post-metabox";
 
 ( function ( $ ) {
 
+	BDB_Dashboard_Widgets.init();
 	BDB_Post_Metabox.init();
 
 } )( jQuery );

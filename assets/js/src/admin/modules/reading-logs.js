@@ -63,7 +63,8 @@ var BDB_Reading_Logs = {
 		readingLog.date_finished_formatted = dateUTCtoLocal( readingLog.date_finished, 'display' );
 		readingLog.date_finished           = dateUTCtoLocal( readingLog.date_finished );
 		readingLog.percentage_complete     = readingLog.percentage_complete * 100;
-		readingLog.rating                  = null === readingLog.rating ? null : parseFloat( readingLog.rating ) + ' ' + bdbVars.stars;
+		readingLog.rating                  = null === readingLog.rating ? null : parseFloat( readingLog.rating );
+		readingLog.rating_formatted        = null === readingLog.rating ? null : parseFloat( readingLog.rating ) + ' ' + bdbVars.stars;
 
 		return readingLog;
 	},

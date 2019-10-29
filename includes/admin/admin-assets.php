@@ -80,6 +80,10 @@ function enqueue_admin_post_assets( $hook ) {
 		return;
 	}
 
+	// CSS
+	wp_enqueue_style( 'book-database-global', BDB_URL . 'assets/css/admin-style-global.min.css', array(), time() );
+
+	// JS
 	$deps = array( 'jquery', 'wp-util' );
 	wp_enqueue_script( 'book-database-global', BDB_URL . 'assets/js/build/admin-global.min.js', $deps, time(), true );
 
@@ -89,10 +93,12 @@ function enqueue_admin_post_assets( $hook ) {
 		'by'                                => esc_html__( 'by', 'book-database' ),
 		'confirm_delete_review'             => __( 'Are you sure you want to delete this review? This will permanently delete the review record from the database.', 'book-database' ),
 		'confirm_remove_review_association' => __( 'Are you sure you want to disassociate this review from this post? Note: the review itself will not be deleted, it will just no longer be linked with this post.', 'book-database' ),
+		'confirm_finish_book'               => __( 'Are you sure you\'d like to mark this book as finished? This will change the progress to 100% and set today as the date finished.', 'book-database' ),
 		'error_required_fields'             => esc_html__( 'Please fill out all the required fields.', 'book-database' ),
 		'generic_error'                     => esc_html__( 'An unexpected error has occurred.', 'book-database' ),
 		'no_books'                          => esc_html__( 'No books found.', 'book-database' ),
 		'please_wait'                       => esc_html__( 'Please wait...', 'book-database' ),
+		'prompt_percentage'                 => __( 'Enter your current percentage.', 'book-database' ),
 		'stars'                             => esc_html__( 'Stars', 'book-database' ),
 		'unknown'                           => esc_html__( 'unknown', 'book-database' )
 	);

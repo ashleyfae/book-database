@@ -39,6 +39,7 @@ module.exports = {
 
 		// CSS
 		"admin-style": './assets/sass/admin.scss',
+		"admin-style-global": './assets/sass/admin-global.scss',
 		"front-end": './assets/sass/front-end.scss'
 	},
 

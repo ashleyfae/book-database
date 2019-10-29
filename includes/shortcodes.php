@@ -244,6 +244,7 @@ function book_grid_shortcode( $atts, $content = '' ) {
 		'pub-year'            => '',
 		'read-status'         => '',
 		'show-ratings'        => false,
+		'show-pub-date'       => true,
 		'show-goodreads-link' => false,
 		'orderby'             => 'book.id',
 		'order'               => 'DESC',

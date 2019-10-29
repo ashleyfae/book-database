@@ -22,7 +22,6 @@ namespace Book_Database;
 		echo $book->get_cover( $atts['cover-size'] );
 	}
 
-
 	if ( ! empty( $atts['show-ratings'] ) && ! empty( $book_data->avg_rating ) ) {
 		?>
 		<p class="book-grid-rating">
@@ -30,6 +29,14 @@ namespace Book_Database;
 			$rating = new Rating( $book_data->avg_rating );
 			echo $rating->format_font_awesome();
 			?>
+		</p>
+		<?php
+	}
+
+	if ( ! empty( $atts['show-pub-date'] ) ) {
+		?>
+		<p class="bdb-book-pub-date">
+			<?php echo esc_html( $book->get_pub_date( true ) ); ?>
 		</p>
 		<?php
 	}

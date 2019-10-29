@@ -269,6 +269,7 @@ final class Book_Database {
 
 		// Reviews
 		require_once BDB_DIR . 'includes/reviews/class-review.php';
+		require_once BDB_DIR . 'includes/reviews/review-actions.php';
 		require_once BDB_DIR . 'includes/reviews/review-functions.php';
 		require_once BDB_DIR . 'includes/reviews/review-meta.php';
 

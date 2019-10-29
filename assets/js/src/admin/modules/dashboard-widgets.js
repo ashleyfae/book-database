@@ -14,6 +14,7 @@ var BDB_Dashboard_Widgets = {
 
 		$( '.bdb-currently-reading-widget-update-progress' ).on( 'click', this.updatePercentage );
 		$( '.bdb-currently-reading-widget-finish-book' ).on( 'click', this.finishBook );
+		$( '.bdb-currently-reading-widget-dnf-book' ).on( 'click', this.dnfBook );
 		$( '.bdb-currently-reading-widget-set-rating' ).on( 'click', this.setRating );
 
 	},
@@ -92,6 +93,46 @@ var BDB_Dashboard_Widgets = {
 
 	},
 
+	/**
+	 * DNF book
+	 *
+	 * @param e
+	 * @returns {boolean}
+	 */
+	dnfBook: function ( e ) {
+
+		e.preventDefault();
+
+		if ( ! confirm( bdbVars.confirm_dnf_book ) ) {
+			return false;
+		}
+
+		let button = $( this );
+
+		spinButton( button );
+
+		let wrap = button.closest( 'li' );
+
+		let args = {
+			date_finished: wrap.data( 'now' )
+		};
+
+		apiRequest( 'v1/reading-log/update/' + wrap.data( 'log-id' ), args, 'POST' ).then( function( apiResponse ) {
+			wrap.find( '.bdb-currently-reading-data' ).remove();
+			wrap.find( '.bdb-currently-reading-rate-book' ).show();
+		} ).catch( function( errorMessage ) {
+			console.log( errorMessage );
+		} ).finally( function() {
+			unspinButton( button );
+		} );
+
+	},
+
+	/**
+	 * Set the rating
+	 *
+	 * @param e
+	 */
 	setRating: function ( e ) {
 
 		e.preventDefault();

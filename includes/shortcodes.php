@@ -9,6 +9,16 @@
 
 namespace Book_Database;
 
+/**
+ * Book
+ *
+ * Display book information.
+ *
+ * @param array  $atts    Shortcode attributes.
+ * @param string $content Shortcode content.
+ *
+ * @return string
+ */
 function book_shortcode( $atts, $content = '' ) {
 
 	$atts = shortcode_atts( array(
@@ -45,6 +55,16 @@ function book_shortcode( $atts, $content = '' ) {
 
 add_shortcode( 'book', __NAMESPACE__ . '\book_shortcode' );
 
+/**
+ * Book reviews
+ *
+ * Displays a list of book reviews with filters allowing users to change the parameters.
+ *
+ * @param array  $atts    Shortcode attributes.
+ * @param string $content Shortcode content.
+ *
+ * @return string
+ */
 function book_reviews_shortcode( $atts, $content = '' ) {
 
 	$atts = shortcode_atts( array(

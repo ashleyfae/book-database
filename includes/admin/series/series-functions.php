@@ -3,33 +3,22 @@
  * Admin Series Functions
  *
  * @package   book-database
- * @copyright Copyright (c) 2017, Ashley Gibson
+ * @copyright Copyright (c) 2019, Ashley Gibson
  * @license   GPL2+
- * @since     1.0
  */
 
-// Exit if accessed directly
-if ( ! defined( 'ABSPATH' ) ) {
-	exit;
-}
+namespace Book_Database;
 
 /**
- * Register Default Series Views
+ * Get the URL for deleting a series
  *
- * @param array $views
+ * @param int $series_id ID of the series to delete.
  *
- * @since 1.0
- * @return array
+ * @return string
  */
-function bdb_register_default_series_views( $views ) {
-
-	$default_views = array(
-		'add'  => 'bdb_series_edit_view',
-		'edit' => 'bdb_series_edit_view'
-	);
-
-	return array_merge( $views, $default_views );
-
+function get_delete_series_url( $series_id ) {
+	return wp_nonce_url( get_series_admin_page_url( array(
+		'bdb_action' => 'delete_series',
+		'series_id'  => $series_id
+	) ), 'bdb_delete_series' );
 }
-
-add_filter( 'book-database/series/views', 'bdb_register_default_series_views' );

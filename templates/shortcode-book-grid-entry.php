@@ -1,49 +1,52 @@
 <?php
 /**
- * Shortcode: Book Reviews - Single Book Entry
+ * Shortcode: `[book-grid]` - Single book entry
  *
  * @package   book-database
- * @copyright Copyright (c) 2017, Ashley Gibson
+ * @copyright Copyright (c) 2019, Ashley Gibson
  * @license   GPL2+
  */
 
-// Exit if accessed directly
-if ( ! defined( 'ABSPATH' ) ) {
-	exit;
-}
+namespace Book_Database;
 
 /**
- * @var BDB_Book $book
+ * @var array  $atts      Shortcode attributes.
+ * @var Book   $book      Book object.
+ * @var object $book_data Full object from the database.
  */
-$book = $entry['book'];
-/**
- * @var BDB_Review $review
- */
-$review = $entry['review'];
 
-$rating = new BDB_Rating( $review->rating );
-$url    = $review->get_permalink();
 ?>
-<div id="review-<?php echo absint( $review->ID ); ?>" class="book-review-entry">
+<div id="book-<?php echo esc_attr( $book->get_id() ); ?>" class="book-grid-entry bdb-grid-entry">
 	<?php
 	if ( $book->get_cover_id() ) {
-		echo $url ? '<a href="' . esc_url( $url ) . '">' : '';
-		echo $book->get_cover( $atts['image-size'] );
-		echo $url ? '</a>' : '';
+		echo $book->get_cover( $atts['cover-size'] );
+	}
+
+	if ( ! empty( $atts['show-ratings'] ) && ! empty( $book_data->avg_rating ) ) {
+		?>
+		<p class="book-grid-rating">
+			<?php
+			$rating = new Rating( $book_data->avg_rating );
+			echo $rating->format_font_awesome();
+			?>
+		</p>
+		<?php
+	}
+
+	if ( ! empty( $atts['show-pub-date'] ) ) {
+		?>
+		<p class="bdb-book-pub-date">
+			<?php echo esc_html( $book->get_pub_date( true ) ); ?>
+		</p>
+		<?php
+	}
+
+	if ( ! empty( $atts['show-goodreads-link'] ) && $book->get_goodreads_url() ) {
+		?>
+		<p>
+			<a href="<?php echo esc_url( $book->get_goodreads_url() ); ?>" class="button bdb-goodreads-link" target="_blank"><?php _e( 'Goodreads', 'book-database' ); ?></a>
+		</p>
+		<?php
 	}
 	?>
-
-	<?php if ( $atts['show-ratings'] && $review->get_rating() ) : ?>
-		<p class="book-review-rating">
-			<?php echo $rating->format( 'font_awesome' ); ?>
-		</p>
-	<?php endif; ?>
-
-	<?php if ( $atts['show-review-link'] && $url ) : ?>
-		<p><a href="<?php echo esc_url( $url ); ?>" class="button bookdb-read-review-link"><?php _e( 'Read Review', 'book-database' ); ?></a></p>
-	<?php endif; ?>
-
-	<?php if ( $atts['show-goodreads-link'] && $book->get_goodreads_url() ) : ?>
-		<p><a href="<?php echo esc_url( $book->get_goodreads_url() ); ?>" class="button bookdb-goodreads-link" target="_blank"><?php _e( 'Goodreads', 'book-database' ); ?></a></p>
-	<?php endif; ?>
 </div>

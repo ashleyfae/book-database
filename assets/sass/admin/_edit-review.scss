@@ -1,0 +1,19 @@
+#bdb-book-associated-with-review {
+    clear: both;
+    line-height: 1.8;
+    overflow: hidden;
+
+    .alignleft {
+        margin-right: 1.5em;
+    }
+
+    .alignright {
+        margin-left: 1.5em;
+    }
+
+    blockquote {
+        font: {
+            style: italic;
+        }
+    }
+}

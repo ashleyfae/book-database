@@ -1,315 +1,102 @@
 <?php
 /**
- * Misc Functions
+ * Misc. Functions
  *
  * @package   book-database
- * @copyright Copyright (c) 2017, Ashley Gibson
+ * @copyright Copyright (c) 2019, Ashley Gibson
  * @license   GPL2+
  */
 
-// Exit if accessed directly
-if ( ! defined( 'ABSPATH' ) ) {
-	exit;
-}
+namespace Book_Database;
 
 /**
- * Returns an array of post types that you can add reviews and
- * book information to.
+ * Get an array of all settings
  *
- * @since 1.0
  * @return array
  */
-function bdb_get_review_post_types() {
-	$post_types = array(
-		'post'
-	);
-
-	return apply_filters( 'book-database/get-review-post-types', $post_types );
+function bdb_get_settings() {
+	return get_option( 'bdb_settings', array() );
 }
 
 /**
- * Get Admin Page: Books Table
+ * Get an option value
  *
- * @since 1.0
+ * @param string $key
+ * @param bool   $default
+ *
+ * @return mixed
+ */
+function bdb_get_option( $key, $default = false ) {
+
+	$settings = bdb_get_settings();
+
+	return isset( $settings[ $key ] ) ? $settings[ $key ] : $default;
+
+}
+
+/**
+ * Update an option
+ *
+ * @param string $key
+ * @param mixed  $value
+ *
+ * @return bool
+ */
+function bdb_update_option( $key, $value ) {
+
+	$settings = bdb_get_settings();
+
+	$settings[ $key ] = $value;
+
+	return update_option( 'bdb_settings', $settings );
+
+}
+
+/**
+ * Format a date for display
+ *
+ * This converts a GMT date to local site time and formats it.
+ *
+ * @param string $date   Date string to format.
+ * @param string $format Date format. Default is the site's `date_format`.
+ *
  * @return string
  */
-function bdb_get_admin_page_books() {
-	$url = admin_url( 'admin.php?page=bdb-books' );
+function format_date( $date, $format = '' ) {
 
-	return apply_filters( 'book-database/admin-page-url/books', $url );
+	$format     = ! empty( $format ) ? $format : get_option( 'date_format' );
+	$local_date = get_date_from_gmt( $date, 'Y-m-d H:i:s' );
+
+	return date( $format, strtotime( $local_date ) );
+
 }
 
 /**
- * Get Admin Page: Add Book
- *
- * @since 1.0
- * @return string
- */
-function bdb_get_admin_page_add_book() {
-	$book_page     = bdb_get_admin_page_books();
-	$add_book_page = add_query_arg( array(
-		'view' => 'add'
-	), $book_page );
-
-	return apply_filters( 'book-database/admin-page-url/add-book', $add_book_page );
-}
-
-/**
- * Get Admin Page: Edit Book
- *
- * @param int $book_id
- *
- * @since 1.0
- * @return string
- */
-function bdb_get_admin_page_edit_book( $book_id ) {
-	$book_page      = bdb_get_admin_page_books();
-	$edit_book_page = add_query_arg( array(
-		'view' => 'edit',
-		'ID'   => absint( $book_id )
-	), $book_page );
-
-	return apply_filters( 'book-database/admin-page-url/edit-book', $edit_book_page );
-}
-
-/**
- * Get Admin Page: Delete Book
- *
- * @param int $book_id
- *
- * @since 1.0
- * @return string
- */
-function bdb_get_admin_page_delete_book( $book_id ) {
-	$book_page        = bdb_get_admin_page_books();
-	$delete_book_page = add_query_arg( array(
-		'bdb-action' => urlencode( 'book/delete' ),
-		'ID'         => absint( $book_id ),
-		'nonce'      => wp_create_nonce( 'bdb_delete_book' )
-	), $book_page );
-
-	return apply_filters( 'book-database/admin-page-url/delete-book', $delete_book_page );
-}
-
-/**
- * Get Admin Page: Reviews Table
- *
- * @since 1.0
- * @return string
- */
-function bdb_get_admin_page_reviews() {
-	$url = admin_url( 'admin.php?page=bdb-reviews' );
-
-	return apply_filters( 'book-database/admin-page-url/reviews', $url );
-}
-
-/**
- * Get Admin Page: Add Review
- *
- * @since 1.0
- * @return string
- */
-function bdb_get_admin_page_add_review( $book_id = 0 ) {
-	$review = bdb_get_admin_page_reviews();
-
-	$query_args = array(
-		'view' => 'add'
-	);
-
-	if ( $book_id ) {
-		$query_args['book_id'] = absint( $book_id );
-	}
-
-	$add_review_page = add_query_arg( $query_args, $review );
-
-	return apply_filters( 'book-database/admin-page-url/add-review', $add_review_page );
-}
-
-/**
- * Get Admin Page: Edit Review
- *
- * @param int $review_id
- *
- * @since 1.0
- * @return string
- */
-function bdb_get_admin_page_edit_review( $review_id ) {
-	$review_page      = bdb_get_admin_page_reviews();
-	$edit_review_page = add_query_arg( array(
-		'view' => 'edit',
-		'ID'   => absint( $review_id )
-	), $review_page );
-
-	return apply_filters( 'book-database/admin-page-url/edit-review', $edit_review_page );
-}
-
-/**
- * Get Admin Page: Delete Review
- *
- * @param int $review_id
- *
- * @since 1.0
- * @return string
- */
-function bdb_get_admin_page_delete_review( $review_id ) {
-	$review_page        = bdb_get_admin_page_reviews();
-	$delete_review_page = add_query_arg( array(
-		'bdb-action' => urlencode( 'review/delete' ),
-		'ID'         => absint( $review_id ),
-		'nonce'      => wp_create_nonce( 'bdb_delete_review' )
-	), $review_page );
-
-	return apply_filters( 'book-database/admin-page-url/delete-review', $delete_review_page );
-}
-
-/**
- * Get Admin Page: Series Table
- *
- * @since 1.0
- * @return string
- */
-function bdb_get_admin_page_series() {
-	$url = admin_url( 'admin.php?page=bdb-series' );
-
-	return apply_filters( 'book-database/admin-page-url/series', $url );
-}
-
-/**
- * Get Admin Page: Edit Series
- *
- * @param int $series_id
- *
- * @since 1.0
- * @return string
- */
-function bdb_get_admin_page_edit_series( $series_id ) {
-	$series_page = bdb_get_admin_page_series();
-
-	$edit_series_page = add_query_arg( array(
-		'view' => 'edit',
-		'ID'   => absint( $series_id )
-	), $series_page );
-
-	return apply_filters( 'book-database/admin-page-url/edit-series', $edit_series_page );
-}
-
-/**
- * Get Admin Page: Delete Series
- *
- * @todo  Make this work.
- *
- * @param int $series_id
- *
- * @since 1.0
- * @return string
- */
-function bdb_get_admin_page_delete_series( $series_id ) {
-	$series_page = bdb_get_admin_page_series();
-
-	$delete_series_page = add_query_arg( array(
-		'bdb-action' => urlencode( 'series/delete' ),
-		'ID'         => absint( $series_id ),
-		'nonce'      => wp_create_nonce( 'bdb_delete_series' )
-	), $series_page );
-
-	return apply_filters( 'book-database/admin-page-url/delete-series', $delete_series_page );
-}
-
-/**
- * Get Admin Page: Terms Table
- *
- * @since 1.0
- * @return string
- */
-function bdb_get_admin_page_terms() {
-	$url = admin_url( 'admin.php?page=bdb-terms' );
-
-	return apply_filters( 'book-database/admin-page-url/terms', $url );
-}
-
-/**
- * Get Admin Page: Add Term
- *
- * @since 1.0
- * @return string
- */
-function bdb_get_admin_page_add_term() {
-	$term_page = bdb_get_admin_page_terms();
-
-	$add_term_page = add_query_arg( array(
-		'view' => 'add'
-	), $term_page );
-
-	return apply_filters( 'book-database/admin-page-url/add-term', $add_term_page );
-}
-
-/**
- * Get Admin Page: Edit Term
- *
- * @param int $term_id
- *
- * @since 1.0
- * @return string
- */
-function bdb_get_admin_page_edit_term( $term_id ) {
-	$term_page = bdb_get_admin_page_terms();
-
-	$edit_term_page = add_query_arg( array(
-		'view' => 'edit',
-		'ID'   => absint( $term_id )
-	), $term_page );
-
-	return apply_filters( 'book-database/admin-page-url/edit-term', $edit_term_page );
-}
-
-/**
- * Get Admin Page: Delete Term
- *
- * @param int $term_id
- *
- * @since 1.0
- * @return string
- */
-function bdb_get_admin_page_delete_term( $term_id ) {
-	$term_page = bdb_get_admin_page_terms();
-
-	$args = array(
-		'bdb-action' => urlencode( 'terms/delete' ),
-		'ID'         => absint( $term_id ),
-		'nonce'      => wp_create_nonce( 'bdb_delete_term' )
-	);
-
-	if ( isset( $_GET['type'] ) ) {
-		$args['type'] = urlencode( $_GET['type'] );
-	}
-
-	$delete_term_page = add_query_arg( $args, $term_page );
-
-	return apply_filters( 'book-database/admin-page-url/delete-term', $delete_term_page );
-}
-
-/**
- * Generate Unique Slug
+ * Generate a unique book term slug
  *
  * Checks to see if the given slug already exists. If so, numbers are appended
  * until the slug becomes available.
  *
- * @see   wp_unique_post_slug() - Based on this.
+ * @see wp_unique_post_slug()
  *
- * @param string $slug Desired slug.
- * @param string $type Table type. Accepts any term type or `series`.
+ * @param string $slug     Desired slug.
+ * @param string $taxonomy Accepts any taxonomy slug, `author`, `series`, or `book_taxonomy`.
  *
- * @since 1.0
- * @return string Unique slug.
+ * @return string A unique slug.
  */
-function bdb_unique_slug( $slug, $type = 'author' ) {
+function unique_book_slug( $slug, $taxonomy = 'author' ) {
+
 	// Check if this slug already exists.
-	if ( 'series' == $type ) {
-		$terms = book_database()->series->get_series_by( 'slug', $slug );
+	if ( 'series' === $taxonomy ) {
+		$terms = get_book_series_by( 'slug', $slug );
+	} elseif ( 'book_taxonomy' === $taxonomy ) {
+		$terms = get_book_taxonomy_by( 'slug', $slug );
+	} elseif ( 'author' == $taxonomy ) {
+		$terms = get_book_author_by( 'slug', $slug );
 	} else {
-		$terms = book_database()->book_terms->get_terms( array(
-			'type' => $type,
-			'slug' => $slug
+		$terms = count_book_terms( array(
+			'taxonomy' => $taxonomy,
+			'slug'     => $slug
 		) );
 	}
 
@@ -319,136 +106,85 @@ function bdb_unique_slug( $slug, $type = 'author' ) {
 		$suffix = 2;
 
 		do {
-			$alt_slug = _truncate_post_slug( $slug, 200 - ( strlen( $suffix ) + 1 ) ) . "-$suffix";
 
-			if ( 'series' == $type ) {
-				$terms = book_database()->series->get_series_by( 'slug', $alt_slug );
+			$alt_slug = _truncate_post_slug( $slug, 200 - ( strlen( $suffix ) + 1 ) ) . '-' . $suffix;
+
+			if ( 'series' === $taxonomy ) {
+				$terms = get_book_series_by( 'slug', $alt_slug );
+			} elseif ( 'book_taxonomy' === $taxonomy ) {
+				$terms = get_book_taxonomy_by( 'slug', $alt_slug );
+			} elseif ( 'author' === $taxonomy ) {
+				$terms = get_book_author_by( 'slug', $alt_slug );
 			} else {
-				$terms = book_database()->book_terms->get_terms( array(
-					'type' => $type,
-					'slug' => $alt_slug
+				$terms = count_book_terms( array(
+					'taxonomy' => $taxonomy,
+					'slug'     => $alt_slug
 				) );
 			}
 
 			$suffix ++;
-		} while ( $terms );
 
-		$new_slug = $alt_slug;
+		} while ( $terms );
 	}
 
-	return apply_filters( 'book-database/unique-slug', $new_slug, $slug );
+	return apply_filters( 'book-database/unique-slug', $new_slug, $slug, $taxonomy );
+
 }
 
 /**
- * Link Terms in Book Info
- *
- * Whether or not terms should link to the archive.
+ * Whether or not terms should link to the archive
  *
  * Disable with this:
  *      `add_filter( 'book-database/link-terms', '__return_false' );`
  *
- * @since 1.0
  * @return bool
  */
-function bdb_link_terms() {
+function link_book_terms() {
 	return apply_filters( 'book-database/link-terms', true );
 }
 
 /**
- * Get Allowed Orderby Options
+ * Get the term archive link
  *
- * Used in review queries.
+ * @param Author|Book_Term|Series|Rating $term
  *
- * @since 1.0
- * @return array
+ * @return bool
  */
-function bdb_get_allowed_orderby() {
-	$allowed_orderby = array(
-		'author'        => esc_html__( 'Author Name', 'book-database' ),
-		'title'         => esc_html__( 'Book Title', 'book-database' ),
-		'date_finished' => esc_html__( 'Date Read', 'book-database' ),
-		'date'          => esc_html__( 'Date Reviewed', 'book-database' ),
-		'pages'         => esc_html__( 'Number of Pages', 'book-database' ),
-		'pub_date'      => esc_html__( 'Publication Date', 'book-database' ),
-		'rating'        => esc_html__( 'Rating', 'book-database' ),
-	);
+function get_book_term_link( $term ) {
 
-	return apply_filters( 'book-database/allowed-orderby-for-reviews', $allowed_orderby );
-}
-
-/**
- * Format MySQL Date
- *
- * @param string      $mysql_date MySQL date in GMT timezone.
- * @param bool|string $format     Date format or leave false to use WP date setting.
- *
- * @since 1.1.0
- * @return bool|int|string Formatted date in blog's timezone.
- */
-function bdb_format_mysql_date( $mysql_date, $format = false ) {
-
-	if ( empty( $mysql_date ) ) {
+	if ( ! is_object( $term ) ) {
 		return false;
 	}
 
-	if ( false == $format ) {
-		$format = get_option( 'date_format' );
+	$slug     = method_exists( $term, 'get_slug' ) ? $term->get_slug() : '';
+	$taxonomy = '';
+
+	if ( $term instanceof Author ) {
+		$taxonomy = 'author';
+	} elseif ( $term instanceof Book_Term ) {
+		$taxonomy = $term->get_taxonomy();
+	} elseif ( $term instanceof Series ) {
+		$taxonomy = 'series';
+	} elseif ( $term instanceof Rating ) {
+		$taxonomy = 'rating';
+		$slug     = $term->get_rating();
 	}
 
-	$date = mysql2date( $format, get_date_from_gmt( $mysql_date ) );
-
-	return $date;
-
-}
-
-/**
- * Get Available Image Sizes
- *
- * @since 1.2.1
- * @return array
- */
-function bdb_get_image_sizes() {
-	$sizes       = get_intermediate_image_sizes();
-	$final_sizes = array( 'full' => esc_html__( 'full', 'book-database' ) );
-
-	if ( is_array( $sizes ) ) {
-		foreach ( $sizes as $size ) {
-			$final_sizes[ $size ] = $size;
-		}
+	if ( empty( $taxonomy ) || empty( $slug ) ) {
+		return false;
 	}
 
-	return apply_filters( 'book-database/image-sizes', $final_sizes );
-}
+	$base_url  = untrailingslashit( get_reviews_page_url() );
+	$final_url = sprintf( '%1$s/%2$s/%3$s/', $base_url, urlencode( $taxonomy ), urlencode( $slug ) );
 
-/**
- * Calculate books on track to be read in given period.
- *
- * @param int    $books_read Number of books read in the given period.
- * @param string $start_date Start date (any PHP format to use strtotime() on).
- * @param string $end_date   End date (any PHP format to use strtotime() on).
- *
- * @since 1.2.4
- * @return int
- */
-function bdb_get_books_on_track_to_read( $books_read, $start_date, $end_date ) {
-
-	// If end date is in the past, return books read.
-	if ( time() > strtotime( $end_date ) ) {
-		return $books_read;
-	}
-
-	$now        = new DateTime();
-	$start_date = new DateTime( $start_date );
-	$end_date   = new DateTime( $end_date );
-
-	// Calculate books read per day so far
-	$days_in_period = $now->diff( $start_date )->days;
-	$books_per_day  = $books_read / $days_in_period;
-
-	// Based on books per day, calculate how many we'll read in remaining period.
-	$remaining_days = $end_date->diff( $now )->days;
-	$left_to_read   = $books_per_day * $remaining_days;
-
-	return apply_filters( 'book-database/books-on-track-to-read', round( $left_to_read + $books_read ), $books_read, $start_date, $end_date );
+	/**
+	 * Filters the term archive URL.
+	 *
+	 * @param string                         $final_url Final archive URL.
+	 * @param string                         $slug      Term slug.
+	 * @param string                         $taxonomy  Term taxonomy / type.
+	 * @param Author|Book_Term|Series|Rating $term      Term object.
+	 */
+	return apply_filters( 'book-database/term-archive-link', $final_url, $slug, $taxonomy, $term );
 
 }

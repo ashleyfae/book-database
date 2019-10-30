@@ -2,78 +2,75 @@
 /**
  * Admin Pages
  *
- * Creates admin pages and loads any required assets on these pages.
- *
  * @package   book-database
- * @copyright Copyright (c) 2017, Ashley Gibson
+ * @copyright Copyright (c) 2019, Ashley Gibson
  * @license   GPL2+
  */
 
-// Exit if accessed directly
-if ( ! defined( 'ABSPATH' ) ) {
-	exit;
-}
+namespace Book_Database;
 
 /**
- * Admin Pages
- *
- * Top Level: Book Library
- * Submenus: Book Reviews, Settings
- *
- * @since 1.0
- * @return void
+ * Register admin pages
  */
-function bdb_add_options_link() {
+function register_admin_pages() {
+
+	global $bdb_admin_pages;
+
 	// Book Library
-	add_menu_page( sprintf( esc_html__( '%s Library', 'book-database' ), bdb_get_label_singular() ), sprintf( esc_html__( '%s Library', 'book-database' ), bdb_get_label_singular() ), 'edit_posts', 'bdb-books', 'bdb_books_page', 'dashicons-book' );
+	$bdb_admin_pages['books'] = add_menu_page( __( 'Book Library', 'book-database' ), __( 'Book Library', 'book-database' ), 'edit_posts', 'bdb-books', __NAMESPACE__ . '\render_books_page', 'dashicons-book' );
+
+	// Authors
+	$bdb_admin_pages['authors'] = add_submenu_page( 'bdb-books', __( 'Authors', 'book-database' ), __( 'Authors', 'book-database' ), 'edit_posts', 'bdb-authors', __NAMESPACE__ . '\render_book_authors_page' );
 
 	// Series
-	add_submenu_page( 'bdb-books', sprintf( esc_html__( '%s Series', 'book-database' ), bdb_get_label_singular() ), sprintf( esc_html__( '%s Series', 'book-database' ), bdb_get_label_singular() ), 'edit_posts', 'bdb-series', 'bdb_series_page' );
+	$bdb_admin_pages['series'] = add_submenu_page( 'bdb-books', __( 'Series', 'book-database' ), __( 'Series', 'book-database' ), 'edit_posts', 'bdb-series', __NAMESPACE__ . '\render_book_series_page' );
 
-	// Book Reviews
-	add_submenu_page( 'bdb-books', sprintf( esc_html__( '%s Reviews', 'book-database' ), bdb_get_label_singular() ), sprintf( esc_html__( '%s Reviews', 'book-database' ), bdb_get_label_singular() ), 'edit_posts', 'bdb-reviews', 'bdb_reviews_page' );
+	// Reviews
+	$bdb_admin_pages['reviews'] = add_submenu_page( 'bdb-books', __( 'Reviews', 'book-database' ), __( 'Reviews', 'book-database' ), 'edit_posts', 'bdb-reviews', __NAMESPACE__ . '\render_book_reviews_page' );
 
-	// Book Terms
-	add_submenu_page( 'bdb-books', sprintf( esc_html__( '%s Terms', 'book-database' ), bdb_get_label_singular() ), sprintf( esc_html__( '%s Terms', 'book-database' ), bdb_get_label_singular() ), 'edit_posts', 'bdb-terms', 'bdb_terms_page' );
+	// Terms
+	$bdb_admin_pages['terms'] = add_submenu_page( 'bdb-books', __( 'Terms', 'book-database' ), __( 'Terms', 'book-database' ), 'edit_posts', 'bdb-terms', __NAMESPACE__ . '\render_book_terms_page' );
 
 	// Analytics
-	add_submenu_page( 'bdb-books', esc_html__( 'Review Analytics', 'book-database' ), esc_html__( 'Analytics', 'book-database' ), 'manage_options', 'bdb-analytics', 'bdb_analytics_page' );
+	$bdb_admin_pages['analytics'] = add_submenu_page( 'bdb-books', __( 'Analytics', 'book-database' ), __( 'Analytics', 'book-database' ), 'manage_options', 'bdb-analytics', __NAMESPACE__ . '\render_analytics_page' );
 
 	// Settings
-	add_submenu_page( 'bdb-books', esc_html__( 'Book Database Settings', 'book-database' ), esc_html__( 'Settings', 'book-database' ), 'manage_options', 'bdb-settings', 'bdb_options_page' );
+	$bdb_admin_pages['settings'] = add_submenu_page( 'bdb-books', __( 'Settings', 'book-database' ), __( 'Settings', 'book-database' ), 'manage_options', 'bdb-settings', __NAMESPACE__ . '\render_settings_page' );
+
 }
 
-add_action( 'admin_menu', 'bdb_add_options_link', 10 );
+add_action( 'admin_menu', __NAMESPACE__ . '\register_admin_pages' );
 
 /**
- * Is Admin Page
+ * Whether or not the current page is a Book Database admin page.
  *
- * Checks whether or not the current page is an UBB admin page.
- *
- * @since 1.0
  * @return bool
  */
-function bdb_is_admin_page() {
-	$screen      = get_current_screen();
-	$is_bdb_page = false;
+function is_admin_page() {
 
-	$bdb_page_ids = array(
-		'dashboard',
-		'toplevel_page_bdb-books',
-		'book-library_page_bdb-series',
-		'book-library_page_bdb-reviews',
-		'book-library_page_bdb-settings',
-		'book-library_page_bdb-analytics'
-	);
+	global $bdb_admin_pages;
 
-	if ( in_array( $screen->id, $bdb_page_ids ) ) {
-		$is_bdb_page = true;
-	}
+	$screen = get_current_screen();
 
-	// Show where the reviews are included.
-	if ( in_array( $screen->post_type, bdb_get_review_post_types() ) ) {
-		$is_bdb_page = true;
-	}
+	return in_array( $screen->id, $bdb_admin_pages );
 
-	return apply_filters( 'book-database/is-admin-page', $is_bdb_page, $screen );
 }
+
+/**
+ * Add a `bdb-admin-page` class to all BDB admin pages.
+ *
+ * @param string $classes
+ *
+ * @return string
+ */
+function admin_body_class( $classes ) {
+
+	if ( is_admin_page() ) {
+		$classes .= ' bdb-admin-page ';
+	}
+
+	return $classes;
+
+}
+
+add_filter( 'admin_body_class', __NAMESPACE__ . '\admin_body_class' );

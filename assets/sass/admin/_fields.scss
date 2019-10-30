@@ -1,0 +1,80 @@
+.bdb-id-col {
+    color: #555;
+}
+
+.bdb-admin-page {
+    .postbox {
+        > h2 {
+            border-bottom: 1px solid #eee;
+        }
+    }
+}
+
+.bdb-meta-row {
+    margin: 1.5em 0;
+
+    > label {
+        display: block;
+        font: {
+            weight: 600;
+        }
+    }
+
+    .description {
+        color: #666;
+        display: block;
+        font: {
+            size: 13px;
+            style: italic;
+        }
+        margin: 2px 0 5px;
+    }
+
+    input[type="text"],
+    input[type="url"],
+    textarea {
+        &:not(.bdb-color-picker):not(.text-small) {
+            display: block;
+            width: 99%;
+        }
+    }
+
+    input[type="number"] {
+        display: inline-block;
+        width: auto;
+    }
+
+    .bdb-input-suffix {
+        background: #f2f2f2;
+        border: 1px solid #ddd;
+        border-left: none;
+        font-size: 14px;
+        margin: 0 0 0 -6px;
+        padding: 4px 8px 3px;
+    }
+
+    textarea {
+        min-height: 250px;
+    }
+
+    .regular-text,
+    .bdb-datepicker {
+        max-width: 550px;
+    }
+
+    @media (min-width: 900px) {
+        clear: both;
+        overflow: hidden;
+
+        > label {
+            float: left;
+            margin: 0;
+            width: 18%;
+        }
+
+        .bdb-meta-value {
+            float: right;
+            width: 80%;
+        }
+    }
+}

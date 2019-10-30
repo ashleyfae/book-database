@@ -1,4 +1,4 @@
-#bookdb-books-filter {
+#bdb-books-filter {
     .view-month:before {
         content: '\f508';
         font: {
@@ -15,6 +15,10 @@
 
     .view-day:before {
         content: '\f163';
+    }
+
+    #bdb-filter-by-year {
+        float: left;
     }
 
     .calendar {
@@ -70,7 +74,7 @@
             }
         }
 
-        .books-for-cell {
+        .bdb-books-for-cell {
             display: flex;
             flex-flow: row wrap;
         }
@@ -136,8 +140,8 @@
                     min-height: 110px;
                     position: relative;
 
-                    a.day-number,
-                    a.add-book-for-day {
+                    .bdb-day-number,
+                    a.bdb-add-book-for-day {
                         background-color: rgba(255, 255, 255, 0.8);
                         border: 1px solid transparent;
                         border-bottom: 1px solid #e1e1e1;
@@ -159,23 +163,23 @@
                         }
                     }
 
-                    a.add-book-for-day {
+                    a.bdb-add-book-for-day {
                         border-left: 1px solid #e1e1e1;
                         right: 0;
                         visibility: hidden;
                     }
 
-                    td.today {
+                    &.today {
                         background: #ffe;
                     }
 
                     &:hover {
-                        a.day-number,
-                        a.add-book-for-day {
+                        .bdb-day-number,
+                        a.bdb-add-book-for-day {
                             border-color: #ccc;
                         }
 
-                        a.add-book-for-day {
+                        a.bdb-add-book-for-day {
                             visibility: visible;
                         }
                     }
@@ -198,13 +202,13 @@
                 }
             }
 
-            .books-for-cell {
+            .bdb-books-for-cell {
                 margin: 30px 0 5px;
                 min-height: 80px;
             }
 
             @media screen and (max-width: 782px) {
-                .books-for-cell {
+                .bdb-books-for-cell {
                     margin: 0;
                     padding-top: 30px;
                 }
@@ -223,10 +227,6 @@
                     }
                 }
             }
-        }
-
-        @media screen and (max-width: 782px) {
-
         }
     }
 }

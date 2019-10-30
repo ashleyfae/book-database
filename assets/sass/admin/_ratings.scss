@@ -1,0 +1,25 @@
+.bdb-rating {
+    display: inline-block;
+    min-width: 60px;
+
+    &.bdb-five-stars,
+    &.bdb-four-half-stars,
+    &.bdb-four-stars {
+        color: #090;
+    }
+
+    &.bdb-three-half-stars,
+    &.bdb-three-stars,
+    &.bdb-two-half-stars {
+        color: #da9d1c;
+    }
+
+    &.bdb-two-stars,
+    &.bdb-one-half-stars,
+    &.bdb-one-star,
+    &.bdb-half-star,
+    &.bdb-zero-stars,
+    &.bdb-dnf {
+        color: #c00;
+    }
+}

@@ -1,45 +1,56 @@
 <?php
 /**
- * Shortcode: Book Reviews - Single Book Entry
+ * Shortcode: `[book-reviews]` - Single book entry
  *
  * @package   book-database
- * @copyright Copyright (c) 2017, Ashley Gibson
+ * @copyright Copyright (c) 2019, Ashley Gibson
  * @license   GPL2+
  */
 
-// Exit if accessed directly
-if ( ! defined( 'ABSPATH' ) ) {
-	exit;
-}
+namespace Book_Database;
 
 /**
- * @var BDB_Book $book
+ * @var array       $atts        Shortcode attributes.
+ * @var Book        $book        Book object.
+ * @var Review      $review      Review object.
+ * @var Reading_Log $reading_log Reading log object.
+ * @var object      $review_data Full object from the database.
  */
-$book = $entry['book'];
-/**
- * @var BDB_Review $review
- */
-$review = $entry['review'];
 
-$rating = new BDB_Rating( $review->get_rating() );
-$url    = $review->get_permalink();
+$rating       = new Rating( $review_data->rating ?? null );
+$url          = $review->get_permalink();
+$is_published = $review->is_published();
+$target       = $review->is_external() ? 'blank' : 'self';
 ?>
-<div id="review-<?php echo absint( $review->ID ); ?>" class="book-review-entry">
+<div id="review-<?php echo esc_attr( $review->get_id() ); ?>" class="book-review-entry bdb-grid-entry">
 	<?php
 	if ( $book->get_cover_id() ) {
-		echo $url ? '<a href="' . esc_url( $url ) . '">' : '';
-		echo $book->get_cover( apply_filters( 'book-database/shortcode/book-reviews/entry/cover-image-size', 'medium' ) );
-		echo $url ? '</a>' : '';
+		echo ( ! empty( $url ) && $is_published ) ? '<a href="' . esc_url( $url ) . '" target="_' . esc_attr( $target ) . '">' : '';
+		echo $book->get_cover( $atts['cover-size'] );
+		echo ( ! empty( $url ) && $is_published ) ? '</a>' : '';
+	}
+
+	if ( ! empty( $review_data->rating ) ) {
+		?>
+		<p class="book-review-rating">
+			<?php echo $rating->format_font_awesome(); ?>
+		</p>
+		<?php
+	} elseif ( $reading_log->is_dnf() ) {
+		?>
+		<p class="book-review-rating">
+			<?php _e( 'Did Not Finish', 'book-database' ) ?>
+		</p>
+		<?php
+	}
+
+	if ( ! $is_published ) {
+		echo '<p>' . sprintf( __( 'Review coming %s', 'book-database' ), $review->get_date_published( true ) ) . '</p>';
+	} elseif ( ! empty( $url ) ) {
+		?>
+		<a href="<?php echo esc_url( $url ); ?>" class="button bdb-read-review-link" target="_<?php echo esc_attr( $target ); ?>"><?php _e( 'Read Review', 'book-database' ); ?></a>
+		<?php
 	}
 	?>
-
-	<?php if ( $review->get_rating() ) : ?>
-		<p class="book-review-rating">
-			<?php echo $rating->format( 'font_awesome' ); ?>
-		</p>
-	<?php endif; ?>
-
-	<?php if ( $url ) : ?>
-		<a href="<?php echo esc_url( $url ); ?>" class="button bookdb-read-review-link"><?php _e( 'Read Review', 'book-database' ); ?></a>
-	<?php endif; ?>
 </div>
+

@@ -7,38 +7,39 @@
  * @license   GPL2+
  */
 
+namespace Book_Database\Admin\Dashboard;
+
+use function Book_Database\book_database;
+use function Book_Database\get_available_ratings;
+use function Book_Database\get_book;
+use function Book_Database\get_books_admin_page_url;
+
 /**
  * Register dashboard widgets
  *
  * @since 1.0
- * @return void
  */
-function bdb_register_dashboard_widgets() {
+function register_widgets() {
 
 	// Currently Reading
-	wp_add_dashboard_widget( 'bdb_currently_reading', __( 'Currently Reading', 'book-database' ), 'bdb_render_currently_reading_dashboard_widget' );
+	wp_add_dashboard_widget( 'bdb_currently_reading', __( 'Currently Reading', 'book-database' ), __NAMESPACE__ . '\render_currently_reading' );
 
 }
 
-add_action( 'wp_dashboard_setup', 'bdb_register_dashboard_widgets' );
+add_action( 'wp_dashboard_setup', __NAMESPACE__ . '\register_widgets' );
 
 /**
- * Render "Currently Reading" dashboard widget.
- *
- * @todo  Admin styles
- * @todo  Ajax update progress
- * @todo  Percentage inside progress bar?
+ * Render "Currently Reading" dashboard widget
  *
  * @since 1.0
- * @return void
  */
-function bdb_render_currently_reading_dashboard_widget() {
+function render_currently_reading() {
 
 	global $wpdb;
 
-	$log_table = book_database()->reading_log->table_name;
+	$tbl_logs = book_database()->get_table( 'reading_log' )->get_table_name();
 
-	$query = "SELECT * from {$log_table}
+	$query = "SELECT * from {$tbl_logs}
 		WHERE date_started IS NOT NULL
 		AND date_finished IS NULL
 		ORDER BY date_started DESC";
@@ -54,26 +55,42 @@ function bdb_render_currently_reading_dashboard_widget() {
 	<ul class="bdb-currently-reading-widget-list">
 		<?php
 		foreach ( $logs as $log ) {
-			$book = new BDB_Book( $log->book_id );
+			$book = get_book( absint( $log->book_id ) );
+
+			$edit_book_url = get_books_admin_page_url( array( 'view' => 'edit', 'book_id' => $book->get_id() ) );
 			?>
-			<li>
+			<li data-log-id="<?php echo esc_attr( $log->id ); ?>" data-now="<?php echo esc_attr( date( 'Y-m-d H:i:s' ) ); ?>">
 				<?php
 				$cover = $book->get_cover( 'medium' );
 				if ( ! empty( $cover ) ) {
-					echo '<a href="' . esc_url( bdb_get_admin_page_edit_book( $book->ID ) ) . '">' . $cover . '</a>';
+					echo '<a href="' . esc_url( $edit_book_url ) . '">' . $cover . '</a>';
 				}
 				?>
 				<p class="bdb-currently-reading-book-title">
-					<a href="<?php echo esc_url( bdb_get_admin_page_edit_book( $book->ID ) ); ?>"><?php printf( '%s by %s', $book->get_title(), $book->get_author_names() ); ?></a>
+					<a href="<?php echo esc_url( $edit_book_url ); ?>"><?php printf( '%s by %s', $book->get_title(), $book->get_author_names( true ) ); ?></a>
 				</p>
-				<div class="bdb-currently-reading-progress">
-					<div class="bdb-currently-reading-progress-bar" style="width: <?php echo absint( $log->complete ); ?>%"></div>
-					<span class="bdb-currently-reading-progress-number"<?php echo $log->complete >= 60 ? ' style="color: white"' : ''; ?>>
-						<?php printf( '%d%%', absint( $log->complete ) ); ?>
+				<div class="bdb-currently-reading-data">
+					<div class="bdb-currently-reading-progress">
+						<div class="bdb-currently-reading-progress-bar" style="width: <?php echo absint( $log->percentage_complete * 100 ); ?>%"></div>
+						<span class="bdb-currently-reading-progress-number"<?php echo $log->percentage_complete >= 0.6 ? ' style="color: white"' : ''; ?>>
+						<?php printf( '%d%%', absint( $log->percentage_complete * 100 ) ); ?>
 					</span>
+					</div>
+					<button class="bdb-currently-reading-widget-update-progress button"><?php _e( 'Update', 'book-database' ); ?></button>
+					<button class="bdb-currently-reading-widget-finish-book button"><?php _e( 'Finished', 'book-database' ); ?></button>
+					<button class="bdb-currently-reading-widget-dnf-book button"><?php _e( 'DNF', 'book-database' ); ?></button>
 				</div>
-				<button class="bdb-currently-reading-widget-update-progress button" data-log="<?php echo esc_attr( $log->ID ); ?>"><?php _e( 'Update', 'book-database' ); ?></button>
-				<button class="bdb-currently-reading-widget-finish-book button" data-log="<?php echo esc_attr( $log->ID ); ?>"><?php _e( 'Finished', 'book-database' ); ?></button>
+				<div class="bdb-currently-reading-rate-book" style="display: none;">
+					<p>
+						<label for="bdb-rating-<?php echo esc_attr( $log->id ); ?>"><?php _e( 'Rate the book (optional)', 'book-database' ); ?></label>
+					</p>
+					<select id="bdb-rating-<?php echo esc_attr( $log->id ); ?>" class="bdb-currently-reading-rating">
+						<?php foreach ( get_available_ratings() as $rating_key => $rating_label ) : ?>
+							<option value="<?php echo esc_attr( $rating_key ); ?>"><?php echo esc_html( $rating_label ); ?></option>
+						<?php endforeach; ?>
+					</select>
+					<button type="button" class="bdb-currently-reading-widget-set-rating button"><?php _e( 'Set Rating', 'book-database' ); ?></button>
+				</div>
 			</li>
 			<?php
 		}

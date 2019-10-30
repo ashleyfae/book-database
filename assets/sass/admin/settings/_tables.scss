@@ -1,0 +1,15 @@
+#bdb-settings-wrap {
+    .widefat {
+        th {
+            padding: 8px 10px !important;
+        }
+    }
+
+    tfoot {
+        tr {
+            &:not(:first-child) {
+                background: #f9f9f9;
+            }
+        }
+    }
+}

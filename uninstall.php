@@ -12,6 +12,8 @@
  * @since     1.0
  */
 
+namespace Book_Database;
+
 // Exit if accessed directly.
 if ( ! defined( 'WP_UNINSTALL_PLUGIN' ) ) {
 	exit;
@@ -30,11 +32,31 @@ global $wpdb;
 // Remove all plugin settings.
 $wpdb->query( "DELETE FROM $wpdb->options WHERE option_name LIKE 'bdb\_%'" );
 
-// Drop tables.
-$wpdb->query( "DROP TABLE IF EXISTS " . $wpdb->prefix . "bdb_book_term_relationships" );
-$wpdb->query( "DROP TABLE IF EXISTS " . $wpdb->prefix . "bdb_book_terms" );
-$wpdb->query( "DROP TABLE IF EXISTS " . $wpdb->prefix . "bdb_books" );
-$wpdb->query( "DROP TABLE IF EXISTS " . $wpdb->prefix . "bdb_reading_log" );
-$wpdb->query( "DROP TABLE IF EXISTS " . $wpdb->prefix . "bdb_reviewmeta" );
-$wpdb->query( "DROP TABLE IF EXISTS " . $wpdb->prefix . "bdb_reviews" );
-$wpdb->query( "DROP TABLE IF EXISTS " . $wpdb->prefix . "bdb_series" );
+// Drop tables
+$tables = array(
+	'authors',
+	'book_author_relationships',
+	'book_taxonomies',
+	'book_term_relationships',
+	'book_terms',
+	'books',
+	'book_meta',
+	'owned_editions',
+	'reading_log',
+	'reviewmeta',
+	'reviews',
+	'review_meta',
+	'series'
+);
+
+foreach ( $tables as $table_key ) {
+	$table = book_database()->get_table( $table_key );
+
+	if ( ! $table ) {
+		continue;
+	}
+
+	if ( $table->exists() ) {
+		$table->uninstall();
+	}
+}

@@ -1,4 +1,4 @@
-#book-layout-builder {
+#bdb-book-layout-builder {
     clear: both;
     margin: 0 0 1em;
     overflow: hidden;
@@ -21,14 +21,14 @@
 }
 
 /* Saved Options */
-#enabled-book-settings {
+#bdb-enabled-book-settings {
     @media (min-width: 1200px) {
         float: left;
         width: 70%;
     }
 
     // Special styling for book cover
-    #bookdb-book-option-cover {
+    #bdb-book-option-cover {
         background: #93648d;
         background-size: cover;
         border: none;
@@ -56,8 +56,8 @@
             z-index: 1;
         }
 
-        .bookdb-book-option-title,
-        .bookdb-book-option-fields,
+        .bdb-book-option-title,
+        .bdb-book-option-fields,
         button {
             position: relative;
             z-index: 20;
@@ -71,7 +71,7 @@
             }
         }
 
-        .bookdb-book-option-fields {
+        .bdb-book-option-fields {
             background: white;
             color: #444;
             overflow: visible;
@@ -79,15 +79,15 @@
         }
 
         @media (min-width: 768px) {
-            &.bookdb-book-cover-align-left {
+            &.bdb-book-cover-align-left {
                 float: left;
                 margin: 0 1em 1em 0;
             }
-            &.bookdb-book-cover-align-center {
+            &.bdb-book-cover-align-center {
                 display: block;
                 margin: 0 auto 1em;
             }
-            &.bookdb-book-cover-align-right {
+            &.bdb-book-cover-align-right {
                 float: right;
                 margin: 0 0 1em 1em;
             }
@@ -95,7 +95,7 @@
     }
 }
 
-#enabled-book-settings-inner {
+#bdb-enabled-book-settings-inner {
     background: white;
     clear: both;
     overflow: hidden;
@@ -103,7 +103,7 @@
 }
 
 /* Library of Options */
-#available-book-settings {
+#bdb-available-book-settings {
     margin-top: 1.5em;
 
     @media (min-width: 1200px) {
@@ -112,23 +112,23 @@
         width: 28%;
     }
 
-    .bookdb-book-option-name {
+    .bdb-book-option-name {
         display: none;
     }
 
-    .bookdb-book-option {
+    .bdb-book-option {
         button {
             display: none;
         }
     }
 }
 
-#available-book-settings-inner {
+#bdb-available-book-settings-inner {
     border: 2px dashed #ccc;
     padding: 15px;
 }
 
-.bookdb-book-option {
+.bdb-book-option {
     background: white;
     border: 1px solid rgba(0, 0, 0, 0.1);
     margin: 5px 0;
@@ -162,7 +162,7 @@
     }
 }
 
-.bookdb-book-option-name {
+.bdb-book-option-name {
     background: white;
     color: rgba(0, 0, 0, 0.5);
     font: {
@@ -176,22 +176,22 @@
     z-index: 10;
 }
 
-.bookdb-book-option-fields {
+.bdb-book-option-fields {
     display: none;
     margin-top: .5em;
     overflow: hidden;
 }
 
-.bookdb-sortable-placeholder {
+.bdb-sortable-placeholder {
     border: 1px dashed rgba(0, 0, 0, 0.1);
     height: 40px;
 }
 
-.bookdb-book-option-field-wrap {
+.bdb-book-option-field-wrap {
     margin-top: .5em;
 }
 
-.bookdb-new-line-option {
+.bdb-new-line-option {
     margin-top: .5em;
 
     label {

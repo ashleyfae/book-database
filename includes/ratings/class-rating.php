@@ -53,7 +53,7 @@ class Rating {
 	 * @param null|float|int $rating Rating value to set.
 	 */
 	public function set_rating( $rating ) {
-		$this->rating = is_null( $rating ) ? null : $rating + 0;
+		$this->rating = is_null( $rating ) ? null : floatval( $rating ) + 0;
 	}
 
 	/**

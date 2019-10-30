@@ -31,11 +31,11 @@ Most read books:
 SELECT
   book_id,
   book.title,
-  COUNT(*) AS count
+  COUNT(*) AS times_read
 FROM `wp_bdb_reading_log` log INNER JOIN `wp_bdb_books` book ON book.id = log.book_id
 GROUP BY book_id
-HAVING count > 1
-ORDER BY count DESC
+HAVING times_read > 1
+ORDER BY times_read DESC
 LIMIT 25
 ```
 
@@ -61,7 +61,7 @@ SELECT
   log.date_finished
 FROM `wp_bdb_books` book RIGHT JOIN `wp_bdb_reading_log` log ON log.book_id = book.id
   INNER JOIN `wp_bdb_book_term_relationships` r ON r.book_id = book.id
-  INNER JOIN `wp_bdb_book_terms` term ON (term.term_id = r.term_id AND term.name = 'Fantasy')
+  INNER JOIN `wp_bdb_book_terms` term ON (term.id = r.term_id AND term.name = 'Fantasy')
 WHERE 2017 = YEAR (date_finished)
 ORDER BY log.date_finished ASC
 ```
@@ -75,7 +75,7 @@ SELECT
 FROM `wp_bdb_reviews` review RIGHT JOIN `wp_bdb_reading_log` log ON log.review_id = review.id
   INNER JOIN `wp_bdb_books` book ON book.id = review.book_id
   INNER JOIN `wp_bdb_book_term_relationships` r ON r.book_id = review.book_id
-  INNER JOIN `wp_bdb_book_terms` term ON (term.term_id = r.term_id AND term.name = 'Fantasy')
+  INNER JOIN `wp_bdb_book_terms` term ON (term.id = r.term_id AND term.name = 'Fantasy')
 WHERE 2017 = YEAR (date_written)
 ORDER BY book.title ASC
 ```
@@ -95,12 +95,12 @@ WHERE log.rating > 4
       AND book.id IN (
   SELECT book_id
   FROM wp_bdb_book_term_relationships AS r
-    INNER JOIN wp_bdb_book_terms AS t ON r.term_id = t.term_id
+    INNER JOIN wp_bdb_book_terms AS t ON r.term_id = t.id
   WHERE t.name = 'Contemporary'
         AND book_id IN (
     SELECT book_id
     FROM wp_bdb_book_term_relationships AS r2
-      INNER JOIN wp_bdb_book_terms AS t2 ON r2.term_id = t2.term_id
+      INNER JOIN wp_bdb_book_terms AS t2 ON r2.term_id = t2.id
     WHERE t2.name = 'Romance'
   )
 )
@@ -113,7 +113,7 @@ Get a count of how many books were read in each format in a given year (2017).
 ```mysql
 SELECT
   format,
-  COUNT(*) AS count
+  COUNT(*) AS number_books_read
 FROM `wp_bdb_owned_editions` AS b
   INNER JOIN wp_bdb_reading_log AS l ON l.book_id = b.book_id
 WHERE 2017 = YEAR (date_finished)
@@ -126,7 +126,7 @@ Get a count of how many books read in 2017 were published in each year.
 ```mysql
 SELECT
   YEAR(pub_date) AS pub_year,
-  COUNT(*) AS number_books
+  COUNT(*) AS number_books_published
 FROM wp_bdb_books AS b
   INNER JOIN wp_bdb_reading_log AS l ON l.book_id = b.id
 WHERE 2017 = YEAR (date_finished)

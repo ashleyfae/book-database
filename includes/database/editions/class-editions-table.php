@@ -63,7 +63,7 @@ class Editions_Table extends BerlinDB\Database\Table {
 			date_modified datetime NOT NULL DEFAULT '0000-00-00 00:00:00',
 			INDEX book_id (book_id),
 			INDEX isbn (isbn),
-			INDEX date_acquired (dte_acquired)";
+			INDEX date_acquired (date_acquired)";
 	}
 
 	/**

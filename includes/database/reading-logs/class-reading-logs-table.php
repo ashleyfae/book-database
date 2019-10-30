@@ -63,7 +63,6 @@ class Reading_Logs_Table extends BerlinDB\Database\Table {
 			INDEX date_finished_percentage_complete (date_finished, percentage_complete),
 			INDEX date_finished_rating (date_finished, rating),
 			INDEX date_started (date_started),
-			INDEX date_dnf (date_dnf),
 			INDEX rating_book_id (rating, book_id),
 			INDEX review_id (review_id),
 			INDEX user_id (user_id)";

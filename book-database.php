@@ -442,6 +442,9 @@ final class Book_Database {
 		/**
 		 * Add default taxonomies.
 		 */
+		if ( ! $this->get_table( 'book_taxonomies' )->exists() ) {
+			$this->get_table( 'book_taxonomies' )->install();
+		}
 		$default_taxonomies = array(
 			'publisher' => array(
 				'slug'   => 'publisher',

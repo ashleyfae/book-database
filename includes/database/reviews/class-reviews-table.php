@@ -24,7 +24,7 @@ class Reviews_Table extends BerlinDB\Database\Table {
 	/**
 	 * @var int Database version in format {YYYY}{MM}{DD}{1}
 	 */
-	protected $version = 201910261;
+	protected $version = 201910301;
 
 	/**
 	 * @var array Upgrades to perform
@@ -35,7 +35,8 @@ class Reviews_Table extends BerlinDB\Database\Table {
 		'201910183' => 201910183,
 		'201910184' => 201910184,
 		'201910185' => 201910185,
-		'201910261' => 201910261
+		'201910261' => 201910261,
+		'201910301' => 201910301
 	);
 
 	/**
@@ -51,6 +52,7 @@ class Reviews_Table extends BerlinDB\Database\Table {
 	protected function set_schema() {
 		$this->schema = "id bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY,
 			book_id bigint(20) UNSIGNED NOT NULL DEFAULT 0,
+			reading_log_id bigint(20) UNSIGNED DEFAULT NULL,
 			user_id bigint(20) UNSIGNED NOT NULL DEFAULT 0,
 			post_id bigint(20) UNSIGNED DEFAULT NULL,
 			url mediumtext NOT NULL DEFAULT '',
@@ -189,6 +191,24 @@ class Reviews_Table extends BerlinDB\Database\Table {
 			$result = $this->get_db()->query( "ALTER TABLE {$this->table_name} DROP COLUMN `rating`" );
 		} else {
 			$result = true;
+		}
+
+		return $this->is_success( $result );
+
+	}
+
+	/**
+	 * Upgrade to version 201910301
+	 *      - Add `reading_log_id` column
+	 *
+	 * @return bool
+	 */
+	protected function __201910301() {
+
+		$result = $this->column_exists( 'reading_log_id' );
+
+		if ( ! $result ) {
+			$result = $this->get_db()->query( "ALTER TABLE {$this->table_name} ADD COLUMN reading_log_id bigint(20) UNSIGNED DEFAULT NULL AFTER book_id" );
 		}
 
 		return $this->is_success( $result );

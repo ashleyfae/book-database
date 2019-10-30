@@ -17,8 +17,6 @@ class Reading_Log extends Base_Object {
 
 	protected $book_id = 0;
 
-	protected $review_id = 0;
-
 	protected $user_id = 0;
 
 	protected $date_started = '';
@@ -36,15 +34,6 @@ class Reading_Log extends Base_Object {
 	 */
 	public function get_book_id() {
 		return absint( $this->book_id );
-	}
-
-	/**
-	 * Get the ID of the associated review
-	 *
-	 * @return int
-	 */
-	public function get_review_id() {
-		return absint( $this->review_id );
 	}
 
 	/**
@@ -137,6 +126,12 @@ class Reading_Log extends Base_Object {
 
 		$vars['is_complete'] = $this->is_complete();
 		$vars['is_dnf']      = $this->is_dnf();
+
+		// Get the review ID.
+		$review = get_review_by( 'reading_log_id', $this->get_id() );
+		if ( $review instanceof Review ) {
+			$vars['review_id'] = $review->get_id();
+		}
 
 		return $vars;
 

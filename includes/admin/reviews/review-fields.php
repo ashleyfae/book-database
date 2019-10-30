@@ -201,13 +201,10 @@ add_action( 'book-database/review-edit/fields', __NAMESPACE__ . '\review' );
  */
 function reading_log( $review ) {
 
-	$selected_reading_log = ! empty( $review ) ? get_reading_log_by( 'review_id', $review->get_id() ) : false;
-
+	$selected_reading_log_id = ! empty( $review ) ? $review->get_reading_log_id() : 0;
 	if ( empty( $selected_reading_log ) && ! empty( $_GET['reading_log_id'] ) ) {
-		$selected_reading_log = get_reading_log( absint( $_GET['reading_log_id'] ) );
+		$selected_reading_log_id = absint( $_GET['reading_log_id'] );
 	}
-
-	$selected_reading_log_id = $selected_reading_log instanceof Reading_Log ? $selected_reading_log->get_id() : 0;
 
 	$args = array(
 		'number' => 50

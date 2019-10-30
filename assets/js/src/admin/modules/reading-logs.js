@@ -143,7 +143,6 @@ var BDB_Reading_Logs = {
 		let args = {
 			book_id: BDB_Reading_Logs.bookID,
 			user_id: BDB_Reading_Logs.userID,
-			review_id: $( '#bdb-new-log-review-id' ).val(),
 			date_started: dateLocalToUTC( $( '#bdb-new-log-start-date' ).val() ),
 			date_finished: dateLocalToUTC( $( '#bdb-new-log-end-date' ).val() ),
 			percentage_complete: percentage,
@@ -220,7 +219,6 @@ var BDB_Reading_Logs = {
 		let args = {
 			date_started: dateLocalToUTC( wrap.find( '.bdb-reading-log-date-started input' ).val() ),
 			date_finished: dateLocalToUTC( wrap.find( '.bdb-reading-log-date-finished input' ).val() ),
-			review_id: wrap.find( '.bdb-reading-log-review-id input' ).val(),
 			user_id: wrap.find( '.bdb-reading-log-user-id input' ).val(),
 			percentage_complete: percentage,
 			rating: wrap.find( '.bdb-reading-log-rating select' ).val()

@@ -21,14 +21,19 @@ class Review extends Base_Object {
 	protected $book_id = 0;
 
 	/**
-	 * @var int|null ID of the associated blog post.
+	 * @var int ID of the associated reading log.
 	 */
-	protected $post_id = null;
+	protected $reading_log_id = 0;
 
 	/**
 	 * @var int ID of the user who wrote the review.
 	 */
 	protected $user_id = 0;
+
+	/**
+	 * @var int|null ID of the associated blog post.
+	 */
+	protected $post_id = null;
 
 	/**
 	 * @var string External URL to the review.
@@ -60,15 +65,12 @@ class Review extends Base_Object {
 	}
 
 	/**
-	 * Get the ID of the corresponding post
+	 * Get the ID of the user who wrote the review
 	 *
-	 * This is the post the review was published on. This will only be filled out if the
-	 * review was published as a blog post on this site.
-	 *
-	 * @return int|null
+	 * @return int
 	 */
-	public function get_post_id() {
-		return is_null( $this->post_id ) ? null : absint( $this->post_id );
+	public function get_reading_log_id() {
+		return is_null( $this->reading_log_id ) ? null : absint( $this->reading_log_id );
 	}
 
 	/**
@@ -78,6 +80,18 @@ class Review extends Base_Object {
 	 */
 	public function get_user_id() {
 		return absint( $this->user_id );
+	}
+
+	/**
+	 * Get the ID of the corresponding post
+	 *
+	 * This is the post the review was published on. This will only be filled out if the
+	 * review was published as a blog post on this site.
+	 *
+	 * @return int|null
+	 */
+	public function get_post_id() {
+		return is_null( $this->post_id ) ? null : absint( $this->post_id );
 	}
 
 	/**

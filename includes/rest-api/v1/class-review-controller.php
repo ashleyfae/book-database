@@ -71,6 +71,12 @@ class Review extends Controller {
 						return absint( $param );
 					}
 				),
+				'reading_log_id' => array(
+					'default'           => null,
+					'sanitize_callback' => function ( $param, $request, $key ) {
+						return empty( $param ) ? null : absint( $param );
+					}
+				),
 				'user_id'        => array(
 					'required'          => true,
 					'sanitize_callback' => function ( $param, $request, $key ) {

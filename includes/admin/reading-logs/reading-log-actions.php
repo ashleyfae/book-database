@@ -74,13 +74,6 @@ function reading_logs_table( $book ) {
 					</div>
 				</div>
 				<div class="bdb-meta-row">
-					<label for="bdb-new-log-review-id"><?php _e( 'Review ID', 'book-database' ); ?></label>
-					<div class="bdb-meta-value">
-						<input type="number" id="bdb-new-log-review-id" class="regular-text">
-						<p class="description"><?php _e( 'If there\'s a review connected to this reading entry, enter the ID here. Or you can add it later.', 'book-database' ); ?></p>
-					</div>
-				</div>
-				<div class="bdb-meta-row">
 					<label for="bdb-new-log-percent-complete"><?php _e( '% Complete', 'book-database' ); ?></label>
 					<div class="bdb-meta-value">
 						<input type="number" id="bdb-new-log-percent-complete" class="regular-text bdb-input-has-suffix">

@@ -50,7 +50,6 @@ class Reading_Logs_Table extends BerlinDB\Database\Table {
 	protected function set_schema() {
 		$this->schema = "id bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY,
 			book_id bigint(20) UNSIGNED NOT NULL DEFAULT 0,
-			review_id bigint(20) UNSIGNED DEFAULT NULL,
 			user_id bigint(20) UNSIGNED NOT NULL DEFAULT 0,
 			date_started datetime DEFAULT NULL,
 			date_finished datetime DEFAULT NULL,

@@ -44,18 +44,6 @@ class Reading_Logs_Schema extends BerlinDB\Database\Schema {
 			'default'  => 0
 		),
 
-		// review_id
-		array(
-			'name'       => 'review_id',
-			'type'       => 'bigint',
-			'length'     => '20',
-			'unsigned'   => true,
-			'sortable'   => true,
-			'allow_null' => true,
-			'default'    => null,
-			'validate'   => '\Book_Database\BerlinDB\Sanitization\absint_allow_null'
-		),
-
 		// user_id
 		array(
 			'name'     => 'user_id',

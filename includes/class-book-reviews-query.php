@@ -182,7 +182,7 @@ class Book_Reviews_Query {
 					$this->args['author_query'] = array(
 						array(
 							'field' => 'slug',
-							'value' => array( sanitize_text_field( wp_strip_all_tags( $wp_query->query_vars['book_term'] ) ) ),
+							'value' => sanitize_text_field( wp_strip_all_tags( $wp_query->query_vars['book_term'] ) ),
 						)
 					);
 					break;

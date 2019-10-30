@@ -67,6 +67,8 @@ add_shortcode( 'book', __NAMESPACE__ . '\book_shortcode' );
  */
 function book_reviews_shortcode( $atts, $content = '' ) {
 
+	global $wp_query;
+
 	$atts = shortcode_atts( array(
 		'hide-future' => true,
 		'per-page'    => 20,
@@ -86,28 +88,53 @@ function book_reviews_shortcode( $atts, $content = '' ) {
 					<?php
 					switch ( $filter ) {
 						case 'book_title' :
+							$title = '';
+							if ( ! empty( $_GET['title'] ) ) {
+								$title = wp_strip_all_tags( $_GET['title'] );
+							}
 							?>
 							<label for="bdb-book-title"><?php _e( 'Book Title', 'book-database' ); ?></label>
-							<input type="text" id="bdb-book-title" name="title" value="<?php echo ! empty( $_GET['title'] ) ? esc_attr( wp_strip_all_tags( $_GET['title'] ) ) : ''; ?>">
+							<input type="text" id="bdb-book-title" name="title" value="<?php echo esc_attr( $title ); ?>">
 							<?php
 							break;
 
 						case 'book_author' :
+							$author = '';
+							if ( ! empty( $_GET['author'] ) ) {
+								$author = wp_strip_all_tags( $_GET['author'] );
+							} elseif ( ! empty( $wp_query->query_vars['book_tax'] ) && 'author' === $wp_query->query_vars['book_tax'] && ! empty( $wp_query->query_vars['book_term'] ) ) {
+								$slug   = $wp_query->query_vars['book_term'];
+								$author = get_book_author_by( 'slug', $slug );
+								$author = $author instanceof Author ? $author->get_name() : '';
+							}
 							?>
 							<label for="bdb-book-author"><?php _e( 'Book Author', 'book-database' ); ?></label>
-							<input type="text" id="bdb-book-author" name="author" value="<?php echo ! empty( $_GET['author'] ) ? esc_attr( wp_strip_all_tags( $_GET['author'] ) ) : ''; ?>">
+							<input type="text" id="bdb-book-author" name="author" value="<?php echo esc_attr( $author ); ?>">
 							<?php
 							break;
 
 						case 'book_series' :
+							$series = '';
+							if ( ! empty( $_GET['series'] ) ) {
+								$series = wp_strip_all_tags( $_GET['series'] );
+							} elseif ( ! empty( $wp_query->query_vars['book_tax'] ) && 'series' === $wp_query->query_vars['book_tax'] && ! empty( $wp_query->query_vars['book_term'] ) ) {
+								$slug   = $wp_query->query_vars['book_term'];
+								$series = get_book_series_by( 'slug', $slug );
+								$series = $series instanceof Series ? $series->get_name() : '';
+							}
 							?>
 							<label for="bdb-book-series"><?php _e( 'Book Series', 'book-database' ); ?></label>
-							<input type="text" id="bdb-book-series" name="series" value="<?php echo ! empty( $_GET['series'] ) ? esc_attr( wp_strip_all_tags( $_GET['series'] ) ) : ''; ?>">
+							<input type="text" id="bdb-book-series" name="series" value="<?php echo esc_attr( $series ); ?>">
 							<?php
 							break;
 
 						case 'rating' :
-							$selected_rating = $_GET['rating'] ?? 'any';
+							$selected_rating = 'any';
+							if ( ! empty( $_GET['rating'] ) ) {
+								$selected_rating = wp_strip_all_tags( $_GET['rating'] );
+							} elseif ( ! empty( $wp_query->query_vars['book_tax'] ) && 'rating' === $wp_query->query_vars['book_tax'] && ! empty( $wp_query->query_vars['book_term'] ) ) {
+								$selected_rating = $wp_query->query_vars['book_term'];
+							}
 							?>
 							<label for="bdb-book-rating"><?php _e( 'Rating', 'book-database' ); ?></label>
 							<select id="bdb-book-rating" name="rating">
@@ -177,7 +204,17 @@ function book_reviews_shortcode( $atts, $content = '' ) {
 								'order'    => 'ASC'
 							) );
 
-							$selected_term = $_GET[ $taxonomy->get_slug() ] ?? 'any';
+							$selected_term = 'any';
+							if ( ! empty( $_GET[ $taxonomy->get_slug() ] ) ) {
+								$selected_term = wp_strip_all_tags( $taxonomy->get_slug() );
+							} elseif ( ! empty( $wp_query->query_vars['book_tax'] ) && $taxonomy->get_slug() === $wp_query->query_vars['book_tax'] && ! empty( $wp_query->query_vars['book_term'] ) ) {
+								$slug = $wp_query->query_vars['book_term'];
+								$term = get_book_term_by( 'slug', $slug );
+
+								if ( $term instanceof Book_Term ) {
+									$selected_term = $term->get_id();
+								}
+							}
 							?>
 							<label for="bdb-<?php echo esc_attr( $taxonomy->get_slug() ); ?>"><?php echo esc_html( $taxonomy->get_name() ) ?></label>
 							<select id="bdb-<?php echo esc_attr( $taxonomy->get_slug() ); ?>" name="<?php echo esc_attr( $taxonomy->get_slug() ); ?>">

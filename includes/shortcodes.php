@@ -342,6 +342,7 @@ function book_grid_shortcode( $atts, $content = '' ) {
 		</nav>
 	</div>
 	<?php
+	return ob_get_clean();
 
 }
 

@@ -106,7 +106,11 @@ class Books_Table extends BerlinDB\Database\Table {
 	 */
 	protected function __201910093() {
 
-		$result = $this->get_db()->query( "ALTER TABLE {$this->table_name} CHANGE `cover` `cover_id` bigint(20) UNSIGNED NOT NULL DEFAULT 0" );
+		if ( $this->column_exists( 'cover' ) ) {
+			$result = $this->get_db()->query( "ALTER TABLE {$this->table_name} CHANGE `cover` `cover_id` bigint(20) UNSIGNED NOT NULL DEFAULT 0" );
+		} else {
+			$result = true;
+		}
 
 		return $this->is_success( $result );
 

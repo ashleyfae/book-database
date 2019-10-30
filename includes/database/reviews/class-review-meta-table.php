@@ -47,7 +47,7 @@ class Review_Meta_Table extends BerlinDB\Database\Table {
 	 */
 	protected function set_schema() {
 		$max_index_length = 191;
-		$this->schema = "meta_id bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY,
+		$this->schema     = "meta_id bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY,
 			bdb_review_id bigint(20) UNSIGNED NOT NULL DEFAULT 0,
 			meta_key varchar(255) DEFAULT NULL,
 			meta_value longtext DEFAULT NULL,
@@ -99,7 +99,11 @@ class Review_Meta_Table extends BerlinDB\Database\Table {
 	 */
 	protected function __201910273() {
 
-		$result = $this->get_db()->query( "ALTER TABLE {$this->table_name} CHANGE `review_id` `bdb_review_id` BIGINT(20) UNSIGNED NOT NULL DEFAULT 0" );
+		if ( $this->column_exists( 'review_id' ) ) {
+			$result = $this->get_db()->query( "ALTER TABLE {$this->table_name} CHANGE `review_id` `bdb_review_id` BIGINT(20) UNSIGNED NOT NULL DEFAULT 0" );
+		} else {
+			$result = true;
+		}
 
 		return $this->is_success( $result );
 

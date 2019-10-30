@@ -92,8 +92,18 @@ class Book_Terms_Table extends BerlinDB\Database\Table {
 	 */
 	protected function __201910122() {
 
+		$result = true;
+
 		// Drop keys involving `term_id` or `type`.
-		$result = $this->get_db()->query( "ALTER TABLE {$this->table_name} DROP INDEX id_type_name, DROP INDEX id_type_slug, DROP INDEX type" );
+		if ( $this->get_db()->query( "SHOW INDEX FROM {$this->table_name} WHERE Key_name = 'id_type_name'" ) ) {
+			$result = $this->get_db()->query( "ALTER TABLE {$this->table_name} DROP INDEX id_type_name" );
+		}
+		if ( $this->get_db()->query( "SHOW INDEX FROM {$this->table_name} WHERE Key_name = 'id_type_slug'" ) ) {
+			$result = $this->get_db()->query( "ALTER TABLE {$this->table_name} DROP INDEX id_type_slug" );
+		}
+		if ( $this->get_db()->query( "SHOW INDEX FROM {$this->table_name} WHERE Key_name = 'type'" ) ) {
+			$result = $this->get_db()->query( "ALTER TABLE {$this->table_name} DROP INDEX type" );
+		}
 
 		if ( $result ) {
 			$result = $this->get_db()->query( "ALTER TABLE {$this->table_name} CHANGE `term_id` `id` BIGINT(20) UNSIGNED NOT NULL AUTO_INCREMENT" );

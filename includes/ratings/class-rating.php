@@ -53,7 +53,13 @@ class Rating {
 	 * @param null|float|int $rating Rating value to set.
 	 */
 	public function set_rating( $rating ) {
-		$this->rating = is_null( $rating ) ? null : floatval( $rating ) + 0;
+		if ( is_null( $rating ) ) {
+			$this->rating = null;
+		} elseif ( is_numeric( $rating ) ) {
+			$this->rating = $rating + 0;
+		} else {
+			$this->rating = $rating;
+		}
 	}
 
 	/**
@@ -83,7 +89,7 @@ class Rating {
 
 		$rating = $this->rating;
 
-		if ( is_null( $rating ) ) {
+		if ( is_null( $rating ) || ! is_numeric( $rating ) ) {
 			return null;
 		}
 
@@ -106,7 +112,7 @@ class Rating {
 
 		$rating = $this->round_rating();
 
-		if ( is_null( $format ) ) {
+		if ( is_null( $format ) || ! is_numeric( $rating ) ) {
 			return $rating;
 		} elseif ( method_exists( $this, 'format_' . $format ) ) {
 			return call_user_func( array( $this, 'format_' . $format ) );
@@ -123,11 +129,13 @@ class Rating {
 	 */
 	public function format_text() {
 
-		$text = ! is_null( $this->rating ) ? $this->rating * 1 : null;
-
-		if ( null === $text ) {
+		if ( null === $this->rating ) {
 			$text = '&ndash;';
+		} elseif ( ! is_numeric( $this->rating ) ) {
+			return $this->rating;
 		} else {
+			$text = $this->rating * 1;
+
 			if ( array_key_exists( (string) $text, $this->available_ratings ) ) {
 				$text = $this->available_ratings[ (string) $text ];
 			} else {

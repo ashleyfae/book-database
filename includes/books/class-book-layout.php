@@ -344,6 +344,16 @@ class Book_Layout {
 			return '';
 		}
 
+		if ( ! is_numeric( $this->rating->get_rating() ) ) {
+			$rating = $this->rating->get_rating();
+
+			if ( 'dnf' === $rating ) {
+				$rating = __( 'Did Not Finish', 'book-database' );
+			}
+
+			return $rating;
+		}
+
 		$fa_stars     = $this->rating->format_font_awesome();
 		$actual_value = $this->rating->get_rating();
 		$value        = '<span itemprop="reviewRating" itemscope itemtype="http://schema.org/Rating">';

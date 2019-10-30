@@ -58,8 +58,8 @@ class Book_Terms_Table extends BerlinDB\Database\Table {
 			book_count bigint(20) UNSIGNED NOT NULL DEFAULT 0,
 			date_created datetime NOT NULL DEFAULT '0000-00-00 00:00:00',
 			date_modified datetime NOT NULL DEFAULT '0000-00-00 00:00:00',
-			UNIQUE KEY id_taxonomy_name (id, taxonomy, name),
-			UNIQUE KEY id_taxonomy_slug (id, taxonomy, slug),
+			INDEX id_taxonomy_name (id, taxonomy, name),
+			INDEX id_taxonomy_slug (id, taxonomy, slug),
 			INDEX taxonomy (taxonomy),
 			INDEX name (name)";
 	}

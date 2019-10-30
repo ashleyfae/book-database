@@ -323,7 +323,7 @@ class Analytics {
 		$query = $this->wpdb->prepare(
 			"SELECT DISTINCT review.id, review.date_written, log.rating AS rating, book.id AS book_id, book.title AS book_title, GROUP_CONCAT(author.name SEPARATOR ', ') AS author_name
 				FROM {$this->tables['reviews']} AS review 
-				LEFT JOIN {$this->tables['reading_log']} AS log ON ( review.id = log.review_id )
+				LEFT JOIN {$this->tables['reading_log']} AS log ON ( review.reading_log_id = log.id )
 				INNER JOIN {$this->tables['books']} AS book ON ( review.book_id = book.id )
 				LEFT JOIN {$this->tables['author_r']} AS ar ON ( book.id = ar.book_id )
 				INNER JOIN {$this->tables['authors']} AS author ON ( ar.author_id = author.id )
@@ -574,7 +574,7 @@ class Analytics {
 		$query = $this->wpdb->prepare(
 			"SELECT COUNT( log.id ) AS number_books_read, ROUND( AVG( log.rating ), 2 ) AS average_rating, COUNT( review.id ) AS number_reviews, term.name AS term_name
 			FROM {$this->tables['reading_log']} AS log 
-			LEFT JOIN {$this->tables['reviews']} AS review ON ( review.id = log.review_id )
+			LEFT JOIN {$this->tables['reviews']} AS review ON ( review.reading_log_id = log.id )
 			INNER JOIN {$this->tables['term_r']} AS tr ON ( tr.book_id = log.book_id )
 			INNER JOIN {$this->tables['book_terms']} AS term ON ( term.id = tr.term_id )
 			WHERE date_finished >= %s 

@@ -58,8 +58,7 @@ namespace Book_Database;
 		</div>
 
 		<div class="bdb-table-edit-value">
-			<label for="bdb-reading-log-review-id-{{ data.id }}" class="screen-reader-text"><?php _e( 'Review ID', 'book-database' ); ?></label>
-			<input type="number" id="bdb-reading-log-review-id-{{ data.id }}" value="{{ data.review_id }}">
+			&mdash;
 		</div>
 	</td>
 

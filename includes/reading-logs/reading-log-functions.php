@@ -51,7 +51,6 @@ function get_reading_log_by( $column_name, $column_value ) {
  * @type array        $id__not_in          An array of item IDs to exclude. Default empty.
  * @type int          $book_id             Filter by book ID. Default empty.
  * @type array        $book_id__in         An array of book IDs to include. Default empty.
- * @type int          $review_id           Filter by review ID. Default empty.
  * @type int          $user_id             Filter by user ID. Default empty.
  * @type array        $user_id__in         An array of user IDs to include. Default empty.
  * @type array        $user_id__not_in     An array of user IDs to exclude. Default empty.
@@ -67,7 +66,7 @@ function get_reading_log_by( $column_name, $column_value ) {
  * @type int          $number              Limit number of items to retrieve. Default 20.
  * @type int          $offset              Number of items to offset the query. Used to build LIMIT clause. Default 0.
  * @type bool         $no_found_rows       Whether to disable the `SQL_CALC_FOUND_ROWS` query. Default true.
- * @type string|array $orderby             Accepts 'id', 'book_id', 'review_id', 'user_id', 'date_started',
+ * @type string|array $orderby             Accepts 'id', 'book_id', 'user_id', 'date_started',
  *                                         'date_finished', 'percentage_complete', 'rating', and 'date_modified'.
  *                                         Also accepts false, an empty array, or 'none' to disable `ORDER BY` clause.
  *                                         Default 'id'.
@@ -117,7 +116,6 @@ function count_reading_logs( $args = array() ) {
  * @param array      $args                {
  *
  * @type int         $book_id             Required. ID of the book that was read.
- * @type int         $review_id           Optional. ID of the review associated with this log.
  * @type int         $user_id             Optional. ID of the user who read the log. Defaults to current user.
  * @type string|null $date_started        Optional. Date the book was started in UTC / MySQL format.
  * @type string|null $date_finished       Optional. Date the book was finished in UTC / MySQL format.
@@ -132,7 +130,6 @@ function add_reading_log( $args = array() ) {
 
 	$args = wp_parse_args( $args, array(
 		'book_id'             => 0,
-		'review_id'           => 0,
 		'user_id'             => get_current_user_id(),
 		'date_started'        => null,
 		'date_finished'       => null,
@@ -196,6 +193,24 @@ function delete_reading_log( $log_id ) {
 
 	if ( ! $deleted ) {
 		throw new Exception( 'database_error', __( 'Failed to delete the reading log.', 'book-database' ), 500 );
+	}
+
+	// Find all reviews associated with this reading log and wipe that column value.
+	$reviews = get_reviews( array(
+		'review_query' => array(
+			array(
+				'field' => 'reading_log_id',
+				'value' => $log_id
+			)
+		)
+	) );
+
+	if ( ! empty( $reviews ) ) {
+		foreach ( $reviews as $review ) {
+			update_review( $review->id, array(
+				'reading_log_id' => null
+			) );
+		}
 	}
 
 	return true;

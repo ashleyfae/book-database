@@ -157,7 +157,7 @@ class Reviews_Query extends BerlinDB\Database\Query {
 		$join['series_query'] = "LEFT JOIN {$tbl_series} AS series ON book.series_id = series.id";
 
 		// Reading Log Join
-		$join['reading_log_query'] = "LEFT JOIN {$tbl_log} AS log ON log.review_id = review.id";
+		$join['reading_log_query'] = "LEFT JOIN {$tbl_log} AS log ON log.id = review.reading_log_id";
 
 		/**
 		 * Where
@@ -264,6 +264,7 @@ class Reviews_Query extends BerlinDB\Database\Query {
 		$valid_orderbys = array(
 			'review.id',
 			'review.book_id',
+			'review.reading_log_id',
 			'review.user_id',
 			'review.post_id',
 			'review.date_written',
@@ -288,7 +289,6 @@ class Reviews_Query extends BerlinDB\Database\Query {
 			'series.number_books',
 			'series.date_created',
 			'log.id',
-			'log.review_id',
 			'log.user_id',
 			'log.date_started',
 			'log.date_finished',

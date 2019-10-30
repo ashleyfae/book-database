@@ -12,6 +12,7 @@ namespace Book_Database\REST_API\v1;
 use Book_Database\Exception;
 use Book_Database\REST_API\Controller;
 use function Book_Database\add_reading_log;
+use function Book_Database\book_database;
 use function Book_Database\delete_reading_log;
 use function Book_Database\get_available_ratings;
 use function Book_Database\get_reading_log;
@@ -47,15 +48,6 @@ class Reading_Log extends Controller {
 					}
 				),
 				'user_id'       => array(
-					'default'           => null,
-					'validate_callback' => function ( $param, $request, $key ) {
-						return is_numeric( $param ) || empty( $param );
-					},
-					'sanitize_callback' => function ( $param, $request, $key ) {
-						return empty( $param ) ? '' : absint( $param );
-					}
-				),
-				'review_id'     => array(
 					'default'           => null,
 					'validate_callback' => function ( $param, $request, $key ) {
 						return is_numeric( $param ) || empty( $param );
@@ -110,15 +102,6 @@ class Reading_Log extends Controller {
 					},
 					'sanitize_callback' => function ( $param, $request, $key ) {
 						return absint( $param );
-					}
-				),
-				'review_id'           => array(
-					'default'           => null,
-					'validate_callback' => function ( $param, $request, $key ) {
-						return empty( $param ) || is_numeric( $param );
-					},
-					'sanitize_callback' => function ( $param, $request, $key ) {
-						return empty( $param ) ? null : absint( $param );
 					}
 				),
 				'user_id'             => array(
@@ -196,14 +179,6 @@ class Reading_Log extends Controller {
 					},
 					'sanitize_callback' => function ( $param, $request, $key ) {
 						return absint( $param );
-					}
-				),
-				'review_id'           => array(
-					'validate_callback' => function ( $param, $request, $key ) {
-						return empty( $param ) || is_numeric( $param );
-					},
-					'sanitize_callback' => function ( $param, $request, $key ) {
-						return empty( $param ) ? null : absint( $param );
 					}
 				),
 				'user_id'             => array(
@@ -317,7 +292,6 @@ class Reading_Log extends Controller {
 		try {
 			$args = array(
 				'book_id'             => $request->get_param( 'book_id' ),
-				'review_id'           => $request->get_param( 'review_id' ),
 				'user_id'             => $request->get_param( 'user_id' ),
 				'date_started'        => $request->get_param( 'date_started' ),
 				'date_finished'       => $request->get_param( 'date_finished' ),
@@ -351,7 +325,6 @@ class Reading_Log extends Controller {
 		try {
 			$whitelist = array(
 				'book_id',
-				'review_id',
 				'user_id',
 				'date_started',
 				'date_finished',

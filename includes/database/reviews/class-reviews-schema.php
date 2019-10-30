@@ -44,9 +44,9 @@ class Reviews_Schema extends BerlinDB\Database\Schema {
 			'validate' => 'absint'
 		),
 
-		// post_id
+		// reading_log_id
 		array(
-			'name'       => 'post_id',
+			'name'       => 'reading_log_id',
 			'type'       => 'bigint',
 			'length'     => '20',
 			'unsigned'   => true,
@@ -64,6 +64,18 @@ class Reviews_Schema extends BerlinDB\Database\Schema {
 			'unsigned' => true,
 			'sortable' => true,
 			'validate' => 'absint'
+		),
+
+		// post_id
+		array(
+			'name'       => 'post_id',
+			'type'       => 'bigint',
+			'length'     => '20',
+			'unsigned'   => true,
+			'sortable'   => true,
+			'allow_null' => true,
+			'default'    => null,
+			'validate'   => '\Book_Database\BerlinDB\Sanitization\absint_allow_null'
 		),
 
 		// url

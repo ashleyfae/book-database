@@ -112,8 +112,9 @@ function add_review( $args = array() ) {
 
 	$args = wp_parse_args( $args, array(
 		'book_id'        => 0,
-		'post_id'        => null,
+		'reading_log_id' => null,
 		'user_id'        => get_current_user_id(),
+		'post_id'        => null,
 		'url'            => '',
 		'review'         => '',
 		'date_written'   => current_time( 'mysql', true ),
@@ -172,19 +173,6 @@ function delete_review( $review_id ) {
 
 	if ( ! $deleted ) {
 		throw new Exception( 'database_error', __( 'Failed to delete the review.', 'book-database' ), 500 );
-	}
-
-	// Find all logs associated with this review and wipe it.
-	$reading_logs = get_reading_logs( array(
-		'review_id' => $review_id
-	) );
-
-	if ( ! empty( $reading_logs ) ) {
-		foreach ( $reading_logs as $reading_log ) {
-			update_reading_log( $reading_log->get_id(), array(
-				'review_id' => null
-			) );
-		}
 	}
 
 	// Delete all review meta.

@@ -139,4 +139,60 @@ class CLI extends \WP_CLI_Command {
 
 	}
 
+	/**
+	 * Add `reading_log_id` column to reviews table, and remove old `review_id` association from
+	 * reading log table.
+	 *
+	 * ## OPTIONS
+	 *
+	 * [--delete=<boolean>]
+	 * : If true, then the old data is wiped. If false, it's not.
+	 *
+	 * @param array $args
+	 * @param array $assoc_args
+	 */
+	public function migrate_reading_logs( $args, $assoc_args ) {
+
+		global $wpdb;
+
+		$delete = $assoc_args['delete'] ?? false;
+		$start  = time();
+
+		$tbl_log = book_database()->get_table( 'reading_log' )->get_table_name();
+
+		$logs  = $wpdb->get_results( "SELECT id,review_id FROM {$tbl_log} WHERE review_id IS NOT NULL" );
+		$count = ! empty( $logs ) ? count( $logs ) : 0;
+
+		$progress = \WP_CLI\Utils\make_progress_bar( __( 'Updating logs', 'book-database' ), $count );
+
+		if ( ! empty( $logs ) ) {
+			foreach ( $logs as $log ) {
+				try {
+					update_review( $log->review_id, array(
+						'reading_log_id' => absint( $log->id )
+					) );
+
+					if ( $delete ) {
+						update_reading_log( $log->id, array(
+							'review_id' => null
+						) );
+					}
+
+					$progress->tick();
+				} catch ( Exception $e ) {
+					WP_CLI::error( sprintf( __( 'Error on log #%d. Message: %s', 'book-database' ), $log->id, $e->getMessage() ) );
+				}
+			}
+		}
+
+		if ( $delete ) {
+			$wpdb->query( "ALTER TABLE {$tbl_log} DROP COLUMN review_id" );
+		}
+
+		$progress->finish();
+
+		WP_CLI::log( sprintf( __( 'Reading log IDs migrated in %d seconds.', 'book-database' ), time() - $start ) );
+
+	}
+
 }

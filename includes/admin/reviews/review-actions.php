@@ -30,6 +30,7 @@ function process_add_review() {
 
 		$args = array(
 			'book_id'        => absint( $_POST['book_id'] ),
+			'reading_log_id' => absint( $_POST['reading_log_id'] ),
 			'user_id'        => ! empty( $_POST['user_id'] ) ? absint( $_POST['user_id'] ) : get_current_user_id(),
 			'post_id'        => ! empty( $_POST['post_id'] ) ? absint( $_POST['post_id'] ) : null,
 			'url'            => ! empty( $_POST['url'] ) ? esc_url_raw( $_POST['url'] ) : '',
@@ -39,14 +40,6 @@ function process_add_review() {
 		);
 
 		$review_id = add_review( $args );
-
-		$reading_log_id = ! empty( $_POST['reading_log_id'] ) ? absint( $_POST['reading_log_id'] ) : false;
-
-		if ( ! empty( $reading_log_id ) ) {
-			update_reading_log( $reading_log_id, array(
-				'review_id' => absint( $review_id )
-			) );
-		}
 
 		$edit_url = get_reviews_admin_page_url( array(
 			'view'        => 'edit',
@@ -92,6 +85,7 @@ function process_update_review() {
 
 		$args = array(
 			'book_id'        => absint( $_POST['book_id'] ),
+			'reading_log_id' => absint( $_POST['reading_log_id'] ),
 			'user_id'        => ! empty( $_POST['user_id'] ) ? absint( $_POST['user_id'] ) : get_current_user_id(),
 			'post_id'        => ! empty( $_POST['post_id'] ) ? absint( $_POST['post_id'] ) : null,
 			'url'            => ! empty( $_POST['url'] ) ? esc_url_raw( $_POST['url'] ) : '',
@@ -101,27 +95,6 @@ function process_update_review() {
 		);
 
 		update_review( $review_id, $args );
-
-		$reading_log_id = ! empty( $_POST['reading_log_id'] ) ? absint( $_POST['reading_log_id'] ) : false;
-
-		if ( ! empty( $reading_log_id ) ) {
-			update_reading_log( $reading_log_id, array(
-				'review_id' => absint( $review_id )
-			) );
-		} else {
-			// Find all logs associated with this review and wipe it.
-			$reading_logs = get_reading_logs( array(
-				'review_id' => $review_id
-			) );
-
-			if ( ! empty( $reading_logs ) ) {
-				foreach ( $reading_logs as $reading_log ) {
-					update_reading_log( $reading_log->get_id(), array(
-						'review_id' => null
-					) );
-				}
-			}
-		}
 
 		$edit_url = get_reviews_admin_page_url( array(
 			'view'        => 'edit',

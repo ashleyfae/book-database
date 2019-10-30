@@ -140,12 +140,10 @@ class CLI extends \WP_CLI_Command {
 	}
 
 	/**
-	 * Migrate authors from the book_terms table to the authors table
+	 * Add `reading_log_id` column to reviews table, and remove old `review_id` association from
+	 * reading log table.
 	 *
 	 * ## OPTIONS
-	 *
-	 * [--number=<int>]
-	 * : Number of book to process. Omit to process them all.
 	 *
 	 * [--delete=<boolean>]
 	 * : If true, then the old data is wiped. If false, it's not.

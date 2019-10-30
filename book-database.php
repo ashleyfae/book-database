@@ -101,7 +101,7 @@ final class Book_Database {
 		self::$instance->setup_files();
 		self::$instance->setup_application();
 
-		register_activation_hook( __FILE__, array( self::$instance, 'install' ) );
+		add_action( 'admin_init', array( self::$instance, 'install' ), 11 );
 
 		return self::$instance;
 
@@ -439,12 +439,17 @@ final class Book_Database {
 	 */
 	public function install() {
 
+		if ( ! get_option( 'bdb_run_activation' ) ) {
+			return;
+		}
+
 		/**
 		 * Add default taxonomies.
 		 */
 		if ( ! $this->get_table( 'book_taxonomies' )->exists() ) {
 			$this->get_table( 'book_taxonomies' )->install();
 		}
+
 		$default_taxonomies = array(
 			'publisher' => array(
 				'slug'   => 'publisher',
@@ -464,6 +469,10 @@ final class Book_Database {
 		);
 
 		foreach ( $default_taxonomies as $taxonomy ) {
+			if ( get_book_taxonomy_by( 'slug', $taxonomy['slug'] ) ) {
+				continue;
+			}
+
 			try {
 				add_book_taxonomy( $taxonomy );
 			} catch ( Exception $e ) {
@@ -477,6 +486,17 @@ final class Book_Database {
 		add_rewrite_tags();
 		add_rewrite_rules();
 		flush_rewrite_rules( true );
+
+		/**
+		 * Set version number
+		 */
+		update_option( 'bdb_version', BDB_VERSION );
+
+		if ( ! get_option( 'bdb_install_date' ) ) {
+			update_option( 'bdb_install_date', date( 'Y-m-d H:i:s' ), false );
+		}
+
+		delete_option( 'bdb_run_activation' );
 
 	}
 
@@ -513,3 +533,16 @@ function book_database() {
 }
 
 add_action( 'plugins_loaded', __NAMESPACE__ . '\book_database', 4 );
+
+/**
+ * On activation, create an option. We'll use this as a flag to actually run our activation later.
+ *
+ * @see Book_Database::install()
+ *
+ * @since 1.0
+ */
+function activate() {
+	add_option( 'bdb_run_activation', date( 'Y-m-d H:i:s' ) );
+}
+
+register_activation_hook( __FILE__, __NAMESPACE__ . '\activate' );

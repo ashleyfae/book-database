@@ -74,7 +74,7 @@ class Book_Reviews_Query {
 		if ( ! empty( $_GET['author'] ) ) {
 			$this->args['author_query'][] = array(
 				'field'    => 'name',
-				'value'    => array( sanitize_text_field( wp_strip_all_tags( urldecode( $_GET['author'] ) ) ) ),
+				'value'    => sanitize_text_field( wp_strip_all_tags( urldecode( $_GET['author'] ) ) ),
 				'operator' => 'LIKE'
 			);
 		}

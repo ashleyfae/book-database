@@ -172,7 +172,15 @@ class Book_Terms_Table extends BerlinDB\Database\Table {
 
 		// Add new indexes.
 		if ( $result ) {
-			$result = $this->get_db()->query( "ALTER TABLE {$this->table_name} ADD UNIQUE KEY id_taxonomy_name (id, taxonomy, name), ADD UNIQUE KEY id_taxonomy_slug (id, taxonomy, slug), ADD INDEX taxonomy (taxonomy)" );
+			if ( $this->get_db()->query( "SHOW INDEX FROM {$this->table_name} WHERE Key_name = 'id_taxonomy_name'" ) ) {
+				$result = $this->get_db()->query( "ALTER TABLE {$this->table_name} ADD UNIQUE KEY id_taxonomy_name (id, taxonomy, name)" );
+			}
+			if ( $this->get_db()->query( "SHOW INDEX FROM {$this->table_name} WHERE Key_name = 'id_taxonomy_slug'" ) ) {
+				$result = $this->get_db()->query( "ALTER TABLE {$this->table_name} ADD UNIQUE KEY id_taxonomy_slug (id, taxonomy, slug)" );
+			}
+			if ( $this->get_db()->query( "SHOW INDEX FROM {$this->table_name} WHERE Key_name = 'taxonomy'" ) ) {
+				$result = $this->get_db()->query( "ALTER TABLE {$this->table_name} ADD UNIQUE KEY taxonomy (taxonomy)" );
+			}
 		}
 
 		return $this->is_success( $result );

@@ -211,7 +211,6 @@ class Books_Query extends BerlinDB\Database\Query {
 
 		if ( ! empty( $args['count'] ) ) {
 			$query = "SELECT {$select} FROM {$tbl_books} AS book {$join} {$where}";
-			error_log( $query );
 
 			$books = $this->get_db()->get_var( $query );
 
@@ -219,7 +218,6 @@ class Books_Query extends BerlinDB\Database\Query {
 		}
 
 		$query = $this->get_db()->prepare( "SELECT {$select} FROM {$tbl_books} AS book {$join} {$where} {$group_by} ORDER BY $orderby $order LIMIT %d,%d;", absint( $args['offset'] ), absint( $args['number'] ) );
-		error_log( $query );
 
 		$books = $this->get_db()->get_results( $query );
 

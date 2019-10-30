@@ -237,7 +237,6 @@ class Reviews_Query extends BerlinDB\Database\Query {
 
 		if ( ! empty( $args['count'] ) ) {
 			$query = "SELECT {$select} FROM {$tbl_reviews} AS review {$join} {$where}";
-			error_log( $query );
 
 			$reviews = $this->get_db()->get_var( $query );
 
@@ -245,7 +244,6 @@ class Reviews_Query extends BerlinDB\Database\Query {
 		}
 
 		$query = $this->get_db()->prepare( "SELECT {$select} FROM {$tbl_reviews} AS review {$join} {$where} {$group_by} ORDER BY $orderby $order LIMIT %d,%d;", absint( $args['offset'] ), absint( $args['number'] ) );
-		error_log( $query );
 
 		$reviews = $this->get_db()->get_results( $query );
 

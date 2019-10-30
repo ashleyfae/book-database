@@ -58,8 +58,8 @@ class Book_Terms_Table extends BerlinDB\Database\Table {
 			book_count bigint(20) UNSIGNED NOT NULL DEFAULT 0,
 			date_created datetime NOT NULL DEFAULT '0000-00-00 00:00:00',
 			date_modified datetime NOT NULL DEFAULT '0000-00-00 00:00:00',
-			UNIQUE KEY id_type_name (id, taxonomy, name),
-			UNIQUE KEY id_type_slug (id, taxonomy, slug),
+			UNIQUE KEY id_taxonomy_name (id, taxonomy, name),
+			UNIQUE KEY id_taxonomy_slug (id, taxonomy, slug),
 			INDEX taxonomy (taxonomy),
 			INDEX name (name)";
 	}
@@ -172,7 +172,7 @@ class Book_Terms_Table extends BerlinDB\Database\Table {
 
 		// Add new indexes.
 		if ( $result ) {
-			$result = $this->get_db()->query( "ALTER TABLE {$this->table_name} ADD UNIQUE KEY id_type_name (id, taxonomy, name), ADD UNIQUE KEY id_type_slug (id, taxonomy, slug), ADD INDEX taxonomy (taxonomy)" );
+			$result = $this->get_db()->query( "ALTER TABLE {$this->table_name} ADD UNIQUE KEY id_taxonomy_name (id, taxonomy, name), ADD UNIQUE KEY id_taxonomy_slug (id, taxonomy, slug), ADD INDEX taxonomy (taxonomy)" );
 		}
 
 		return $this->is_success( $result );
@@ -187,7 +187,11 @@ class Book_Terms_Table extends BerlinDB\Database\Table {
 	 */
 	protected function __201910181() {
 
-		$result = $this->get_db()->query( "ALTER TABLE {$this->table_name} CHANGE `count` `book_count` bigint(20) UNSIGNED NOT NULL DEFAULT 0" );
+		if ( $this->column_exists( 'count' ) && ! $this->column_exists( 'book_count' ) ) {
+			$result = $this->get_db()->query( "ALTER TABLE {$this->table_name} CHANGE `count` `book_count` bigint(20) UNSIGNED NOT NULL DEFAULT 0" );
+		} else {
+			$result = true;
+		}
 
 		return $this->is_success( $result );
 

@@ -32,7 +32,6 @@ class Book_Terms_Table extends BerlinDB\Database\Table {
 	protected $upgrades = array(
 		'201910122' => 201910122,
 		'201910123' => 201910123,
-		'201910124' => 201910124,
 		'201910125' => 201910125,
 		'201910126' => 201910126,
 		'201910181' => 201910181
@@ -126,20 +125,6 @@ class Book_Terms_Table extends BerlinDB\Database\Table {
 		} else {
 			$result = true;
 		}
-
-		return $this->is_success( $result );
-
-	}
-
-	/**
-	 * Upgrade to version 201910124
-	 *      - Add `unsigned` to `count`
-	 *
-	 * @return bool
-	 */
-	protected function __201910124() {
-
-		$result = $this->get_db()->query( "ALTER TABLE {$this->table_name} MODIFY count bigint(20) UNSIGNED NOT NULL DEFAULT 0" );
 
 		return $this->is_success( $result );
 

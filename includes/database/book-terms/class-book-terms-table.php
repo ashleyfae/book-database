@@ -105,7 +105,7 @@ class Book_Terms_Table extends BerlinDB\Database\Table {
 			$result = $this->get_db()->query( "ALTER TABLE {$this->table_name} DROP INDEX type" );
 		}
 
-		if ( $result ) {
+		if ( $result && $this->column_exists( 'term_id' ) ) {
 			$result = $this->get_db()->query( "ALTER TABLE {$this->table_name} CHANGE `term_id` `id` BIGINT(20) UNSIGNED NOT NULL AUTO_INCREMENT" );
 		}
 
@@ -121,7 +121,11 @@ class Book_Terms_Table extends BerlinDB\Database\Table {
 	 */
 	protected function __201910123() {
 
-		$result = $this->get_db()->query( "ALTER TABLE {$this->table_name} CHANGE `image` `image_id` bigint(20) UNSIGNED NOT NULL DEFAULT 0" );
+		if ( $this->column_exists( 'image' ) ) {
+			$result = $this->get_db()->query( "ALTER TABLE {$this->table_name} CHANGE `image` `image_id` bigint(20) UNSIGNED NOT NULL DEFAULT 0" );
+		} else {
+			$result = true;
+		}
 
 		return $this->is_success( $result );
 
@@ -175,7 +179,11 @@ class Book_Terms_Table extends BerlinDB\Database\Table {
 	 */
 	protected function __201910126() {
 
-		$result = $this->get_db()->query( "ALTER TABLE {$this->table_name} CHANGE `type` `taxonomy` varchar(32) NOT NULL DEFAULT ''" );
+		if ( $this->column_exists( 'type' ) ) {
+			$result = $this->get_db()->query( "ALTER TABLE {$this->table_name} CHANGE `type` `taxonomy` varchar(32) NOT NULL DEFAULT ''" );
+		} else {
+			$result = true;
+		}
 
 		// Add new indexes.
 		if ( $result ) {

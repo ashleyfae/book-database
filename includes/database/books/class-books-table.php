@@ -164,7 +164,11 @@ class Books_Table extends BerlinDB\Database\Table {
 	 */
 	protected function __201910096() {
 
-		$result = $this->get_db()->query( "ALTER TABLE {$this->table_name} ADD INDEX title( title(64) )" );
+		if ( ! $this->get_db()->query( "SHOW INDEX FROM {$this->table_name} WHERE Key_name = 'title'" ) ) {
+			$result = $this->get_db()->query( "ALTER TABLE {$this->table_name} ADD INDEX title( title(64) )" );
+		} else {
+			$result = true;
+		}
 
 		return $result;
 

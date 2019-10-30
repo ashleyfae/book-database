@@ -124,7 +124,7 @@ class Books_Table extends BerlinDB\Database\Table {
 	 */
 	protected function __201910094() {
 
-		$result = $this->get_db()->query( "ALTER TABLE {$this->table_name} MODIFY series_id bigint(20) UNSIGNED NOT NULL DEFAULT 0" );
+		$result = $this->get_db()->query( "ALTER TABLE {$this->table_name} MODIFY series_id bigint(20) UNSIGNED DEFAULT NULL" );
 		$result = $this->get_db()->query( "ALTER TABLE {$this->table_name} MODIFY pages bigint(20) UNSIGNED DEFAULT NULL" );
 
 		return $this->is_success( $result );

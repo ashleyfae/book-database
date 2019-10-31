@@ -57,4 +57,30 @@ class Book_Link extends Base_Object {
 		return $this->url;
 	}
 
+	/**
+	 * Format the book link
+	 *
+	 * @return string
+	 */
+	public function format() {
+
+		$retailer = get_retailer( $this->get_retailer_id() );
+
+		if ( $retailer instanceof Retailer ) {
+			$html = '<a href="' . esc_url( $this->get_url() ) . '" target=_blank" class="bdb-book-link">' . esc_html( $retailer->get_name() ) . '</a>';
+		} else {
+			$html = make_clickable( $this->get_url() );
+		}
+
+		/**
+		 * Filters the formatted book link
+		 *
+		 * @param string    $html     Final HTML to be displayed in the book layout.
+		 * @param Retailer  $retailer Retailer object.
+		 * @param Book_Link $this     Book link object.
+		 */
+		return apply_filters( 'book-database/book-link/format', $html, $retailer, $this );
+
+	}
+
 }

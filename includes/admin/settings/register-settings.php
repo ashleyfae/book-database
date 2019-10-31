@@ -37,14 +37,21 @@ function load_settings_templates() {
 		return;
 	}
 
-	$templates = array( 'row', 'row-empty' );
+	$templates = array(
+		'retailers-table-row',
+		'retailers-table-row-empty',
+		'taxonomies-table-row',
+		'taxonomies-table-row-empty'
+	);
 
 	foreach ( $templates as $template ) {
-		?>
-		<script type="text/html" id="tmpl-bdb-book-taxonomies-table-<?php echo esc_attr( $template ); ?>">
-			<?php require_once BDB_DIR . 'includes/admin/settings/templates/tmpl-taxonomies-table-' . $template . '.php'; ?>
-		</script>
-		<?php
+		if ( file_exists( BDB_DIR . 'includes/admin/settings/templates/tmpl-' . $template . '.php' ) ) {
+			?>
+			<script type="text/html" id="tmpl-bdb-<?php echo esc_attr( $template ); ?>">
+				<?php require_once BDB_DIR . 'includes/admin/settings/templates/tmpl-' . $template . '.php'; ?>
+			</script>
+			<?php
+		}
 	}
 
 }

@@ -75,7 +75,8 @@ var BDB_Reading_Logs = {
 	getLogs: function() {
 
 		let args = {
-			book_id: BDB_Reading_Logs.bookID
+			book_id: BDB_Reading_Logs.bookID,
+			number: 50
 		};
 
 		if ( $( '#bdb-book-reading-logs-user-filter' ).prop( 'checked' ) ) {

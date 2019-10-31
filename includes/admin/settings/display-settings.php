@@ -108,12 +108,46 @@ function render_settings_page() {
 												</select>
 											</td>
 											<td data-th="<?php esc_attr_e( 'Actions', 'book-database' ); ?>">
-												<button class="button-primary"><?php _e( 'Add', 'book-database' ); ?></button>
+												<button type="button" class="button-primary"><?php _e( 'Add', 'book-database' ); ?></button>
 											</td>
 										</tr>
 										</tfoot>
 									</table>
 									<div id="bdb-book-taxonomies-errors" class="bdb-notice bdb-notice-error" style="display: none;"></div>
+								</td>
+							</tr>
+							<tr>
+								<th scope="row"><?php _e( 'Retailers', 'book-database' ); ?></th>
+								<td>
+									<table id="bdb-retailers" class="wp-list-table widefat fixed striped">
+										<thead>
+										<tr>
+											<th scope="col" class="column-primary"><?php _e( 'Name', 'book-database' ); ?></th>
+											<th scope="col"><?php _e( 'Actions', 'book-database' ); ?></th>
+										</tr>
+										</thead>
+										<tbody>
+										<tr>
+											<td colspan="2"><?php _e( 'Loading...', 'book-database' ); ?></td>
+										</tr>
+										</tbody>
+										<tfoot>
+										<tr>
+											<th><?php _e( 'Name', 'book-database' ); ?></th>
+											<th><?php _e( 'Actions', 'book-database' ); ?></th>
+										</tr>
+										<tr id="bdb-new-retailer-fields">
+											<td data-th="<?php esc_attr_e( 'Name', 'book-database' ); ?>">
+												<label for="bdb-new-retailer-name" class="screen-reader-text"><?php _e( 'Enter a name for the retailer', 'book-database' ); ?></label>
+												<input type="text" id="bdb-new-retailer-name">
+											</td>
+											<td data-th="<?php esc_attr_e( 'Actions', 'book-database' ); ?>">
+												<button type="button" class="button-primary"><?php _e( 'Add', 'book-database' ); ?></button>
+											</td>
+										</tr>
+										</tfoot>
+									</table>
+									<div id="bdb-retailers-errors" class="bdb-notice bdb-notice-error" style="display: none;"></div>
 								</td>
 							</tr>
 							<?php

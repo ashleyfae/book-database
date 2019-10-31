@@ -215,6 +215,11 @@ final class Book_Database {
 		require_once BDB_DIR . 'includes/database/reading-logs/class-reading-logs-schema.php';
 		require_once BDB_DIR . 'includes/database/reading-logs/class-reading-logs-query.php';
 
+		// Database - retailers
+		require_once BDB_DIR . 'includes/database/retailers/class-retailers-table.php';
+		require_once BDB_DIR . 'includes/database/retailers/class-retailers-schema.php';
+		require_once BDB_DIR . 'includes/database/retailers/class-retailers-query.php';
+
 		// Database - reviews
 		require_once BDB_DIR . 'includes/database/reviews/class-reviews-table.php';
 		require_once BDB_DIR . 'includes/database/reviews/class-reviews-schema.php';
@@ -267,6 +272,10 @@ final class Book_Database {
 		require_once BDB_DIR . 'includes/reading-logs/class-reading-log.php';
 		require_once BDB_DIR . 'includes/reading-logs/reading-log-functions.php';
 
+		// Retailers
+		require_once BDB_DIR . 'includes/retailers/class-retailer.php';
+		require_once BDB_DIR . 'includes/retailers/retailer-functions.php';
+
 		// Reviews
 		require_once BDB_DIR . 'includes/reviews/class-review.php';
 		require_once BDB_DIR . 'includes/reviews/review-actions.php';
@@ -286,6 +295,7 @@ final class Book_Database {
 		require_once BDB_DIR . 'includes/rest-api/v1/class-book-term-controller.php';
 		require_once BDB_DIR . 'includes/rest-api/v1/class-edition-controller.php';
 		require_once BDB_DIR . 'includes/rest-api/v1/class-reading-log-controller.php';
+		require_once BDB_DIR . 'includes/rest-api/v1/class-retailer-controller.php';
 		require_once BDB_DIR . 'includes/rest-api/v1/class-review-controller.php';
 		require_once BDB_DIR . 'includes/rest-api/v1/class-taxonomy-controller.php';
 		require_once BDB_DIR . 'includes/rest-api/v1/class-utility-controller.php';
@@ -389,6 +399,7 @@ final class Book_Database {
 			'book_meta'                 => new Book_Meta_Table(),
 			'editions'                  => new Editions_Table(),
 			'reading_log'               => new Reading_Logs_Table(),
+			'retailers'                 => new Retailers_Table(),
 			'reviews'                   => new Reviews_Table(),
 			'review_meta'               => new Review_Meta_Table(),
 			'series'                    => new Series_Table(),
@@ -412,6 +423,7 @@ final class Book_Database {
 	 *                          'book_meta',
 	 *                          'editions'
 	 *                          'reading_log'
+	 *                          'retailers',
 	 *                          'reviews',
 	 *                          'review_meta',
 	 *                          'series'

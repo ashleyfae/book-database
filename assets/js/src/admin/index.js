@@ -15,6 +15,7 @@ import { BDB_Delete_Objects } from "./modules/delete-objects";
 import { BDB_Editions } from "./modules/editions";
 import { BDB_Media } from "./modules/media-upload";
 import { BDB_Reading_Logs } from "./modules/reading-logs";
+import { BDB_Retailers } from "./modules/retailers";
 import { BDB_Tags } from './modules/tags';
 import { BDB_Book_Taxonomies } from './modules/taxonomies.js';
 
@@ -29,6 +30,7 @@ import { BDB_Book_Taxonomies } from './modules/taxonomies.js';
 	BDB_Editions.init();
 	BDB_Media.init();
 	BDB_Reading_Logs.init();
+	BDB_Retailers.init();
 	BDB_Tags.init();
 	BDB_Book_Taxonomies.init();
 

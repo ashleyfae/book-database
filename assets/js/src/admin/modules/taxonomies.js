@@ -9,9 +9,9 @@ var BDB_Book_Taxonomies = {
 
 	tableBody: false,
 
-	rowTemplate: wp.template( 'bdb-book-taxonomies-table-row' ),
+	rowTemplate: wp.template( 'bdb-taxonomies-table-row' ),
 
-	rowEmptyTemplate: wp.template( 'bdb-book-taxonomies-table-row-empty' ),
+	rowEmptyTemplate: wp.template( 'bdb-taxonomies-table-row-empty' ),
 
 	errorWrap: '',
 
@@ -28,6 +28,7 @@ var BDB_Book_Taxonomies = {
 		}
 
 		$( '#bdb-new-book-taxonomy-name' ).on( 'keyup', this.generateSlug );
+		$( '#bdb-new-book-taxonomy-fields' ).on( 'keyup', 'input', this.clickOnEnter );
 		$( '#bdb-new-book-taxonomy-fields' ).on( 'click', 'button', this.addTaxonomy );
 		$( document ).on( 'click', '.bdb-update-book-taxonomy', this.updateTaxonomy );
 		$( document ).on( 'click', '.bdb-remove-book-taxonomy', this.deleteTaxonomy );
@@ -41,7 +42,7 @@ var BDB_Book_Taxonomies = {
 	 */
 	getTaxonomies: function() {
 
-		apiRequest( 'v1/taxonomy', {}, 'GET' ).then( function( response ) {
+		apiRequest( 'v1/taxonomy', { number: 50 }, 'GET' ).then( function( response ) {
 
 			BDB_Book_Taxonomies.tableBody.empty();
 
@@ -71,6 +72,21 @@ var BDB_Book_Taxonomies = {
 		let slug = name.toLowerCase().replace( /[^a-z0-9_\-]/g, '' );
 
 		$( '#bdb-new-book-taxonomy-slug' ).val( slug );
+
+	},
+
+	/**
+	 * Trigger a button click when pressing `enter` inside an `<input>` field.
+	 *
+	 * @param e
+	 */
+	clickOnEnter: function ( e ) {
+
+		if ( 13 === e.keyCode ) {
+			e.preventDefault();
+
+			$( '#bdb-new-book-taxonomy-fields' ).find( 'button' ).trigger( 'click' );
+		}
 
 	},
 
@@ -145,6 +161,12 @@ var BDB_Book_Taxonomies = {
 
 	},
 
+	/**
+	 * Delete a taxonomy
+	 *
+	 * @param e
+	 * @returns {boolean}
+	 */
 	deleteTaxonomy: function ( e ) {
 
 		e.preventDefault();

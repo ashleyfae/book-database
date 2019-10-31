@@ -46,7 +46,7 @@ var BDB_Editions = {
 	 */
 	getEditions: function() {
 
-		apiRequest( 'v1/edition', { book_id: BDB_Editions.bookID }, 'GET' ).then( function( response ) {
+		apiRequest( 'v1/edition', { book_id: BDB_Editions.bookID, number: 50 }, 'GET' ).then( function( response ) {
 
 			BDB_Editions.tableBody.empty();
 

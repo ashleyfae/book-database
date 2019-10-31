@@ -3070,7 +3070,7 @@ class Query extends Base {
 		}
 
 		// Fetch all the columns for the table being queried.
-		$column_names = $this->get_column_names();
+		$column_names = array_flip( $this->get_column_names() );
 
 		// Ensure valid column names have been passed for the `SELECT` clause.
 		foreach ( $cols as $index => $column ) {

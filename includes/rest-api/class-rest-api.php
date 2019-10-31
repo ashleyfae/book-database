@@ -33,6 +33,7 @@ class REST_API {
 			'\Book_Database\REST_API\v1\Book_Term',
 			'\Book_Database\REST_API\v1\Edition',
 			'\Book_Database\REST_API\v1\Reading_Log',
+			'\Book_Database\REST_API\v1\Retailer',
 			'\Book_Database\REST_API\v1\Review',
 			'\Book_Database\REST_API\v1\Taxonomy',
 			'\Book_Database\REST_API\v1\Utility',

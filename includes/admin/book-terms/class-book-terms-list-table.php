@@ -143,6 +143,10 @@ class Book_Terms_List_Table extends List_Table {
 			'term_id' => '<span class="bdb-id-col">' . sprintf( __( 'ID: %d', 'book-database' ), $item->get_id() ) . '</span>'
 		);
 
+		if ( ! user_can_edit_books() ) {
+			unset( $actions['delete'] );
+		}
+
 		return '<strong><a href="' . esc_url( $edit_url ) . '" class="row-title">' . esc_html( $item->get_name() ) . '</a></strong>' . $this->row_actions( $actions );
 
 	}

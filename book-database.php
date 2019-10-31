@@ -291,6 +291,7 @@ final class Book_Database {
 		require_once BDB_DIR . 'includes/rest-api/v1/class-utility-controller.php';
 
 		// Misc.
+		require_once BDB_DIR . 'includes/capabilities.php';
 		require_once BDB_DIR . 'includes/class-analytics.php';
 		require_once BDB_DIR . 'includes/class-book-reviews-query.php';
 		require_once BDB_DIR . 'includes/class-book-grid-query.php';
@@ -486,6 +487,15 @@ final class Book_Database {
 		add_rewrite_tags();
 		add_rewrite_rules();
 		flush_rewrite_rules( true );
+
+		/**
+		 * Add capabilities
+		 */
+		$role = get_role( 'administrator' );
+
+		foreach ( get_book_capabilities() as $capability ) {
+			$role->add_cap( $capability, true );
+		}
 
 		/**
 		 * Set version number

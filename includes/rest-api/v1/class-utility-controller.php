@@ -40,17 +40,6 @@ class Utility extends Controller {
 	}
 
 	/**
-	 * Can edit
-	 *
-	 * @param \WP_REST_Request $request
-	 *
-	 * @return bool|\WP_Error
-	 */
-	public function can_edit( $request ) {
-		return current_user_can( 'edit_posts' );
-	}
-
-	/**
 	 * Convert date
 	 *
 	 * Converts a provided date string (that's in WordPress site time) to UTC and formats it in MySQL format.

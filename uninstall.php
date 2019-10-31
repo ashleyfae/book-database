@@ -60,3 +60,10 @@ foreach ( $tables as $table_key ) {
 		$table->uninstall();
 	}
 }
+
+// Remove capabilities
+$role = get_role( 'administrator' );
+
+foreach ( get_book_capabilities() as $capability ) {
+	$role->remove_cap( $capability );
+}

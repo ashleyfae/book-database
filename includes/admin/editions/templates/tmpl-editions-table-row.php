@@ -100,7 +100,9 @@ $sources = get_book_terms( array(
 	</td>
 
 	<td class="bdb-edition-actions" data-th="<?php esc_attr_e( 'Actions', 'book-database' ); ?>">
-		<button type="button" class="button bdb-edition-toggle-editable"><?php _e( 'Edit', 'book-database' ); ?></button>
-		<button type="button" class="button bdb-remove-edition"><?php _e( 'Remove', 'book-database' ); ?></button>
+		<?php if ( user_can_edit_books() ) : ?>
+			<button type="button" class="button bdb-edition-toggle-editable"><?php _e( 'Edit', 'book-database' ); ?></button>
+			<button type="button" class="button bdb-remove-edition"><?php _e( 'Remove', 'book-database' ); ?></button>
+		<?php endif; ?>
 	</td>
 </tr>

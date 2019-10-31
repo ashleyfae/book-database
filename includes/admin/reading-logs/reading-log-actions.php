@@ -49,53 +49,57 @@ function reading_logs_table( $book ) {
 					<td colspan="7"><?php _e( 'Loading...', 'book-database' ); ?></td>
 				</tr>
 				</tbody>
-				<tfoot>
-				<tr>
-					<td colspan="7">
-						<button type="button" id="bdb-add-reading-log" class="button"><?php _e( 'Add Reading Log', 'book-database' ); ?></button>
-					</td>
-				</tr>
-				</tfoot>
+				<?php if ( user_can_edit_books() ) : ?>
+					<tfoot>
+					<tr>
+						<td colspan="7">
+							<button type="button" id="bdb-add-reading-log" class="button"><?php _e( 'Add Reading Log', 'book-database' ); ?></button>
+						</td>
+					</tr>
+					</tfoot>
+				<?php endif; ?>
 			</table>
 
-			<div id="bdb-new-reading-log-fields">
-				<div class="bdb-meta-row">
-					<label for="bdb-new-log-start-date"><?php _e( 'Start Date', 'book-database' ); ?></label>
-					<div class="bdb-meta-value">
-						<input type="text" id="bdb-new-log-start-date" class="bdb-datepicker" value="<?php echo esc_attr( format_date( current_time( 'mysql', true ), 'Y-m-d' ) ); ?>">
-						<p class="description"><?php _e( 'Date you started reading the book.', 'book-database' ); ?></p>
+			<?php if ( user_can_edit_books() ) : ?>
+				<div id="bdb-new-reading-log-fields">
+					<div class="bdb-meta-row">
+						<label for="bdb-new-log-start-date"><?php _e( 'Start Date', 'book-database' ); ?></label>
+						<div class="bdb-meta-value">
+							<input type="text" id="bdb-new-log-start-date" class="bdb-datepicker" value="<?php echo esc_attr( format_date( current_time( 'mysql', true ), 'Y-m-d' ) ); ?>">
+							<p class="description"><?php _e( 'Date you started reading the book.', 'book-database' ); ?></p>
+						</div>
+					</div>
+					<div class="bdb-meta-row">
+						<label for="bdb-new-log-end-date"><?php _e( 'Finish Date', 'book-database' ); ?></label>
+						<div class="bdb-meta-value">
+							<input type="text" id="bdb-new-log-end-date" class="bdb-datepicker">
+							<p class="description"><?php _e( 'Date you finished reading the book. Leave blank if you\'re not finished.', 'book-database' ); ?></p>
+						</div>
+					</div>
+					<div class="bdb-meta-row">
+						<label for="bdb-new-log-percent-complete"><?php _e( '% Complete', 'book-database' ); ?></label>
+						<div class="bdb-meta-value">
+							<input type="number" id="bdb-new-log-percent-complete" class="regular-text bdb-input-has-suffix">
+							<span class="bdb-input-suffix">%</span>
+							<p class="description"><?php _e( 'Percentage of the book you\'ve read.', 'book-database' ); ?></p>
+						</div>
+					</div>
+					<div class="bdb-meta-row">
+						<label for="bdb-new-log-rating"><?php _e( 'Rating', 'book-database' ); ?></label>
+						<div class="bdb-meta-value">
+							<select id="bdb-new-log-rating">
+								<option value=""><?php _e( 'None', 'book-database' ); ?></option>
+								<?php foreach ( get_available_ratings() as $rating_value => $rating_label ) : ?>
+									<option value="<?php echo esc_attr( $rating_value ); ?>"><?php echo esc_html( $rating_label ); ?></option>
+								<?php endforeach; ?>
+							</select>
+						</div>
+					</div>
+					<div class="bdb-meta-row">
+						<button id="bdb-submit-new-reading-log" class="button-primary"><?php _e( 'Add Log', 'book-database' ); ?></button>
 					</div>
 				</div>
-				<div class="bdb-meta-row">
-					<label for="bdb-new-log-end-date"><?php _e( 'Finish Date', 'book-database' ); ?></label>
-					<div class="bdb-meta-value">
-						<input type="text" id="bdb-new-log-end-date" class="bdb-datepicker">
-						<p class="description"><?php _e( 'Date you finished reading the book. Leave blank if you\'re not finished.', 'book-database' ); ?></p>
-					</div>
-				</div>
-				<div class="bdb-meta-row">
-					<label for="bdb-new-log-percent-complete"><?php _e( '% Complete', 'book-database' ); ?></label>
-					<div class="bdb-meta-value">
-						<input type="number" id="bdb-new-log-percent-complete" class="regular-text bdb-input-has-suffix">
-						<span class="bdb-input-suffix">%</span>
-						<p class="description"><?php _e( 'Percentage of the book you\'ve read.', 'book-database' ); ?></p>
-					</div>
-				</div>
-				<div class="bdb-meta-row">
-					<label for="bdb-new-log-rating"><?php _e( 'Rating', 'book-database' ); ?></label>
-					<div class="bdb-meta-value">
-						<select id="bdb-new-log-rating">
-							<option value=""><?php _e( 'None', 'book-database' ); ?></option>
-							<?php foreach ( get_available_ratings() as $rating_value => $rating_label ) : ?>
-								<option value="<?php echo esc_attr( $rating_value ); ?>"><?php echo esc_html( $rating_label ); ?></option>
-							<?php endforeach; ?>
-						</select>
-					</div>
-				</div>
-				<div class="bdb-meta-row">
-					<button id="bdb-submit-new-reading-log" class="button-primary"><?php _e( 'Add Log', 'book-database' ); ?></button>
-				</div>
-			</div>
+			<?php endif; ?>
 
 			<div id="bdb-reading-logs-errors" class="bdb-notice bdb-notice-error" style="display: none;"></div>
 		</div>

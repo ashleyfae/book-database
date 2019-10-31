@@ -32,7 +32,9 @@ function render_book_series_page() {
 			<div class="wrap">
 				<h1>
 					<?php esc_html_e( 'Series', 'book-database' ); ?>
-					<a href="<?php echo esc_url( get_series_admin_page_url( array( 'view' => 'add' ) ) ); ?>" class="page-title-action"><?php esc_html_e( 'Add New', 'book-database' ); ?></a>
+					<?php if ( user_can_edit_books() ) : ?>
+						<a href="<?php echo esc_url( get_series_admin_page_url( array( 'view' => 'add' ) ) ); ?>" class="page-title-action"><?php esc_html_e( 'Add New', 'book-database' ); ?></a>
+					<?php endif; ?>
 				</h1>
 
 				<form id="bdb-series-filter" method="GET" action="<?php echo esc_url( get_series_admin_page_url() ); ?>">

@@ -10,7 +10,13 @@
 namespace Book_Database\REST_API;
 
 use WP_REST_Controller;
+use function Book_Database\user_can_edit_books;
+use function Book_Database\user_can_view_books;
 
+/**
+ * Class Controller
+ * @package Book_Database\REST_API
+ */
 abstract class Controller extends WP_REST_Controller {
 
 	protected $namespace = 'book-database/v1';
@@ -32,7 +38,7 @@ abstract class Controller extends WP_REST_Controller {
 	 * @return bool|\WP_Error
 	 */
 	public function can_view( $request ) {
-		return current_user_can( 'edit_posts' );
+		return user_can_view_books();
 	}
 
 	/**
@@ -43,7 +49,7 @@ abstract class Controller extends WP_REST_Controller {
 	 * @return bool|\WP_Error
 	 */
 	public function can_edit( $request ) {
-		return current_user_can( 'manage_options' );
+		return user_can_edit_books();
 	}
 
 }

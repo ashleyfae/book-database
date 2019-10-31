@@ -60,3 +60,16 @@ foreach ( $tables as $table_key ) {
 		$table->uninstall();
 	}
 }
+
+// Remove capabilities
+$capabilities = array(
+	'view_books',
+	'edit_books',
+	'manage_book_settings'
+);
+
+$role = get_role( 'administrator' );
+
+foreach ( $capabilities as $capability ) {
+	$role->remove_cap( $capability );
+}

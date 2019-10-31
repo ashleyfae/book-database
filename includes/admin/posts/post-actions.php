@@ -15,6 +15,10 @@ namespace Book_Database;
  * @since 1.0
  */
 function register_meta_boxes() {
+	if ( ! user_can_edit_books() ) {
+		return;
+	}
+
 	foreach ( get_review_post_types() as $post_type ) {
 		add_meta_box( 'bdb_book_reviews', __( 'Book Reviews', 'book-database' ), __NAMESPACE__ . '\render_book_reviews_meta_box', $post_type, 'normal', 'high' );
 	}
@@ -94,6 +98,10 @@ function render_book_reviews_meta_box( $post ) {
  * Load templates
  */
 function load_post_meta_templates() {
+
+	if ( ! user_can_edit_books() ) {
+		return;
+	}
 
 	$screen = get_current_screen();
 

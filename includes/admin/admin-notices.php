@@ -14,7 +14,7 @@ namespace Book_Database;
  */
 function display_admin_notices() {
 
-	if ( ! current_user_can( 'edit_posts' ) ) {
+	if ( ! user_can_view_books() ) {
 		return;
 	}
 

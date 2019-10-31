@@ -20,7 +20,7 @@ function process_add_book() {
 
 	try {
 
-		if ( ! wp_verify_nonce( $_POST['bdb_add_book_nonce'], 'bdb_add_book' ) || ! current_user_can( 'edit_posts' ) ) {
+		if ( ! wp_verify_nonce( $_POST['bdb_add_book_nonce'], 'bdb_add_book' ) || ! user_can_edit_books() ) {
 			throw new Exception( 'permission_denied', __( 'You do not have permission to perform this action.', 'book-database' ), 403 );
 		}
 
@@ -110,7 +110,7 @@ function process_update_book() {
 
 	try {
 
-		if ( ! wp_verify_nonce( $_POST['bdb_update_book_nonce'], 'bdb_update_book' ) || ! current_user_can( 'edit_posts' ) ) {
+		if ( ! wp_verify_nonce( $_POST['bdb_update_book_nonce'], 'bdb_update_book' ) || ! user_can_edit_books() ) {
 			throw new Exception( 'permission_denied', __( 'You do not have permission to perform this action.', 'book-database' ), 403 );
 		}
 
@@ -210,7 +210,7 @@ function process_delete_book() {
 
 	try {
 
-		if ( empty( $_GET['_wpnonce'] ) || ! wp_verify_nonce( $_GET['_wpnonce'], 'bdb_delete_book' ) || ! current_user_can( 'edit_posts' ) ) {
+		if ( empty( $_GET['_wpnonce'] ) || ! wp_verify_nonce( $_GET['_wpnonce'], 'bdb_delete_book' ) || ! user_can_edit_books() ) {
 			throw new Exception( 'permission_denied', __( 'You do not have permission to perform this action.', 'book-database' ), 403 );
 		}
 

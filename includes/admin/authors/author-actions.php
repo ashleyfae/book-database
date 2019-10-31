@@ -20,7 +20,7 @@ function process_add_author() {
 
 	try {
 
-		if ( ! wp_verify_nonce( $_POST['bdb_add_author_nonce'], 'bdb_add_author' ) || ! current_user_can( 'edit_posts' ) ) {
+		if ( ! wp_verify_nonce( $_POST['bdb_add_author_nonce'], 'bdb_add_author' ) || ! user_can_edit_books() ) {
 			throw new Exception( 'permission_denied', __( 'You do not have permission to perform this action.', 'book-database' ), 403 );
 		}
 
@@ -65,7 +65,7 @@ function process_update_author() {
 
 	try {
 
-		if ( ! wp_verify_nonce( $_POST['bdb_update_author_nonce'], 'bdb_update_author' ) || ! current_user_can( 'edit_posts' ) ) {
+		if ( ! wp_verify_nonce( $_POST['bdb_update_author_nonce'], 'bdb_update_author' ) || ! user_can_edit_books() ) {
 			throw new Exception( 'permission_denied', __( 'You do not have permission to perform this action.', 'book-database' ), 403 );
 		}
 
@@ -114,7 +114,7 @@ function process_delete_author() {
 
 	try {
 
-		if ( empty( $_GET['_wpnonce'] ) || ! wp_verify_nonce( $_GET['_wpnonce'], 'bdb_delete_author' ) || ! current_user_can( 'edit_posts' ) ) {
+		if ( empty( $_GET['_wpnonce'] ) || ! wp_verify_nonce( $_GET['_wpnonce'], 'bdb_delete_author' ) || ! user_can_edit_books() ) {
 			throw new Exception( 'permission_denied', __( 'You do not have permission to perform this action.', 'book-database' ), 403 );
 		}
 

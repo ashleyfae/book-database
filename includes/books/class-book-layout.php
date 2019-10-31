@@ -354,12 +354,12 @@ class Book_Layout {
 			return $rating;
 		}
 
-		$fa_stars     = $this->rating->format_font_awesome();
-		$actual_value = $this->rating->get_rating();
-		$value        = '<span itemprop="reviewRating" itemscope itemtype="http://schema.org/Rating">';
-		$value        .= '<span class="bdb-font-awesome-star-wrap">' . $fa_stars . '</span>';
-		$value        .= '<span class="bdb-actual-rating-values"><span itemprop="ratingValue">' . esc_html( $actual_value ) . '</span>/<span itemprop="bestRating">' . esc_html( $this->rating->get_max_rating() ) . '</span></span>';
-		$value        .= '</span>';
+		$rating_format = bdb_get_option( 'rating_display', 'html_stars' );
+		$actual_value  = $this->rating->get_rating();
+		$value         = '<span itemprop="reviewRating" itemscope itemtype="http://schema.org/Rating">';
+		$value         .= '<span class="bdb-' . sanitize_html_class( str_replace( '_', '-', $rating_format ) ) . '-star-wrap">' . $this->rating->format( $rating_format ) . '</span>';
+		$value         .= '<span class="bdb-actual-rating-values"><span itemprop="ratingValue">' . esc_html( $actual_value ) . '</span>/<span itemprop="bestRating">' . esc_html( $this->rating->get_max_rating() ) . '</span></span>';
+		$value         .= '</span>';
 
 		if ( link_book_terms() ) {
 			$value = '<a href="' . esc_url( get_book_term_link( $this->rating ) ) . '">' . $value . '</a>';

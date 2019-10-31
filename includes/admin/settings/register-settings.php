@@ -92,6 +92,10 @@ function sanitize_settings( $data ) {
 			case 'delete_on_uninstall' :
 				$sanitized[ $key ] = absint( $value );
 				break;
+
+			case 'rating_display' :
+				$sanitized[ $key ] = sanitize_text_field( $value );
+				break;
 		}
 	}
 

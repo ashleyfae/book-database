@@ -10,6 +10,20 @@
 namespace Book_Database;
 
 /**
+ * Get all capabilities added by this plugin
+ *
+ * @since 1.0
+ * @return array
+ */
+function get_book_capabilities() {
+	return array(
+		'bdb_view_books',
+		'bdb_edit_books',
+		'bdb_manage_book_settings'
+	);
+}
+
+/**
  * Returns true if the user can view books in the admin area
  *
  * @param int $user_id
@@ -22,7 +36,7 @@ function user_can_view_books( $user_id = 0 ) {
 		$user_id = get_current_user_id();
 	}
 
-	$can_view = user_can( $user_id, 'view_books' );
+	$can_view = user_can( $user_id, 'bdb_view_books' );
 
 	// Admins can always view.
 	if ( ! $can_view && user_can( $user_id, 'manage_options' ) ) {
@@ -52,7 +66,7 @@ function user_can_edit_books( $user_id = 0 ) {
 		$user_id = get_current_user_id();
 	}
 
-	$can_edit = user_can( $user_id, 'edit_books' );
+	$can_edit = user_can( $user_id, 'bdb_edit_books' );
 
 	// Admins can always edit.
 	if ( ! $can_edit && user_can( $user_id, 'manage_options' ) ) {
@@ -82,7 +96,7 @@ function user_can_manage_book_settings( $user_id = 0 ) {
 		$user_id = get_current_user_id();
 	}
 
-	$can_manage = user_can( $user_id, 'manage_book_settings' );
+	$can_manage = user_can( $user_id, 'bdb_manage_book_settings' );
 
 	// Admins can always edit.
 	if ( ! $can_manage && user_can( $user_id, 'manage_options' ) ) {

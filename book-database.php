@@ -491,15 +491,9 @@ final class Book_Database {
 		/**
 		 * Add capabilities
 		 */
-		$capabilities = array(
-			'view_books',
-			'edit_books',
-			'manage_book_settings'
-		);
-
 		$role = get_role( 'administrator' );
 
-		foreach ( $capabilities as $capability ) {
+		foreach ( get_book_capabilities() as $capability ) {
 			$role->add_cap( $capability, true );
 		}
 

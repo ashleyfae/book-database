@@ -145,6 +145,22 @@ function render_settings_page() {
 							</tr>
 							<tr>
 								<th scope="row">
+									<label for="bdb-settings-rating-display"><?php _e( 'Rating Display Format', 'book-database' ); ?></label>
+								</th>
+								<td>
+									<?php
+									$rating_display = bdb_get_option( 'rating_display', 'html_stars' );
+									?>
+									<select id="bdb-settings-rating-display" name="bdb_settings[rating_display]">
+										<option value="font_awesome" <?php selected( $rating_display, 'font_awesome' ); ?>><?php _e( 'Font Awesome Stars', 'book-database' ); ?></option>
+										<option value="html_stars" <?php selected( $rating_display, 'html_stars' ); ?>><?php _e( 'HTML Stars', 'book-database' ); ?></option>
+										<option value="text" <?php selected( $rating_display, 'text' ); ?>><?php _e( 'Plain Text', 'book-database' ); ?></option>
+									</select>
+									<p class="description"><?php _e( 'How ratings are displayed in shortcodes.', 'book-database'); ?></p>
+								</td>
+							</tr>
+							<tr>
+								<th scope="row">
 									<label for="bdb-settings-sync-review-publish-date"><?php _e( 'Sync Review Publish Date', 'book-database' ); ?></label>
 								</th>
 								<td>

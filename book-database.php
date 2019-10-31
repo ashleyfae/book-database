@@ -296,7 +296,6 @@ final class Book_Database {
 		require_once BDB_DIR . 'includes/class-book-reviews-query.php';
 		require_once BDB_DIR . 'includes/class-book-grid-query.php';
 		require_once BDB_DIR . 'includes/class-html.php';
-		require_once BDB_DIR . 'includes/content-filters.php';
 		require_once BDB_DIR . 'includes/misc-functions.php';
 		require_once BDB_DIR . 'includes/rewrites.php';
 		require_once BDB_DIR . 'includes/shortcodes.php';

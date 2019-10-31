@@ -42,66 +42,70 @@ function editions_table( $book ) {
 					<td colspan="6"><?php _e( 'Loading...', 'book-database' ); ?></td>
 				</tr>
 				</tbody>
-				<tfoot>
-				<tr>
-					<td colspan="6">
-						<button type="button" id="bdb-add-edition" class="button"><?php _e( 'Add Edition', 'book-database' ); ?></button>
-					</td>
-				</tr>
-				</tfoot>
+				<?php if ( user_can_edit_books() ) : ?>
+					<tfoot>
+					<tr>
+						<td colspan="6">
+							<button type="button" id="bdb-add-edition" class="button"><?php _e( 'Add Edition', 'book-database' ); ?></button>
+						</td>
+					</tr>
+					</tfoot>
+				<?php endif; ?>
 			</table>
 
-			<div id="bdb-new-edition-fields">
-				<div class="bdb-meta-row">
-					<label for="bdb-new-edition-isbn"><?php _e( 'ISBN or ASIN', 'book-database' ); ?></label>
-					<div class="bdb-meta-value">
-						<input type="text" id="bdb-new-edition-isbn" class="regular-text">
+			<?php if ( user_can_edit_books() ) : ?>
+				<div id="bdb-new-edition-fields">
+					<div class="bdb-meta-row">
+						<label for="bdb-new-edition-isbn"><?php _e( 'ISBN or ASIN', 'book-database' ); ?></label>
+						<div class="bdb-meta-value">
+							<input type="text" id="bdb-new-edition-isbn" class="regular-text">
+						</div>
 					</div>
-				</div>
-				<div class="bdb-meta-row">
-					<label for="bdb-new-edition-format"><?php _e( 'Format', 'book-database' ); ?></label>
-					<div class="bdb-meta-value">
-						<select id="bdb-new-edition-format">
-							<?php foreach ( get_book_formats() as $format_key => $format_name ) : ?>
-								<option value="<?php echo esc_attr( $format_key ); ?>"><?php echo esc_html( $format_name ); ?></option>
-							<?php endforeach; ?>
-						</select>
+					<div class="bdb-meta-row">
+						<label for="bdb-new-edition-format"><?php _e( 'Format', 'book-database' ); ?></label>
+						<div class="bdb-meta-value">
+							<select id="bdb-new-edition-format">
+								<?php foreach ( get_book_formats() as $format_key => $format_name ) : ?>
+									<option value="<?php echo esc_attr( $format_key ); ?>"><?php echo esc_html( $format_name ); ?></option>
+								<?php endforeach; ?>
+							</select>
+						</div>
 					</div>
-				</div>
-				<div class="bdb-meta-row">
-					<label for="bdb-new-edition-date-acquired"><?php _e( 'Date Acquired', 'book-database' ); ?></label>
-					<div class="bdb-meta-value">
-						<input type="text" id="bdb-new-edition-date-acquired" value="<?php echo esc_attr( format_date( current_time( 'mysql', true ), 'Y-m-d' ) ); ?>" class="bdb-datepicker">
-						<p class="description"><?php _e( 'Date you acquired the book.', 'book-database' ); ?></p>
+					<div class="bdb-meta-row">
+						<label for="bdb-new-edition-date-acquired"><?php _e( 'Date Acquired', 'book-database' ); ?></label>
+						<div class="bdb-meta-value">
+							<input type="text" id="bdb-new-edition-date-acquired" value="<?php echo esc_attr( format_date( current_time( 'mysql', true ), 'Y-m-d' ) ); ?>" class="bdb-datepicker">
+							<p class="description"><?php _e( 'Date you acquired the book.', 'book-database' ); ?></p>
+						</div>
 					</div>
-				</div>
-				<div class="bdb-meta-row">
-					<label for="bdb-new-edition-source"><?php _e( 'Source', 'book-database' ); ?></label>
-					<div class="bdb-meta-value">
-						<?php
-						if ( false !== $source_tax ) {
-							book_database()->get_html()->taxonomy_field( $source_tax, array( 'id' => 'edition' ) );
-						} else {
-							echo '&ndash;';
-						}
-						?>
+					<div class="bdb-meta-row">
+						<label for="bdb-new-edition-source"><?php _e( 'Source', 'book-database' ); ?></label>
+						<div class="bdb-meta-value">
+							<?php
+							if ( false !== $source_tax ) {
+								book_database()->get_html()->taxonomy_field( $source_tax, array( 'id' => 'edition' ) );
+							} else {
+								echo '&ndash;';
+							}
+							?>
+						</div>
 					</div>
-				</div>
-				<div class="bdb-meta-row">
-					<label>
-						<?php _e( 'Signed', 'book-database' ); ?>
-					</label>
-					<div class="bdb-meta-value">
-						<input type="checkbox" id="bdb-new-edition-signed" value="1">
-						<label for="bdb-new-edition-signed">
-							<?php _e( 'Check on if the book is signed', 'book-database' ); ?>
+					<div class="bdb-meta-row">
+						<label>
+							<?php _e( 'Signed', 'book-database' ); ?>
 						</label>
+						<div class="bdb-meta-value">
+							<input type="checkbox" id="bdb-new-edition-signed" value="1">
+							<label for="bdb-new-edition-signed">
+								<?php _e( 'Check on if the book is signed', 'book-database' ); ?>
+							</label>
+						</div>
+					</div>
+					<div class="bdb-meta-row">
+						<button id="bdb-submit-new-edition" class="button-primary"><?php _e( 'Add Edition', 'book-database' ); ?></button>
 					</div>
 				</div>
-				<div class="bdb-meta-row">
-					<button id="bdb-submit-new-edition" class="button-primary"><?php _e( 'Add Edition', 'book-database' ); ?></button>
-				</div>
-			</div>
+			<?php endif; ?>
 
 			<div id="bdb-editions-errors" class="bdb-notice bdb-notice-error" style="display: none;"></div>
 		</div>

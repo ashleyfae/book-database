@@ -36,7 +36,7 @@ function render_book_terms_page() {
 					<?php esc_html_e( 'Book Terms', 'book-database' ); ?>
 				</h1>
 
-				<div id="col-container" class="wp-clearfix">
+				<div id="<?php echo user_can_edit_books() ? 'col-container' : ''; ?>" class="wp-clearfix">
 
 					<?php if ( user_can_edit_books() ) : ?>
 						<div id="col-left">
@@ -78,7 +78,7 @@ function render_book_terms_page() {
 						</div>
 					<?php endif; ?>
 
-					<div id="col-right">
+					<div id="<?php echo user_can_edit_books() ? 'col-right' : ''; ?>">
 						<div class="col-wrap">
 							<form id="bdb-book-terms-filter" method="GET" action="<?php echo esc_url( get_book_terms_admin_page_url() ); ?>">
 								<input type="hidden" name="page" value="bdb-terms"/>

@@ -56,7 +56,7 @@ class Book_Links_Schema extends BerlinDB\Database\Schema {
 
 		// url
 		array(
-			'name'       => 'name',
+			'name'       => 'url',
 			'type'       => 'text',
 			'searchable' => true,
 			'validate'   => 'esc_url_raw'

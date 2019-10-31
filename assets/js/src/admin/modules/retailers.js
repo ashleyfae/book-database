@@ -27,7 +27,7 @@ var BDB_Retailers = {
 			return;
 		}
 
-		$( '#bdb-new-retailer-fields' ).on( 'keyup', 'input', this.clickOnEnter );
+		$( '#bdb-new-retailer-fields' ).on( 'keydown', 'input', this.clickOnEnter );
 		$( '#bdb-new-retailer-fields' ).on( 'click', 'button', this.addRetailer );
 		$( document ).on( 'click', '.bdb-update-retailer', this.updateRetailer );
 		$( document ).on( 'click', '.bdb-remove-retailer', this.deleteRetailer );
@@ -152,7 +152,8 @@ var BDB_Retailers = {
 
 		e.preventDefault();
 
-		let button = $( this );
+		let button = $( this ),
+			unconfirmed = false;
 
 		spinButton( button );
 		BDB_Retailers.errorWrap.empty().hide();
@@ -162,14 +163,15 @@ var BDB_Retailers = {
 			confirmMessage = bdbVars.confirm_delete_retailer;
 
 		// @todo check if purchase links exist
-		BDB_Retailers.getPurchaseLinks( retailerID ).then( function( purchaseLinks ) {
+		apiRequest( 'v1/book-link', { retailer_id: retailerID, number: 1 }, 'GET' ).then( function( purchaseLinks ) {
 
 			if ( 'undefined' !== typeof purchaseLinks && 'undefined' !== typeof purchaseLinks.length && purchaseLinks.length > 0 ) {
 				confirmMessage = bdbVars.confirm_delete_retailer_links;
 			}
 
 			if ( ! confirm( confirmMessage ) ) {
-				return false;
+				unconfirmed = true;
+				throw Error();
 			}
 
 			return apiRequest( 'v1/retailer/delete/' + retailerID, {}, 'DELETE' );
@@ -177,7 +179,9 @@ var BDB_Retailers = {
 		} ).then( function( apiResponse ) {
 			wrap.remove();
 		} ).catch( function( errorMessage ) {
-			BDB_Retailers.errorWrap.append( errorMessage ).show();
+			if ( ! unconfirmed ) {
+				BDB_Retailers.errorWrap.append( errorMessage ).show();
+			}
 		} ).finally( function() {
 			unspinButton( button );
 		} );
@@ -204,18 +208,6 @@ var BDB_Retailers = {
 
 		} );
 
-	},
-
-	/**
-	 * Get purchase links associated with a retailer
-	 *
-	 * @param {int} retailerID
-	 * @returns {Promise<unknown>}
-	 */
-	getPurchaseLinks: function ( retailerID ) {
-		return new Promise( function ( resolve, reject ) {
-			resolve();
-		} )
 	}
 
 };

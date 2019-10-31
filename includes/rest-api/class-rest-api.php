@@ -30,6 +30,7 @@ class REST_API {
 			'\Book_Database\REST_API\v1\Analytics',
 			'\Book_Database\REST_API\v1\Author',
 			'\Book_Database\REST_API\v1\Book',
+			'\Book_Database\REST_API\v1\Book_Link',
 			'\Book_Database\REST_API\v1\Book_Term',
 			'\Book_Database\REST_API\v1\Edition',
 			'\Book_Database\REST_API\v1\Reading_Log',

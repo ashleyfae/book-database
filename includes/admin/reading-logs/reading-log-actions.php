@@ -96,7 +96,7 @@ function reading_logs_table( $book ) {
 						</div>
 					</div>
 					<div class="bdb-meta-row">
-						<button id="bdb-submit-new-reading-log" class="button-primary"><?php _e( 'Add Log', 'book-database' ); ?></button>
+						<button type="button" id="bdb-submit-new-reading-log" class="button-primary"><?php _e( 'Add Log', 'book-database' ); ?></button>
 					</div>
 				</div>
 			<?php endif; ?>

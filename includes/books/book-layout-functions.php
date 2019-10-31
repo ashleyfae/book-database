@@ -61,9 +61,9 @@ function get_book_fields() {
 			'linebreak'   => 'on'
 		),
 		'buy_link'      => array(
-			'name'        => __( 'Purchase Link', 'book-database' ),
+			'name'        => __( 'Purchase Links', 'book-database' ),
 			'placeholder' => '[buy]',
-			'label'       => sprintf( '<a href="%1$s" target="_blank">%2$s</a>', '[buy]', __( 'Buy the Book', 'book-database' ) ),
+			'label'       => sprintf( __( '<strong>Buy the Book:</strong> %s', 'book-database' ), '[buy]' ),
 			'linebreak'   => 'on'
 		),
 		'rating'        => array(

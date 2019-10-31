@@ -165,6 +165,8 @@ function update_retailer( $retailer_id, $args = array() ) {
  */
 function delete_retailer( $retailer_id ) {
 
+	global $wpdb;
+
 	$query   = new Retailers_Query();
 	$deleted = $query->delete_item( $retailer_id );
 
@@ -172,7 +174,10 @@ function delete_retailer( $retailer_id ) {
 		throw new Exception( 'database_error', __( 'Failed to delete the retailer.', 'book-database' ), 500 );
 	}
 
-	// @todo delete all purchase links for this retailer
+	$link_table = book_database()->get_table( 'book_links' )->get_table_name();
+
+	// Delete all links for this retailer.
+	$wpdb->query( $wpdb->prepare( "DELETE FROM {$link_table} WHERE retailer_id = %d", $retailer_id ) );
 
 	return true;
 

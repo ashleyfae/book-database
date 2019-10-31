@@ -251,6 +251,7 @@ function delete_book( $book_id ) {
 	$ar_table       = book_database()->get_table( 'book_author_relationships' )->get_table_name();
 	$bt_table       = book_database()->get_table( 'book_term_relationships' )->get_table_name();
 	$ed_table       = book_database()->get_table( 'editions' )->get_table_name();
+	$link_table     = book_database()->get_table( 'book_links' )->get_table_name();
 	$log_table      = book_database()->get_table( 'reading_log' )->get_table_name();
 	$rev_table      = book_database()->get_table( 'reviews' )->get_table_name();
 	$rev_meta_table = book_database()->get_table( 'review_meta' )->get_table_name();
@@ -273,6 +274,9 @@ function delete_book( $book_id ) {
 
 	// Delete all book meta.
 	$wpdb->query( $wpdb->prepare( "DELETE FROM {$bmeta_table} WHERE bdb_book_id = %d", $book_id ) );
+
+	// Delete all links to this book.
+	$wpdb->query( $wpdb->prepare( "DELETE FROM {$link_table} WHERE book_id = %d", $book_id ) );
 
 	return true;
 

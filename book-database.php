@@ -190,6 +190,11 @@ final class Book_Database {
 		require_once BDB_DIR . 'includes/database/books/class-books-query.php';
 		require_once BDB_DIR . 'includes/database/books/class-book-meta-table.php';
 
+		// Database - book_links
+		require_once BDB_DIR . 'includes/database/book-links/class-book-links-table.php';
+		require_once BDB_DIR . 'includes/database/book-links/class-book-links-schema.php';
+		require_once BDB_DIR . 'includes/database/book-links/class-book-links-query.php';
+
 		// Database - book_taxonomies
 		require_once BDB_DIR . 'includes/database/book-taxonomies/class-book-taxonomies-table.php';
 		require_once BDB_DIR . 'includes/database/book-taxonomies/class-book-taxonomies-schema.php';
@@ -246,6 +251,10 @@ final class Book_Database {
 		require_once BDB_DIR . 'includes/books/book-functions.php';
 		require_once BDB_DIR . 'includes/books/book-layout-functions.php';
 		require_once BDB_DIR . 'includes/books/book-meta.php';
+
+		// Book Links
+		require_once BDB_DIR . 'includes/book-links/class-book-link.php';
+		require_once BDB_DIR . 'includes/book-links/book-link-functions.php';
 
 		// Book Taxonomies
 		require_once BDB_DIR . 'includes/book-taxonomies/class-book-taxonomy.php';
@@ -392,6 +401,7 @@ final class Book_Database {
 		self::$instance->tables = array(
 			'authors'                   => new Authors_Table(),
 			'book_author_relationships' => new Book_Author_Relationships_Table(),
+			'book_links'                => new Book_Links_Table(),
 			'book_taxonomies'           => new Book_Taxonomies_Table(),
 			'book_term_relationships'   => new Book_Term_Relationships_Table(),
 			'book_terms'                => new Book_Terms_Table(),
@@ -416,6 +426,7 @@ final class Book_Database {
 	 * @param string $table_key Table key.  One of:
 	 *                          'authors',
 	 *                          'book_author_relationships',
+	 *                          'book_links',
 	 *                          'book_taxonomies',
 	 *                          'book_term_relationships',
 	 *                          'book_terms'

@@ -645,7 +645,7 @@ class Books_List_Table extends List_Table {
 				<?php
 				foreach ( $this->modes as $mode => $title ) {
 					// Get the URL for the mode.
-					$url = $this->get_base_url();
+					$url = add_query_arg( 'mode', urlencode( $mode ), $this->get_base_url() );
 					if ( 'list' == $mode ) {
 						$url = remove_query_arg( 'mode', $url );
 					}

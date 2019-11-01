@@ -17,7 +17,7 @@ $sources = get_book_terms( array(
 ) );
 ?>
 <tr id="bdb-edition-{{ data.id }}" data-id="{{ data.id }}">
-	<td class="bdb-edition-isbn" data-th="<?php esc_attr_e( 'ISBN', 'book-database' ); ?>">
+	<td class="bdb-edition-isbn column-primary" data-colname="<?php esc_attr_e( 'ISBN', 'book-database' ); ?>">
 		<div class="bdb-table-display-value">{{ data.isbn }}</div>
 
 		<div class="bdb-table-edit-value">
@@ -30,7 +30,7 @@ $sources = get_book_terms( array(
 		</button>
 	</td>
 
-	<td class="bdb-edition-format" data-th="<?php esc_attr_e( 'Format', 'book-database' ); ?>">
+	<td class="bdb-edition-format" data-colname="<?php esc_attr_e( 'Format', 'book-database' ); ?>">
 		<div class="bdb-table-display-value">
 			<# if ( data.format_name ) { #>
 			{{ data.format_name }}
@@ -49,7 +49,7 @@ $sources = get_book_terms( array(
 		</div>
 	</td>
 	
-	<td class="bdb-edition-date-acquired" data-th="<?php esc_attr_e( 'Date Acquired', 'book-database' ); ?>">
+	<td class="bdb-edition-date-acquired" data-colname="<?php esc_attr_e( 'Date Acquired', 'book-database' ); ?>">
 		<div class="bdb-table-display-value">
 			<# if ( data.date_acquired_formatted ) { #>
 				{{ data.date_acquired_formatted }}
@@ -64,7 +64,7 @@ $sources = get_book_terms( array(
 		</div>
 	</td>
 
-	<td class="bdb-edition-source" data-th="<?php esc_attr_e( 'Source', 'book-database' ); ?>">
+	<td class="bdb-edition-source" data-colname="<?php esc_attr_e( 'Source', 'book-database' ); ?>">
 		<div class="bdb-table-display-value">
 			<# if ( data.source_name ) { #>
 			{{ data.source_name }}
@@ -84,7 +84,7 @@ $sources = get_book_terms( array(
 		</div>
 	</td>
 
-	<td class="bdb-edition-signed" data-th="<?php esc_attr_e( 'Signed', 'book-database' ); ?>">
+	<td class="bdb-edition-signed" data-colname="<?php esc_attr_e( 'Signed', 'book-database' ); ?>">
 		<div class="bdb-table-display-value">
 			<# if ( data.signed ) { #>
 				<?php _e( 'Yes', 'book-database' ); ?>
@@ -99,7 +99,7 @@ $sources = get_book_terms( array(
 		</div>
 	</td>
 
-	<td class="bdb-edition-actions" data-th="<?php esc_attr_e( 'Actions', 'book-database' ); ?>">
+	<td class="bdb-edition-actions" data-colname="<?php esc_attr_e( 'Actions', 'book-database' ); ?>">
 		<?php if ( user_can_edit_books() ) : ?>
 			<button type="button" class="button bdb-edition-toggle-editable"><?php _e( 'Edit', 'book-database' ); ?></button>
 			<button type="button" class="button bdb-remove-edition"><?php _e( 'Remove', 'book-database' ); ?></button>

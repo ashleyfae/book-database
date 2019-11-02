@@ -90,7 +90,8 @@ var BDB_Retailers = {
 		BDB_Retailers.errorWrap.empty().hide();
 
 		let args = {
-			name: $( '#bdb-new-retailer-name' ).val()
+			name: $( '#bdb-new-retailer-name' ).val(),
+			template: $( '#bdb-new-retailer-template' ).val()
 		};
 
 		BDB_Retailers.checkRequiredFields( args ).then( function( requirementsResponse ) {
@@ -128,7 +129,8 @@ var BDB_Retailers = {
 		let wrap = button.closest( 'tr' );
 
 		let args = {
-			name: wrap.find( '.bdb-retailer-name input' ).val()
+			name: wrap.find( '.bdb-retailer-name input' ).val(),
+			template: wrap.find( '.bdb-retailer-template textarea' ).val()
 		};
 
 		BDB_Retailers.checkRequiredFields( args ).then( function( requirementsResponse ) {
@@ -161,8 +163,7 @@ var BDB_Retailers = {
 		let wrap = button.closest( 'tr' ),
 			retailerID = wrap.data( 'id' ),
 			confirmMessage = bdbVars.confirm_delete_retailer;
-
-		// @todo check if purchase links exist
+		
 		apiRequest( 'v1/book-link', { retailer_id: retailerID, number: 1 }, 'GET' ).then( function( purchaseLinks ) {
 
 			if ( 'undefined' !== typeof purchaseLinks && 'undefined' !== typeof purchaseLinks.length && purchaseLinks.length > 0 ) {

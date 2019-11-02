@@ -44,6 +44,13 @@ class Retailers_Schema extends BerlinDB\Database\Schema {
 			'validate'   => 'sanitize_text_field'
 		),
 
+		// template
+		array(
+			'name'       => 'template',
+			'type'       => 'text',
+			'validate'   => 'wp_kses_post'
+		),
+
 		// date_created
 		array(
 			'name'       => 'date_created',

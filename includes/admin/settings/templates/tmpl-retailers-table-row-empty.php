@@ -10,5 +10,5 @@
 namespace Book_Database;
 ?>
 <tr id="bdb-retailers-empty">
-	<td colspan="2"><?php esc_html_e( 'No retailers found.', 'book-database' ); ?></td>
+	<td colspan="3"><?php esc_html_e( 'No retailers found.', 'book-database' ); ?></td>
 </tr>

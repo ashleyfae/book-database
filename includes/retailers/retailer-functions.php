@@ -104,9 +104,10 @@ function count_retailers( $args = array() ) {
 /**
  * Add a new retailer
  *
- * @param array $args {
+ * @param array $args     {
  *
- * @type string $name Required. Name of the retailer.
+ * @type string $name     Required. Name of the retailer.
+ * @type string $template Optional. Template for use in book info.
  * }
  *
  * @return int ID of the newly created retailer.
@@ -115,7 +116,8 @@ function count_retailers( $args = array() ) {
 function add_retailer( $args = array() ) {
 
 	$args = wp_parse_args( $args, array(
-		'name' => ''
+		'name'     => '',
+		'template' => ''
 	) );
 
 	if ( empty( $args['name'] ) ) {

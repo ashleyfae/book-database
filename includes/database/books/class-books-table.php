@@ -151,7 +151,7 @@ class Books_Table extends BerlinDB\Database\Table {
 			$result = $this->get_db()->query( "ALTER TABLE {$this->table_name} ADD COLUMN date_modified datetime NOT NULL DEFAULT '0000-00-00 00:00:00'" );
 		}
 
-		return $result;
+		return $this->is_success( $result );
 
 	}
 

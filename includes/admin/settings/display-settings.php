@@ -126,6 +126,7 @@ function render_settings_page() {
 										<thead>
 										<tr>
 											<th scope="col" class="column-primary"><?php _e( 'Name', 'book-database' ); ?></th>
+											<th scope="col"><?php _e( 'Book Info Template', 'book-database' ); ?></th>
 											<th scope="col"><?php _e( 'Actions', 'book-database' ); ?></th>
 										</tr>
 										</thead>
@@ -137,12 +138,17 @@ function render_settings_page() {
 										<tfoot>
 										<tr>
 											<th><?php _e( 'Name', 'book-database' ); ?></th>
+											<th scope="col"><?php _e( 'Book Info Template', 'book-database' ); ?></th>
 											<th><?php _e( 'Actions', 'book-database' ); ?></th>
 										</tr>
 										<tr id="bdb-new-retailer-fields">
 											<td class="column-primary" data-colname="<?php esc_attr_e( 'Name', 'book-database' ); ?>">
 												<label for="bdb-new-retailer-name" class="screen-reader-text"><?php _e( 'Enter a name for the retailer', 'book-database' ); ?></label>
 												<input type="text" id="bdb-new-retailer-name">
+											</td>
+											<td data-colname="<?php esc_attr_e( 'Book Info Template', 'book-database' ); ?>">
+												<label for="bdb-new-retailer-template" class="screen-reader-text"><?php _e( 'Format the template for use in displaying book information', 'book-database' ); ?></label>
+												<textarea id="bdb-new-retailer-template" class="regular-text"><?php echo esc_textarea( sprintf( '<a href="[url]" target="_blank">%s</a>', __( 'Buy the Book', 'book-database' ) ) ); ?></textarea>
 											</td>
 											<td data-colname="<?php esc_attr_e( 'Actions', 'book-database' ); ?>">
 												<button type="button" class="button-primary"><?php _e( 'Add', 'book-database' ); ?></button>

@@ -66,10 +66,15 @@ class Retailer extends Controller {
 			'callback'            => array( $this, 'add_retailer' ),
 			'permission_callback' => array( $this, 'can_edit' ),
 			'args'                => array(
-				'name' => array(
+				'name'     => array(
 					'required'          => true,
 					'sanitize_callback' => function ( $param, $request, $key ) {
 						return sanitize_text_field( $param );
+					}
+				),
+				'template' => array(
+					'sanitize_callback' => function ( $param, $request, $key ) {
+						return wp_kses_post( $param );
 					}
 				)
 			)
@@ -79,7 +84,30 @@ class Retailer extends Controller {
 		register_rest_route( $this->namespace, $this->rest_base . '/update/(?P<id>\d+)', array(
 			'methods'             => \WP_REST_Server::EDITABLE,
 			'callback'            => array( $this, 'update_retailer' ),
-			'permission_callback' => array( $this, 'can_edit' )
+			'permission_callback' => array( $this, 'can_edit' ),
+			'args'                => array(
+				'id'       => array(
+					'required'          => true,
+					'validate_callback' => function ( $param, $request, $key ) {
+						$retailer = get_retailer( $param );
+
+						return ! empty( $retailer );
+					},
+					'sanitize_callback' => function ( $param, $request, $key ) {
+						return absint( $param );
+					}
+				),
+				'name'     => array(
+					'sanitize_callback' => function ( $param, $request, $key ) {
+						return sanitize_text_field( $param );
+					}
+				),
+				'template' => array(
+					'sanitize_callback' => function ( $param, $request, $key ) {
+						return wp_kses_post( $param );
+					}
+				)
+			)
 		) );
 
 		// Delete a retailer.
@@ -146,7 +174,8 @@ class Retailer extends Controller {
 
 		try {
 			$args = array(
-				'name' => $request->get_param( 'name' )
+				'name'     => $request->get_param( 'name' ),
+				'template' => $request->get_param( 'template' )
 			);
 
 			$retailer_id = add_retailer( $args );
@@ -175,6 +204,7 @@ class Retailer extends Controller {
 		try {
 			$whitelist = array(
 				'name',
+				'template',
 				'date_created',
 				'date_modified'
 			);

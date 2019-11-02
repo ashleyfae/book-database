@@ -38,6 +38,11 @@ class License_Key {
 	 */
 	protected $status = null;
 
+	/**
+	 * License expiration date
+	 *
+	 * @var string|null
+	 */
 	protected $expires = null;
 
 	/**
@@ -66,8 +71,18 @@ class License_Key {
 	 */
 	protected $api_data = null;
 
+	/**
+	 * Cached data saved in the `bdb_license_key_data` option.
+	 *
+	 * @var array|false
+	 */
 	protected $cached_data = false;
 
+	/**
+	 * Whether or not the cache is still valid
+	 *
+	 * @var bool
+	 */
 	protected $cache_is_valid = false;
 
 	/**
@@ -182,8 +197,6 @@ class License_Key {
 		}
 
 		$license_data = json_decode( wp_remote_retrieve_body( $response ) );
-
-		error_log( var_export( $license_data, true ) );
 
 		$this->set_api_response( $license_data );
 

@@ -14,14 +14,10 @@ use Book_Database\Rating;
 use Book_Database\Series;
 use function Book_Database\book_database;
 use function Book_Database\count_books;
-use function Book_Database\format_date;
 use function Book_Database\generate_book_index_title;
 use function Book_Database\get_attached_book_terms;
-use function Book_Database\get_book_links;
 use function Book_Database\get_book_series_by;
 use function Book_Database\get_book_taxonomies;
-use function Book_Database\get_book_terms;
-use function Book_Database\get_books;
 use function Book_Database\get_books_admin_page_url;
 use function Book_Database\get_enabled_book_fields;
 use function Book_Database\get_retailers;
@@ -318,29 +314,25 @@ function book_buy_link_field( $book ) {
 	ob_start();
 	?>
 	<div id="bdb-book-purchase-links">
-		<?php if ( ! empty( $book ) ) : ?>
-			<div id="bdb-book-links"></div>
+		<div id="bdb-book-links"></div>
 
-			<div id="bdb-new-purchase-link">
-				<label for="bdb-new-book-link-retailer" class="screen-reader-text"><?php _e( 'Select a retailer', 'book-database' ); ?></label>
-				<select id="bdb-new-book-link-retailer">
-					<?php foreach ( $retailers as $retailer ) : ?>
-						<option value="<?php echo esc_attr( $retailer->get_id() ); ?>">
-							<?php echo esc_html( $retailer->get_name() ); ?>
-						</option>
-					<?php endforeach; ?>
-				</select>
+		<div id="bdb-new-purchase-link">
+			<label for="bdb-new-book-link-retailer" class="screen-reader-text"><?php _e( 'Select a retailer', 'book-database' ); ?></label>
+			<select id="bdb-new-book-link-retailer">
+				<?php foreach ( $retailers as $retailer ) : ?>
+					<option value="<?php echo esc_attr( $retailer->get_id() ); ?>">
+						<?php echo esc_html( $retailer->get_name() ); ?>
+					</option>
+				<?php endforeach; ?>
+			</select>
 
-				<label for="bdb-new-book-link-url" class="screen-reader-text"><?php _e( 'Enter a URL', 'book-database' ); ?></label>
-				<input type="text" id="bdb-new-book-link-url" class="regular-text" placeholder="https://" value="">
+			<label for="bdb-new-book-link-url" class="screen-reader-text"><?php _e( 'Enter a URL', 'book-database' ); ?></label>
+			<input type="text" id="bdb-new-book-link-url" class="regular-text" placeholder="https://" value="">
 
-				<button type="button" class="button"><?php _e( 'Add', 'book-database' ); ?></button>
+			<button type="button" class="button"><?php _e( 'Add', 'book-database' ); ?></button>
 
-				<div id="bdb-book-links-errors" class="bdb-notice bdb-notice-error" style="display: none;"></div>
-			</div>
-		<?php else : ?>
-			<?php _e( 'Please save the book to add links.', 'book-database' ); ?>
-		<?php endif; ?>
+			<div id="bdb-book-links-errors" class="bdb-notice bdb-notice-error" style="display: none;"></div>
+		</div>
 	</div>
 	<?php
 
@@ -364,7 +356,7 @@ function load_link_template() {
 		return;
 	}
 
-	$templates = array( 'book-link' );
+	$templates = array( 'book-link-add', 'book-link-edit' );
 
 	foreach ( $templates as $template ) {
 		if ( file_exists( BDB_DIR . 'includes/admin/books/templates/tmpl-' . $template . '.php' ) ) {

@@ -1,6 +1,8 @@
 <?php
 /**
- * Editions Template: Table Row
+ * Book Link Template: Table Row
+ *
+ * This template is used when editing a book.
  *
  * @package   book-database
  * @copyright Copyright (c) 2019, Ashley Gibson
@@ -24,7 +26,7 @@ $retailers = get_retailers( array(
 	</select>
 
 	<label for="bdb-book-link-{{ data.id }}-url" class="screen-reader-text"><?php _e( 'Enter a URL', 'book-database' ); ?></label>
-	<input type="text" id="bdb-book-link-{{ data.url }}-url" class="regular-text bdb-book-link-url" placeholder="https://" value="{{ data.url }}">
+	<input type="text" id="bdb-book-link-{{ data.id }}-url" class="regular-text bdb-book-link-url" placeholder="https://" value="{{ data.url }}">
 
 	<?php if ( user_can_edit_books() ) : ?>
 		<button type="button" class="button bdb-update-book-link"><?php _e( 'Update', 'book-database' ); ?></button>

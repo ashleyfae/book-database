@@ -36,7 +36,6 @@ function process_add_book() {
 			'pages'           => ( ! isset( $_POST['pages'] ) || '' === $_POST['pages'] ) ? null : absint( $_POST['pages'] ),
 			'synopsis'        => ! empty( $_POST['synopsis'] ) ? wp_kses_post( $_POST['synopsis'] ) : '',
 			'goodreads_url'   => ! empty( $_POST['goodreads_url'] ) ? esc_url_raw( $_POST['goodreads_url'] ) : '',
-			'buy_link'        => ! empty( $_POST['buy_link'] ) ? esc_url_raw( $_POST['buy_link'] ) : '',
 			'terms'           => array()
 		);
 
@@ -81,6 +80,25 @@ function process_add_book() {
 		}
 
 		$book_id = add_book( $args );
+
+		// Add the book links.
+		if ( ! empty( $_POST['book_links'] ) && is_array( $_POST['book_links'] ) ) {
+			foreach ( $_POST['book_links'] as $link ) {
+				if ( empty( $link['retailer_id'] ) || empty( $link['url'] ) ) {
+					continue;
+				}
+
+				try {
+					add_book_link( array(
+						'book_id'     => absint( $book_id ),
+						'retailer_id' => absint( $link['retailer_id'] ),
+						'url'         => sanitize_text_field( esc_url_raw( $link['url'] ) )
+					) );
+				} catch ( Exception $e ) {
+
+				}
+			}
+		}
 
 		$edit_url = get_books_admin_page_url( array(
 			'view'        => 'edit',
@@ -132,7 +150,6 @@ function process_update_book() {
 			'pages'           => ( ! isset( $_POST['pages'] ) || '' === $_POST['pages'] ) ? null : absint( $_POST['pages'] ),
 			'synopsis'        => ! empty( $_POST['synopsis'] ) ? wp_kses_post( $_POST['synopsis'] ) : '',
 			'goodreads_url'   => ! empty( $_POST['goodreads_url'] ) ? esc_url_raw( $_POST['goodreads_url'] ) : '',
-			'buy_link'        => ! empty( $_POST['buy_link'] ) ? esc_url_raw( $_POST['buy_link'] ) : ''
 		);
 
 		// Set the index title.

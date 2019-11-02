@@ -11,7 +11,9 @@ var BDB_Book_Links = {
 
 	linkWrap: false,
 
-	linkTemplate: wp.template( 'bdb-book-link' ),
+	linkTemplateAdd: wp.template( 'bdb-book-link-add' ),
+
+	linkTemplateEdit: wp.template( 'bdb-book-link-edit' ),
 
 	errorWrap: '',
 
@@ -24,7 +26,7 @@ var BDB_Book_Links = {
 		this.linkWrap = $( '#bdb-book-links' );
 		this.errorWrap = $( '#bdb-book-links-errors' );
 
-		if ( ! this.linkWrap.length || 'undefined' === typeof this.bookID ) {
+		if ( ! this.linkWrap.length ) {
 			return;
 		}
 
@@ -42,6 +44,10 @@ var BDB_Book_Links = {
 	 */
 	getLinks: function() {
 
+		if ( ! this.bookID ) {
+			return;
+		}
+
 		let args = {
 			book_id: BDB_Book_Links.bookID,
 			number: 50
@@ -55,7 +61,7 @@ var BDB_Book_Links = {
 				// Do nothing.
 			} else {
 				$.each( apiResponse, function( key, link ) {
-					BDB_Book_Links.linkWrap.append( BDB_Book_Links.linkTemplate( link ) );
+					BDB_Book_Links.linkWrap.append( BDB_Book_Links.linkTemplateEdit( link ) );
 				} );
 			}
 
@@ -94,24 +100,47 @@ var BDB_Book_Links = {
 		spinButton( button );
 		BDB_Book_Links.errorWrap.empty().hide();
 
-		let args = {
-			book_id: BDB_Book_Links.bookID,
-			retailer_id: $( '#bdb-new-book-link-retailer' ).val(),
-			url: $( '#bdb-new-book-link-url' ).val()
-		};
+		if ( BDB_Book_Links.bookID ) {
 
-		apiRequest( 'v1/book-link/add', args, 'POST' ).then( function( apiResponse ) {
+			// Editing an existing book.
 
-			BDB_Book_Links.linkWrap.append( BDB_Book_Links.linkTemplate( apiResponse ) );
+			let args = {
+				book_id: BDB_Book_Links.bookID,
+				retailer_id: $( '#bdb-new-book-link-retailer' ).val(),
+				url: $( '#bdb-new-book-link-url' ).val()
+			};
+
+			apiRequest( 'v1/book-link/add', args, 'POST' ).then( function ( apiResponse ) {
+
+				BDB_Book_Links.linkWrap.append( BDB_Book_Links.linkTemplateEdit( apiResponse ) );
+
+				// Wipe field values.
+				$( '#bdb-new-purchase-link' ).find( 'input' ).val( '' );
+
+				unspinButton( button );
+			} ).catch( function ( errorMessage ) {
+				BDB_Book_Links.errorWrap.append( errorMessage ).show();
+				unspinButton( button );
+			} );
+
+		} else {
+
+			// Adding a new book.
+
+			let data = {
+				id: $( '.bdb-book-link' ).length,
+				retailer_id: $( '#bdb-new-book-link-retailer' ).val(),
+				url: $( '#bdb-new-book-link-url' ).val()
+			};
+
+			BDB_Book_Links.linkWrap.append( BDB_Book_Links.linkTemplateAdd( data ) );
 
 			// Wipe field values.
 			$( '#bdb-new-purchase-link' ).find( 'input' ).val( '' );
 
 			unspinButton( button );
-		} ).catch( function( errorMessage ) {
-			BDB_Book_Links.errorWrap.append( errorMessage ).show();
-			unspinButton( button );
-		} );
+
+		}
 
 	},
 
@@ -165,12 +194,16 @@ var BDB_Book_Links = {
 
 		let wrap = button.closest( '.bdb-book-link' );
 
-		apiRequest( 'v1/book-link/delete/' + wrap.data( 'id' ), {}, 'DELETE' ).then( function( apiResponse ) {
+		if ( BDB_Book_Links.bookID ) {
+			apiRequest( 'v1/book-link/delete/' + wrap.data( 'id' ), {}, 'DELETE' ).then( function ( apiResponse ) {
+				wrap.remove();
+			} ).catch( function ( errorMessage ) {
+				BDB_Book_Links.errorWrap.append( errorMessage ).show();
+				unspinButton( button );
+			} );
+		} else {
 			wrap.remove();
-		} ).catch( function( errorMessage ) {
-			BDB_Book_Links.errorWrap.append( errorMessage ).show();
-			unspinButton( button );
-		} );
+		}
 
 	}
 

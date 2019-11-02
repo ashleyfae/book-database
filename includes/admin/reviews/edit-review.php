@@ -41,6 +41,11 @@ if ( ! empty( $_GET['view'] ) && 'edit' === $_GET['view'] && empty( $review ) ) 
 						<div id="submitdiv" class="postbox">
 							<h2 class="hndle ui-sortable handle"><?php _e( 'Save', 'book-database' ); ?></h2>
 							<div class="inside">
+								<?php if ( $review instanceof Review && ( $review->get_permalink() ) ) : ?>
+									<div id="minor-publishing-actions">
+										<a href="<?php echo esc_url( $review->get_permalink() ); ?>" target="_blank" class="button"><?php _e( 'View Review', 'book-database' ); ?></a>
+									</div>
+								<?php endif; ?>
 								<div id="major-publishing-actions">
 									<div id="delete-action">
 										<?php if ( $review ) : ?>

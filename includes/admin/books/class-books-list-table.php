@@ -360,8 +360,9 @@ class Books_List_Table extends List_Table {
 						)
 					);
 					$args['reading_log_query'][] = array(
-						'field' => 'date_finished',
-						'value' => null
+						'field'    => 'date_finished',
+						'value'    => null,
+						'operator' => 'IS'
 					);
 					break;
 

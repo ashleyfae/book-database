@@ -176,7 +176,9 @@ class Where_Clause {
 			'<=',
 			'LIKE',
 			'IN',
-			'NOT IN'
+			'NOT IN',
+			'IS',
+			'IS NOT'
 		);
 
 		$operator = strtoupper( $operator );

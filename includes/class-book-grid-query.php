@@ -82,8 +82,9 @@ class Book_Grid_Query extends Book_Reviews_Query {
 						)
 					);
 					$this->args['reading_log_query'][] = array(
-						'field' => 'date_finished',
-						'value' => null
+						'field'    => 'date_finished',
+						'value'    => null,
+						'operator' => 'IS'
 					);
 					break;
 

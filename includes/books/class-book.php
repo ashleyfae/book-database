@@ -15,13 +15,13 @@ namespace Book_Database;
  */
 class Book extends Base_Object {
 
-	protected $authors;
-
 	protected $cover_id = 0;
 
 	protected $title = '';
 
 	protected $index_title = '';
+
+	protected $authors;
 
 	protected $series_id = 0;
 
@@ -35,52 +35,7 @@ class Book extends Base_Object {
 
 	protected $goodreads_url = '';
 
-	protected $buy_link = '';
-
-	/**
-	 * Get the authors of the book
-	 *
-	 * This returns an array of `Author` objects.
-	 *
-	 * @param array $args Query args to override the defaults.
-	 *
-	 * @return Author[]|array
-	 */
-	public function get_authors( $args = array() ) {
-
-		if ( ! isset( $this->authors ) ) {
-			$this->authors = get_attached_book_authors( $this->get_id(), $args );
-		}
-
-		return $this->authors;
-
-	}
-
-	/**
-	 * Get the author names
-	 *
-	 * @param bool $implode True to return a comma-separated list, false to return an array.
-	 *
-	 * @return array|string
-	 */
-	public function get_author_names( $implode = false ) {
-
-		$author_names = array();
-		$author_terms = $this->get_authors();
-
-		if ( $author_terms ) {
-			foreach ( $author_terms as $author_term ) {
-				$author_names[] = $author_term->get_name();
-			}
-		}
-
-		if ( $implode ) {
-			$author_names = implode( ', ', $author_names );
-		}
-
-		return $author_names;
-
-	}
+	protected $links;
 
 	/**
 	 * Get the attachment ID for the cover image
@@ -151,6 +106,51 @@ class Book extends Base_Object {
 	 */
 	public function get_index_title() {
 		return $this->index_title;
+	}
+
+	/**
+	 * Get the authors of the book
+	 *
+	 * This returns an array of `Author` objects.
+	 *
+	 * @param array $args Query args to override the defaults.
+	 *
+	 * @return Author[]|array
+	 */
+	public function get_authors( $args = array() ) {
+
+		if ( ! isset( $this->authors ) ) {
+			$this->authors = get_attached_book_authors( $this->get_id(), $args );
+		}
+
+		return $this->authors;
+
+	}
+
+	/**
+	 * Get the author names
+	 *
+	 * @param bool $implode True to return a comma-separated list, false to return an array.
+	 *
+	 * @return array|string
+	 */
+	public function get_author_names( $implode = false ) {
+
+		$author_names = array();
+		$author_terms = $this->get_authors();
+
+		if ( $author_terms ) {
+			foreach ( $author_terms as $author_term ) {
+				$author_names[] = $author_term->get_name();
+			}
+		}
+
+		if ( $implode ) {
+			$author_names = implode( ', ', $author_names );
+		}
+
+		return $author_names;
+
 	}
 
 	/**
@@ -238,12 +238,21 @@ class Book extends Base_Object {
 	}
 
 	/**
-	 * Get the purchase link
+	 * Get the links associated with this book
 	 *
-	 * @return string
+	 * @return Book_Link[]
 	 */
-	public function get_buy_link() {
-		return $this->buy_link;
+	public function get_links() {
+
+		if ( ! isset( $this->links ) ) {
+			$this->links = get_book_links( array(
+				'book_id' => $this->get_id(),
+				'number'  => 30
+			) );
+		}
+
+		return $this->links;
+
 	}
 
 	/**
@@ -316,7 +325,7 @@ class Book extends Base_Object {
 			'pages'           => $this->get_pages(),
 			'synopsis'        => $this->get_synopsis(),
 			'goodreads_url'   => $this->get_goodreads_url(),
-			'buy_link'        => $this->get_buy_link(),
+			'links'           => $this->get_links(),
 			'terms'           => array(),
 			'date_created'    => $this->get_date_created(),
 			'date_modified'   => $this->get_date_modified()

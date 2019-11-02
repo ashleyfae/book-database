@@ -123,13 +123,6 @@ class Books_Schema extends BerlinDB\Database\Schema {
 			'validate' => 'sanitize_text_field'
 		),
 
-		// buy_link
-		array(
-			'name'     => 'buy_link',
-			'type'     => 'text',
-			'validate' => 'sanitize_text_field'
-		),
-
 		// date_created
 		array(
 			'name'       => 'date_created',

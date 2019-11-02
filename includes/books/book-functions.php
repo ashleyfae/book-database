@@ -154,7 +154,6 @@ function count_books( $args = array() ) {
  * @type int              $pages           Number of pages in the book.
  * @type string           $synopsis        Synopsis.
  * @type string           $goodreads_url   Goodreads URL.
- * @type string           $buy_link        Link to purchase the book.
  * @type array            $terms           Multi-dimensional array of terms to apply. Key is the taxonomy
  *                                         and value is a single term name/ID or array of term names/IDs.
  * }
@@ -175,7 +174,6 @@ function add_book( $args = array() ) {
 		'pages'           => null,
 		'synopsis'        => '',
 		'goodreads_url'   => '',
-		'buy_link'        => '',
 		'terms'           => array()
 	) );
 

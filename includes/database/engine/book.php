@@ -52,7 +52,6 @@ class Book extends Join {
 		'pages',
 		'synopsis',
 		'goodreads_url',
-		'buy_link',
 		'date_created',
 		'date_modified'
 	);

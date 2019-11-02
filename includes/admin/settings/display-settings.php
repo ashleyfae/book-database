@@ -133,6 +133,34 @@ function render_settings_page() {
 							?>
 							<tr>
 								<th scope="row">
+									<label for="bdb-license-key"><?php _e( 'License Key', 'book-database' ); ?></label>
+								</th>
+								<td>
+									<?php
+									$license     = new License_Key();
+									$license_key = $license->get_key();
+									?>
+									<input type="text" id="bdb-license-key" class="regular-text" name="bdb_license_key" value="<?php echo esc_attr( $license_key ); ?>">
+									<?php if ( empty( $license_key ) ) : ?>
+										<button type="button" id="bdb-activate-license-key" class="button" data-nonce="<?php echo esc_attr( wp_create_nonce( 'bdb_activate_license_key' ) ); ?>"><?php _e( 'Activate', 'book-database' ); ?></button>
+									<?php else : ?>
+										<button type="button" id="bdb-deactivate-license-key" class="button" data-nonce="<?php echo esc_attr( wp_create_nonce( 'bdb_deactivate_license_key' ) ); ?>"><?php _e( 'Deactivate', 'book-database' ); ?></button>
+										<button type="button" id="bdb-refresh-license-key" class="button" data-nonce="<?php echo esc_attr( wp_create_nonce( 'bdb_refresh_license_key' ) ); ?>"><?php _e( 'Refresh', 'book-database' ); ?></button>
+									<?php endif; ?>
+									<div id="bdb-license-key-response"></div>
+									<p class="description">
+										<?php
+										if ( empty( $license_key ) ) {
+											_e( 'Enter your license key to receive automatic updates.', 'book-database' );
+										} else {
+											echo $license->get_status_message();
+										}
+										?>
+									</p>
+								</td>
+							</tr>
+							<tr>
+								<th scope="row">
 									<label for="bdb-settings-delete-uninstall"><?php _e( 'Delete on Uninstall', 'book-database' ); ?></label>
 								</th>
 								<td>

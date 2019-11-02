@@ -232,6 +232,7 @@ var BDB_Post_Metabox = {
 
 		let args = {
 			book_id: BDB_Post_Metabox.bookID,
+			reading_log_id: $( '#bdb-review-reading-log' ).val(),
 			user_id: BDB_Post_Metabox.userID,
 			post_id: BDB_Post_Metabox.postID
 		};

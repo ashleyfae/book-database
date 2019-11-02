@@ -216,23 +216,29 @@ function reading_log( $review ) {
 		$args['book_id'] = absint( $_GET['book_id'] );
 	}
 
-	$reading_logs = get_reading_logs( $args );
-
 	ob_start();
-	?>
-	<select id="bdb-review-reading-log" name="reading_log_id">
-		<option value="" <?php selected( empty( $selected_reading_log_id ) ); ?>><?php _e( 'None', 'book-database' ); ?></option>
-		<?php foreach ( $reading_logs as $reading_log ) : ?>
-			<option value="<?php echo esc_attr( $reading_log->get_id() ); ?>" <?php selected( $selected_reading_log_id, $reading_log->get_id() ); ?>>
-				<?php
-				$rating = new Rating( $reading_log->get_rating() );
-				printf( '%s - %s (%s)', $reading_log->get_date_started( true ), $reading_log->get_date_finished( true ), $rating->format_text() );
-				?>
-			</option>
-		<?php endforeach; ?>
-	</select>
-	<p class="description"><?php _e( 'Select the reading log associated with this review. This is where the rating comes from.', 'book-database' ); ?></p>
-	<?php
+
+	if ( empty( $args['book_id'] ) ) {
+		?>
+		<p class="description"><?php _e( 'Please enter a book ID and save. You\'ll then be able to choose an associated reading log.', 'book-database' ); ?></p>
+		<?php
+	} else {
+		$reading_logs = get_reading_logs( $args );
+		?>
+		<select id="bdb-review-reading-log" name="reading_log_id">
+			<option value="" <?php selected( empty( $selected_reading_log_id ) ); ?>><?php _e( 'None', 'book-database' ); ?></option>
+			<?php foreach ( $reading_logs as $reading_log ) : ?>
+				<option value="<?php echo esc_attr( $reading_log->get_id() ); ?>" <?php selected( $selected_reading_log_id, $reading_log->get_id() ); ?>>
+					<?php
+					$rating = new Rating( $reading_log->get_rating() );
+					printf( '%s - %s (%s)', $reading_log->get_date_started( true ), $reading_log->get_date_finished( true ), $rating->format_text() );
+					?>
+				</option>
+			<?php endforeach; ?>
+		</select>
+		<p class="description"><?php _e( 'Select the reading log associated with this review. This is where the rating comes from.', 'book-database' ); ?></p>
+		<?php
+	}
 
 	book_database()->get_html()->meta_row( array(
 		'label' => __( 'Associated Reading Log', 'book-database' ),

@@ -1,4 +1,4 @@
-/* global $, bdbVars */
+/* global $, bdbVars, ajaxurl */
 
 /**
  * Make a request to the REST API
@@ -42,5 +42,48 @@ export function apiRequest( endpoint, data = {}, method = 'POST' ) {
 
 			reject( error );
 		} );
-	} )
+	} );
+}
+
+/**
+ * Make an ajax request
+ *
+ * @param {object} args
+ * @returns {Promise}
+ */
+export function ajaxRequest( args ) {
+
+	const options = {
+		method: 'POST',
+		dataType: 'JSON',
+		url: ajaxurl,
+		data: args
+	};
+
+	return new Promise( function ( resolve, reject ) {
+		$.ajax( options ).success( function ( response ) {
+			if ( ! response.success ) {
+				console.log( 'Error response', response );
+				reject( response.data );
+			} else {
+				console.log( 'Success response', response );
+				resolve( response.data );
+			}
+		} ).error( function ( qpXHR, textStatus, errorThrown ) {
+			let error = bdbVars.generic_erroc;
+
+			if ( 'undefined' !== typeof qpXHR.responseJSON ) {
+				error = qpXHR.responseJSON;
+
+				if ( 'undefined' !== typeof error.message ) {
+					error = error.message;
+				}
+			} else if ( 'undefined' !== typeof qpXHR.message ) {
+				error = qpXHR.message;
+			}
+
+			reject( error );
+		} );
+	} );
+
 }

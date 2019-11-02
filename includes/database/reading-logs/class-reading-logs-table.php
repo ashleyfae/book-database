@@ -63,7 +63,6 @@ class Reading_Logs_Table extends BerlinDB\Database\Table {
 			INDEX date_finished_rating (date_finished, rating),
 			INDEX date_started (date_started),
 			INDEX rating_book_id (rating, book_id),
-			INDEX review_id (review_id),
 			INDEX user_id (user_id)";
 	}
 
@@ -169,25 +168,6 @@ class Reading_Logs_Table extends BerlinDB\Database\Table {
 		$result = $this->get_db()->query( "UPDATE {$this->table_name} SET rating = NULL WHERE rating = 'dnf'" );
 
 		$result = $this->get_db()->query( "ALTER TABLE {$this->table_name} MODIFY rating decimal(4,2) DEFAULT NULL" );
-
-		return $this->is_success( $result );
-
-	}
-
-	/**
-	 * Upgrade to version 201910271
-	 *      - Allow null for `review_id`
-	 *      - Update to change all `0` values to `null`.
-	 *
-	 * @return bool
-	 */
-	protected function __201910271() {
-
-		$result = $this->get_db()->query( "ALTER TABLE {$this->table_name} MODIFY review_id bigint(20) UNSIGNED DEFAULT NULL" );
-
-		if ( $this->is_success( $result ) ) {
-			$result = $this->get_db()->query( "UPDATE {$this->table_name} SET review_id = NULL WHERE review_id = 0" );
-		}
 
 		return $this->is_success( $result );
 

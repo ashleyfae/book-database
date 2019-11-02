@@ -39,8 +39,6 @@ var BDB_Analytics = {
 			BDB_Analytics.tables.push( id );
 		} );
 
-		console.log(BDB_Analytics.tables);
-
 		BDB_Analytics.batches = [
 			BDB_Analytics.numbers,
 			BDB_Analytics.tables

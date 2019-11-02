@@ -21,11 +21,11 @@ export function apiRequest( endpoint, data = {}, method = 'POST' ) {
 		data: data
 	};
 
-	console.log( 'API endpoint', endpoint );
+	//console.log( 'API endpoint', endpoint );
 
 	return new Promise( function ( resolve, reject ) {
 		$.ajax( options ).success( function ( response ) {
-			console.log( 'Success response', response );
+			//console.log( 'Success response', response );
 			resolve( response );
 		} ).error( function ( qpXHR, textStatus, errorThrown ) {
 			let error = bdbVars.generic_erroc;
@@ -63,10 +63,10 @@ export function ajaxRequest( args ) {
 	return new Promise( function ( resolve, reject ) {
 		$.ajax( options ).success( function ( response ) {
 			if ( ! response.success ) {
-				console.log( 'Error response', response );
+				//console.log( 'Error response', response );
 				reject( response.data );
 			} else {
-				console.log( 'Success response', response );
+				//console.log( 'Success response', response );
 				resolve( response.data );
 			}
 		} ).error( function ( qpXHR, textStatus, errorThrown ) {

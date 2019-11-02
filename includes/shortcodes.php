@@ -303,6 +303,7 @@ function book_grid_shortcode( $atts, $content = '' ) {
 		'show-ratings'        => false,
 		'show-pub-date'       => true,
 		'show-goodreads-link' => false,
+		'show-purchase-links' => false,
 		'orderby'             => 'book.id',
 		'order'               => 'DESC',
 		'cover-size'          => 'large',

@@ -48,5 +48,15 @@ namespace Book_Database;
 		</p>
 		<?php
 	}
+
+	if ( ! empty( $atts['show-purchase-links'] ) && $book->get_links() ) {
+		foreach ( $book->get_links() as $link ) {
+			?>
+			<div class="bdb-grid-purchase-link">
+				<?php echo $link->format(); ?>
+			</div>
+			<?php
+		}
+	}
 	?>
 </div>

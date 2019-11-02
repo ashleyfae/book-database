@@ -36,6 +36,7 @@ class REST_API {
 			'\Book_Database\REST_API\v1\Reading_Log',
 			'\Book_Database\REST_API\v1\Retailer',
 			'\Book_Database\REST_API\v1\Review',
+			'\Book_Database\REST_API\v1\Series',
 			'\Book_Database\REST_API\v1\Taxonomy',
 			'\Book_Database\REST_API\v1\Utility',
 		);

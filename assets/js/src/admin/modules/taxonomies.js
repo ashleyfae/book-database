@@ -29,7 +29,7 @@ var BDB_Book_Taxonomies = {
 
 		$( '#bdb-new-book-taxonomy-name' ).on( 'keyup', this.generateSlug );
 		$( '#bdb-new-book-taxonomy-fields' ).on( 'keydown', 'input', this.clickOnEnter );
-		$( '#bdb-new-book-taxonomy-fields' ).on( 'click', 'button', this.addTaxonomy );
+		$( '#bdb-new-book-taxonomy-fields' ).on( 'click', '.button-primary', this.addTaxonomy );
 		$( document ).on( 'click', '.bdb-update-book-taxonomy', this.updateTaxonomy );
 		$( document ).on( 'click', '.bdb-remove-book-taxonomy', this.deleteTaxonomy );
 

@@ -308,7 +308,7 @@ class Book extends Base_Object {
 			'cover_url'       => $this->get_cover_url( 'full' ),
 			'title'           => $this->get_title(),
 			'index_title'     => $this->get_index_title(),
-			'author'          => '', // @todo
+			'authors'         => $this->get_authors(),
 			'series_id'       => $this->get_series_id(),
 			'series_name'     => $this->get_series_name(),
 			'series_position' => $this->get_series_position(),
@@ -317,9 +317,15 @@ class Book extends Base_Object {
 			'synopsis'        => $this->get_synopsis(),
 			'goodreads_url'   => $this->get_goodreads_url(),
 			'buy_link'        => $this->get_buy_link(),
+			'terms'           => array(),
 			'date_created'    => $this->get_date_created(),
 			'date_modified'   => $this->get_date_modified()
 		);
+
+		// Attach all terms.
+		foreach ( get_book_taxonomies( array( 'field' => 'slug' ) ) as $taxonomy ) {
+			$data['terms'][ $taxonomy ] = get_attached_book_terms( $this->get_id(), $taxonomy );
+		}
 
 		/**
 		 * Filters the data.

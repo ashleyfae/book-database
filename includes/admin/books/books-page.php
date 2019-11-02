@@ -11,8 +11,6 @@ namespace Book_Database;
 
 /**
  * Render the Book Library page
- *
- * @todo Month view
  */
 function render_books_page() {
 

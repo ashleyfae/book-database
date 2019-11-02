@@ -10,7 +10,7 @@
 namespace Book_Database;
 ?>
 <tr id="bdb-reading-log-{{ data.id }}" data-id="{{ data.id }}">
-	<td class="bdb-reading-log-date-started" data-th="<?php esc_attr_e( 'Date Started', 'book-database' ); ?>">
+	<td class="bdb-reading-log-date-started column-primary" data-colname="<?php esc_attr_e( 'Date Started', 'book-database' ); ?>">
 		<div class="bdb-table-display-value">
 			<# if ( data.date_started_formatted ) { #>
 				{{ data.date_started_formatted }}
@@ -29,7 +29,7 @@ namespace Book_Database;
 		</button>
 	</td>
 
-	<td class="bdb-reading-log-date-finished" data-th="<?php esc_attr_e( 'Date Finished', 'book-database' ); ?>">
+	<td class="bdb-reading-log-date-finished" data-colname="<?php esc_attr_e( 'Date Finished', 'book-database' ); ?>">
 		<div class="bdb-table-display-value">
 			<# if ( data.date_finished_formatted ) { #>
 			{{ data.date_finished_formatted }}
@@ -48,7 +48,7 @@ namespace Book_Database;
 		</button>
 	</td>
 
-	<td class="bdb-reading-log-review-id" data-th="<?php esc_attr_e( 'Review ID', 'book-database' ); ?>">
+	<td class="bdb-reading-log-review-id" data-colname="<?php esc_attr_e( 'Review ID', 'book-database' ); ?>">
 		<div class="bdb-table-display-value">
 			<# if ( data.review_id && '0' !== data.review_id ) { #>
 			<a href="<?php echo esc_url( get_reviews_admin_page_url( array( 'view' => 'edit' ) ) ); ?>&review_id={{ data.review_id }}">{{ data.review_id }} <?php _e( '(Edit)', 'book-database' ); ?></a>
@@ -62,7 +62,7 @@ namespace Book_Database;
 		</div>
 	</td>
 
-	<td class="bdb-reading-log-user-id" data-th="<?php esc_attr_e( 'User ID', 'book-database' ); ?>">
+	<td class="bdb-reading-log-user-id" data-colname="<?php esc_attr_e( 'User ID', 'book-database' ); ?>">
 		<div class="bdb-table-display-value">{{ data.user_id }}</div>
 
 		<div class="bdb-table-edit-value">
@@ -71,7 +71,7 @@ namespace Book_Database;
 		</div>
 	</td>
 
-	<td class="bdb-reading-log-percentage-complete" data-th="<?php esc_attr_e( '% Complete', 'book-database' ); ?>">
+	<td class="bdb-reading-log-percentage-complete" data-colname="<?php esc_attr_e( '% Complete', 'book-database' ); ?>">
 		<div class="bdb-table-display-value">
 			{{ data.percentage_complete }}%
 		</div>
@@ -82,7 +82,7 @@ namespace Book_Database;
 		</div>
 	</td>
 
-	<td class="bdb-reading-log-rating" data-th="<?php esc_attr_e( 'Rating', 'book-database' ); ?>">
+	<td class="bdb-reading-log-rating" data-colname="<?php esc_attr_e( 'Rating', 'book-database' ); ?>">
 		<div class="bdb-table-display-value">
 			<# if ( data.rating ) { #>
 			{{ data.rating }}
@@ -102,7 +102,7 @@ namespace Book_Database;
 		</div>
 	</td>
 
-	<td class="bdb-reading-log-actions" data-th="<?php esc_attr_e( 'Actions', 'book-database' ); ?>">
+	<td class="bdb-reading-log-actions" data-colname="<?php esc_attr_e( 'Actions', 'book-database' ); ?>">
 		<?php if ( user_can_edit_books() ) : ?>
 			<button type="button" class="button bdb-reading-log-toggle-editable"><?php _e( 'Edit', 'book-database' ); ?></button>
 			<button type="button" class="button bdb-remove-reading-log"><?php _e( 'Remove', 'book-database' ); ?></button>

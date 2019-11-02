@@ -92,22 +92,25 @@ function render_settings_page() {
 											<th><?php _e( 'Actions', 'book-database' ); ?></th>
 										</tr>
 										<tr id="bdb-new-book-taxonomy-fields">
-											<td data-th="<?php esc_attr_e( 'Name', 'book-database' ); ?>">
+											<td data-colname="<?php esc_attr_e( 'Name', 'book-database' ); ?>">
 												<label for="bdb-new-book-taxonomy-name" class="screen-reader-text"><?php _e( 'Enter a name for the taxonomy', 'book-database' ); ?></label>
 												<input type="text" id="bdb-new-book-taxonomy-name">
+												<button type="button" class="toggle-row">
+													<span class="screen-reader-text"><?php _e( 'Show more details', 'book-database' ); ?></span>
+												</button>
 											</td>
-											<td data-th="<?php esc_attr_e( 'Slug', 'book-database' ); ?>">
+											<td data-colname="<?php esc_attr_e( 'Slug', 'book-database' ); ?>">
 												<label for="bdb-new-book-taxonomy-slug" class="screen-reader-text"><?php _e( 'Enter a unique slug for the taxonomy', 'book-database' ); ?></label>
 												<input type="text" id="bdb-new-book-taxonomy-slug">
 											</td>
-											<td data-th="<?php esc_attr_e( 'Format', 'book-database' ); ?>">
+											<td data-colname="<?php esc_attr_e( 'Format', 'book-database' ); ?>">
 												<label for="bdb-new-book-taxonomy-format" class="screen-reader-text"><?php _e( 'Select a format for the taxonomy terms', 'book-database' ); ?></label>
 												<select id="bdb-new-book-taxonomy-format">
 													<option value="text"><?php _e( 'Text', 'book-database' ); ?></option>
 													<option value="checkbox"><?php _e( 'Checkbox', 'book-database' ); ?></option>
 												</select>
 											</td>
-											<td data-th="<?php esc_attr_e( 'Actions', 'book-database' ); ?>">
+											<td data-colname="<?php esc_attr_e( 'Actions', 'book-database' ); ?>">
 												<button type="button" class="button-primary"><?php _e( 'Add', 'book-database' ); ?></button>
 											</td>
 										</tr>
@@ -137,11 +140,11 @@ function render_settings_page() {
 											<th><?php _e( 'Actions', 'book-database' ); ?></th>
 										</tr>
 										<tr id="bdb-new-retailer-fields">
-											<td data-th="<?php esc_attr_e( 'Name', 'book-database' ); ?>">
+											<td class="column-primary" data-colname="<?php esc_attr_e( 'Name', 'book-database' ); ?>">
 												<label for="bdb-new-retailer-name" class="screen-reader-text"><?php _e( 'Enter a name for the retailer', 'book-database' ); ?></label>
 												<input type="text" id="bdb-new-retailer-name">
 											</td>
-											<td data-th="<?php esc_attr_e( 'Actions', 'book-database' ); ?>">
+											<td data-colname="<?php esc_attr_e( 'Actions', 'book-database' ); ?>">
 												<button type="button" class="button-primary"><?php _e( 'Add', 'book-database' ); ?></button>
 											</td>
 										</tr>
@@ -208,6 +211,34 @@ function render_settings_page() {
 
 						case 'misc' :
 							?>
+							<tr>
+								<th scope="row">
+									<label for="bdb-license-key"><?php _e( 'License Key', 'book-database' ); ?></label>
+								</th>
+								<td>
+									<?php
+									$license     = new License_Key();
+									$license_key = $license->get_key();
+									?>
+									<input type="text" id="bdb-license-key" class="regular-text" name="bdb_license_key" value="<?php echo esc_attr( $license_key ); ?>">
+									<?php if ( empty( $license_key ) ) : ?>
+										<button type="button" id="bdb-activate-license-key" class="button" data-nonce="<?php echo esc_attr( wp_create_nonce( 'bdb_activate_license_key' ) ); ?>"><?php _e( 'Activate', 'book-database' ); ?></button>
+									<?php else : ?>
+										<button type="button" id="bdb-deactivate-license-key" class="button" data-nonce="<?php echo esc_attr( wp_create_nonce( 'bdb_deactivate_license_key' ) ); ?>"><?php _e( 'Deactivate', 'book-database' ); ?></button>
+										<button type="button" id="bdb-refresh-license-key" class="button" data-nonce="<?php echo esc_attr( wp_create_nonce( 'bdb_refresh_license_key' ) ); ?>"><?php _e( 'Refresh', 'book-database' ); ?></button>
+									<?php endif; ?>
+									<div id="bdb-license-key-response"></div>
+									<p class="description">
+										<?php
+										if ( empty( $license_key ) ) {
+											_e( 'Enter your license key to receive automatic updates.', 'book-database' );
+										} else {
+											echo $license->get_status_message();
+										}
+										?>
+									</p>
+								</td>
+							</tr>
 							<tr>
 								<th scope="row">
 									<label for="bdb-settings-delete-uninstall"><?php _e( 'Delete on Uninstall', 'book-database' ); ?></label>

@@ -25,6 +25,7 @@ use function Book_Database\get_books;
 use function Book_Database\get_books_admin_page_url;
 use function Book_Database\get_enabled_book_fields;
 use function Book_Database\get_retailers;
+use function Book_Database\get_series_admin_page_url;
 
 /**
  * Load all enabled fields into the Add/Edit book display.
@@ -489,9 +490,6 @@ add_action( 'book-database/book-edit/after-save-box', __NAMESPACE__ . '\books_by
 /**
  * Field: other books in this series
  *
- * @todo Average rating
- * @todo Link to Edit Series page
- *
  * @param Book|false $book
  */
 function books_in_series( $book ) {
@@ -514,6 +512,7 @@ function books_in_series( $book ) {
 		return;
 	}
 
+	$edit_series_url = get_series_admin_page_url( array( 'view' => 'edit', 'series_id' => $series->get_id() ) );
 	?>
 	<div class="postbox bdb-books-in-series">
 		<h2 class="hndle ui-sortable handle"><?php printf( __( '%s Series', 'book-database' ), esc_html( $series->get_name() ) ); ?></h2>
@@ -539,7 +538,7 @@ function books_in_series( $book ) {
 				?>
 			</div>
 
-			<a href="<?php echo esc_url( '#' ); ?>" class="button button-secondary"><?php _e( 'Edit Series', 'book-database' ) ?></a>
+			<a href="<?php echo esc_url( $edit_series_url ); ?>" class="button button-secondary"><?php _e( 'Edit Series', 'book-database' ) ?></a>
 		</div>
 	</div>
 	<?php

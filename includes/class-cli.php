@@ -195,4 +195,69 @@ class CLI extends \WP_CLI_Command {
 
 	}
 
+	/**
+	 * Migrate purchase links from `buy_link` column in `wp_bdb_books` to custom tables.
+	 *
+	 * ## OPTIONS
+	 *
+	 * [--delete=<boolean>]
+	 * : If true, then the old data is wiped. If false, it's not.
+	 *
+	 * @param array $args
+	 * @param array $assoc_args
+	 */
+	public function migrate_purchase_links( $args, $assoc_args ) {
+
+		global $wpdb;
+
+		$delete = $assoc_args['delete'] ?? false;
+		$start  = time();
+
+		$tbl_books = book_database()->get_table( 'books' )->get_table_name();
+
+		$books = $wpdb->get_results( "SELECT id,buy_link FROM {$tbl_books} WHERE buy_link != ''" );
+		$count = ! empty( $books ) ? count( $books ) : 0;
+
+		$progress = \WP_CLI\Utils\make_progress_bar( __( 'Updating purchase links', 'book-database' ), $count );
+
+		if ( ! empty( $books ) ) {
+			foreach ( $books as $book ) {
+				try {
+					$url_parts     = parse_url( $book->buy_link );
+					$retailer_name = $url_parts['host'];
+
+					// Maybe add retailer.
+					$retailer = get_retailer_by( 'name', $retailer_name );
+					if ( $retailer instanceof Retailer ) {
+						$retailer_id = $retailer->get_id();
+					} else {
+						$retailer_id = add_retailer( array(
+							'name' => sanitize_text_field( $retailer_name )
+						) );
+					}
+
+					// Insert book link.
+					add_book_link( array(
+						'book_id'     => absint( $book->id ),
+						'retailer_id' => absint( $retailer_id ),
+						'url'         => $book->buy_link
+					) );
+
+					$progress->tick();
+				} catch ( Exception $e ) {
+					WP_CLI::error( sprintf( __( 'Error on book #%d. Message: %s', 'book-database' ), $book->id, $e->getMessage() ) );
+				}
+			}
+		}
+
+		if ( $delete ) {
+			$wpdb->query( "ALTER TABLE {$tbl_books} DROP COLUMN buy_link" );
+		}
+
+		$progress->finish();
+
+		WP_CLI::log( sprintf( __( 'Purchase links migrated in %d seconds.', 'book-database' ), time() - $start ) );
+
+	}
+
 }

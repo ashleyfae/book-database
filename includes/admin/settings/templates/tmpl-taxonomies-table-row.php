@@ -12,7 +12,7 @@ namespace Book_Database;
 <tr id="bdb-book-taxonomy-{{ data.id }}" data-id="{{ data.id }}">
 	<td class="bdb-book-taxonomy-name column-primary" data-colname="<?php esc_attr_e( 'Name', 'book-database' ); ?>">
 		<label for="bdb-book-taxonomy-name-{{ data.id }}" class="screen-reader-text"><?php _e( 'Enter a name for the taxonomy', 'book-database' ); ?></label>
-		<input type="text" id="bdb-book-taxonomy-name-{{ data.id }}" value="{{ data.name }}"<# if ( data.slug == 'author' ) { #> readonly="readonly" <# } #>>
+		<input type="text" id="bdb-book-taxonomy-name-{{ data.id }}" value="{{ data.name }}">
 
 		<button type="button" class="toggle-row"><span class="screen-reader-text"><?php _e( 'Show more details', 'book-database' ); ?></span></button>
 	</td>

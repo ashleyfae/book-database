@@ -102,7 +102,7 @@ function editions_table( $book ) {
 						</div>
 					</div>
 					<div class="bdb-meta-row">
-						<button id="bdb-submit-new-edition" class="button-primary"><?php _e( 'Add Edition', 'book-database' ); ?></button>
+						<button type="button" id="bdb-submit-new-edition" class="button-primary"><?php _e( 'Add Edition', 'book-database' ); ?></button>
 					</div>
 				</div>
 			<?php endif; ?>

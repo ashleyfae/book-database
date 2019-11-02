@@ -14,15 +14,13 @@ use Book_Database\Rating;
 use Book_Database\Series;
 use function Book_Database\book_database;
 use function Book_Database\count_books;
-use function Book_Database\format_date;
 use function Book_Database\generate_book_index_title;
 use function Book_Database\get_attached_book_terms;
 use function Book_Database\get_book_series_by;
 use function Book_Database\get_book_taxonomies;
-use function Book_Database\get_book_terms;
-use function Book_Database\get_books;
 use function Book_Database\get_books_admin_page_url;
 use function Book_Database\get_enabled_book_fields;
+use function Book_Database\get_retailers;
 use function Book_Database\get_series_admin_page_url;
 
 /**
@@ -80,8 +78,8 @@ function book_cover_field( $book ) {
 	<img src="<?php echo esc_url( $cover_url ); ?>" alt="<?php esc_attr_e( 'Book cover', 'book-database' ); ?>" id="bdb-cover-image" style="<?php echo empty( $cover_url ) ? 'display: none;' : ''; ?>">
 
 	<div class="bdb-cover-image-fields" data-image="#bdb-cover-image" data-image-id="#bdb-cover-id" data-image-size="large">
-		<button class="bdb-upload-image button"><?php esc_html_e( 'Upload Image', 'book-database' ); ?></button>
-		<button class="bdb-remove-image button" style="<?php echo empty( $cover_id ) ? 'display: none;' : ''; ?>"><?php esc_html_e( 'Remove Image', 'book-database' ); ?></button>
+		<button type="button" class="bdb-upload-image button"><?php esc_html_e( 'Upload Image', 'book-database' ); ?></button>
+		<button type="button" class="bdb-remove-image button" style="<?php echo empty( $cover_id ) ? 'display: none;' : ''; ?>"><?php esc_html_e( 'Remove Image', 'book-database' ); ?></button>
 	</div>
 	<input type="hidden" id="bdb-cover-id" name="cover_id" value="<?php echo esc_attr( $cover_id ); ?>">
 	<?php
@@ -303,20 +301,76 @@ function book_goodreads_url_field( $book ) {
  */
 function book_buy_link_field( $book ) {
 
-	$url = ! empty( $book ) ? $book->get_buy_link() : '';
+	$retailers = get_retailers( array(
+		'orderby' => 'name',
+		'order'   => 'ASC',
+		'number'  => 50
+	) );
+
+	if ( empty( $retailers ) ) {
+		return;
+	}
 
 	ob_start();
 	?>
-	<input type="url" id="bdb-book-buy-url" class="regular-text" name="buy_link" value="<?php echo esc_attr( $url ); ?>" placeholder="https://">
+	<div id="bdb-book-purchase-links">
+		<div id="bdb-book-links"></div>
+
+		<div id="bdb-new-purchase-link">
+			<label for="bdb-new-book-link-retailer" class="screen-reader-text"><?php _e( 'Select a retailer', 'book-database' ); ?></label>
+			<select id="bdb-new-book-link-retailer">
+				<?php foreach ( $retailers as $retailer ) : ?>
+					<option value="<?php echo esc_attr( $retailer->get_id() ); ?>">
+						<?php echo esc_html( $retailer->get_name() ); ?>
+					</option>
+				<?php endforeach; ?>
+			</select>
+
+			<label for="bdb-new-book-link-url" class="screen-reader-text"><?php _e( 'Enter a URL', 'book-database' ); ?></label>
+			<input type="text" id="bdb-new-book-link-url" class="regular-text" placeholder="https://" value="">
+
+			<button type="button" class="button"><?php _e( 'Add', 'book-database' ); ?></button>
+
+			<div id="bdb-book-links-errors" class="bdb-notice bdb-notice-error" style="display: none;"></div>
+		</div>
+	</div>
 	<?php
 
 	book_database()->get_html()->meta_row( array(
-		'label' => __( 'Purchase URL', 'book-database' ),
-		'id'    => 'bdb-book-buy-url',
+		'label' => __( 'Purchase Links', 'book-database' ),
 		'field' => ob_get_clean()
 	) );
 
 }
+
+/**
+ * Load book link template
+ */
+function load_link_template() {
+
+	global $bdb_admin_pages;
+
+	$screen = get_current_screen();
+
+	if ( $screen->id !== $bdb_admin_pages['books'] ) {
+		return;
+	}
+
+	$templates = array( 'book-link-add', 'book-link-edit' );
+
+	foreach ( $templates as $template ) {
+		if ( file_exists( BDB_DIR . 'includes/admin/books/templates/tmpl-' . $template . '.php' ) ) {
+			?>
+			<script type="text/html" id="tmpl-bdb-<?php echo esc_attr( $template ); ?>">
+				<?php require_once BDB_DIR . 'includes/admin/books/templates/tmpl-' . $template . '.php'; ?>
+			</script>
+			<?php
+		}
+	}
+
+}
+
+add_action( 'admin_footer', __NAMESPACE__ . '\load_link_template' );
 
 /**
  * Field: synopsis

@@ -39,6 +39,14 @@
     }
 }
 
+#bdb-book-purchase-links {
+    input[type="text"] {
+        display: inline-block;
+        min-width: 300px;
+        width: auto;
+    }
+}
+
 #bdb-new-edition-fields,
 #bdb-new-reading-log-fields,
 .bdb-table-edit-value {

@@ -70,7 +70,93 @@ function render_settings_page() {
 							<tr>
 								<th scope="row"><?php _e( 'Book Taxonomies', 'book-database' ); ?></th>
 								<td>
-
+									<table id="bdb-book-taxonomies" class="wp-list-table widefat fixed striped">
+										<thead>
+										<tr>
+											<th scope="col" class="column-primary"><?php _e( 'Name', 'book-database' ); ?></th>
+											<th scope="col"><?php _e( 'Slug', 'book-database' ); ?></th>
+											<th scope="col"><?php _e( 'Format', 'book-database' ); ?></th>
+											<th scope="col"><?php _e( 'Actions', 'book-database' ); ?></th>
+										</tr>
+										</thead>
+										<tbody>
+										<tr>
+											<td colspan="4"><?php _e( 'Loading...', 'book-database' ); ?></td>
+										</tr>
+										</tbody>
+										<tfoot>
+										<tr>
+											<th><?php _e( 'Name', 'book-database' ); ?></th>
+											<th><?php _e( 'Slug', 'book-database' ); ?></th>
+											<th><?php _e( 'Format', 'book-database' ); ?></th>
+											<th><?php _e( 'Actions', 'book-database' ); ?></th>
+										</tr>
+										<tr id="bdb-new-book-taxonomy-fields">
+											<td data-colname="<?php esc_attr_e( 'Name', 'book-database' ); ?>">
+												<label for="bdb-new-book-taxonomy-name" class="screen-reader-text"><?php _e( 'Enter a name for the taxonomy', 'book-database' ); ?></label>
+												<input type="text" id="bdb-new-book-taxonomy-name">
+												<button type="button" class="toggle-row">
+													<span class="screen-reader-text"><?php _e( 'Show more details', 'book-database' ); ?></span>
+												</button>
+											</td>
+											<td data-colname="<?php esc_attr_e( 'Slug', 'book-database' ); ?>">
+												<label for="bdb-new-book-taxonomy-slug" class="screen-reader-text"><?php _e( 'Enter a unique slug for the taxonomy', 'book-database' ); ?></label>
+												<input type="text" id="bdb-new-book-taxonomy-slug">
+											</td>
+											<td data-colname="<?php esc_attr_e( 'Format', 'book-database' ); ?>">
+												<label for="bdb-new-book-taxonomy-format" class="screen-reader-text"><?php _e( 'Select a format for the taxonomy terms', 'book-database' ); ?></label>
+												<select id="bdb-new-book-taxonomy-format">
+													<option value="text"><?php _e( 'Text', 'book-database' ); ?></option>
+													<option value="checkbox"><?php _e( 'Checkbox', 'book-database' ); ?></option>
+												</select>
+											</td>
+											<td data-colname="<?php esc_attr_e( 'Actions', 'book-database' ); ?>">
+												<button type="button" class="button-primary"><?php _e( 'Add', 'book-database' ); ?></button>
+											</td>
+										</tr>
+										</tfoot>
+									</table>
+									<div id="bdb-book-taxonomies-errors" class="bdb-notice bdb-notice-error" style="display: none;"></div>
+								</td>
+							</tr>
+							<tr>
+								<th scope="row"><?php _e( 'Retailers', 'book-database' ); ?></th>
+								<td>
+									<table id="bdb-retailers" class="wp-list-table widefat fixed striped">
+										<thead>
+										<tr>
+											<th scope="col" class="column-primary"><?php _e( 'Name', 'book-database' ); ?></th>
+											<th scope="col"><?php _e( 'Book Info Template', 'book-database' ); ?></th>
+											<th scope="col"><?php _e( 'Actions', 'book-database' ); ?></th>
+										</tr>
+										</thead>
+										<tbody>
+										<tr>
+											<td colspan="2"><?php _e( 'Loading...', 'book-database' ); ?></td>
+										</tr>
+										</tbody>
+										<tfoot>
+										<tr>
+											<th><?php _e( 'Name', 'book-database' ); ?></th>
+											<th scope="col"><?php _e( 'Book Info Template', 'book-database' ); ?></th>
+											<th><?php _e( 'Actions', 'book-database' ); ?></th>
+										</tr>
+										<tr id="bdb-new-retailer-fields">
+											<td class="column-primary" data-colname="<?php esc_attr_e( 'Name', 'book-database' ); ?>">
+												<label for="bdb-new-retailer-name" class="screen-reader-text"><?php _e( 'Enter a name for the retailer', 'book-database' ); ?></label>
+												<input type="text" id="bdb-new-retailer-name">
+											</td>
+											<td data-colname="<?php esc_attr_e( 'Book Info Template', 'book-database' ); ?>">
+												<label for="bdb-new-retailer-template" class="screen-reader-text"><?php _e( 'Format the template for use in displaying book information', 'book-database' ); ?></label>
+												<textarea id="bdb-new-retailer-template" class="regular-text"><?php echo esc_textarea( sprintf( '<a href="[url]" target="_blank">%s</a>', __( 'Buy the Book', 'book-database' ) ) ); ?></textarea>
+											</td>
+											<td data-colname="<?php esc_attr_e( 'Actions', 'book-database' ); ?>">
+												<button type="button" class="button-primary"><?php _e( 'Add', 'book-database' ); ?></button>
+											</td>
+										</tr>
+										</tfoot>
+									</table>
+									<div id="bdb-retailers-errors" class="bdb-notice bdb-notice-error" style="display: none;"></div>
 								</td>
 							</tr>
 							<?php
@@ -179,60 +265,6 @@ function render_settings_page() {
 					}
 					?>
 				</table>
-
-				<?php if ( 'books' === $tab ) :
-					/*
-					 * This is shown outside the normal table because WordPress doesn't handle nested responsive tables well....
-					 */
-					?>
-					<table id="bdb-book-taxonomies" class="wp-list-table widefat fixed striped">
-						<thead>
-						<tr>
-							<th scope="col" class="column-primary"><?php _e( 'Name', 'book-database' ); ?></th>
-							<th scope="col"><?php _e( 'Slug', 'book-database' ); ?></th>
-							<th scope="col"><?php _e( 'Format', 'book-database' ); ?></th>
-							<th scope="col"><?php _e( 'Actions', 'book-database' ); ?></th>
-						</tr>
-						</thead>
-						<tbody>
-						<tr>
-							<td colspan="4"><?php _e( 'Loading...', 'book-database' ); ?></td>
-						</tr>
-						</tbody>
-						<tfoot>
-						<tr>
-							<th><?php _e( 'Name', 'book-database' ); ?></th>
-							<th><?php _e( 'Slug', 'book-database' ); ?></th>
-							<th><?php _e( 'Format', 'book-database' ); ?></th>
-							<th><?php _e( 'Actions', 'book-database' ); ?></th>
-						</tr>
-						<tr id="bdb-new-book-taxonomy-fields">
-							<td data-colname="<?php esc_attr_e( 'Name', 'book-database' ); ?>">
-								<label for="bdb-new-book-taxonomy-name" class="screen-reader-text"><?php _e( 'Enter a name for the taxonomy', 'book-database' ); ?></label>
-								<input type="text" id="bdb-new-book-taxonomy-name">
-								<button type="button" class="toggle-row">
-									<span class="screen-reader-text"><?php _e( 'Show more details', 'book-database' ); ?></span>
-								</button>
-							</td>
-							<td data-colname="<?php esc_attr_e( 'Slug', 'book-database' ); ?>">
-								<label for="bdb-new-book-taxonomy-slug" class="screen-reader-text"><?php _e( 'Enter a unique slug for the taxonomy', 'book-database' ); ?></label>
-								<input type="text" id="bdb-new-book-taxonomy-slug">
-							</td>
-							<td data-colname="<?php esc_attr_e( 'Format', 'book-database' ); ?>">
-								<label for="bdb-new-book-taxonomy-format" class="screen-reader-text"><?php _e( 'Select a format for the taxonomy terms', 'book-database' ); ?></label>
-								<select id="bdb-new-book-taxonomy-format">
-									<option value="text"><?php _e( 'Text', 'book-database' ); ?></option>
-									<option value="checkbox"><?php _e( 'Checkbox', 'book-database' ); ?></option>
-								</select>
-							</td>
-							<td data-colname="<?php esc_attr_e( 'Actions', 'book-database' ); ?>">
-								<button class="button-primary"><?php _e( 'Add', 'book-database' ); ?></button>
-							</td>
-						</tr>
-						</tfoot>
-					</table>
-					<div id="bdb-book-taxonomies-errors" class="bdb-notice bdb-notice-error" style="display: none;"></div>
-				<?php endif; ?>
 
 				<div class="bdb-settings-buttons">
 					<?php

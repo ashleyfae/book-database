@@ -330,7 +330,32 @@ class Book_Layout {
 	 * @return string
 	 */
 	public function get_field_buy_link() {
-		return $this->book->get_buy_link();
+
+		$final_links = array();
+		$links       = get_book_links( array(
+			'book_id' => $this->book->get_id()
+		) );
+
+		if ( ! empty( $links ) ) {
+			foreach ( $links as $link ) {
+				$final_links[] = $link->format();
+			}
+		}
+
+		/**
+		 * Filters the buy link separator.
+		 *
+		 * @param string      $link_separator Separator string between links.
+		 * @param Book_Link[] $links          Array of Book_Link objects.
+		 * @param Book        $book           Book object.
+		 * @param Book_Layout $this           Book layout object.
+		 *
+		 * @since 1.0
+		 */
+		$link_separator = apply_filters( 'book-database/book/formatted-info/buy-links/separator', ', ', $links, $this->book, $this );
+
+		return implode( $link_separator, $final_links );
+
 	}
 
 	/**

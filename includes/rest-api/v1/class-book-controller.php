@@ -114,12 +114,6 @@ class Book extends Controller {
 						return ! empty( $param ) ? esc_url_raw( $param ) : '';
 					}
 				),
-				'buy_link'        => array(
-					'default'           => '',
-					'sanitize_callback' => function ( $param, $request, $key ) {
-						return ! empty( $param ) ? esc_url_raw( $param ) : '';
-					}
-				),
 			)
 		) );
 

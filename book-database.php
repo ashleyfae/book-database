@@ -30,7 +30,7 @@
  * under GPL2+.
  *
  * @package   book-database
- * @copyright Copyright (c) 2017, Ashley Gibson
+ * @copyright Copyright (c) 2019, Ashley Gibson
  * @license   GPL2+
  */
 

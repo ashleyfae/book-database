@@ -2,8 +2,6 @@
 /**
  * Editions Table
  *
- * @todo      Note: `source_id` depends on their being a `source` taxonomy. Consider source table or protection against
- *            deleting the `source` taxonomy.
  * @todo      Consider `format` table.
  *
  * @package   book-database

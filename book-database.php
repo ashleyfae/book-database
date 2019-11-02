@@ -24,11 +24,6 @@
  * You should have received a copy of the GNU General Public License
  * along with Book Database. If not, see <http://www.gnu.org/licenses/>.
  *
- * Thanks to Easy Digital Downloads for serving as a great code base
- * and resource, which a lot of Book Database's structure is based on.
- * Easy Digital Downloads is made by Pippin Williamson and licensed
- * under GPL2+.
- *
  * @package   book-database
  * @copyright Copyright (c) 2019, Ashley Gibson
  * @license   GPL2+
@@ -56,6 +51,10 @@ if ( ! defined( 'NOSE_GRAZE_STORE_URL' ) ) {
 	define( 'NOSE_GRAZE_STORE_URL', 'https://shop.nosegraze.com' );
 }
 
+/**
+ * Class Book_Database
+ * @package Book_Database
+ */
 final class Book_Database {
 
 	/**

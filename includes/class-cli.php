@@ -256,7 +256,7 @@ class CLI extends \WP_CLI_Command {
 
 		$progress->finish();
 
-		WP_CLI::log( sprintf( __( 'Purchase links migrated in %d seconds.', 'book-database' ), time() - $start ) );
+		WP_CLI::log( sprintf( __( 'Purchase links migrated in %d seconds. Old Count: %d; New Count: %d', 'book-database' ), time() - $start ), count( $books ), count_book_links() );
 
 	}
 

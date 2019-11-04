@@ -104,7 +104,7 @@ var BDB_Editions = {
 			format: $( '#bdb-new-edition-format' ).val(),
 			date_acquired: dateLocalToUTC( $( '#bdb-new-edition-date-acquired' ).val() ),
 			source_id: $( '#bdb-checkboxes-source-edition' ).find( 'input:checked' ).val(),
-			signed: $( '#bdb-new-edition-signed' ).prop( 'checked' )
+			signed: $( '#bdb-new-edition-signed' ).prop( 'checked' ) ? 1 : 0
 		};
 
 		apiRequest( 'v1/edition/add', args, 'POST' ).then( function( apiResponse ) {
@@ -173,7 +173,7 @@ var BDB_Editions = {
 			format: wrap.find( '.bdb-edition-format select' ).val(),
 			date_acquired: dateLocalToUTC( wrap.find( '.bdb-edition-date-acquired input' ).val() ),
 			source_id: wrap.find( '.bdb-edition-source select' ).val(),
-			signed: wrap.find( '.bdb-edition-signed input[type="checkbox"]' ).prop( 'checked' )
+			signed: wrap.find( '.bdb-edition-signed input[type="checkbox"]' ).prop( 'checked' ) ? 1 : 0
 		};
 
 		apiRequest( 'v1/edition/update/' + wrap.data( 'id' ), args, 'POST' ).then( function( apiResponse ) {

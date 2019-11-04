@@ -393,6 +393,8 @@ class Book_Layout {
 		$publishers = get_attached_book_terms( $this->book->get_id(), 'publisher', array( 'fields' => 'name' ) );
 		$genres     = get_attached_book_terms( $this->book->get_id(), 'genre', array( 'fields' => 'name', 'number' => 1 ) );
 		$genre      = $genres[0] ?? '';
+		$authors    = $this->book->get_authors();
+		$base_url   = untrailingslashit( get_reviews_page_url() );
 
 		ob_start();
 		?>
@@ -410,11 +412,20 @@ class Book_Layout {
 				"itemReviewed": {
 					"@type": "Book",
 					"name": <?php echo json_encode( $this->book->get_title() ); ?>,
-					"author": {
-						"@type": "Person",
-						"name": <?php echo json_encode( $this->book->get_author_names( true ) ); ?>,
-						"sameAs": ""
-					},
+					"author": [
+						<?php foreach ( $authors as $author ) :
+							$author_url = ''; // @todo DB column in future.
+							if ( empty( $author_url ) ) {
+								$author_url = sprintf( '%1$s/author/%2$s/', $base_url, urlencode( $author->get_slug() ) );
+							}
+							?>
+							{
+								"@type": "Person",
+								"name": <?php echo json_encode( $author->get_name() ); ?>,
+								"sameAs": <?php echo json_encode( $author_url ); ?>
+							}
+						<?php endforeach; ?>
+					],
 					"isbn": <?php echo json_encode( $isbn ); ?>,
 					"numberOfPages": <?php echo json_encode( $this->book->get_pages() ); ?>,
 					"publisher": {

@@ -173,7 +173,7 @@ class Review extends Base_Object {
 		}
 
 		if ( $id_appended && ! empty( $url ) && ! $this->is_external() ) {
-			$url .= '#book-' . urlencode( $this->get_id() );
+			$url .= '#book-' . urlencode( $this->get_book_id() );
 		}
 
 		/**

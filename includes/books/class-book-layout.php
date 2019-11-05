@@ -111,6 +111,12 @@ class Book_Layout {
 		// Wrap the entire HTML in a `<div>` with the book ID.
 		$html = '<div id="book-' . esc_attr( $this->book->get_id() ) . '" class="bdb-book-info">' . $html . '</div>';
 
+		// Add Schema.org markup.
+		$add_schema_markup = apply_filters( 'book-database/book/add-schema-markup', true, $this->book, $this );
+		if ( $add_schema_markup ) {
+			$html .= $this->get_schema_markup();
+		}
+
 		/**
 		 * Filters the final layout HTML.
 		 *
@@ -175,7 +181,7 @@ class Book_Layout {
 		}
 
 		$class = 'align' . sanitize_html_class( $alignment );
-		$value = '<img src="' . esc_url( $this->book->get_cover_url( $size ) ) . '" alt="' . esc_attr( wp_strip_all_tags( $this->book->get_title() ) ) . '" class="' . esc_attr( $class ) . '" itemprop="image">';
+		$value = '<img src="' . esc_url( $this->book->get_cover_url( $size ) ) . '" alt="' . esc_attr( wp_strip_all_tags( $this->book->get_title() ) ) . '" class="' . esc_attr( $class ) . '">';
 
 		return $value;
 
@@ -187,7 +193,7 @@ class Book_Layout {
 	 * @return string
 	 */
 	public function get_field_title() {
-		return '<span itemprop="name">' . $this->book->get_title() . '</span>';
+		return $this->book->get_title();
 	}
 
 	/**
@@ -206,8 +212,7 @@ class Book_Layout {
 		$names = array();
 
 		foreach ( $authors as $author ) {
-			$name    = '<span itemprop="author">' . esc_html( $author->get_name() ) . '</span>';
-			$names[] = link_book_terms() ? '<a href="' . esc_url( get_book_term_link( $author ) ) . '">' . $name . '</a>' : $name;
+			$names[] = link_book_terms() ? '<a href="' . esc_url( get_book_term_link( $author ) ) . '">' . esc_html( $author->get_name() ) . '</a>' : esc_html( $author->get_name() );
 		}
 
 		return implode( ', ', $names );
@@ -238,30 +243,6 @@ class Book_Layout {
 	}
 
 	/**
-	 * Field: publisher
-	 *
-	 * @return string
-	 */
-	public function get_field_publisher() {
-
-		$publishers = get_attached_book_terms( $this->book->get_id(), 'publisher' );
-
-		if ( empty( $publishers ) ) {
-			return '';
-		}
-
-		$pub_names = array();
-
-		foreach ( $publishers as $publisher ) {
-			$name        = '<span itemprop="publisher">' . esc_html( $publisher->get_name() ) . '</span>';
-			$pub_names[] = link_book_terms() ? '<a href="' . esc_url( get_book_term_link( $publisher ) ) . '">' . $name . '</a>' : $name;
-		}
-
-		return implode( ', ', $pub_names );
-
-	}
-
-	/**
 	 * Field: publication date
 	 *
 	 * @return string
@@ -272,31 +253,7 @@ class Book_Layout {
 			return '';
 		}
 
-		return '<span itemprop="datePublished" content="' . esc_attr( $this->book->get_pub_date( true, 'Y-m-d' ) ) . '">' . esc_html( $this->book->get_pub_date( true ) ) . '</span>';
-
-	}
-
-	/**
-	 * Field: genre
-	 *
-	 * @return string
-	 */
-	public function get_field_genre() {
-
-		$genres = get_attached_book_terms( $this->book->get_id(), 'genre' );
-
-		if ( empty( $genres ) ) {
-			return '';
-		}
-
-		$genre_names = array();
-
-		foreach ( $genres as $genre ) {
-			$name          = '<span itemprop="genre">' . esc_html( $genre->get_name() ) . '</span>';
-			$genre_names[] = link_book_terms() ? '<a href="' . esc_url( get_book_term_link( $genre ) ) . '">' . $name . '</a>' : $name;
-		}
-
-		return implode( ', ', $genre_names );
+		return '<span content="' . esc_attr( $this->book->get_pub_date( true, 'Y-m-d' ) ) . '">' . esc_html( $this->book->get_pub_date( true ) ) . '</span>';
 
 	}
 
@@ -306,13 +263,7 @@ class Book_Layout {
 	 * @return string
 	 */
 	public function get_field_pages() {
-
-		if ( empty( $this->book->get_pages() ) ) {
-			return '';
-		}
-
-		return '<span itemprop="numberOfPages">' . esc_html( $this->book->get_pages() ) . '</span>';
-
+		return  esc_html( $this->book->get_pages() );
 	}
 
 	/**
@@ -380,11 +331,7 @@ class Book_Layout {
 		}
 
 		$rating_format = bdb_get_option( 'rating_display', 'html_stars' );
-		$actual_value  = $this->rating->get_rating();
-		$value         = '<span itemprop="reviewRating" itemscope itemtype="http://schema.org/Rating">';
-		$value         .= '<span class="bdb-' . sanitize_html_class( str_replace( '_', '-', $rating_format ) ) . '-star-wrap">' . $this->rating->format( $rating_format ) . '</span>';
-		$value         .= '<span class="bdb-actual-rating-values"><span itemprop="ratingValue">' . esc_html( $actual_value ) . '</span>/<span itemprop="bestRating">' . esc_html( $this->rating->get_max_rating() ) . '</span></span>';
-		$value         .= '</span>';
+		$value         = '<span class="bdb-' . sanitize_html_class( str_replace( '_', '-', $rating_format ) ) . '-star-wrap">' . $this->rating->format( $rating_format ) . '</span>';
 
 		if ( link_book_terms() ) {
 			$value = '<a href="' . esc_url( get_book_term_link( $this->rating ) ) . '">' . $value . '</a>';
@@ -428,6 +375,91 @@ class Book_Layout {
 
 		return implode( ', ', $term_names );
 
+	}
+
+	/**
+	 * Get the Schema.org Review markup for this book / review
+	 *
+	 * Only displays if we have a valid WP_Post object and Rating object.
+	 *
+	 * @return string
+	 */
+	public function get_schema_markup() {
+
+		global $post;
+
+		if ( ! $post instanceof \WP_Post || ! $this->rating instanceof Rating || null === $this->rating->get_rating() ) {
+			return '';
+		}
+
+		$user = get_userdata( $post->post_author );
+		$user_name = $user instanceof \WP_User ? $user->display_name : '';
+		$post_date = $post->post_date_gmt;
+		$edition   = get_edition_by( 'book_id', $this->book->get_id() );
+		$isbn      = $edition instanceof Edition ? $edition->get_isbn() : '';
+		$publishers = get_attached_book_terms( $this->book->get_id(), 'publisher', array( 'fields' => 'name' ) );
+		$genres     = get_attached_book_terms( $this->book->get_id(), 'genre', array( 'fields' => 'name', 'number' => 1 ) );
+		$genre      = $genres[0] ?? '';
+		$authors    = $this->book->get_authors();
+		$base_url   = untrailingslashit( get_reviews_page_url() );
+
+		ob_start();
+		?>
+		<script type="application/ld+json">
+			{
+				"@context": "https://schema.org/",
+				"@type": "Review",
+				"datePublished": <?php echo json_encode( date( 'c', strtotime( $post_date ) ) ); ?>,
+				"description": <?php echo json_encode( $post->post_title ); ?>,
+				"publisher": {
+					"@type": "Organization",
+					"name": <?php echo json_encode( get_bloginfo( 'name' ) ); ?>
+				},
+				"url": <?php echo json_encode( get_permalink( $post ) ); ?>,
+				"itemReviewed": {
+					"@type": "Book",
+					"name": <?php echo json_encode( $this->book->get_title() ); ?>,
+					"author": [
+						<?php foreach ( $authors as $author ) :
+							$author_url = ''; // @todo DB column in future.
+							if ( empty( $author_url ) ) {
+								$author_url = sprintf( '%1$s/author/%2$s/', $base_url, urlencode( $author->get_slug() ) );
+							}
+							?>
+							{
+								"@type": "Person",
+								"name": <?php echo json_encode( $author->get_name() ); ?>,
+								"sameAs": <?php echo json_encode( $author_url ); ?>
+							}
+						<?php endforeach; ?>
+					],
+					"isbn": <?php echo json_encode( $isbn ); ?>,
+					"numberOfPages": <?php echo json_encode( $this->book->get_pages() ); ?>,
+					"publisher": {
+						"@type": "Organization",
+						"name": <?php echo json_encode( implode( ', ', $publishers ) ); ?>
+					},
+					"image": <?php echo json_encode( $this->book->get_cover_url() ); ?>,
+					"datePublished": <?php echo json_encode( date( 'c', strtotime( $this->book->get_pub_date() ) ) ); ?>,
+					"sameAs": <?php echo json_encode( $this->book->get_goodreads_url() ); ?>,
+					"genre": <?php echo json_encode( $genre ); ?>
+				},
+				"author": {
+					"@type": "Person",
+					"name": <?php echo json_encode( $user_name ); ?>,
+					"sameAs": <?php echo json_encode( home_url( '/' ) ); ?>
+				}
+				<?php if ( is_numeric( $this->rating->get_rating() ) ) : ?>
+				, "reviewRating": {
+					"@type": "Rating",
+					"ratingValue": <?php echo json_encode( $this->rating->get_rating() ); ?>,
+					"bestRating": <?php echo json_encode( $this->rating->get_max_rating() ); ?>
+				}
+				<?php endif; ?>
+			}
+		</script>
+		<?php
+		return ob_get_clean();
 	}
 
 }

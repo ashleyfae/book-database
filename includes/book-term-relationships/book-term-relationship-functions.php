@@ -233,7 +233,7 @@ function get_attached_book_terms( $book_id, $taxonomy, $args = array() ) {
 	$select_this = 't.*';
 	if ( in_array( $args['fields'], array( 'id', 'ids' ) ) ) {
 		$select_this = 't.id';
-	} elseif ( 'names' === $args['fields'] ) {
+	} elseif ( in_array( $args['fields'], array( 'name', 'names' ) ) ) {
 		$select_this = 't.name';
 	}
 
@@ -270,7 +270,7 @@ function get_attached_book_terms( $book_id, $taxonomy, $args = array() ) {
 				$terms[] = new Book_Term( $object );
 			}
 		}
-	} elseif ( in_array( $args['fields'], array( 'id', 'ids', 'names' ) ) ) {
+	} elseif ( in_array( $args['fields'], array( 'id', 'ids', 'name', 'names' ) ) ) {
 		$terms = $wpdb->get_col( $query );
 	}
 

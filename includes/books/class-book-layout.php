@@ -377,11 +377,18 @@ class Book_Layout {
 
 	}
 
+	/**
+	 * Get the Schema.org Review markup for this book / review
+	 *
+	 * Only displays if we have a valid WP_Post object and Rating object.
+	 *
+	 * @return string
+	 */
 	public function get_schema_markup() {
 
 		global $post;
 
-		if ( ! $post instanceof \WP_Post ) {
+		if ( ! $post instanceof \WP_Post || ! $this->rating instanceof Rating || null === $this->rating->get_rating() ) {
 			return '';
 		}
 
@@ -442,7 +449,7 @@ class Book_Layout {
 					"name": <?php echo json_encode( $user_name ); ?>,
 					"sameAs": <?php echo json_encode( home_url( '/' ) ); ?>
 				}
-				<?php if ( $this->rating instanceof Rating && null !== $this->rating->get_rating() && is_numeric( $this->rating->get_rating() ) ) : ?>
+				<?php if ( is_numeric( $this->rating->get_rating() ) ) : ?>
 				, "reviewRating": {
 					"@type": "Rating",
 					"ratingValue": <?php echo json_encode( $this->rating->get_rating() ); ?>,

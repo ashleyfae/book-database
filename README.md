@@ -23,6 +23,11 @@ I'm not sure if I'll ever officially release this. I'm mostly building this for 
 * Maintain a front-end archive of all your book reviews.
 * See analytics about the books you've reviewed during a specific date range.
 
+## Requirements:
+
+* PHP 7.0+
+* 64-bit
+
 ## Fun Queries:
 
 Most read books:

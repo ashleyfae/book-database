@@ -42,7 +42,7 @@ function render_analytics_page() {
 				<div class="bdb-metric">
 					<div class="bdb-metric-inner bdb-metric-multi-col">
 						<div id="bdb-number-books-finished">
-							<p class="top-text"><?php _e( 'Total Books Finished', 'book-database' ); ?></p>
+							<p class="top-text"><?php _e( 'Books Finished', 'book-database' ); ?></p>
 							<div class="bdb-loading"></div>
 							<h2 class="bdb-result"></h2>
 							<p class="bottom-text bdb-result-compare"><span></span></p>
@@ -56,7 +56,7 @@ function render_analytics_page() {
 						</div>
 
 						<div id="bdb-number-new-books">
-							<p class="top-text"><?php _e( 'New Books', 'book-database' ); ?></p>
+							<p class="top-text"><?php _e( 'New Reads', 'book-database' ); ?></p>
 							<div class="bdb-loading"></div>
 							<h2 class="bdb-result"></h2>
 							<p class="bottom-text bdb-result-compare"><span></span></p>

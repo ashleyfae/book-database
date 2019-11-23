@@ -53,6 +53,14 @@
     display: none;
 }
 
+.bdb-table-edit-value {
+    display: none;
+
+    input, select {
+        max-width: 100%;
+    }
+}
+
 #bdb-book-reading-logs-list {
     > h2 {
         > label {

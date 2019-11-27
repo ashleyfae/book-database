@@ -647,10 +647,11 @@ class Analytics {
 			INNER JOIN {$this->tables['books']} AS book ON ( log.book_id = book.id )
 			LEFT JOIN {$this->tables['author_r']} AS ar ON ( log.book_id = ar.book_id )
 			INNER JOIN {$this->tables['authors']} AS author ON ( ar.author_id = author.id )
+			LEFT JOIN {$this->tables['reviews']} AS review ON ( book.id = review.book_id )
 			WHERE date_finished >= %s 
 			AND date_finished <= %s 
 			AND date_finished IS NOT NULL 
-			AND review_id IS NULL 
+			AND review.book_id IS NULL
 			GROUP BY book.id 
 			ORDER BY log.date_finished DESC 
 			LIMIT 20",

@@ -118,7 +118,7 @@ class Where_Clause {
 			$operator    = $this->sanitize_operator( $condition['operator'] ?? '=' );
 			$type        = ! empty( $condition['type'] ) ? strtoupper( $condition['type'] ) : 'TEXT';
 			$placeholder = is_int( $condition['value'] ) ? '%d' : '%s';
-			$value       = 'LIKE' === $operator ? '%' . $wpdb->esc_like( stripslashes( $condition['value'] ) ) . '%' : stripslashes( $condition['value'] );
+			$value       = 'LIKE' === $operator ? '%' . $wpdb->esc_like( stripslashes_deep( $condition['value'] ) ) . '%' : stripslashes_deep( $condition['value'] );
 
 			if ( in_array( $operator, array( 'IN', 'NOT IN' ) ) ) {
 

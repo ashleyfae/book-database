@@ -70,7 +70,7 @@ add_action( 'admin_enqueue_scripts', __NAMESPACE__ . '\enqueue_admin_assets' );
  *
  * @param string $hook
  */
-function enqueue_admin_post_assets( $hook ) {
+function enqueue_admin_global_assets( $hook ) {
 
 	$hooks = array(
 		'edit.php',
@@ -111,4 +111,4 @@ function enqueue_admin_post_assets( $hook ) {
 
 }
 
-add_action( 'admin_enqueue_scripts', __NAMESPACE__ . '\enqueue_admin_post_assets' );
+add_action( 'admin_enqueue_scripts', __NAMESPACE__ . '\enqueue_admin_global_assets' );

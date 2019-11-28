@@ -77,8 +77,19 @@ namespace Book_Database;
 		</div>
 
 		<div class="bdb-table-edit-value">
-			<label for="bdb-reading-log-percentage-complete-{{ data.id }}" class="screen-reader-text"><?php _e( 'Percentage Complete', 'book-database' ); ?></label>
-			<input type="number" id="bdb-reading-log-percentage-complete-{{ data.id }}" value="{{ data.percentage_complete }}">
+			<span class="bdb-reading-log-percentage-complete-wrap">
+				<label for="bdb-reading-log-percentage-complete-{{ data.id }}" class="screen-reader-text"><?php _e( 'Percentage Complete', 'book-database' ); ?></label>
+				<input type="number" id="bdb-reading-log-percentage-complete-{{ data.id }}" class="bdb-input-has-suffix" value="{{ data.percentage_complete }}">
+			</span>
+			<span class="bdb-reading-log-page-wrap" style="display: none;">
+				<label for="bdb-reading-log-page-{{ data.id }}" class="screen-reader-text"><?php _e( 'Current Page Number', 'book-database' ); ?></label>
+				<span>
+					<input type="number" id="bdb-reading-log-page-{{ data.id }}" class="bdb-input-has-suffix" value="{{ data.page }}">
+					<span class="bdb-reading-log-max-pages"><?php _e( 'of', 'book-database' ); ?> <span>{{ data.max_pages }}</span></span>
+				</span>
+			</span>
+			<a href="#" title="<?php esc_attr_e( 'Enter a percentage' ); ?>" class="bdb-input-suffix bdb-input-suffix-percentage bdb-input-suffix-selected">%</a>
+			<a href="#" title="<?php esc_attr_e( 'Enter a page number' ); ?>" class="bdb-input-suffix bdb-input-suffix-page">#</a>
 		</div>
 	</td>
 

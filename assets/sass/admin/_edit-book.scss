@@ -72,3 +72,35 @@
         }
     }
 }
+
+.bdb-reading-log-percentage-complete {
+    .bdb-input-suffix {
+        &:not(.bdb-input-suffix-selected) {
+            background: white;
+            color: #b5b4b4;
+
+            &:hover {
+                background: #f2f2f2;
+                color: #6d6d6d;
+            }
+        }
+    }
+
+    .bdb-input-suffix-page {
+        border-left: 1px solid #7e8993;
+    }
+}
+
+.bdb-reading-log-page-wrap {
+    > span {
+        display: inline-block;
+        position: relative;
+    }
+
+    .bdb-reading-log-max-pages {
+        color: #a8a8a8;
+        line-height: 30px;
+        position: absolute;
+        right: 33px;
+    }
+}

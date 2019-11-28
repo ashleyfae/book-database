@@ -11,6 +11,7 @@ namespace Book_Database;
 
 /**
  * Class Reading_Log
+ *
  * @package Book_Database
  */
 class Reading_Log extends Base_Object {
@@ -131,6 +132,16 @@ class Reading_Log extends Base_Object {
 		$review = get_review_by( 'reading_log_id', $this->get_id() );
 		if ( $review instanceof Review ) {
 			$vars['review_id'] = $review->get_id();
+		}
+
+		// Calculate the page number we're on.
+		$vars['page']      = 0;
+		$vars['max_pages'] = 0;
+		$book              = get_book( $this->get_book_id() );
+		if ( $book instanceof Book ) {
+			$percentage        = $this->get_percentage_complete() / 100;
+			$vars['page']      = round( $percentage * $book->get_pages() );
+			$vars['max_pages'] = $book->get_pages();
 		}
 
 		return $vars;

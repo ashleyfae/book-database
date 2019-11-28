@@ -13,6 +13,9 @@ var BDB_Dashboard_Widgets = {
 	init: function() {
 
 		$( '.bdb-currently-reading-widget-update-progress' ).on( 'click', this.updatePercentage );
+		$( '.bdb-currently-reading-progress-unit-choices' ).on( 'click', 'a', this.setUnit );
+		$( '.bdb-currently-reading-widget-save-progress' ).on( 'click', this.saveProgress );
+		$( '.bdb-currently-reading-set-progress-wrap' ).on( 'keydown', 'input', this.saveProgressOnEnter );
 		$( '.bdb-currently-reading-widget-finish-book' ).on( 'click', this.finishBook );
 		$( '.bdb-currently-reading-widget-dnf-book' ).on( 'click', this.dnfBook );
 		$( '.bdb-currently-reading-widget-set-rating' ).on( 'click', this.setRating );
@@ -28,31 +31,105 @@ var BDB_Dashboard_Widgets = {
 
 		e.preventDefault();
 
+		let wrap = $( this ).closest( 'li' );
+
+		wrap.find( '.bdb-currently-reading-set-progress-wrap' ).slideToggle();
+
+	},
+
+	/**
+	 * Set the unit to use for updating progress
+	 *
+	 * @param e
+	 */
+	setUnit: function ( e ) {
+
+		e.preventDefault();
+
+		let wrap = $( this ).closest( '.bdb-currently-reading-set-progress-wrap' ),
+			unit = $( this ).data( 'unit' );
+
+		wrap.find( '.bdb-currently-reading-progress-unit-choices a' ).removeClass( 'bdb-currently-reading-progress-unit-selected' );
+		$( this ).addClass( 'bdb-currently-reading-progress-unit-selected' );
+
+		if ( 'page' === unit ) {
+			wrap.find( '.bdb-currently-reading-unit-percentage-wrap' ).hide();
+			wrap.find( '.bdb-currently-reading-unit-pages-wrap' ).show();
+		} else {
+			wrap.find( '.bdb-currently-reading-unit-percentage-wrap' ).show();
+			wrap.find( '.bdb-currently-reading-unit-pages-wrap' ).hide();
+		}
+
+	},
+
+	/**
+	 * Save the new progress
+	 *
+	 * @param e
+	 */
+	saveProgress: function ( e ) {
+
+		e.preventDefault();
+
 		let button = $( this ),
 			wrap = button.closest( 'li' ),
 			logID = wrap.data( 'log-id' ),
-			percentage = prompt( bdbVars.prompt_percentage ),
-			progressWrap = button.parent().find( '.bdb-currently-reading-progress-bar' ),
-			progressNumber = button.parent().find( '.bdb-currently-reading-progress-number' );
-
-		if ( null === percentage || '0' === percentage ) {
-			return;
-		}
+			unit = wrap.find( '.bdb-currently-reading-progress-unit-selected' ).data( 'unit' ),
+			percentage = 0,
+			readablePercentage,
+			progressWrap = wrap.find( '.bdb-currently-reading-progress-bar' ),
+			progressNumber = wrap.find( '.bdb-currently-reading-progress-number' );
 
 		spinButton( button );
 
+		// Figure out the percentage.
+		if ( 'page' === unit ) {
+			let pageField = wrap.find( '.bdb-currently-reading-unit-page' ),
+				maxPages = parseInt( pageField.data( 'max' ) ),
+				currentPage = parseInt( pageField.val() );
+
+			if ( maxPages > 0 ) {
+				percentage = currentPage / maxPages;
+				readablePercentage = Math.round( percentage * 100 );
+			}
+		} else {
+			let percentageField = wrap.find( '.bdb-currently-reading-unit-percentage' );
+
+			readablePercentage = parseFloat( percentageField.val() );
+
+			if ( readablePercentage > 0 ) {
+				percentage = readablePercentage / 100;
+			}
+		}
+
 		let args = {
-			percentage_complete: percentage / 100
+			percentage_complete: percentage
 		};
 
 		apiRequest( 'v1/reading-log/update/' + logID, args, 'POST' ).then( function( apiResponse ) {
-			progressWrap.css( 'width', percentage + '%' );
-			progressNumber.text( percentage + '%' );
+			progressWrap.css( 'width', readablePercentage + '%' );
+			progressNumber.text( readablePercentage + '%' );
 		} ).catch( function( errorMessage ) {
 			console.log( errorMessage );
 		} ).finally( function() {
 			unspinButton( button );
+			wrap.find( '.bdb-currently-reading-set-progress-wrap' ).slideUp();
 		} );
+
+	},
+
+	/**
+	 * Trigger progress saving when clicking "enter"
+	 *
+	 * @param e
+	 */
+	saveProgressOnEnter: function ( e ) {
+
+		if ( 13 === e.keyCode ) {
+			e.preventDefault();
+
+			$( this ).closest( 'li' ).find( '.bdb-currently-reading-widget-save-progress' ).trigger( 'click' );
+		}
 
 	},
 

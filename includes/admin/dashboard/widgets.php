@@ -82,12 +82,38 @@ function render_currently_reading() {
 						</span>
 					</div>
 					<?php if ( user_can_edit_books() ) : ?>
-						<button class="bdb-currently-reading-widget-update-progress button"><?php _e( 'Update', 'book-database' ); ?></button>
-						<button class="bdb-currently-reading-widget-finish-book button"><?php _e( 'Finished', 'book-database' ); ?></button>
-						<button class="bdb-currently-reading-widget-dnf-book button"><?php _e( 'DNF', 'book-database' ); ?></button>
+						<button type="button" class="bdb-currently-reading-widget-update-progress button"><?php _e( 'Update', 'book-database' ); ?></button>
+						<button type="button" class="bdb-currently-reading-widget-finish-book button"><?php _e( 'Finished', 'book-database' ); ?></button>
+						<button type="button" class="bdb-currently-reading-widget-dnf-book button"><?php _e( 'DNF', 'book-database' ); ?></button>
 					<?php endif; ?>
 				</div>
 				<?php if ( user_can_edit_books() ) : ?>
+					<div class="bdb-currently-reading-set-progress-wrap" style="display: none;">
+						<p class="bdb-currently-reading-progress-unit-choices">
+							<a href="#" class="bdb-currently-reading-progress-unit-selected" data-unit="percentage"><?php _e( 'Percentage', 'book-database' ); ?></a>
+							&nbsp;|&nbsp;
+							<a href="#" data-unit="page"><?php _e( 'Page', 'book-database' ); ?></a>
+						</p>
+
+						<p class="bdb-currently-reading-unit-percentage-wrap">
+							<label for="bdb-currently-reading-percentage-complete-<?php echo esc_attr( $log->id ); ?>" class="screen-reader-text"><?php _e( 'Enter the percentage you\'ve read', 'book-database' ); ?></label>
+							<span>
+								<input type="number" id="bdb-currently-reading-percentage-complete-<?php echo esc_attr( $log->id ); ?>" class="bdb-currently-reading-unit-percentage bdb-input-has-suffix" value="<?php echo esc_attr( round( $log->percentage_complete * 100 ) ); ?>">
+								<span class="bdb-input-suffix">%</span>
+							</span>
+						</p>
+
+						<p class="bdb-currently-reading-unit-pages-wrap" style="display: none;">
+							<label for="bdb-currently-reading-page-complete-<?php echo esc_attr( $log->id ); ?>" class="screen-reader-text"><?php _e( 'Enter your current page number', 'book-database' ); ?></label>
+							<span>
+								<input type="number" id="bdb-currently-reading-page-complete-<?php echo esc_attr( $log->id ); ?>" class="bdb-currently-reading-unit-page bdb-input-has-suffix" value="<?php echo esc_attr( round( $log->percentage_complete * $book->get_pages() ) ); ?>" data-max="<?php echo esc_attr( $book->get_pages() ); ?>">
+								<span class="bdb-input-suffix"><?php printf( __( 'of %d', 'book-database' ), $book->get_pages() ); ?></span>
+							</span>
+						</p>
+
+						<button type="button" class="bdb-currently-reading-widget-save-progress button"><?php _e( 'Save', 'book-database' ); ?></button>
+					</div>
+
 					<div class="bdb-currently-reading-rate-book" style="display: none;">
 						<p>
 							<label for="bdb-rating-<?php echo esc_attr( $log->id ); ?>"><?php _e( 'Rate the book (optional)', 'book-database' ); ?></label>

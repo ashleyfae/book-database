@@ -10,6 +10,22 @@
     }
 }
 
+.bdb-input-has-suffix {
+    border-bottom-right-radius: 0 !important;
+    border-top-right-radius: 0 !important;
+}
+
+.bdb-input-suffix {
+    background: #f1f1f1;
+    border: 1px solid #7e8993;
+    border-left: none;
+    display: inline-block;
+    font-size: 14px;
+    line-height: 2;
+    margin: 0 0 0 -4px;
+    padding: 0 8px 0;
+}
+
 .bdb-meta-row {
     margin: 1.5em 0;
 
@@ -42,22 +58,6 @@
     input[type="number"] {
         display: inline-block;
         width: auto;
-    }
-
-    .bdb-input-has-suffix {
-        border-bottom-right-radius: 0;
-        border-top-right-radius: 0;
-    }
-
-    .bdb-input-suffix {
-        background: #f2f2f2;
-        border: 1px solid #ddd;
-        border-left: none;
-        display: inline-block;
-        font-size: 14px;
-        line-height: 2;
-        margin: 0 0 0 -4px;
-        padding: 0 8px 0;
     }
 
     textarea {

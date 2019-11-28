@@ -12,6 +12,8 @@ var BDB_Reading_Logs = {
 
 	userID: 0,
 
+	maxPages: 0,
+
 	tableBody: false,
 
 	rowTemplate: wp.template( 'bdb-reading-logs-table-row' ),
@@ -37,9 +39,11 @@ var BDB_Reading_Logs = {
 			return;
 		}
 
+		this.maxPages = $( '#bdb-book-pages' ).val();
 		$( '#bdb-add-reading-log' ).on( 'click', this.toggleNewLogFields );
 		$( '#bdb-submit-new-reading-log' ).on( 'click', this.addLog );
 		$( document ).on( 'click', '.bdb-reading-log-toggle-editable', this.toggleEditableFields );
+		$( document ).on( 'click', '.bdb-reading-log-percentage-complete .bdb-input-suffix', this.toggleCompleteUnit );
 		$( document ).on( 'click', '.bdb-update-reading-log', this.updateLog );
 		$( document ).on( 'click', '.bdb-remove-reading-log', this.removeLog );
 
@@ -195,6 +199,37 @@ var BDB_Reading_Logs = {
 	},
 
 	/**
+	 * Toggle the fields for the chosen unit (page vs percentage)
+	 *
+	 * @param e
+	 */
+	toggleCompleteUnit: function ( e ) {
+
+		e.preventDefault();
+
+		let wrap = $( this ).closest( '.bdb-reading-log-percentage-complete' );
+		let type = 'percentage';
+
+		if ( $( this ).hasClass( 'bdb-input-suffix-page' ) ) {
+			type = 'page';
+		}
+
+		// Change which one is selected.
+		wrap.find( '.bdb-input-suffix' ).removeClass( 'bdb-input-suffix-selected' );
+		$( this ).addClass( 'bdb-input-suffix-selected' );
+
+		// Show/hide relevant inputs.
+		if ( 'page' === type ) {
+			wrap.find( '.bdb-reading-log-percentage-complete-wrap' ).hide();
+			wrap.find( '.bdb-reading-log-page-wrap' ).show();
+		} else {
+			wrap.find( '.bdb-reading-log-percentage-complete-wrap' ).show();
+			wrap.find( '.bdb-reading-log-page-wrap' ).hide();
+		}
+
+	},
+
+	/**
 	 * Update a reading log
 	 *
 	 * @param e
@@ -210,11 +245,27 @@ var BDB_Reading_Logs = {
 
 		let wrap = button.closest( 'tr' );
 
-		let percentage = wrap.find( '.bdb-reading-log-percentage-complete input' ).val();
-		if ( '' !== percentage && percentage > 0 ) {
-			percentage = percentage / 100;
+		// Figure out if we're working with page numbers or percentages.
+		let percentage = 0,
+			unitType = 'percentage',
+			selectedSuffix = wrap.find( '.bdb-input-suffix-selected' );
+
+		if ( selectedSuffix.hasClass( 'bdb-input-suffix-page' ) ) {
+			unitType = 'page';
+		}
+
+		if ( 'page' === unitType ) {
+			// Page number.
+			let pageNumber = wrap.find( '.bdb-reading-log-page-wrap input' ).val();
+			percentage = ( BDB_Reading_Logs.maxPages > 0 ) ? pageNumber / BDB_Reading_Logs.maxPages : 0;
 		} else {
-			percentage = 0;
+			// Percentage.
+			percentage = wrap.find( '.bdb-reading-log-percentage-complete-wrap input' ).val();
+			if ( '' !== percentage && percentage > 0 ) {
+				percentage = percentage / 100;
+			} else {
+				percentage = 0;
+			}
 		}
 
 		let args = {

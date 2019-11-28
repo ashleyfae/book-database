@@ -28,3 +28,24 @@
     top: 0;
     left: 0;
 }
+
+.bdb-currently-reading-progress-unit-selected {
+    &, &:hover {
+        color: #444;
+    }
+}
+
+.bdb-currently-reading-unit-percentage-wrap,
+.bdb-currently-reading-unit-pages-wrap {
+    > span {
+        display: flex;
+    }
+
+    input {
+        margin: 0;
+    }
+
+    .bdb-input-suffix {
+        flex-shrink: 0;
+    }
+}

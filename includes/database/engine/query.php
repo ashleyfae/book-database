@@ -1245,7 +1245,7 @@ class Query extends Base {
 		// Array or String
 		$like = ( false !== strpos( $string, '*' ) )
 			? '%' . implode( '%', array_map( array( $this->get_db(), 'esc_like' ), explode( '*', $string ) ) ) . '%'
-			: '%' . $this->get_db()->esc_like( $string ) . '%';
+			: '%' . $this->get_db()->esc_like( stripslashes( $string ) ) . '%';
 
 		// Default array
 		$searches = array();

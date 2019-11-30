@@ -100,7 +100,9 @@ class Series extends Base_Object {
 
 		$args = wp_parse_args( $args, array(
 			'series_id' => $this->get_id(),
-			'number'    => 50
+			'number'    => 50,
+			'orderby'   => 'series_position',
+			'order'     => 'ASC'
 		) );
 
 		return get_books( $args );

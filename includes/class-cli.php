@@ -160,7 +160,7 @@ class CLI extends \WP_CLI_Command {
 
 		$tbl_log = book_database()->get_table( 'reading_log' )->get_table_name();
 
-		$logs  = $wpdb->get_results( "SELECT id,review_id FROM {$tbl_log} WHERE review_id IS NOT NULL" );
+		$logs  = $wpdb->get_results( "SELECT id,review_id FROM {$tbl_log} WHERE review_id IS NOT NULL AND review_id != 0" );
 		$count = ! empty( $logs ) ? count( $logs ) : 0;
 
 		$progress = \WP_CLI\Utils\make_progress_bar( __( 'Updating logs', 'book-database' ), $count );

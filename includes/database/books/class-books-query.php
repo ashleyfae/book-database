@@ -90,6 +90,7 @@ class Books_Query extends BerlinDB\Database\Query {
 			'book_query'        => array(),
 			'series_query'      => array(),
 			'reading_log_query' => array(),
+			'review_query'      => array(),
 			'edition_query'     => array(),
 			'tax_query'         => array(),
 			'unread'            => false,
@@ -111,6 +112,7 @@ class Books_Query extends BerlinDB\Database\Query {
 		$tbl_ed       = book_database()->get_table( 'editions' )->get_table_name();
 		$tbl_log      = book_database()->get_table( 'reading_log' )->get_table_name();
 		$tbl_series   = book_database()->get_table( 'series' )->get_table_name();
+		$tbl_reviews  = book_database()->get_table( 'reviews' )->get_table_name();
 
 		// Select
 		$select = array(
@@ -164,6 +166,14 @@ class Books_Query extends BerlinDB\Database\Query {
 			$join['reading_log_query'] = "INNER JOIN {$tbl_log} AS log ON (book.id = log.book_id)";
 			$clause_engine->set_table_query( new Reading_Logs_Query() );
 			$clause_engine->set_args( $args['reading_log_query'] );
+			$where = array_merge( $where, $clause_engine->get_clauses() );
+		}
+
+		// Review query
+		if ( ! empty( $args['review_query'] ) ) {
+			$join['review_query'] = "INNER JOIN {$tbl_reviews} AS review ON (book.id = review.book_id)";
+			$clause_engine->set_table_query( new Reviews_Query() );
+			$clause_engine->set_args( $args['review_query'] );
 			$where = array_merge( $where, $clause_engine->get_clauses() );
 		}
 

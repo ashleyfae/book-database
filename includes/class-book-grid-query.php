@@ -109,6 +109,32 @@ class Book_Grid_Query extends Book_Reviews_Query {
 			}
 		}
 
+		// Reviews only.
+		if ( ! empty( $atts['reviews-only'] ) ) {
+			$this->args['review_query'][] = array(
+				'field'    => 'date_published',
+				'value'    => null,
+				'operator' => 'IS NOT'
+			);
+		}
+
+		// Review dates.
+		if ( ! empty( $atts['review-start-date'] ) || ! empty( $atts['review-end-date'] ) ) {
+			$date_query = array();
+
+			if ( ! empty( $atts['review-start-date'] ) ) {
+				$date_query['after'] = date( 'Y-m-d 00:00:00', strtotime( $atts['review-start-date'] ) );
+			}
+			if ( ! empty( $atts['review-end-date'] ) ) {
+				$date_query['before'] = date( 'Y-m-d 23:59:59', strtotime( $atts['review-end-date'] ) );
+			}
+
+			$this->args['review_query'][] = array(
+				'field' => 'date_published',
+				'value' => $date_query
+			);
+		}
+
 	}
 
 	/**

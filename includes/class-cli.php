@@ -168,9 +168,14 @@ class CLI extends \WP_CLI_Command {
 		if ( ! empty( $logs ) ) {
 			foreach ( $logs as $log ) {
 				try {
-					update_review( $log->review_id, array(
-						'reading_log_id' => absint( $log->id )
-					) );
+					// Only update if review exists.
+					if ( get_review( $log->review_id ) instanceof Review ) {
+						update_review( $log->review_id, array(
+							'reading_log_id' => absint( $log->id )
+						) );
+					} else {
+						WP_CLI::warning( sprintf( 'Skipping log #%d - review #%d does not exist.', $log->id, $log->review_id ) );
+					}
 
 					if ( $delete ) {
 						update_reading_log( $log->id, array(

@@ -293,6 +293,7 @@ add_shortcode( 'book-reviews', __NAMESPACE__ . '\book_reviews_shortcode' );
 function book_grid_shortcode( $atts, $content = '' ) {
 
 	$default_atts = array(
+		'ids'                 => '',
 		'author'              => '',
 		'series'              => '',
 		'rating'              => '',

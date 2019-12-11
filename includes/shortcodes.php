@@ -205,7 +205,7 @@ function book_reviews_shortcode( $atts, $content = '' ) {
 							) );
 
 							$selected_term = 'any';
-							if ( ! empty( $_GET[$taxonomy->get_slug()] ) ) {
+							if ( ! empty( $_GET[ $taxonomy->get_slug() ] ) ) {
 								$selected_term = wp_strip_all_tags( $taxonomy->get_slug() );
 							} elseif ( ! empty( $wp_query->query_vars['book_tax'] ) && $taxonomy->get_slug() === $wp_query->query_vars['book_tax'] && ! empty( $wp_query->query_vars['book_term'] ) ) {
 								$slug = $wp_query->query_vars['book_term'];
@@ -266,10 +266,13 @@ function book_reviews_shortcode( $atts, $content = '' ) {
 			<p><?php _e( 'No reviews found.', 'book-database' ); ?></p>
 			<?php
 		}
-		?>
-		<nav class="bdb-pagination bookdb-reviews-list-pagination pagination">
-			<?php echo $query->get_pagination(); ?>
-		</nav>
+
+		if ( $query->total_results > count( $reviews ) ) {
+			?>
+			<nav class="bdb-pagination bookdb-reviews-list-pagination pagination">
+				<?php echo $query->get_pagination(); ?>
+			</nav>
+		<?php } ?>
 	</div>
 	<?php
 
@@ -318,7 +321,7 @@ function book_grid_shortcode( $atts, $content = '' ) {
 	);
 
 	foreach ( get_book_taxonomies( array( 'fields' => 'slug' ) ) as $tax_slug ) {
-		$default_atts[$tax_slug] = '';
+		$default_atts[ $tax_slug ] = '';
 	}
 
 	$atts = shortcode_atts( $default_atts, $atts, 'book-grid' );
@@ -374,10 +377,13 @@ function book_grid_shortcode( $atts, $content = '' ) {
 			<p><?php _e( 'No books found.', 'book-database' ); ?></p>
 			<?php
 		}
-		?>
-		<nav class="bdb-pagination bdb-book-grid-pagination pagination">
-			<?php echo $query->get_pagination(); ?>
-		</nav>
+
+		if ( $query->total_results > count( $books ) ) {
+			?>
+			<nav class="bdb-pagination bdb-book-grid-pagination pagination">
+				<?php echo $query->get_pagination(); ?>
+			</nav>
+		<?php } ?>
 	</div>
 	<?php
 	return ob_get_clean();

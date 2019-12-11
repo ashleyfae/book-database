@@ -31,22 +31,31 @@ class Book_Grid_Query extends Book_Reviews_Query {
 		$this->args['orderby']        = $atts['orderby'];
 		$this->args['order']          = 'ASC' === strtoupper( $atts['order'] ) ? 'ASC' : 'DESC';
 
+		if ( ! empty( $atts['ids'] ) ) {
+			$ids                      = array_map( 'trim', explode( ',', $atts['ids'] ) );
+			$this->args['book_query'][] = array(
+				'field'    => 'id',
+				'value'    => $ids,
+				'operator' => 'IN'
+			);
+		}
+
 		if ( ! empty( $atts['author'] ) ) {
-			$this->args['author_query'] = array(
+			$this->args['author_query'][] = array(
 				'field' => 'name',
 				'value' => $atts['author']
 			);
 		}
 
 		if ( ! empty( $atts['series'] ) ) {
-			$this->args['series_query'] = array(
+			$this->args['series_query'][] = array(
 				'field' => 'name',
 				'value' => $atts['series']
 			);
 		}
 
 		if ( ! empty( $atts['rating'] ) ) {
-			$this->args['reading_log_query'] = array(
+			$this->args['reading_log_query'][] = array(
 				'field' => 'rating',
 				'value' => floatval( $atts['series'] )
 			);
@@ -107,6 +116,32 @@ class Book_Grid_Query extends Book_Reviews_Query {
 					$this->args['unread'] = true;
 					break;
 			}
+		}
+
+		// Reviews only.
+		if ( ! empty( $atts['reviews-only'] ) ) {
+			$this->args['review_query'][] = array(
+				'field'    => 'date_published',
+				'value'    => null,
+				'operator' => 'IS NOT'
+			);
+		}
+
+		// Review dates.
+		if ( ! empty( $atts['review-date-after'] ) || ! empty( $atts['review-date-before'] ) ) {
+			$date_query = array();
+
+			if ( ! empty( $atts['review-date-after'] ) ) {
+				$date_query['after'] = date( 'Y-m-d 00:00:00', strtotime( $atts['review-date-after'] ) );
+			}
+			if ( ! empty( $atts['review-date-before'] ) ) {
+				$date_query['before'] = date( 'Y-m-d 23:59:59', strtotime( $atts['review-date-before'] ) );
+			}
+
+			$this->args['review_query'][] = array(
+				'field' => 'date_published',
+				'value' => $date_query
+			);
 		}
 
 	}

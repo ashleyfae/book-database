@@ -10,9 +10,10 @@
 namespace Book_Database;
 
 /**
- * @var array  $atts      Shortcode attributes.
- * @var Book   $book      Book object.
- * @var object $book_data Full object from the database.
+ * @var array        $atts      Shortcode attributes.
+ * @var Book         $book      Book object.
+ * @var Review|false $review    False if we haven't included review data, Review object if we have.
+ * @var object       $book_data Full object from the database.
  */
 
 ?>
@@ -37,6 +38,15 @@ namespace Book_Database;
 		?>
 		<p class="bdb-book-pub-date">
 			<?php echo esc_html( $book->get_pub_date( true ) ); ?>
+		</p>
+		<?php
+	}
+
+	if ( ! empty( $atts['show-review-link'] ) && $review instanceof Review && $review->get_permalink( true ) ) {
+		$target = $review->is_external() ? 'blank' : 'self';
+		?>
+		<p class="bdb-book-review-link">
+			<a href="<?php echo esc_url( $review->get_permalink() ); ?>" class="button bdb-read-review-link" target="_<?php echo esc_attr( $target ); ?>"><?php _e( 'Read Review', 'book-database' ); ?></a>
 		</p>
 		<?php
 	}

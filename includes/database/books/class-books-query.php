@@ -14,6 +14,7 @@ use Book_Database\BerlinDB\Database\Query;
 
 /**
  * Class Books_Query
+ *
  * @package Book_Database
  */
 class Books_Query extends BerlinDB\Database\Query {
@@ -90,6 +91,7 @@ class Books_Query extends BerlinDB\Database\Query {
 			'book_query'        => array(),
 			'series_query'      => array(),
 			'reading_log_query' => array(),
+			'review_query'      => array(),
 			'edition_query'     => array(),
 			'tax_query'         => array(),
 			'unread'            => false,
@@ -111,6 +113,7 @@ class Books_Query extends BerlinDB\Database\Query {
 		$tbl_ed       = book_database()->get_table( 'editions' )->get_table_name();
 		$tbl_log      = book_database()->get_table( 'reading_log' )->get_table_name();
 		$tbl_series   = book_database()->get_table( 'series' )->get_table_name();
+		$tbl_reviews  = book_database()->get_table( 'reviews' )->get_table_name();
 
 		// Select
 		$select = array(
@@ -167,6 +170,14 @@ class Books_Query extends BerlinDB\Database\Query {
 			$where = array_merge( $where, $clause_engine->get_clauses() );
 		}
 
+		// Review query
+		if ( ! empty( $args['review_query'] ) ) {
+			$join['review_query'] = "INNER JOIN {$tbl_reviews} AS review ON (book.id = review.book_id)";
+			$clause_engine->set_table_query( new Reviews_Query() );
+			$clause_engine->set_args( $args['review_query'] );
+			$where = array_merge( $where, $clause_engine->get_clauses() );
+		}
+
 		// Unread books only
 		// This is a bit "special" because we need a weird left join.
 		if ( ! empty( $args['unread'] ) ) {
@@ -186,6 +197,11 @@ class Books_Query extends BerlinDB\Database\Query {
 			$tax_query          = new Tax( $args['tax_query'] );
 			$clauses            = $tax_query->get_sql( $this->table_alias, 'id' );
 			$where['tax_query'] = preg_replace( '/^\s*AND\s*/', '', $clauses['where'] );
+		}
+
+		// Select review data if we have a review query.
+		if ( ! empty( $args['review_query'] ) && ! empty( $join['review_query'] ) ) {
+			$select[] = 'review.id AS review_id, review.user_id AS review_user_id, review.post_id AS review_post_id, review.url AS review_url, review.date_written AS review_date_written, review.date_published AS review_date_published';
 		}
 
 		/**

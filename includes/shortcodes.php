@@ -301,6 +301,8 @@ function book_grid_shortcode( $atts, $content = '' ) {
 		'pub-date-before'     => '',
 		'pub-year'            => '',
 		'read-status'         => '',
+		'review-date-after'   => '',
+		'review-date-before'  => '',
 		'review-start-date'   => '',
 		'review-end-date'     => '',
 		'reviews-only'        => false,
@@ -319,7 +321,16 @@ function book_grid_shortcode( $atts, $content = '' ) {
 		$default_atts[$tax_slug] = '';
 	}
 
-	$atts  = shortcode_atts( $default_atts, $atts, 'book-grid' );
+	$atts = shortcode_atts( $default_atts, $atts, 'book-grid' );
+
+	// Replace "review-start-date" and "review-end-date".
+	if ( ! empty( $atts['review-start-date'] ) ) {
+		$atts['review-date-after'] = $atts['review-start-date'];
+	}
+	if ( ! empty( $atts['review-end-date'] ) ) {
+		$atts['review-date-before'] = $atts['review-end-date'];
+	}
+
 	$query = new Book_Grid_Query( $atts );
 
 	ob_start();

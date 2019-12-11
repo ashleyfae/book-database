@@ -205,7 +205,7 @@ function book_reviews_shortcode( $atts, $content = '' ) {
 							) );
 
 							$selected_term = 'any';
-							if ( ! empty( $_GET[ $taxonomy->get_slug() ] ) ) {
+							if ( ! empty( $_GET[$taxonomy->get_slug()] ) ) {
 								$selected_term = wp_strip_all_tags( $taxonomy->get_slug() );
 							} elseif ( ! empty( $wp_query->query_vars['book_tax'] ) && $taxonomy->get_slug() === $wp_query->query_vars['book_tax'] && ! empty( $wp_query->query_vars['book_term'] ) ) {
 								$slug = $wp_query->query_vars['book_term'];
@@ -308,6 +308,7 @@ function book_grid_shortcode( $atts, $content = '' ) {
 		'show-pub-date'       => true,
 		'show-goodreads-link' => false,
 		'show-purchase-links' => false,
+		'show-review-link'    => false,
 		'orderby'             => 'book.id',
 		'order'               => 'DESC',
 		'cover-size'          => 'large',
@@ -315,7 +316,7 @@ function book_grid_shortcode( $atts, $content = '' ) {
 	);
 
 	foreach ( get_book_taxonomies( array( 'fields' => 'slug' ) ) as $tax_slug ) {
-		$default_atts[ $tax_slug ] = '';
+		$default_atts[$tax_slug] = '';
 	}
 
 	$atts  = shortcode_atts( $default_atts, $atts, 'book-grid' );
@@ -332,7 +333,28 @@ function book_grid_shortcode( $atts, $content = '' ) {
 			echo '<div class="bdb-book-list-number-results bdb-book-grid-number-results">' . sprintf( _n( '%s book found', '%s books found', $query->total_results, 'book-database' ), $query->total_results ) . '</div>';
 			echo '<div class="bdb-book-list bdb-book-grid">';
 			foreach ( $books as $book_data ) {
-				$book = new Book( $book_data );
+				$book   = new Book( $book_data );
+				$review = false;
+
+				// Create a review object if we can.
+				if ( ! empty( $book_data->review_id ) ) {
+					$review_data = array(
+						'id'             => $book_data->review_id ?? 0,
+						'book_id'        => $book->get_id(),
+						'reading_log_id' => $book_data->review_reading_log_id ?? null,
+						'user_id'        => $book_data->review_user_id ?? null,
+						'post_id'        => $book_data->review_post_id ?? null,
+						'url'            => $book_data->review_url ?? '',
+						'review'         => $book_data->review_review ?? '',
+						'date_written'   => $book_data->review_date_written ?? '',
+						'date_published' => $book_data->review_date_published ?? null,
+						'date_created'   => $book_data->review_date_created ?? '',
+						'date_modified'  => $book_data->review_date_modified ?? ''
+					);
+
+					$review = new Review( $review_data );
+				}
+
 				include $template;
 			}
 			echo '</div>';

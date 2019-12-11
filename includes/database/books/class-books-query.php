@@ -14,6 +14,7 @@ use Book_Database\BerlinDB\Database\Query;
 
 /**
  * Class Books_Query
+ *
  * @package Book_Database
  */
 class Books_Query extends BerlinDB\Database\Query {
@@ -196,6 +197,11 @@ class Books_Query extends BerlinDB\Database\Query {
 			$tax_query          = new Tax( $args['tax_query'] );
 			$clauses            = $tax_query->get_sql( $this->table_alias, 'id' );
 			$where['tax_query'] = preg_replace( '/^\s*AND\s*/', '', $clauses['where'] );
+		}
+
+		// Select review data if we have a review query.
+		if ( ! empty( $args['review_query'] ) && ! empty( $join['review_query'] ) ) {
+			$select[] = 'review.id AS review_id, review.user_id AS review_user_id, review.post_id AS review_post_id, review.url AS review_url, review.date_written AS review_date_written, review.date_published AS review_date_published';
 		}
 
 		/**

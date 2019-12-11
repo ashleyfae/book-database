@@ -14,20 +14,14 @@ namespace Book_Database;
  */
 function load_assets() {
 
-	global $post;
-
-	$review_page_id = bdb_get_option( 'reviews_page' );
-
-	/*
-	 * Bail if:
+	/**
+	 * Filters whether or not assets should be loaded.
 	 *
-	 * - There is no reviews page set; or
-	 * - The the current page ID doesn't match the selected reviews page;
-	 * AND
-	 * - The global `$post` variable isn't set; or
-	 * - The current post isn't using the `[book-grid]` shortcode.
+	 * @param bool $load_assets
 	 */
-	if ( ( ! $review_page_id || get_the_ID() != $review_page_id ) && ( ! is_a( $post, 'WP_Post' ) || ! has_shortcode( $post->post_content, 'book-grid' ) ) ) {
+	$load_assets = apply_filters( 'book-database/load-assets', true );
+
+	if ( ! $load_assets ) {
 		return;
 	}
 

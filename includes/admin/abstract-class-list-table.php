@@ -45,6 +45,7 @@ abstract class List_Table extends \WP_List_Table {
 		parent::__construct( $args );
 
 		$this->set_per_page();
+		$this->process_bulk_actions();
 
 		add_filter( 'removable_query_args', array( $this, 'removable_query_args' ) );
 	}

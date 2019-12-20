@@ -238,7 +238,7 @@ class Book_Terms_List_Table extends List_Table {
 			return;
 		}
 
-		$ids = wp_parse_id_list( (array) $this->get_request_var( 'term_id', false ) );
+		$ids = wp_parse_id_list( (array) $this->get_request_var( 'book_term_id', false ) );
 
 		// Bail if no IDs
 		if ( empty( $ids ) ) {

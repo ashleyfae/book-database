@@ -21,8 +21,8 @@ class Series_List_Table extends List_Table {
 	public function __construct() {
 
 		parent::__construct( array(
-			'singular' => 'author',
-			'plural'   => 'authors',
+			'singular' => 'series',
+			'plural'   => 'series',
 			'ajax'     => false
 		) );
 
@@ -226,18 +226,18 @@ class Series_List_Table extends List_Table {
 		$ids = wp_parse_id_list( (array) $this->get_request_var( 'series_id', false ) );
 
 		// Bail if no IDs
-		if ( empty( $ids ) ) {
+		if ( empty( $ids ) || ( 1 === count( $ids ) && isset( $ids[0] ) && empty( $ids[0] ) ) ) {
 			return;
 		}
 
 		try {
 
-			foreach ( $ids as $book_id ) {
+			foreach ( $ids as $series_id ) {
 
 				switch ( $this->current_action() ) {
 
 					case 'delete' :
-						delete_book_series( $book_id );
+						delete_book_series( $series_id );
 						break;
 
 				}

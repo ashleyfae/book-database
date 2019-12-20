@@ -165,7 +165,7 @@ class Book extends Base_Object {
 	/**
 	 * Get the position in the series
 	 *
-	 * @return int|float
+	 * @return int|float|null
 	 */
 	public function get_series_position() {
 		return $this->series_position ?? null;

@@ -85,7 +85,7 @@ class Books_Schema extends BerlinDB\Database\Schema {
 			'sortable'   => true,
 			'allow_null' => true,
 			'default'    => null,
-			'validate'   => '\Book_Database\BerlinDB\Sanitization\absint_allow_null'
+			'validate'   => '\Book_Database\BerlinDB\Sanitization\floatval_int_allow_null'
 		),
 
 		// pub_date

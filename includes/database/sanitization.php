@@ -10,7 +10,7 @@
 namespace Book_Database\BerlinDB\Sanitization;
 
 /**
- * Validate integers, but allow null.
+ * Sanitizes integers, but allow null.
  *
  * @param $value
  *
@@ -21,7 +21,28 @@ function absint_allow_null( $value ) {
 }
 
 /**
- * Validate a date value
+ * If null or empty string, return null
+ * If integer, run through `absint()`
+ * If floatval, run through `floatval()`
+ *
+ * @param $value
+ *
+ * @since 1.0.3
+ * @return float|int|null
+ */
+function floatval_int_allow_null( $value ) {
+
+	if ( is_null( $value ) || '' === $value ) {
+		return null;
+	} elseif ( is_int( $value ) ) {
+		return absint( $value );
+	} else {
+		return floatval( $value );
+	}
+}
+
+/**
+ * Sanitize a date value
  *
  * @param string|null $value
  *

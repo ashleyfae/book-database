@@ -452,6 +452,15 @@ final class Book_Database {
 	}
 
 	/**
+	 * Returns an array of all registered tables
+	 *
+	 * @return BerlinDB\Database\Table[]
+	 */
+	public function get_tables() {
+		return self::$instance->tables;
+	}
+
+	/**
 	 * Get the HTML helper class
 	 *
 	 * @return HTML

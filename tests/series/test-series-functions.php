@@ -65,10 +65,17 @@ class Test_Series_Functions extends UnitTestCase {
 		$this->assertInstanceOf( 'Book_Database\Series', get_book_series_by( 'slug', 'my-trilogy' ) );
 	}
 
+	/**
+	 * If you try to create two series with the same name, the second one should have a new slug
+	 *
+	 * @covers ::\Book_Database\add_book_series()
+	 * @covers ::\Book_Database\unique_book_slug()
+	 */
 	public function test_series_same_slug_should_append_number() {
 
 		$first_series_id = $this->bdb()->series->create( array(
 			'name' => 'Book Series',
+			'slug' => 'book-series'
 		) );
 		$first_series    = get_book_series_by( 'id', $first_series_id );
 
@@ -76,6 +83,7 @@ class Test_Series_Functions extends UnitTestCase {
 
 		$second_series_id = $this->bdb()->series->create( array(
 			'name' => 'Book Series',
+			'slug' => 'book-series'
 		) );
 		$second_series    = get_book_series_by( 'id', $second_series_id );
 

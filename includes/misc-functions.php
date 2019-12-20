@@ -125,6 +125,8 @@ function unique_book_slug( $slug, $taxonomy = 'author' ) {
 			$suffix ++;
 
 		} while ( $terms );
+
+		$new_slug = $alt_slug;
 	}
 
 	return apply_filters( 'book-database/unique-slug', $new_slug, $slug, $taxonomy );

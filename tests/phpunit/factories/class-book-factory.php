@@ -40,6 +40,20 @@ class Book_Factory extends \WP_UnitTest_Factory_For_Thing {
 	}
 
 	/**
+	 * Create and get
+	 *
+	 * Used for autocomplete in IDEs.
+	 *
+	 * @param array      $args
+	 * @param null|array $generation_definitions
+	 *
+	 * @return Book|false
+	 */
+	public function create_and_get( $args = array(), $generation_definitions = null ) {
+		return parent::create_and_get( $args, $generation_definitions );
+	}
+
+	/**
 	 * Create
 	 *
 	 * @param array $args

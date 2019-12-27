@@ -55,7 +55,7 @@ function process_add_book() {
 
 		// Set the series.
 		if ( ! empty( $_POST['series_name'] ) ) {
-			$series = get_book_series_by( 'name', sanitize_text_field( $_POST['series_name'] ) );
+			$series = get_book_series_by( 'name', sanitize_text_field( stripslashes( $_POST['series_name'] ) ) );
 
 			if ( $series instanceof Series ) {
 				$args['series_id'] = $series->get_id();
@@ -161,7 +161,7 @@ function process_update_book() {
 
 		// Set the series.
 		if ( ! empty( $_POST['series_name'] ) ) {
-			$series = get_book_series_by( 'name', sanitize_text_field( $_POST['series_name'] ) );
+			$series = get_book_series_by( 'name', sanitize_text_field( stripslashes( $_POST['series_name'] ) ) );
 
 			if ( $series instanceof Series ) {
 				$args['series_id'] = $series->get_id();

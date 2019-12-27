@@ -206,7 +206,7 @@ function book_reviews_shortcode( $atts, $content = '' ) {
 
 							$selected_term = 'any';
 							if ( ! empty( $_GET[ $taxonomy->get_slug() ] ) ) {
-								$selected_term = wp_strip_all_tags( $taxonomy->get_slug() );
+								$selected_term = wp_strip_all_tags( $_GET[ $taxonomy->get_slug() ] );
 							} elseif ( ! empty( $wp_query->query_vars['book_tax'] ) && $taxonomy->get_slug() === $wp_query->query_vars['book_tax'] && ! empty( $wp_query->query_vars['book_term'] ) ) {
 								$slug = $wp_query->query_vars['book_term'];
 								$term = get_book_term_by( 'slug', $slug );

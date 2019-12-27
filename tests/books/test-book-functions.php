@@ -12,6 +12,7 @@ namespace Book_Database\Tests;
 use Book_Database\Book;
 use Book_Database\Exception;
 use function Book_Database\add_book;
+use function Book_Database\add_book_series;
 use function Book_Database\get_book;
 use function Book_Database\get_book_by;
 use function Book_Database\get_books;
@@ -114,6 +115,61 @@ class Test_Book_Functions extends UnitTestCase {
 		) );
 
 		$this->assertTrue( $books[0]->get_id() < $books[1]->get_id() );
+	}
+
+	/**
+	 * Ensure series ID is `null` if adding a book without a series
+	 *
+	 * @covers Book::get_series_id
+	 */
+	public function test_add_book_with_series_id_null() {
+		$integer_book = $this->bdb()->book->create_and_get();
+
+		$this->assertNull( $integer_book->get_series_id() );
+	}
+
+	/**
+	 * Ensure series position is `null` if adding a book without a series
+	 *
+	 * @covers Book::get_series_id
+	 * @covers Book::get_series_position
+	 */
+	public function test_add_book_with_series_position_null() {
+		$integer_book = $this->bdb()->book->create_and_get();
+
+		$this->assertNull( $integer_book->get_series_position() );
+	}
+
+	/**
+	 * Ensure we can add a series position as an integer and that it returns an integer value
+	 *
+	 * @covers Book::get_series_position
+	 */
+	public function test_add_book_with_series_position_integer() {
+		$series_id = $this->bdb()->series->create();
+
+		$integer_book = $this->bdb()->book->create_and_get( array(
+			'series_id'       => $series_id,
+			'series_position' => 1
+		) );
+
+		$this->assertEquals( 1, $integer_book->get_series_position() );
+	}
+
+	/**
+	 * Ensure we can add a series position as a float and that it returns a float value
+	 *
+	 * @covers Book::get_series_position
+	 */
+	public function test_add_book_with_series_position_float() {
+		$series_id = $this->bdb()->series->create();
+
+		$integer_book = $this->bdb()->book->create_and_get( array(
+			'series_id'       => $series_id,
+			'series_position' => 1.5
+		) );
+
+		$this->assertEquals( 1.5, $integer_book->get_series_position() );
 	}
 
 }

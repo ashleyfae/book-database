@@ -34,20 +34,21 @@ class Book extends Controller {
 
 		// Get all books. (this is /books)
 		register_rest_route( $this->namespace, $this->rest_base . 's', array(
-			'methods'             => \WP_REST_Server::READABLE,
+			'methods'             => sprintf( '%s, %s', \WP_REST_Server::READABLE, \WP_REST_Server::CREATABLE ),
 			'callback'            => array( $this, 'get_books' ),
 			'permission_callback' => array( $this, 'can_view' ),
 			'args'                => array(
-				'number'  => array(
+				'cover_size' => 'large',
+				'number'     => array(
 					'default'           => 20,
 					'sanitize_callback' => function ( $param, $request, $key ) {
 						return absint( $param );
 					}
 				),
-				'orderby' => array(
+				'orderby'    => array(
 					'default' => 'book.date_created'
 				),
-				'order'   => array(
+				'order'      => array(
 					'default' => 'ASC'
 				)
 			)
@@ -191,6 +192,14 @@ class Book extends Controller {
 
 			$query = new Books_Query();
 			$books = $query->get_books( $args );
+
+			foreach ( $books as $key => $book ) {
+				if ( ! empty( $book->cover_id ) ) {
+					$books[ $key ]->cover_url = wp_get_attachment_image_url( absint( $book->cover_id ), $request->get_param( 'cover_size' ) );
+				} else {
+					$books[ $key ]->cover_url = false;
+				}
+			}
 
 			return new \WP_REST_Response( $books );
 		} catch ( Exception $e ) {

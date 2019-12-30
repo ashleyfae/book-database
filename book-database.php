@@ -239,6 +239,9 @@ final class Book_Database {
 		require_once BDB_DIR . 'includes/authors/class-author.php';
 		require_once BDB_DIR . 'includes/authors/author-functions.php';
 
+		// Blocks
+		require_once BDB_DIR . 'includes/blocks.php';
+
 		// Book Author Relationships
 		require_once BDB_DIR . 'includes/book-author-relationships/class-book-author-relationship.php';
 		require_once BDB_DIR . 'includes/book-author-relationships/book-author-relationship-actions.php';

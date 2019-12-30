@@ -13,6 +13,17 @@ const IgnoreEmitPlugin = require( 'ignore-emit-webpack-plugin' );
 
 const production = process.env.NODE_ENV === '';
 
+const wplib = [
+	'blocks',
+	'components',
+	'date',
+	'editor',
+	'element',
+	'i18n',
+	'utils',
+	'data',
+];
+
 module.exports = {
 	...defaultConfig,
 
@@ -20,7 +31,16 @@ module.exports = {
 
 	externals: {
 		jquery: 'jQuery',
-		$: 'jQuery'
+		$: 'jQuery',
+		'wp.blocks': {
+			window: ['wp', 'blocks'],
+		},
+		'wp.i18n': {
+			window: ['wp', 'i18n'],
+		},
+		'wp.data': {
+			window: ['wp', 'data']
+		}
 	},
 
 	resolve: {
@@ -33,13 +53,14 @@ module.exports = {
 
 	entry: {
 		// JS
-		admin: './assets/js/src/admin/index.js',
-
+		"admin": './assets/js/src/admin/index.js',
 		"admin-global": './assets/js/src/admin/global.js',
+		"blocks": './assets/js/src/blocks/blocks.js',
 
 		// CSS
 		"admin-style": './assets/sass/admin.scss',
 		"admin-style-global": './assets/sass/admin-global.scss',
+		"admin-style-blocks": './assets/sass/admin-blocks.scss',
 		"front-end": './assets/sass/front-end.scss'
 	},
 
@@ -103,7 +124,7 @@ module.exports = {
 			$: 'jquery',
 		} ),
 
-		new IgnoreEmitPlugin( [ 'admin-style.min.js', 'front-end.min.js', 'front-end.js' ] ),
+		new IgnoreEmitPlugin( [ 'admin-style.min.js', 'admin-style-blocks.min.js', 'admin-style-global.min.js', 'front-end.min.js', 'front-end.js' ] ),
 
 		new MiniCssExtractPlugin( {
 			filename: 'assets/css/[name].min.css',

@@ -1,4 +1,4 @@
-.book-database-grid{display:flex;flex-flow:row wrap}.book-database-grid>figure{flex:0 50%;margin:0;padding:15px}@media (min-width: 768px){.book-database-grid>figure{flex:0 33.3%}}@media (min-width: 992px){.book-database-grid>figure{flex:0 25%}}
+.bdb-book-grid{display:flex;flex-flow:row wrap;margin:0 -10px}.bdb-grid-entry{flex:0 50%;margin-bottom:3em;padding:10px;text-align:center}.bdb-grid-entry a{border:none}.bdb-read-review-link{display:block;width:100%}.bdb-pagination{margin:1.5em 0}@media (min-width: 768px){.bdb-book-grid-number-results{text-align:right}.bdb-grid-entry{flex:0 33.3%}}@media (min-width: 992px){.bdb-grid-entry{flex:0 25%}}
 
 
 /*# sourceMappingURL=admin-style-blocks.min.css.map*/

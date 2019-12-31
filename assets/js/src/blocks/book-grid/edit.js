@@ -1,7 +1,7 @@
 /** Components */
 import Book from './components/Book';
 
-const {	Component, Fragment } = wp.element;
+const {	Component, Fragment, RawHTML } = wp.element;
 
 const {
 	PanelBody,
@@ -40,7 +40,7 @@ class BookGridEdit extends Component {
 	}
 
 	componentDidUpdate( prevProps ) {
-		const { ids, author, series, rating, pubDateAfter, pubDateBefore, readStatus, reviewsOnly, orderby, order, coverSize, "per-page": perPage } = this.props.attributes;
+		const { ids, author, series, rating, "pub-date-after" : pubDateAfter, "pub-date-before" : pubDateBefore, "read-status" : readStatus, "reviews-only" : reviewsOnly, orderby, order, "cover-size" : coverSize, "per-page": perPage } = this.props.attributes;
 		const { alignWide } = wp.data.select( "core/editor" ).getEditorSettings();
 
 		const prevProp = prevProps.attributes;
@@ -50,9 +50,9 @@ class BookGridEdit extends Component {
 			author !== prevProp.author ||
 			series !== prevProp.series ||
 			rating !== prevProp.rating ||
-			pubDateAfter !== prevProp.pubDateAfter ||
-			pubDateBefore !== prevProp.pubDateBefore ||
-			readStatus !== prevProp.readStatus ||
+			pubDateAfter !== prevProp['pub-date-after'] ||
+			pubDateBefore !== prevProp['pub-date-before'] ||
+			readStatus !== prevProp['read-status'] ||
 			reviewsOnly !== prevProp.reviewsOnly ||
 			orderby !== prevProp.orderby ||
 			order !== prevProp.order ||
@@ -97,47 +97,29 @@ class BookGridEdit extends Component {
 		]
 	}
 
+	getReadStatusOptions() {
+		return [
+			{ value: '', label: __( 'All', 'book-database' ) },
+			{ value: 'reading', label: __( 'Currently Reading', 'book-database' ) },
+			{ value: 'read', label: __( 'Read', 'book-database' ) },
+			{ value: 'unread', label: __( 'Unread', 'book-database' ) }
+		]
+	}
+
 	fetchBooks() {
 		const attributes = this.props.attributes;
 
-		let queryArgs = {
-			orderby: attributes.orderby,
-			order: attributes.order,
-			number: attributes['per-page']
-		};
-
-		queryArgs.number = queryArgs['per-page'];
-
-		if ( attributes.author.length ) {
-			queryArgs.author_query = [
-				{
-					field: 'name',
-					value: attributes.author
-				}
-			]
-		}
-
-		if ( attributes.series.length ) {
-			queryArgs.series_query = [
-				{
-					field: 'name',
-					value: attributes.series
-				}
-			]
-		}
-
-		// @todo pub-date-before and pub-date-after
-
 		const request = apiFetch( {
-			path: '/book-database/v1/books',
-			data: queryArgs,
+			path: '/book-database/v1/book/grid',
+			data: attributes,
 			method: 'POST'
 		} );
 
 		request.then( ( books ) => {
-			if ( this.booksRequest !== request || ! this.state.isMounted ) {
+			if ( this.booksRequest !== request ) {
 				return;
 			}
+			console.log( 'Books', books );
 
 			this.setState( { books, isLoading: false } );
 		} ).catch( ( error ) => {
@@ -149,14 +131,10 @@ class BookGridEdit extends Component {
 	}
 
 	renderBooks() {
-		const books = this.state.books;
-		const attributes = this.props;
-		const classNames = 'book-database-grid';
+		const books = this.state.books.grid;
 
 		return (
-			<div className={ classNames }>
-				{ books.map( ( book ) => <Book book={book} key={book.id.toString()} attributes={attributes} /> ) }
-			</div>
+			<RawHTML>{ books }</RawHTML>
 		);
 	}
 
@@ -171,6 +149,7 @@ class BookGridEdit extends Component {
 			series,
 			'pub-date-after' : pubDateAfter,
 			'pub-date-before' : pubDateBefore,
+			'read-status' : readStatus,
 			'per-page' : perPage,
 			orderby,
 			order
@@ -215,6 +194,12 @@ class BookGridEdit extends Component {
 						value={ pubDateBefore }
 						onChange={ (pubDateBefore) => setAttributes( { 'pub-date-before' : pubDateBefore } ) }
 					/>
+					<SelectControl
+						label={ __( 'Read Status', 'book-database' ) }
+						value={ readStatus }
+						options={ this.getReadStatusOptions() }
+						onChange={ (readStatus) => setAttributes( { 'read-status' : readStatus } ) }
+					/>
 				</PanelBody>
 				<PanelBody title={ __( 'Limits & Ordering', 'book-database' ) }>
 					<RangeControl
@@ -242,7 +227,7 @@ class BookGridEdit extends Component {
 			</InspectorControls>
 		);
 
-		const hasBooks = Array.isArray( books ) && books.length;
+		const hasBooks = 'undefined' !== typeof books.grid && books.grid.length;
 
 		if ( ! hasBooks ) {
 			return (
@@ -252,7 +237,7 @@ class BookGridEdit extends Component {
 						icon="book-alt"
 						label={ __( 'Loading books', 'book-database' ) }
 					>
-						{ ! Array.isArray( books ) ?
+						{ ! books.grid.length ?
 							<Spinner /> :
 							__( 'No books found.', 'book-database' )
 						}

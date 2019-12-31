@@ -33,6 +33,10 @@ registerBlockType( 'book-database/book-grid', {
 			type: 'string',
 			default: ''
 		},
+		'read-status' : {
+			type: 'string',
+			default: ''
+		},
 		'per-page': {
 			type: 'number',
 			default: 20

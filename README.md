@@ -138,3 +138,16 @@ WHERE 2017 = YEAR (date_finished)
 GROUP BY YEAR(pub_date)
 ORDER BY pub_year DESC;
 ```
+
+Get your top 5 most read genres (order by `ASC` to get least read).
+
+```mysql
+SELECT COUNT(log.id) AS count,t.name
+FROM wp_bdb_reading_log AS log
+INNER JOIN wp_bdb_book_term_relationships AS tr ON( log.book_id = tr.book_id )
+INNER JOIN wp_bdb_book_terms AS t ON( tr.term_id = t.id )
+WHERE t.taxonomy = 'genre'
+GROUP BY t.taxonomy,t.name
+ORDER BY count DESC
+LIMIT 5;
+```

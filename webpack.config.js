@@ -20,7 +20,8 @@ module.exports = {
 
 	externals: {
 		jquery: 'jQuery',
-		$: 'jQuery'
+		$: 'jQuery',
+		moment: 'moment'
 	},
 
 	resolve: {

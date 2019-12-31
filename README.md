@@ -146,8 +146,7 @@ SELECT COUNT(log.id) AS count,t.name
 FROM wp_bdb_reading_log AS log
 INNER JOIN wp_bdb_book_term_relationships AS tr ON( log.book_id = tr.book_id )
 INNER JOIN wp_bdb_book_terms AS t ON( tr.term_id = t.id )
-WHERE t.taxonomy = 'genre'
-GROUP BY t.taxonomy,t.name
+GROUP BY t.name
 ORDER BY count DESC
 LIMIT 5;
 ```

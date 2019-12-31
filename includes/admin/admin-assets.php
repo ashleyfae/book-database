@@ -29,15 +29,17 @@ function enqueue_admin_assets( $hook ) {
 
 	wp_enqueue_script( 'jquery-ui-datepicker' );
 
+	wp_register_script( 'moment', BDB_URL . 'assets/js/build/moment.min.js', array(), '2.24.0', true );
+
 	// JS
-	$deps = array( 'jquery', 'jquery-ui-sortable', 'suggest', 'wp-util' );
+	$deps = array( 'jquery', 'jquery-ui-sortable', 'suggest', 'wp-util', 'moment' );
 	wp_enqueue_script( 'book-database', BDB_URL . 'assets/js/build/admin.min.js', $deps, time(), true );
 
 	$localized = array(
-		'api_base'                   => esc_url_raw( rest_url() ),
-		'api_nonce'                  => wp_create_nonce( 'wp_rest' ),
-		'confirm_delete_author'      => __( 'Are you sure you want to delete this author?', 'book-database' ),
-		'confirm_delete_book_link'   => __( 'Are you sure you want to delete this link?', 'book-database' ),
+		'api_base'                      => esc_url_raw( rest_url() ),
+		'api_nonce'                     => wp_create_nonce( 'wp_rest' ),
+		'confirm_delete_author'         => __( 'Are you sure you want to delete this author?', 'book-database' ),
+		'confirm_delete_book_link'      => __( 'Are you sure you want to delete this link?', 'book-database' ),
 		'confirm_delete_book_term'   => __( 'Are you sure you want to delete this term?', 'book-database' ),
 		'confirm_delete_book'        => __( 'Are you sure you want to delete this book?', 'book-database' ),
 		'confirm_delete_edition'     => __( 'Are you sure you want to delete this edition?', 'book-database' ),
@@ -87,7 +89,9 @@ function enqueue_admin_global_assets( $hook ) {
 	wp_enqueue_style( 'book-database-global', BDB_URL . 'assets/css/admin-style-global.min.css', array(), time() );
 
 	// JS
-	$deps = array( 'jquery', 'wp-util' );
+	wp_register_script( 'moment', BDB_URL . 'assets/js/build/moment.min.js', array(), '2.24.0', true );
+
+	$deps = array( 'jquery', 'wp-util', 'moment' );
 	wp_enqueue_script( 'book-database-global', BDB_URL . 'assets/js/build/admin-global.min.js', $deps, time(), true );
 
 	$localized = array(

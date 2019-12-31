@@ -1,8 +1,4 @@
-/* global $, bdbVars */
-
-import {utc} from "moment";
-
-let moment = require( 'moment' );
+/* global $, bdbVars, moment */
 
 const formatMySQL = 'YYYY-MM-DD HH:mm:ss';
 const formatDisplay = 'MMMM D, YYYY';
@@ -58,7 +54,7 @@ export function dateLocalToUTC( localDate ) {
 	let newDate = new Date( t[0], t[1] - 1, t[2], t[3] || 0, t[4] || 0, t[5] || 0 ).toISOString();
 	let utcDate = moment.utc( newDate ).format( formatMySQL );
 
-	//console.log( 'UTC Date', utcDate );
+	console.log( 'UTC Date', utcDate );
 
 	return utcDate;
 

@@ -159,3 +159,14 @@ FROM wp_bdb_reading_log
 WHERE date_started IS NOT NULL
 AND date_finished IS NOT NULL
 ```
+
+Breakdown of books by their publication year.
+
+```mysql
+SELECT DATE_FORMAT( pub_date, '%Y' ) AS year, COUNT( log.id ) AS number_books
+FROM wp_bdb_books AS book
+INNER JOIN wp_bdb_reading_log AS log ON( book.id = log.book_id )
+WHERE pub_date IS NOT NULL
+GROUP BY year
+ORDER BY year ASC
+```

@@ -155,7 +155,7 @@ LIMIT 5;
 Average number of days it takes you to finish a book. To exclude DNF books, add another condition for `AND percentage_complete >= 1`.
 
 ```mysql
-SELECT ROUND( AVG( DATEDIFF( date_finished, date_started ) * percentage_complete ) ) AS number_days
+SELECT ROUND( AVG( DATEDIFF( date_finished, date_started ) * percentage_complete ) ) + 1 AS number_days
 FROM wp_bdb_reading_log
 WHERE date_started IS NOT NULL
 AND date_finished IS NOT NULL

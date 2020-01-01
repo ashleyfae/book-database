@@ -295,7 +295,7 @@ class Analytics {
 
 			// Calculate books read per day so far.
 			$days_in_period = $now->diff( $start_date )->days;
-			$books_per_day  = $books_read / $days_in_period;
+			$books_per_day  = ( $days_in_period > 0 ) ? $books_read / $days_in_period : 0;
 
 			// Based on books per day, calculate how many we'll read in the remaining days.
 			$remaining_days = $end_date->diff( $now )->days;

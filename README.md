@@ -146,6 +146,7 @@ SELECT COUNT(log.id) AS count,t.name
 FROM wp_bdb_reading_log AS log
 INNER JOIN wp_bdb_book_term_relationships AS tr ON( log.book_id = tr.book_id )
 INNER JOIN wp_bdb_book_terms AS t ON( tr.term_id = t.id )
+WHERE t.taxonomy = 'genre'
 GROUP BY t.name
 ORDER BY count DESC
 LIMIT 5;
@@ -158,15 +159,4 @@ SELECT ROUND( AVG( DATEDIFF( date_finished, date_started ) * percentage_complete
 FROM wp_bdb_reading_log
 WHERE date_started IS NOT NULL
 AND date_finished IS NOT NULL
-```
-
-Breakdown of books by their publication year.
-
-```mysql
-SELECT DATE_FORMAT( pub_date, '%Y' ) AS year, COUNT( log.id ) AS number_books
-FROM wp_bdb_books AS book
-INNER JOIN wp_bdb_reading_log AS log ON( book.id = log.book_id )
-WHERE pub_date IS NOT NULL
-GROUP BY year
-ORDER BY year ASC
 ```

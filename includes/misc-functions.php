@@ -190,3 +190,16 @@ function get_book_term_link( $term ) {
 	return apply_filters( 'book-database/term-archive-link', $final_url, $slug, $taxonomy, $term );
 
 }
+
+/**
+ * Get the site's timezone
+ *
+ * @return \DateTimeZone
+ */
+function get_site_timezone() {
+	if ( function_exists( 'wp_timezone' ) ) {
+		return wp_timezone();
+	} else {
+		return new \DateTimeZone( get_option( 'timezone_string' ) );
+	}
+}

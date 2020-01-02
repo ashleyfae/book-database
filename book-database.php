@@ -53,6 +53,7 @@ if ( ! defined( 'NOSE_GRAZE_STORE_URL' ) ) {
 
 /**
  * Class Book_Database
+ *
  * @package Book_Database
  */
 final class Book_Database {
@@ -234,6 +235,18 @@ final class Book_Database {
 		require_once BDB_DIR . 'includes/database/series/class-series-table.php';
 		require_once BDB_DIR . 'includes/database/series/class-series-schema.php';
 		require_once BDB_DIR . 'includes/database/series/class-series-query.php';
+
+		// Analytics
+		require_once BDB_DIR . 'includes/analytics/abstract-class-dataset.php';
+		require_once BDB_DIR . 'includes/analytics/analytics-functions.php';
+		$datasets = array(
+			'books-dnf-count', 'books-finished-count', 'pages-read', 'rereads-count'
+		);
+		foreach ( $datasets as $dataset ) {
+			if ( file_exists( BDB_DIR . 'includes/analytics/datasets/class-' . $dataset . '.php' ) ) {
+				require_once BDB_DIR . 'includes/analytics/datasets/class-' . $dataset . '.php';
+			}
+		}
 
 		// Authors
 		require_once BDB_DIR . 'includes/authors/class-author.php';
@@ -584,7 +597,7 @@ add_action( 'plugins_loaded', __NAMESPACE__ . '\book_database', 4 );
 /**
  * On activation, create an option. We'll use this as a flag to actually run our activation later.
  *
- * @see Book_Database::install()
+ * @see   Book_Database::install()
  *
  * @since 1.0
  */

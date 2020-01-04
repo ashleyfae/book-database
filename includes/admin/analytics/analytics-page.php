@@ -10,267 +10,102 @@
 namespace Book_Database;
 
 /**
+ * Get available analytics tabs
+ *
+ * @return array
+ */
+function get_analytics_tabs() {
+	return array(
+		'overview' => array(
+			'title'    => __( 'Overview', 'book-database' ),
+			'dashicon' => 'dashboard'
+		),
+		'books'    => array(
+			'title'    => __( 'Books', 'book-database' ),
+			'dashicon' => 'book'
+		),
+		'reading'  => array(
+			'title'    => __( 'Reading', 'book-database' ),
+			'dashicon' => 'book'
+		),
+		'editions' => array(
+			'title'    => __( 'Editions', 'book-database' ),
+			'dashicon' => 'admin-page'
+		),
+		'reviews'  => array(
+			'title'    => __( 'Reviews', 'book-database' ),
+			'dashicon' => 'welcome-write-blog'
+		),
+		'terms'    => array(
+			'title'    => __( 'Terms', 'book-database' ),
+			'dashicon' => 'tag'
+		),
+	);
+}
+
+/**
+ * Get the analytics admin page URL.
+ *
+ * @param array $args Query args to append to the URL.
+ *
+ * @return string
+ */
+function get_analytics_admin_page_url( $args = array() ) {
+
+	$sanitized_args = array();
+
+	foreach ( $args as $key => $value ) {
+		$sanitized_args[ sanitize_key( $key ) ] = urlencode( $value );
+	}
+
+	return add_query_arg( $sanitized_args, admin_url( 'admin.php?page=bdb-analytics' ) );
+
+}
+
+/**
  * Render the analytics page
  */
 function render_analytics_page() {
 
+	$view = ! empty( $_GET['view'] ) ? urldecode( $_GET['view'] ) : 'overview';
 	?>
 	<div id="bdb-book-analytics-wrap" class="wrap">
 		<h1><?php _e( 'Reading &amp; Review Analytics', 'book-database' ); ?></h1>
 
-		<div id="bdb-date-range">
-			<input type="hidden" id="bdb-start" value="<?php echo esc_attr( date( 'Y-1-1', current_time( 'timestamp' ) ) ); ?>">
-			<input type="hidden" id="bdb-end" value="<?php echo esc_attr( date( 'Y-12-31', current_time( 'timestamp' ) ) ); ?>">
-			<label for="bdb-range" class="screen-reader-text"><?php _e( 'Select a date range', 'book-database' ); ?></label>
-			<select id="bdb-range">
-				<option value="30-days" data-start="<?php echo esc_attr( date( 'Y-m-d', strtotime( '-30 days', current_time( 'timestamp' ) ) ) ); ?>" data-end="<?php echo esc_attr( date( 'Y-m-d', current_time( 'timestamp' ) ) ); ?>"><?php _e( 'Last 30 days', 'book-database' ); ?></option>
-				<option value="this-month" data-start="<?php echo esc_attr( date( 'Y-m-1', current_time( 'timestamp' ) ) ); ?>" data-end="<?php echo esc_attr( date( 'Y-m-t', current_time( 'timestamp' ) ) ); ?>"><?php _e( 'This month', 'book-database' ); ?></option>
-				<option value="last-month" data-start="<?php echo esc_attr( date( 'Y-m-d', strtotime( '-1 month', strtotime( date( 'Y-m-1', current_time( 'timestamp' ) ) ) ) ) ); ?>" data-end="<?php echo esc_attr( date( 'Y-m-d', strtotime( 'last day of last month', current_time( 'timestamp' ) ) ) ); ?>"><?php _e( 'Last month', 'book-database' ); ?></option>
-				<option value="this-year" data-start="<?php echo esc_attr( date( 'Y-1-1', current_time( 'timestamp' ) ) ); ?>" data-end="<?php echo esc_attr( date( 'Y-12-31', current_time( 'timestamp' ) ) ); ?>" selected><?php _e( 'This year', 'book-database' ); ?></option>
-				<option value="last-year" data-start="<?php echo esc_attr( date( 'Y-m-d', strtotime( '-1 year', strtotime( date( 'Y-1-1', current_time( 'timestamp' ) ) ) ) ) ); ?>" data-end="<?php echo esc_attr( date( 'Y-m-d', strtotime( '-1 year', strtotime( date( 'Y-12-31', current_time( 'timestamp' ) ) ) ) ) ); ?>"><?php _e( 'Last year', 'book-database' ); ?></option>
-				<option value="custom"><?php _e( 'Custom', 'book-database' ); ?></option>
+		<form id="bdb-analytics-date-range" method="GET">
+			<label for="bdb-analytics-date-range-select" class="screen-reader-text"><?php _e( 'Date Range', 'book-database' ); ?></label>
+			<select id="bdb-analytics-date-range-select" name="range">
+				<?php foreach ( Analytics\get_dates_filter_options() as $filter_key => $filter_value ) : ?>
+					<option value="<?php echo esc_attr( $filter_key ); ?>" <?php selected( $filter_key, Analytics\get_current_date_filter()['option'] ); ?>>
+						<?php echo esc_html( $filter_value ); ?>
+					</option>
+				<?php endforeach; ?>
 			</select>
-			<button type="button" class="button"><?php _e( 'Update', 'book-database' ); ?></button>
-		</div>
 
-		<div id="bdb-book-analytics-metrics">
+			<?php wp_nonce_field( 'bdb_set_analytics_date_filter', 'bdb_analytics_date_filter_nonce' ); ?>
+			<input type="hidden" name="bdb_analytics_view" value="<?php echo esc_attr( $view ); ?>">
+			<button type="submit" id="bdb-analytics-set-date-range" class="button"><?php esc_html_e( 'Filter', 'book-database' ); ?></button>
+		</form>
 
-			<!-- Column 1 -->
-			<div class="bdb-analytics-column">
+		<div class="bdb-panels-wrap">
+			<ul class="bdb-tabs">
+				<?php foreach ( get_analytics_tabs() as $tab_key => $tab ) : ?>
+					<li<?php echo $tab_key === $view ? ' class="bdb-tab-active"' : ''; ?>>
+						<a href="<?php echo esc_url( get_analytics_admin_page_url( array( 'view' => urlencode( $tab_key ) ) ) ); ?>">
+							<?php if ( ! empty( $tab['dashicon'] ) ) : ?>
+								<i class="dashicons dashicons-<?php echo sanitize_html_class( $tab['dashicon'] ); ?>"></i>
+							<?php endif; ?>
+							<?php echo esc_html( $tab['title'] ); ?>
+						</a>
+					</li>
+				<?php endforeach; ?>
+			</ul>
 
-				<!-- Books at a Glance -->
-				<div class="bdb-metric">
-					<div class="bdb-metric-inner bdb-metric-multi-col">
-						<div id="bdb-number-books-finished">
-							<p class="top-text"><?php _e( 'Books Finished', 'book-database' ); ?></p>
-							<div class="bdb-loading"></div>
-							<h2 class="bdb-result"></h2>
-							<p class="bottom-text bdb-result-compare"><span></span></p>
-						</div>
-
-						<div id="bdb-number-dnf">
-							<p class="top-text"><?php _e( 'DNF', 'book-database' ); ?></p>
-							<div class="bdb-loading"></div>
-							<h2 class="bdb-result"></h2>
-							<p class="bottom-text bdb-result-compare"><span></span></p>
-						</div>
-
-						<div id="bdb-number-new-books">
-							<p class="top-text"><?php _e( 'New Reads', 'book-database' ); ?></p>
-							<div class="bdb-loading"></div>
-							<h2 class="bdb-result"></h2>
-							<p class="bottom-text bdb-result-compare"><span></span></p>
-						</div>
-
-						<div id="bdb-number-rereads">
-							<p class="top-text"><?php _e( 'Re-Reads', 'book-database' ); ?></p>
-							<div class="bdb-loading"></div>
-							<h2 class="bdb-result"></h2>
-							<p class="bottom-text bdb-result-compare"><span></span></p>
-						</div>
-
-						<div id="bdb-number-pages-read">
-							<p class="top-text"><?php _e( 'Pages Read', 'book-database' ); ?></p>
-							<div class="bdb-loading"></div>
-							<h2 id="bdb-pages" class="bdb-result"></h2>
-							<p class="bottom-text bdb-result-compare"><span></span></p>
-						</div>
-					</div>
-					<div id="bdb-reading-track">
-						<div class="bdb-metric-inner bdb-result"></div>
-					</div>
-				</div> <!--/ Books at a Glance -->
-
-				<!-- Reviews & Ratings -->
-				<div class="bdb-metric">
-					<div class="bdb-metric-inner bdb-metric-multi-col">
-						<div id="bdb-number-reviews">
-							<p class="top-text"><?php _e( 'Reviews Written', 'book-database' ); ?></p>
-							<div class="bdb-loading"></div>
-							<h2 class="bdb-result"></h2>
-							<p class="bottom-text bdb-result-compare"><span></span></p>
-						</div>
-
-						<div id="bdb-avg-rating">
-							<p class="top-text"><?php _e( 'Average Rating', 'book-database' ); ?></p>
-							<div class="bdb-loading"></div>
-							<h2 class="bdb-result"></h2>
-							<p class="bottom-text" id="bdb-avg-rating-compare"><span></span></p>
-						</div>
-					</div>
-				</div><!--/ Reviews & Ratings -->
-
-				<!-- Series & Authors -->
-				<div class="bdb-metric">
-					<div class="bdb-metric-inner bdb-metric-multi-col">
-						<div id="bdb-number-different-series">
-							<p class="top-text"><?php _e( 'Different Series', 'book-database' ); ?></p>
-							<div class="bdb-loading"></div>
-							<h2 class="bdb-result"></h2>
-							<p class="bottom-text bdb-result-compare"><span></span></p>
-						</div>
-
-						<div id="bdb-number-standalones">
-							<p class="top-text"><?php _e( 'Standalones', 'book-database' ); ?></p>
-							<div class="bdb-loading"></div>
-							<h2 class="bdb-result"></h2>
-							<p class="bottom-text bdb-result-compare"><span></span></p>
-						</div>
-
-						<div id="bdb-number-authors">
-							<p class="top-text"><?php _e( 'Different Authors', 'book-database' ); ?></p>
-							<div class="bdb-loading"></div>
-							<h2 class="bdb-result"></h2>
-							<p class="bottom-text bdb-result-compare"><span></span></p>
-						</div>
-					</div>
-				</div><!--/ Series & Authors -->
-
-				<!-- Rating Breakdown -->
-				<div class="bdb-metric">
-					<div class="bdb-metric-inner">
-						<div id="bdb-rating-breakdown">
-							<p class="top-text"><?php _e( 'Rating Breakdown', 'book-database' ); ?></p>
-							<table>
-								<thead>
-								<tr>
-									<th><?php _e( 'Rating', 'book-database' ); ?></th>
-									<th><?php _e( 'Number of Books', 'book-database' ); ?></th>
-								</tr>
-								</thead>
-								<tbody class="bdb-result">
-								<tr>
-									<td colspan="2">
-										<div class="bdb-loading"></div>
-									</td>
-								</tr>
-								</tbody>
-							</table>
-						</div>
-					</div>
-				</div><!--/ Rating Breakdown-->
-
-				<!-- Pages Breakdown -->
-				<div class="bdb-metric">
-					<div class="bdb-metric-inner">
-						<div id="bdb-pages-breakdown">
-							<p class="top-text"><?php _e( 'Pages Breakdown', 'book-database' ); ?></p>
-							<table>
-								<thead>
-								<tr>
-									<th><?php _e( 'Pages', 'book-database' ); ?></th>
-									<th><?php _e( 'Number of Books', 'book-database' ); ?></th>
-								</tr>
-								</thead>
-								<tbody class="bdb-result">
-								<tr>
-									<td colspan="2">
-										<div class="bdb-loading"></div>
-									</td>
-								</tr>
-								</tbody>
-							</table>
-						</div>
-					</div>
-				</div><!--/ Pages Breakdown-->
-
+			<div class="bdb-panels">
+				<div id="bdb-dataset-wrap-<?php echo sanitize_html_class( $view ); ?>" class="bdb-panel bdb-panel-active">
+					<?php do_action( 'book-database/analytics/' . $view ); ?>
+				</div>
 			</div>
-
-			<!-- Column 2 -->
-			<div class="bdb-analytics-column">
-
-				<?php
-				$taxonomies = get_book_taxonomies( array(
-					'orderby' => 'name',
-					'order'   => 'ASC'
-				) );
-
-				foreach ( $taxonomies as $taxonomy ) {
-					?>
-					<!-- Taxonomy Breakdown -->
-					<div class="bdb-metric">
-						<div class="bdb-metric-inner">
-							<div id="bdb-taxonomy-<?php echo esc_attr( $taxonomy->get_slug() ); ?>-breakdown" class="bdb-taxonomy-breakdown" data-taxonomy="<?php echo esc_attr( $taxonomy->get_slug() ); ?>">
-								<p class="top-text"><?php printf( __( '%s Breakdown', 'book-database' ), esc_html( $taxonomy->get_name() ) ); ?></p>
-								<table>
-									<thead>
-									<tr>
-										<th><?php _e( 'Name', 'book-database' ); ?></th>
-										<th><?php _e( 'Books Read', 'book-database' ); ?></th>
-										<th><?php _e( 'Reviews Written', 'book-database' ); ?></th>
-										<th><?php _e( 'Average Rating', 'book-database' ); ?></th>
-									</tr>
-									</thead>
-									<tbody class="bdb-result">
-									<tr>
-										<td colspan="4">
-											<div class="bdb-loading"></div>
-										</td>
-									</tr>
-									</tbody>
-								</table>
-							</div>
-						</div>
-					</div><!--/ Taxonomy Breakdown-->
-					<?php
-				}
-				?>
-
-			</div>
-
-			<!-- Column 3 -->
-			<div class="bdb-analytics-column">
-				<!-- Reviews Written -->
-				<div class="bdb-metric">
-					<div class="bdb-metric-inner">
-						<div id="bdb-reviews-written">
-							<p class="top-text"><?php _e( 'Reviews Written (20 max)' ); ?></p>
-							<table>
-								<thead>
-								<tr>
-									<th><?php _e( 'Rating', 'book-database' ); ?></th>
-									<th><?php _e( 'Book', 'book-database' ); ?></th>
-									<th><?php _e( 'Date Written', 'book-database' ); ?></th>
-								</tr>
-								</thead>
-								<tbody class="bdb-result">
-								<tr>
-									<td colspan="4">
-										<div class="bdb-loading"></div>
-									</td>
-								</tr>
-								</tbody>
-							</table>
-						</div>
-					</div>
-				</div><!--/ Reviews Written-->
-
-				<!-- Read But Not Reviewed -->
-				<div class="bdb-metric">
-					<div class="bdb-metric-inner">
-						<div id="bdb-read-not-reviewed">
-							<p class="top-text"><?php _e( 'Read But Not Reviewed (20 max)' ); ?></p>
-							<table>
-								<thead>
-								<tr>
-									<th><?php _e( 'Rating', 'book-database' ); ?></th>
-									<th><?php _e( 'Book', 'book-database' ); ?></th>
-									<th><?php _e( 'Date Finished', 'book-database' ); ?></th>
-								</tr>
-								</thead>
-								<tbody class="bdb-result">
-								<tr>
-									<td colspan="4">
-										<div class="bdb-loading"></div>
-									</td>
-								</tr>
-								</tbody>
-							</table>
-						</div>
-					</div>
-				</div><!--/ Read But Not Reviewed -->
-			</div>
-
 		</div>
 	</div>
 	<?php

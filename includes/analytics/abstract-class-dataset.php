@@ -18,9 +18,10 @@ abstract class Dataset {
 
 	/**
 	 * @var string Dataset type:
-	 *             value
-	 *             table
-	 *             graph
+	 *             value - Single value
+	 *             dataset - Group of values
+	 *             table - Table
+	 *             graph - Chart.js graph
 	 */
 	protected $type = 'value';
 
@@ -46,7 +47,7 @@ abstract class Dataset {
 	 */
 	public function __construct( $args = array() ) {
 
-		$this->log( var_export( $args, true ), __METHOD__ );
+		//$this->log( var_export( $args, true ), __METHOD__ );
 
 		$defaults = array(
 			'date_option' => get_current_date_filter()['option'],
@@ -67,7 +68,7 @@ abstract class Dataset {
 			$args['end']   = '';
 		}
 
-		$this->log( sprintf( '%s Report Args: %s', __CLASS__, var_export( $args, true ) ), __METHOD__ );
+		//$this->log( sprintf( '%s Dataset Args: %s', __CLASS__, var_export( $args, true ) ), __METHOD__ );
 
 		$this->date_start = $args['start'];
 		$this->date_end   = $args['end'];

@@ -34,9 +34,9 @@ module.exports = {
 
 	entry: {
 		// JS
-		admin: './assets/js/src/admin/index.js',
-
+		"admin": './assets/js/src/admin/index.js',
 		"admin-global": './assets/js/src/admin/global.js',
+		"analytics": './assets/js/src/admin/analytics.js',
 
 		// CSS
 		"admin-style": './assets/sass/admin.scss',

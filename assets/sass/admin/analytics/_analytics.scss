@@ -1,83 +1,49 @@
-#bdb-book-analytics-wrap {
-    * {
-        -webkit-box-sizing: border-box;
-        -moz-box-sizing: border-box;
-        box-sizing: border-box;
-    }
-}
-
-.bdb-metric {
-    margin: 20px 0;
+.bdb-analytics-block {
+    flex-grow: 1;
     position: relative;
 
-    .top-text {
-        clear: both;
-        color: #999;
-        font-size: 14px;
+    &.bdb-dataset-type-value,
+    &.bdb-dataset-type-dataset {
+        text-align: center;
     }
 
-    h2 {
-        color: #0073aa;
-        font: {
-            size: 32px;
-            weight: bold;
+    &.bdb-dataset-type-graph {
+        max-width: 100%;
+        width: inherit !important;
+
+        canvas {
+            width: auto;
         }
-        margin: 0;
-        padding: 0;
     }
-}
 
-.bdb-metric-inner {
-    background: white;
-    border: 1px solid #e5e5e5;
-    padding: 10px;
-    text-align: center;
-}
-
-@media (min-width: 1200px) {
-    #bdb-book-analytics-metrics {
+    &.bdb-dataset-type-dataset {
         display: flex;
-        flex-flow: row wrap;
-        margin: 0 -20px;
-    }
 
-    .bdb-analytics-column {
-        padding: 0 20px;
-        width: 33.3%;
-    }
-
-    // Books read
-    .bdb-metric-multi-col {
-        display: flex;
-        padding-bottom: 30px;
-
-        > div {
-            flex: 1;
+        .bdb-dataset-section {
+            flex-grow: 1;
+            flex-basis: 0;
         }
     }
-}
 
-// Tables
-.bdb-metric {
-    table {
-        margin: 1em auto;
-        text-align: left;
-        width: 100%;
+    .spinner {
+        float: none;
+    }
 
-        th {
-            background: #f9f9f9;
-            border-bottom: 1px solid #eee;
-            font-weight: 600;
-        }
+    .bdb-dataset-value {
+        font-size: 16px;
+    }
 
-        th, td {
-            padding: 10px;
-        }
-
-        tbody {
-            tr:nth-child(even) {
-                background: #f9f9f9;
-            }
-        }
+    .bdb-dataset-period {
+        background: white;
+        border: 1px solid #e5e5e5;
+        border-bottom-color: white;
+        border-right-color: white;
+        border-top-left-radius: 8px;
+        color: #aaa;
+        margin: 0 -1px -1px 0;
+        padding: 4px 0 0 9px;
+        position: absolute;
+        bottom: 0;
+        right: 0;
     }
 }

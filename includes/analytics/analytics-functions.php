@@ -9,6 +9,7 @@
 
 namespace Book_Database\Analytics;
 
+use Book_Database\Exception;
 use function Book_Database\get_site_timezone;
 
 /**
@@ -88,7 +89,8 @@ function get_date_filter_range( $option = '', $format = 'Y-m-d H:i:s' ) {
 		}
 
 		$range = array(
-			'end' => new \DateTime( 'now', get_site_timezone() )
+			'start' => '',
+			'end'   => new \DateTime( 'now', get_site_timezone() )
 		);
 
 		switch ( $option ) {
@@ -109,7 +111,12 @@ function get_date_filter_range( $option = '', $format = 'Y-m-d H:i:s' ) {
 
 			case 'this_year' :
 				$range['start'] = new \DateTime( 'first day of this year', get_site_timezone() );
-				$range['end']   = new \DateTime( 'last day of this year', get_site_timezone() );
+				$range['end']   = new \DateTime( date( 'Y-12-31' ), get_site_timezone() );
+				break;
+
+			case 'last_year' :
+				$range['start'] = new \DateTime( 'first day of last year', get_site_timezone() );
+				$range['end']   = new \DateTime( 'December 31, last year', get_site_timezone() );
 				break;
 
 			case 'all_time' :
@@ -147,5 +154,31 @@ function get_date_filter_range( $option = '', $format = 'Y-m-d H:i:s' ) {
 	}
 
 	return $range;
+
+}
+
+/**
+ * Get a dataset value by name
+ *
+ * @param string $dataset Dataset class name.
+ * @param array  $args    Arguments to pass to the class.
+ *
+ * @return array
+ * @throws Exception
+ */
+function get_dataset_value( $dataset, $args = array() ) {
+
+	$class_name = __NAMESPACE__ . '\\' . $dataset;
+
+	if ( class_exists( $class_name ) ) {
+		$dataset = new $class_name( $args );
+
+		/**
+		 * @var Dataset $dataset
+		 */
+		return $dataset->get_dataset();
+	}
+
+	throw new Exception( 'invalid-dataset', __( 'Invalid dataset.', 'book-database' ), 404 );
 
 }

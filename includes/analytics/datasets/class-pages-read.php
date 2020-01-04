@@ -34,7 +34,7 @@ class Pages_Read extends Dataset {
 				WHERE date_finished IS NOT NULL
 				{$this->get_date_condition( 'date_finished', 'date_finished' )}";
 
-		$this->log( $query, __METHOD__ );
+		//$this->log( $query, __METHOD__ );
 
 		$result = $this->get_db()->get_var( $query );
 

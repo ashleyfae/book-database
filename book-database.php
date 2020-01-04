@@ -238,9 +238,15 @@ final class Book_Database {
 
 		// Analytics
 		require_once BDB_DIR . 'includes/analytics/abstract-class-dataset.php';
+		require_once BDB_DIR . 'includes/analytics/abstract-class-graph.php';
 		require_once BDB_DIR . 'includes/analytics/analytics-functions.php';
+		require_once BDB_DIR . 'includes/analytics/graphs/class-bar-graph.php';
+		require_once BDB_DIR . 'includes/analytics/graphs/class-horizontal-bar-graph.php';
+		require_once BDB_DIR . 'includes/analytics/graphs/class-pie-chart.php';
 		$datasets = array(
-			'books-dnf-count', 'books-finished-count', 'pages-read', 'rereads-count'
+			'reading-overview', 'number-different-series-read', 'number-standalones-read', 'pages-read',
+			'number-different-authors-read', 'number-reviews-written', 'average-rating', 'reading-track',
+			'books-per-year', 'most-read-genres', 'pages-breakdown'
 		);
 		foreach ( $datasets as $dataset ) {
 			if ( file_exists( BDB_DIR . 'includes/analytics/datasets/class-' . $dataset . '.php' ) ) {
@@ -353,6 +359,8 @@ final class Book_Database {
 		// Analytics
 		require_once BDB_DIR . 'includes/admin/analytics/analytics-actions.php';
 		require_once BDB_DIR . 'includes/admin/analytics/analytics-page.php';
+		require_once BDB_DIR . 'includes/admin/analytics/tabs/overview.php';
+		require_once BDB_DIR . 'includes/admin/analytics/tabs/reading.php';
 
 		// Authors
 		require_once BDB_DIR . 'includes/admin/authors/author-actions.php';

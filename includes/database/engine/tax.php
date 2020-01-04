@@ -555,7 +555,7 @@ class Tax extends Base {
 	 */
 	protected function clean_query( &$query ) {
 		if ( empty( $query['taxonomy'] ) ) {
-			if ( 'term_id' !== $query['field'] ) {
+			if ( 'id' !== $query['field'] ) {
 				$query = new \WP_Error( 'invalid_taxonomy', __( 'Invalid taxonomy.', 'book-database' ) );
 				return;
 			}

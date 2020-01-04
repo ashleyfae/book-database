@@ -11,6 +11,7 @@ namespace Book_Database;
 
 /**
  * Class Book
+ *
  * @package Book_Database
  */
 class Book extends Base_Object {
@@ -23,9 +24,9 @@ class Book extends Base_Object {
 
 	protected $authors;
 
-	protected $series_id = 0;
+	protected $series_id = null;
 
-	protected $series_position = 0;
+	protected $series_position = null;
 
 	protected $pub_date = '';
 
@@ -156,16 +157,16 @@ class Book extends Base_Object {
 	/**
 	 * Get the ID of the series this book is in
 	 *
-	 * @return int
+	 * @return int|null
 	 */
 	public function get_series_id() {
-		return absint( $this->series_id );
+		return ! empty( $this->series_id ) ? absint( $this->series_id ) : null;
 	}
 
 	/**
 	 * Get the position in the series
 	 *
-	 * @return int|float
+	 * @return int|float|null
 	 */
 	public function get_series_position() {
 		return $this->series_position ?? null;

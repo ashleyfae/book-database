@@ -1,7 +1,5 @@
 # Book Database
 
-WIP
-
 Book Database is for managing a library of books, documenting book reviews, and tracking review analytics.
 
 I have a book review plugin already, but Book Database is a fun recoding project for me. It's basically, "what would my other plugin look like if I could start over with zero backwards compatibility?" -- Basically a rewrite considering all the things I now hate about my other plugin and what I wish I could have done differently.
@@ -12,8 +10,6 @@ Things I'm focusing on:
 * Better job scaling, when people want to add *thousands* of books.
 * Better UI and UX.
 * And finally, I'm focusing more on what I want from this plugin, rather than what other people say they want.
-
-I'm not sure if I'll ever officially release this. I'm mostly building this for myself and for funsies. Then we'll see what happens.
 
 ## Features:
 
@@ -137,4 +133,26 @@ FROM wp_bdb_books AS b
 WHERE 2017 = YEAR (date_finished)
 GROUP BY YEAR(pub_date)
 ORDER BY pub_year DESC;
+```
+
+Get your top 5 most read genres (order by `ASC` to get least read).
+
+```mysql
+SELECT COUNT(log.id) AS count,t.name
+FROM wp_bdb_reading_log AS log
+INNER JOIN wp_bdb_book_term_relationships AS tr ON( log.book_id = tr.book_id )
+INNER JOIN wp_bdb_book_terms AS t ON( tr.term_id = t.id )
+WHERE t.taxonomy = 'genre'
+GROUP BY t.name
+ORDER BY count DESC
+LIMIT 5;
+```
+
+Average number of days it takes you to finish a book. To exclude DNF books, add another condition for `AND percentage_complete >= 1`.
+
+```mysql
+SELECT ROUND( AVG( DATEDIFF( date_finished, date_started ) * percentage_complete ) ) + 1 AS number_days
+FROM wp_bdb_reading_log
+WHERE date_started IS NOT NULL
+AND date_finished IS NOT NULL
 ```

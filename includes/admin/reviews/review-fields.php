@@ -131,7 +131,7 @@ function date_written( $review ) {
 
 	ob_start();
 	?>
-	<input type="text" id="bdb-review-date-written" class="bdb-datepicker" name="date_written" value="<?php echo ! empty( $review ) ? esc_attr( $review->get_date_written( true, 'Y-m-d H:i:s' ) ) : date( 'Y-m-d H:i:s', current_time( 'timestamp' ) ); ?>">
+	<input type="text" id="bdb-review-date-written" class="bdb-datepicker bdb-timepicker" name="date_written" value="<?php echo ! empty( $review ) ? esc_attr( $review->get_date_written( true, 'Y-m-d H:i:s' ) ) : date( 'Y-m-d H:i:s', current_time( 'timestamp' ) ); ?>">
 	<p class="description"><?php _e( 'Date the review was written.', 'book-database' ); ?></p>
 	<?php
 
@@ -155,7 +155,7 @@ function date_published( $review ) {
 
 	ob_start();
 	?>
-	<input type="text" id="bdb-review-date-published" class="bdb-datepicker" name="date_published" value="<?php echo ! empty( $review ) ? esc_attr( $review->get_date_published( true, 'Y-m-d H:i:s' ) ) : ''; ?>">
+	<input type="text" id="bdb-review-date-published" class="bdb-datepicker bdb-timepicker" name="date_published" value="<?php echo ! empty( $review ) ? esc_attr( $review->get_date_published( true, 'Y-m-d H:i:s' ) ) : ''; ?>">
 	<p class="description"><?php _e( 'Date the review was published on the blog. Leave blank to hide from archive.', 'book-database' ); ?></p>
 	<?php
 

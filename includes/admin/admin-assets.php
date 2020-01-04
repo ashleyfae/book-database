@@ -24,10 +24,9 @@ function enqueue_admin_assets( $hook ) {
 
 	// CSS
 	wp_enqueue_style( 'book-database', BDB_URL . 'assets/css/admin-style.min.css', array(), time() );
+	wp_enqueue_style( 'flatpickr', 'https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css', array(), '4.0' );
 
 	wp_enqueue_media();
-
-	wp_enqueue_script( 'jquery-ui-datepicker' );
 
 	wp_register_script( 'moment', BDB_URL . 'assets/js/build/moment.min.js', array(), '2.24.0', true );
 

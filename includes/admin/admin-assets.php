@@ -59,7 +59,9 @@ function enqueue_admin_assets( $hook ) {
 
 	if ( $hook === $bdb_admin_pages['analytics'] ) {
 
-		$deps = array( 'jquery', 'wp-util' );
+		wp_enqueue_script( 'google-charts', 'https://www.gstatic.com/charts/loader.js', array(), false, true );
+
+		$deps = array( 'jquery', 'wp-util', 'google-charts' );
 
 		wp_enqueue_script( 'book-database-analytics', BDB_URL . 'assets/js/build/analytics.min.js', $deps, time(), true );
 		wp_localize_script( 'book-database-analytics', 'bdbVars', $localized );

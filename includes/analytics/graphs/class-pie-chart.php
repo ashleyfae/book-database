@@ -16,24 +16,6 @@ namespace Book_Database\Analytics;
  */
 class Pie_Chart extends Graph {
 
-	protected $type = 'pie';
-
-	/**
-	 * Graph constructor.
-	 *
-	 * @param array $args
-	 */
-	public function __construct( $args = array() ) {
-
-		parent::__construct( wp_parse_args( $args, array(
-			'type'    => $this->type,
-			'data'    => array(
-				'labels'   => array(),
-				'datasets' => array()
-			),
-			'options' => array()
-		) ) );
-
-	}
+	protected $type = 'PieChart';
 
 }

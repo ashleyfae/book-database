@@ -47,22 +47,26 @@ class Pages_Breakdown extends Dataset {
 			absint( $number_range - 1 )
 		);
 
-		$results   = $this->get_db()->get_results( $query );
-		$breakdown = array();
+		//error_log( $query );
 
-		if ( ! empty( $results ) ) {
-			foreach ( $results as $result ) {
-				$breakdown[ $result->page_range ] = absint( $result->number_books );
-			}
-		}
+		$results = $this->get_db()->get_results( $query );
 
-		$args = array(
-			'label'           => __( 'Pages Breakdown', 'book-database' ),
-			'fill'            => false
+		$columns = array(
+			array(
+				'id'      => 'page_range',
+				'label'   => esc_html__( 'Number of Pages', 'book-database' ),
+				'type'    => 'string',
+				'display' => esc_html__( '%s Pages', 'book-database' )
+			),
+			array(
+				'id'      => 'number_books',
+				'label'   => esc_html__( 'Number of Books', 'book-database' ),
+				'type'    => 'number',
+				'display' => esc_html__( '%d Books', 'book-database' )
+			)
 		);
 
-		$chart->add_dataset( $args, array_values( $breakdown ), false, true );
-		$chart->set_labels( array_map( 'strval', array_keys( $breakdown ) ) );
+		$chart->add_dataset( $columns, $results );
 
 		return $chart->get_args();
 

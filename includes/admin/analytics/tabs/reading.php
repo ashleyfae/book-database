@@ -17,7 +17,7 @@ function reading() {
 	<h2><?php _e( 'Reading', 'book-database' ); ?></h2>
 
 	<div class="bdb-flexbox-container">
-		<section class="bdb-analytics-block bdb-dataset-type-table bdb-flexbox-third" data-dataset="Most_Read_Genres">
+		<section class="bdb-analytics-block bdb-dataset-type-table bdb-flexbox-half" data-dataset="Most_Read_Genres">
 			<h3><?php _e( 'Most Read Genres', 'book-database' ); ?></h3>
 
 			<table class="wp-list-table widefat fixed striped">
@@ -43,10 +43,10 @@ function reading() {
 			</script>
 		</section>
 
-		<section class="bdb-analytics-block bdb-dataset-type-table bdb-flexbox-third" data-dataset="Pages_Breakdown" data-canvas="bdb-dataset-pages-breakdown">
+		<section class="bdb-analytics-block bdb-dataset-type-table bdb-flexbox-half" data-dataset="Pages_Breakdown" data-canvas="bdb-dataset-pages-breakdown">
 			<h3><?php _e( 'Pages Breakdown', 'book-database' ); ?></h3>
 			<div>
-				<canvas id="bdb-dataset-pages-breakdown"></canvas>
+				<div id="bdb-dataset-pages-breakdown"></div>
 			</div>
 		</section>
 	</div>

@@ -19,6 +19,6 @@ class Horizontal_Bar_Graph extends Graph {
 	/**
 	 * @var string Type of graph.
 	 */
-	protected $type = 'horizontalBar';
+	protected $type = 'BarChart';
 
 }

@@ -1,9 +1,8 @@
-/* global $, bdbVars, wp */
+/* global $, bdbVars, wp, google */
 
 import { dateLocalToUTC, dateUTCtoLocal } from "./dates";
 import { apiRequest, spinButton, unspinButton } from 'utils';
 import { BDB_Datepicker } from './datepicker';
-import Chart from 'chart.js';
 
 /**
  * Analytics
@@ -19,6 +18,8 @@ var BDB_Analytics = {
 		if ( ! document.getElementById( 'bdb-book-analytics-wrap') ) {
 			return;
 		}
+
+		google.charts.load( 'current', { packages: [ 'corechart', 'calendar' ] } );
 
 		this.getBlockValues();
 
@@ -89,6 +90,7 @@ var BDB_Analytics = {
 			} );
 
 			apiRequest( 'v1/analytics/dataset/' + dataset, args, 'GET' ).then( function( apiResponse ) {
+				console.log( apiResponse.type, apiResponse );
 				BDB_Analytics.renderDataset( blockWrap, apiResponse );
 			} ).catch( function( error ) {
 				blockWrap.find( '.bdb-dataset-value' ).empty().append( error );
@@ -113,16 +115,24 @@ var BDB_Analytics = {
 		switch( apiResponse.type ) {
 
 			case 'graph' :
-				// @todo
+				if ( 'undefined' === typeof apiResponse.type ) {
+					return;
+				}
+
 				let id = blockWrap.data( 'canvas' );
 
 				if ( 'undefined' === typeof id || '' === id ) {
 					return;
 				}
 
-				const config = BDB_Analytics.shapeConfig( apiResponse.data );
-
-				new Chart( document.getElementById( id ).getContext( '2d' ), config );
+				const type = apiResponse.data.type;
+				const options = apiResponse.data.options || {};
+				const data = new google.visualization.DataTable( apiResponse.data.chart );
+				console.log( 'Chart Data', data );
+				console.log( 'Chart Type', type );
+				const chart = new google.visualization[ type ]( document.getElementById( id ) );
+				console.log( 'Chart', chart );
+				chart.draw( data, options );
 				break;
 
 			case 'table' :

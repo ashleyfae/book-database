@@ -36,15 +36,15 @@ class Books_Per_Year extends Dataset {
 				'datasets' => array(),
 			),
 			'options' => array(
-				'title'               => array(
+				'title'      => array(
 					'text' => ''
 				),
-				'responsive'          => true,
+				'responsive' => true,
 				//'maintainAspectRatio' => false,
-				'legend'              => array(
+				'legend'     => array(
 					'display' => false
 				),
-				'scales'              => array(
+				'scales'     => array(
 					'xAxes' => array(
 						array(
 							'ticks' => array(
@@ -70,7 +70,7 @@ class Books_Per_Year extends Dataset {
 
 		$tbl_log = book_database()->get_table( 'reading_log' )->get_table_name();
 
-		$years    = array();
+		$years    = $final_years = array();
 		$raw_rows = $this->get_db()->get_results(
 			"SELECT YEAR( date_finished ) AS year, COUNT(*) AS number_books
 			FROM {$tbl_log}
@@ -107,26 +107,31 @@ class Books_Per_Year extends Dataset {
 			$years[ absint( $row->year ) ] = absint( $row->number_books );
 		}
 
-		ksort( $years, SORT_NUMERIC );
+		krsort( $years, SORT_NUMERIC );
 
-		$args = array(
-			'label'           => __( 'Books Read', 'book-database' ),
-			'backgroundColor' => array(),
-			'borderColor'     => array(),
-		);
-
-		for ( $i = 0; $i < count( $years ); $i++ ) {
-			$rgb = array();
-			foreach ( array( 'r', 'g', 'b' ) as $colour ) {
-				$rgb[ $colour ] = mt_rand( 0, 255 );
-			}
-
-			$args['backgroundColor'][] = 'rgba(' . implode( ', ', $rgb ) . ',0.5)';
-			$args['borderColor'][]     = 'rgb(' . implode( ', ', $rgb ) . ')';
+		// Now convert back to objects.
+		foreach ( $years as $year => $value ) {
+			$dataset               = new \stdClass();
+			$dataset->year         = absint( $year );
+			$dataset->number_books = absint( $value );
+			$final_years[]         = $dataset;
 		}
 
-		$graph->add_dataset( $args, array_values( $years ), false, true );
-		$graph->set_labels( array_map( 'strval', array_keys( $years ) ) );
+		$columns = array(
+			array(
+				'id'    => 'year',
+				'label' => esc_html__( 'Year', 'book-database' ),
+				'type'  => 'string'
+			),
+			array(
+				'id'      => 'number_books',
+				'label'   => esc_html__( 'Books Read', 'book-database' ),
+				'type'    => 'number',
+				'display' => esc_html__( '%d Books', 'book-database' )
+			)
+		);
+
+		$graph->add_dataset( $columns, $final_years );
 
 		return $graph->get_args();
 

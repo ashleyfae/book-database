@@ -51,37 +51,7 @@ class Graph {
 
 		$this->args = wp_parse_args( $args, array(
 			'type'    => $this->type,
-			'data'    => array(
-				'labels'   => array(),
-				'datasets' => array(),
-			),
-			'options' => array(
-				'title'  => array(
-					'text' => ''
-				),
-				//'responsive'          => true,
-				//'maintainAspectRatio' => false,
-				'scales' => array(
-					'xAxes' => array(
-						array(
-							'ticks' => array(
-								'autoSkipPadding' => 10,
-								'maxLabels'       => 52,
-								'min'             => 0,
-								'precision'       => 0,
-							)
-						)
-					),
-					'yAxes' => array(
-						array(
-							'ticks' => array(
-								'min'       => 0,
-								'precision' => 0
-							)
-						)
-					)
-				)
-			)
+			'options' => array()
 		) );
 
 	}
@@ -211,61 +181,85 @@ class Graph {
 	/**
 	 * Add a data set
 	 *
-	 * @param array $args            Dataset args.
-	 * @param array $data            Data.
-	 * @param bool  $auto_fill       Whether to auto fill the dataset with the label values.
-	 * @param bool  $colour_per_data Whether or not to have a different colour for each piece of data.
+	 * @param array $columns Column labels.
+	 * @param array $rows    Rows values.
 	 */
-	public function add_dataset( $args = array(), $data = array(), $auto_fill = true, $colour_per_data = false ) {
+	public function add_dataset( $columns = array(), $rows = array() ) {
 
-		$rgb = array();
-		foreach ( array( 'r', 'g', 'b' ) as $colour ) {
-			$rgb[ $colour ] = mt_rand( 0, 255 );
+		$this->args['chart']['cols'] = $this->shape_columns( $columns );
+		$this->args['chart']['rows'] = $this->shape_rows( $columns, $rows );
+
+	}
+
+	/**
+	 * Shape columns
+	 *
+	 * @param array $columns
+	 *
+	 * @return array
+	 */
+	protected function shape_columns( $columns ) {
+
+		foreach ( $columns as $key => $value ) {
+			unset( $columns[ $key ]['display'] );
 		}
 
-		if ( $colour_per_data ) {
-			$background = array();
-			$border     = array();
+		return $columns;
 
-			for ( $i = 0; $i < count( $data ); $i++ ) {
-				$rgb = $this->random_colour();
+	}
 
-				// If we already have this one, get another.
-				if ( in_array( 'rgb(' . $rgb . ')', $border ) ) {
-					$new_rgb = array();
-					foreach ( array( 'r', 'g', 'b' ) as $colour ) {
-						$new_rgb[ $colour ] = mt_rand( 0, 255 );
-					}
-					$rgb = implode( ', ', $new_rgb );
+	/**
+	 * Shape rows
+	 *
+	 * Format and sanitize.
+	 *
+	 * @param array $columns
+	 * @param array $rows
+	 *
+	 * @return array
+	 */
+	protected function shape_rows( $columns, $rows ) {
+
+		$formatted_rows = array();
+
+		foreach ( $rows as $row ) {
+			$values = array();
+
+			foreach ( $columns as $column ) {
+				$this_value = array(
+					'v' => isset( $row->{$column['id']} ) ? $this->sanitize_row_value( $row->{$column['id']}, $column['type'] ) : null
+				);
+
+				if ( ! empty( $column['display'] ) ) {
+					$this_value['f'] = sprintf( $column['display'], $this_value['v'] );
 				}
 
-				$background[] = 'rgba(' . $rgb . ',0.3)';
-				$border[]     = 'rgb(' . $rgb . ')';
+				$values[] = $this_value;
 			}
-		} else {
-			$rgb        = $this->random_colour();
-			$background = 'rgba(' . $rgb . ',0.5)';
-			$border     = 'rgb(' . $rgb . ')';
+
+			$formatted_rows[] = array(
+				'c' => $values
+			);
 		}
 
-		$args = wp_parse_args( $args, array(
-			'label'                => '',
-			'backgroundColor'      => $background,
-			'borderColor'          => $border,
-			'fill'                 => true,
-			'borderWidth'          => 1,
-			'borderDash'           => array( 2, 6 ),
-			'borderCapStyle'       => 'round',
-			'borderJoinStyle'      => 'round',
-			'pointRadius'          => 4,
-			'pointHoverRadius'     => 6,
-			'pointBackgroundColor' => 'rgb(255,255,255)',
-		) );
+		return $formatted_rows;
 
-		$args['data'] = $auto_fill ? $this->fill_data( $data ) : $data;
+	}
 
-		$this->args['data']['datasets'][] = $args;
+	protected function sanitize_row_value( $value, $type ) {
+		switch ( $type ) {
+			case 'number' :
+				return is_int( $value ) ? intval( $value ) : floatval( $value );
+				break;
 
+			case 'date' :
+				return 'new Date( ' . esc_attr( sanitize_text_field( $value ) ) . ' )';
+				break;
+
+			default :
+				return sanitize_text_field( $value );
+				break;
+		}
 	}
 
 	protected function random_colour() {

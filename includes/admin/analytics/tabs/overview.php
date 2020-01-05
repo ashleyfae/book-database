@@ -83,7 +83,9 @@ function overview() {
 
 	<div class="bdb-analytics-block bdb-dataset-type-graph bdb-flexbox-full" data-dataset="Books_Per_Year" data-canvas="bdb-dataset-books-per-year">
 		<h3><?php _e( 'Books Read Per Year', 'book-database' ); ?></h3>
-		<canvas id="bdb-dataset-books-per-year"></canvas>
+		<div>
+			<canvas id="bdb-dataset-books-per-year"></canvas>
+		</div>
 	</div>
 	<?php
 }

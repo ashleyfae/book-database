@@ -168,6 +168,10 @@ var BDB_Analytics = {
 
 	shapeConfig: function ( config ) {
 
+		console.log( config );
+
+		return config;
+
 		const letters = '0123456789ABCDEF'.split('');
 
 		if ( 'pie' === config.type ) {

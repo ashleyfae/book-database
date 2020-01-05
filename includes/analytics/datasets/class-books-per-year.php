@@ -30,7 +30,43 @@ class Books_Per_Year extends Dataset {
 	 */
 	protected function _get_dataset() {
 
-		$graph = new Horizontal_Bar_Graph();
+		$graph = new Horizontal_Bar_Graph( array(
+			'data'    => array(
+				'labels'   => array(),
+				'datasets' => array(),
+			),
+			'options' => array(
+				'title'               => array(
+					'text' => ''
+				),
+				'responsive'          => true,
+				//'maintainAspectRatio' => false,
+				'legend'              => array(
+					'display' => false
+				),
+				'scales'              => array(
+					'xAxes' => array(
+						array(
+							'ticks' => array(
+								'min'       => 0,
+								'precision' => 0,
+							)
+						)
+					),
+					'yAxes' => array(
+						array(
+							'ticks' => array(
+								'autoSkip'    => false,
+								'beginAtZero' => true,
+								'min'         => 0,
+								'precision'   => 0,
+								'stepSize'    => 0
+							)
+						)
+					)
+				)
+			)
+		) );
 
 		$tbl_log = book_database()->get_table( 'reading_log' )->get_table_name();
 
@@ -77,7 +113,6 @@ class Books_Per_Year extends Dataset {
 			'label'           => __( 'Books Read', 'book-database' ),
 			'backgroundColor' => array(),
 			'borderColor'     => array(),
-			'fill'            => false
 		);
 
 		for ( $i = 0; $i < count( $years ); $i++ ) {
@@ -90,7 +125,7 @@ class Books_Per_Year extends Dataset {
 			$args['borderColor'][]     = 'rgb(' . implode( ', ', $rgb ) . ')';
 		}
 
-		$graph->add_dataset( $args, array_values( $years ), false );
+		$graph->add_dataset( $args, array_values( $years ), false, true );
 		$graph->set_labels( array_map( 'strval', array_keys( $years ) ) );
 
 		return $graph->get_args();

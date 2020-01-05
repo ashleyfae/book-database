@@ -28,6 +28,10 @@ function get_analytics_tabs() {
 			'title'    => __( 'Reading', 'book-database' ),
 			'dashicon' => 'book'
 		),
+		'ratings'  => array(
+			'title'    => __( 'Ratings', 'book-database' ),
+			'dashicon' => 'star-filled'
+		),
 		'editions' => array(
 			'title'    => __( 'Editions', 'book-database' ),
 			'dashicon' => 'admin-page'

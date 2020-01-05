@@ -1,6 +1,6 @@
 <?php
 /**
- * tmpl-most-read-genres.php
+ * Most Read Genres
  *
  * @package   book-database
  * @copyright Copyright (c) 2020, Ashley Gibson

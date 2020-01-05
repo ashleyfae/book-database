@@ -61,7 +61,7 @@ class Pages_Breakdown extends Dataset {
 			'fill'            => false
 		);
 
-		$chart->add_dataset( $args, array_values( $breakdown ), false );
+		$chart->add_dataset( $args, array_values( $breakdown ), false, true );
 		$chart->set_labels( array_map( 'strval', array_keys( $breakdown ) ) );
 
 		return $chart->get_args();

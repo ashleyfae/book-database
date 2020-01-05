@@ -26,15 +26,12 @@ class Pie_Chart extends Graph {
 	public function __construct( $args = array() ) {
 
 		parent::__construct( wp_parse_args( $args, array(
-			'type' => $this->type,
-			'data' => array(
+			'type'    => $this->type,
+			'data'    => array(
 				'labels'   => array(),
-				'datasets' => array(),
-				'options'  => array(
-					'responsive'          => true,
-					'maintainAspectRatio' => false,
-				)
-			)
+				'datasets' => array()
+			),
+			'options' => array()
 		) ) );
 
 	}

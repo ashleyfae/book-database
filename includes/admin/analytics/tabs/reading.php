@@ -45,7 +45,9 @@ function reading() {
 
 		<section class="bdb-analytics-block bdb-dataset-type-table bdb-flexbox-third" data-dataset="Pages_Breakdown" data-canvas="bdb-dataset-pages-breakdown">
 			<h3><?php _e( 'Pages Breakdown', 'book-database' ); ?></h3>
-			<canvas id="bdb-dataset-pages-breakdown"></canvas>
+			<div>
+				<canvas id="bdb-dataset-pages-breakdown"></canvas>
+			</div>
 		</section>
 	</div>
 	<?php

@@ -16,7 +16,7 @@ use function Book_Database\get_site_timezone;
  *
  * @package Book_Database\Analytics
  */
-abstract class Graph {
+class Graph {
 
 	/**
 	 * @var string Type of graph.
@@ -50,33 +50,33 @@ abstract class Graph {
 	public function __construct( $args = array() ) {
 
 		$this->args = wp_parse_args( $args, array(
-			'type' => $this->type,
-			'data' => array(
+			'type'    => $this->type,
+			'data'    => array(
 				'labels'   => array(),
 				'datasets' => array(),
-				'options'  => array(
-					'title'               => array(
-						'text' => ''
-					),
-					'responsive'          => true,
-					'maintainAspectRatio' => false,
-					'scales'              => array(
-						'xAxes' => array(
-							array(
-								'ticks' => array(
-									'autoSkipPadding' => 10,
-									'maxLabels'       => 52,
-									'min'             => 0,
-									'precision'       => 0,
-								)
+			),
+			'options' => array(
+				'title'  => array(
+					'text' => ''
+				),
+				//'responsive'          => true,
+				//'maintainAspectRatio' => false,
+				'scales' => array(
+					'xAxes' => array(
+						array(
+							'ticks' => array(
+								'autoSkipPadding' => 10,
+								'maxLabels'       => 52,
+								'min'             => 0,
+								'precision'       => 0,
 							)
-						),
-						'yAxes' => array(
-							array(
-								'ticks' => array(
-									'min'       => 0,
-									'precision' => 0
-								)
+						)
+					),
+					'yAxes' => array(
+						array(
+							'ticks' => array(
+								'min'       => 0,
+								'precision' => 0
 							)
 						)
 					)
@@ -91,14 +91,16 @@ abstract class Graph {
 	 *
 	 * @param string $start
 	 * @param string $end
-	 *
-	 * @throws \Exception
 	 */
 	public function set_range( $start = '', $end = '' ) {
-		$this->date_start = new \DateTime( $start );
-		$this->date_end   = new \DateTime( $end );
-		$this->date_start->setTimezone( get_site_timezone() );
-		$this->date_end->setTimezone( get_site_timezone() );
+		try {
+			$this->date_start = new \DateTime( $start );
+			$this->date_end   = new \DateTime( $end );
+			$this->date_start->setTimezone( get_site_timezone() );
+			$this->date_end->setTimezone( get_site_timezone() );
+		} catch ( \Exception $e ) {
+
+		}
 	}
 
 	/**
@@ -209,22 +211,49 @@ abstract class Graph {
 	/**
 	 * Add a data set
 	 *
-	 * @param array $args      Dataset args.
-	 * @param array $data      Data.
-	 * @param bool  $auto_fill Whether to auto fill the dataset with the label values.
+	 * @param array $args            Dataset args.
+	 * @param array $data            Data.
+	 * @param bool  $auto_fill       Whether to auto fill the dataset with the label values.
+	 * @param bool  $colour_per_data Whether or not to have a different colour for each piece of data.
 	 */
-	public function add_dataset( $args = array(), $data = array(), $auto_fill = true ) {
+	public function add_dataset( $args = array(), $data = array(), $auto_fill = true, $colour_per_data = false ) {
 
 		$rgb = array();
 		foreach ( array( 'r', 'g', 'b' ) as $colour ) {
 			$rgb[ $colour ] = mt_rand( 0, 255 );
 		}
 
+		if ( $colour_per_data ) {
+			$background = array();
+			$border     = array();
+
+			for ( $i = 0; $i < count( $data ); $i++ ) {
+				$rgb = $this->random_colour();
+
+				// If we already have this one, get another.
+				if ( in_array( 'rgb(' . $rgb . ')', $border ) ) {
+					$new_rgb = array();
+					foreach ( array( 'r', 'g', 'b' ) as $colour ) {
+						$new_rgb[ $colour ] = mt_rand( 0, 255 );
+					}
+					$rgb = implode( ', ', $new_rgb );
+				}
+
+				$background[] = 'rgba(' . $rgb . ',0.3)';
+				$border[]     = 'rgb(' . $rgb . ')';
+			}
+		} else {
+			$rgb        = $this->random_colour();
+			$background = 'rgba(' . $rgb . ',0.5)';
+			$border     = 'rgb(' . $rgb . ')';
+		}
+
 		$args = wp_parse_args( $args, array(
 			'label'                => '',
-			'backgroundColor'      => 'rgba(252,108,18,0.5)',
-			'borderColor'          => 'rgb(252,108,18)',
+			'backgroundColor'      => $background,
+			'borderColor'          => $border,
 			'fill'                 => true,
+			'borderWidth'          => 1,
 			'borderDash'           => array( 2, 6 ),
 			'borderCapStyle'       => 'round',
 			'borderJoinStyle'      => 'round',
@@ -236,6 +265,26 @@ abstract class Graph {
 		$args['data'] = $auto_fill ? $this->fill_data( $data ) : $data;
 
 		$this->args['data']['datasets'][] = $args;
+
+	}
+
+	protected function random_colour() {
+
+		$colours = array(
+			'54, 162, 235', // Blue
+			'75, 192, 192', // Teal
+			'86, 255, 97', // Green
+			'153, 102, 255', // Purple
+			//'201, 203, 207', // Grey
+			'252, 108,18', // Orange (dark)
+			'252, 221, 18', // Yellow (bright)
+			'255, 86, 86', // Red
+			'255, 99, 132', // Pink
+			'255, 159, 64', // Orange (medium)
+			'255, 205, 86', // Yellow (pale)
+		);
+
+		return $colours[ rand( 0, count( $colours ) - 1 ) ];
 
 	}
 

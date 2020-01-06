@@ -4,6 +4,7 @@ import { dateLocalToUTC, dateUTCtoLocal } from "./dates";
 import { apiRequest, spinButton, unspinButton } from 'utils';
 import { BDB_Datepicker } from './datepicker';
 import Chart from 'chart.js';
+import 'chartjs-plugin-labels';
 
 /**
  * Analytics
@@ -174,7 +175,7 @@ var BDB_Analytics = {
 
 		const letters = '0123456789ABCDEF'.split('');
 
-		if ( 'pie' === config.type ) {
+		/*if ( 'pie' === config.type ) {
 			for ( let dataSet = 0; dataSet < config.data.datasets.length; dataSet++ ) {
 				config.data.datasets[dataSet].backgroundColor = [];
 				config.data.datasets[dataSet].borderColor = '#ffffff';
@@ -192,7 +193,20 @@ var BDB_Analytics = {
 					config.data.datasets[dataSet].backgroundColor.push( colour );
 				}
 			}
-		}
+		}*/
+
+		/* Custom Tooltip */
+		config.options.tooltips = {
+			callbacks: {
+				label: function( tooltipItem, data ) {
+					const label = data.labels[ tooltipItem.index ];
+					const dataset = data.datasets[ tooltipItem.datasetIndex ];
+					const value = dataset.data[ tooltipItem.datasetIndex ];
+
+					return label + ' Pages - ' + value + ' Books';
+				}
+			}
+		};
 
 		console.log( config );
 

@@ -36,18 +36,22 @@ class Books_Per_Year extends Dataset {
 				'datasets' => array(),
 			),
 			'options' => array(
-				'title'               => array(
+				'title'      => array(
 					'text' => ''
 				),
-				'responsive'          => true,
+				'responsive' => true,
 				//'maintainAspectRatio' => false,
-				'legend'              => array(
+				'legend'     => array(
 					'display' => false
 				),
-				'scales'              => array(
+				'scales'     => array(
 					'xAxes' => array(
 						array(
-							'ticks' => array(
+							'scaleLabel' => array(
+								'display'     => true,
+								'labelString' => esc_html__( 'Number of Books Read', 'book-database' )
+							),
+							'ticks'      => array(
 								'min'       => 0,
 								'precision' => 0,
 							)
@@ -63,6 +67,11 @@ class Books_Per_Year extends Dataset {
 								'stepSize'    => 0
 							)
 						)
+					)
+				),
+				'plugins'    => array(
+					'labels' => array(
+						'render' => 'value',
 					)
 				)
 			)

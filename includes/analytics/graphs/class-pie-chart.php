@@ -31,7 +31,13 @@ class Pie_Chart extends Graph {
 				'labels'   => array(),
 				'datasets' => array()
 			),
-			'options' => array()
+			'options' => array(
+				'plugins' => array(
+					'labels' => array(
+						'render' => 'percentage',
+					)
+				)
+			)
 		) ) );
 
 	}

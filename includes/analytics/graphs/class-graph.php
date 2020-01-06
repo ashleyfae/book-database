@@ -80,6 +80,12 @@ class Graph {
 							)
 						)
 					)
+				),
+				'plugins' => array(
+					'labels' => array(
+						'render' => 'label',
+						//'overlap' => false
+					)
 				)
 			)
 		) );
@@ -98,6 +104,8 @@ class Graph {
 			$this->date_end   = new \DateTime( $end );
 			$this->date_start->setTimezone( get_site_timezone() );
 			$this->date_end->setTimezone( get_site_timezone() );
+
+			$this->set_timestamps();;
 		} catch ( \Exception $e ) {
 
 		}
@@ -137,6 +145,7 @@ class Graph {
 			/**
 			 * @var \DateTime $datetime
 			 */
+			error_log(var_export($datetime, true));
 
 			$this->timestamps[]             = $datetime->getTimestamp();
 			$this->args['data']['labels'][] = $datetime->format( $format );
@@ -189,7 +198,7 @@ class Graph {
 					break;
 
 				case 'month' :
-					$datetime->setDate( $datetime->format( 'Y' ), $datetime->format( 'M' ), 1 )->setTime( 0, 0, 0 );
+					$datetime->setDate( $datetime->format( 'Y' ), $datetime->format( 'm' ), 1 )->setTime( 0, 0, 0 );
 					break;
 
 				default :
@@ -198,6 +207,8 @@ class Graph {
 			}
 
 			$timestamp = $datetime->getTimestamp();
+			error_log(var_export($datetime, true));
+			error_log($timestamp);
 
 			if ( isset( $final_dates[ $timestamp ] ) ) {
 				$final_dates[ $timestamp ] = $value;

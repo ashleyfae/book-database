@@ -4,6 +4,8 @@
  *
  * Scatter plot
  *
+ * @todo Timezone
+ *
  * @package   book-database
  * @copyright Copyright (c) 2020, Ashley Gibson
  * @license   GPL2+
@@ -95,11 +97,10 @@ class Ratings_Over_Time extends Dataset {
 		}
 
 		$graph->add_dataset( array(
-			'fill'     => false,
-			'showLine' => false,
+			'fill'            => false,
+			'showLine'        => false,
 			'backgroundColor' => 'blue',
-			'borderColor' => 'blue',
-			'pointStyle' => 'circle'
+			'borderColor'     => 'blue',
 		), array_values( $formatted_results ), false );
 
 		$graph->set_labels( array_keys( $formatted_results ) );

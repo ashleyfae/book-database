@@ -64,7 +64,8 @@ class Books_Per_Year extends Dataset {
 								'beginAtZero' => true,
 								'min'         => 0,
 								'precision'   => 0,
-								'stepSize'    => 0
+								'stepSize'    => 0,
+								'reverse'     => true
 							)
 						)
 					)

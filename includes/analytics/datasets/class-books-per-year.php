@@ -31,39 +31,13 @@ class Books_Per_Year extends Dataset {
 	protected function _get_dataset() {
 
 		$graph = new Horizontal_Bar_Graph( array(
-			'data'    => array(
-				'labels'   => array(),
-				'datasets' => array(),
-			),
 			'options' => array(
-				'title'      => array(
-					'text' => ''
+				'chartArea'       => array(
+					'width'  => '95%',
+					'height' => '80%'
 				),
-				'responsive' => true,
-				//'maintainAspectRatio' => false,
-				'legend'     => array(
+				'legend'          => array(
 					'display' => false
-				),
-				'scales'     => array(
-					'xAxes' => array(
-						array(
-							'ticks' => array(
-								'min'       => 0,
-								'precision' => 0,
-							)
-						)
-					),
-					'yAxes' => array(
-						array(
-							'ticks' => array(
-								'autoSkip'    => false,
-								'beginAtZero' => true,
-								'min'         => 0,
-								'precision'   => 0,
-								'stepSize'    => 0
-							)
-						)
-					)
 				)
 			)
 		) );

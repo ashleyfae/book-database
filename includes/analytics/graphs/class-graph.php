@@ -51,7 +51,16 @@ class Graph {
 
 		$this->args = wp_parse_args( $args, array(
 			'type'    => $this->type,
-			'options' => array()
+			'options' => array(
+				'backgroundColor' => 'transparent',
+				'chartArea'       => array(
+					'width'  => '100%',
+					'height' => '80%'
+				),
+				'legend'          => array(
+					'position' => 'top'
+				)
+			)
 		) );
 
 	}

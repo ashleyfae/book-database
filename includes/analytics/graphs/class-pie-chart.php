@@ -35,6 +35,7 @@ class Pie_Chart extends Graph {
 				'plugins' => array(
 					'labels' => array(
 						'render' => 'percentage',
+						'overlap' => false
 					)
 				)
 			)

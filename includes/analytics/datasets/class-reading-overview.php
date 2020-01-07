@@ -92,6 +92,9 @@ class Reading_Overview extends Dataset {
 				$dates_finished    = explode( ',', $book_read->date_finished );
 				$this_book_rereads = 0;
 
+				/**
+				 * @todo fix this for "all time"
+				 */
 				foreach ( $dates_finished as $date_finished ) {
 					if ( $date_finished >= $this->date_start && $date_finished <= $this->date_end ) {
 						$this_book_rereads++;

@@ -1,5 +1,7 @@
 /* global $, bdbVars, wp */
 
+import flatpickr from "flatpickr";
+
 /**
  * Datepicker
  */
@@ -28,15 +30,21 @@ var BDB_Datepicker = {
 	 * Set datepickers
 	 */
 	setDatepickers: function() {
-		$( '.bdb-datepicker' ).datepicker( {
-			dateFormat: 'yy-mm-dd',
-			beforeShow: function() {
-				$( this ).datepicker( 'widget' ).addClass( 'bdb-datepicker-wrap' );
-			},
-			onClose: function() {
-				$( this ).datepicker( 'widget' ).removeClass( 'bdb-datepicker-wrap' );
-			}
-		} );
+		let dateField = $( '.bdb-datepicker' ),
+			config = {
+				allowInput: true,
+				altInput: true,
+				altFormat: 'F J, Y',
+				dateFormat: 'Y-m-d'
+			};
+
+		if ( dateField.hasClass( 'bdb-timepicker' ) ) {
+			config.enableTime = true;
+			config.dateFormat = 'Y-m-d H:i';
+			config.altFormat = 'F J, Y, h:i K';
+		}
+
+		dateField.flatpickr( config );
 	}
 
 };

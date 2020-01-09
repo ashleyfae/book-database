@@ -85,13 +85,13 @@ function enqueue_admin_global_assets( $hook ) {
 	}
 
 	// CSS
-	wp_enqueue_style( 'book-database-global', BDB_URL . 'assets/css/admin-style-global.min.css', array(), time() );
+	wp_enqueue_style( 'book-database-global', BDB_URL . 'assets/css/admin-style-global.min.css', array(), BDB_VERSION );
 
 	// JS
 	wp_register_script( 'moment', BDB_URL . 'assets/js/build/moment.min.js', array(), '2.24.0', true );
 
 	$deps = array( 'jquery', 'wp-util', 'moment' );
-	wp_enqueue_script( 'book-database-global', BDB_URL . 'assets/js/build/admin-global.min.js', $deps, time(), true );
+	wp_enqueue_script( 'book-database-global', BDB_URL . 'assets/js/build/admin-global.min.js', $deps, BDB_VERSION, true );
 
 	$localized = array(
 		'api_base'                          => esc_url_raw( rest_url() ),

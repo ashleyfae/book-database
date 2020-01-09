@@ -73,8 +73,19 @@
     }
 }
 
+.bdb-reading-log-progress-wrap {
+    display: flex;
+
+    input[type="number"] {
+        width: 100%;
+    }
+}
+
 .bdb-reading-log-percentage-complete {
     .bdb-input-suffix {
+        display: block;
+        padding: 0 12px;
+
         &:not(.bdb-input-suffix-selected) {
             background: white;
             color: #b5b4b4;
@@ -83,6 +94,10 @@
                 background: #f2f2f2;
                 color: #6d6d6d;
             }
+        }
+
+        @media screen and (max-width: 782px) {
+            line-height: 38px;
         }
     }
 
@@ -101,6 +116,11 @@
         color: #a8a8a8;
         line-height: 30px;
         position: absolute;
-        right: 33px;
+        right: 28px;
+        top: 0;
+
+        @media screen and (max-width: 782px) {
+            line-height: 40px;
+        }
     }
 }

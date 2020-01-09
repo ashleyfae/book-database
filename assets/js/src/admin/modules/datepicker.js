@@ -28,13 +28,18 @@ var BDB_Datepicker = {
 
 	/**
 	 * Set datepickers
+	 *
+	 * altInput is disabled because when it's enabled it breaks the ability to
+	 * manually delete the input value and have that reflected in the DOM.
+	 * @link https://github.com/nosegraze/book-database/issues/194
+	 * @link https://github.com/flatpickr/flatpickr/issues/1910
 	 */
 	setDatepickers: function() {
 		let dateField = $( '.bdb-datepicker' ),
 			config = {
 				allowInput: true,
-				altInput: true,
-				altFormat: 'F J, Y',
+				//altInput: true,
+				//altFormat: 'F J, Y',
 				dateFormat: 'Y-m-d'
 			};
 

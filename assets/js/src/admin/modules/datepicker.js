@@ -32,6 +32,7 @@ var BDB_Datepicker = {
 	setDatepickers: function() {
 		let dateField = $( '.bdb-datepicker' ),
 			config = {
+				allowInput: true,
 				altInput: true,
 				altFormat: 'F J, Y',
 				dateFormat: 'Y-m-d'

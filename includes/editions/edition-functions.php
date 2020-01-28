@@ -203,6 +203,7 @@ function get_book_formats() {
 
 	$formats = array(
 		'arc'       => __( 'ARC', 'book-database' ),
+		'audiobook' => __( 'Audiobook', 'book-database' ),
 		'earc'      => __( 'eARC', 'book-database' ),
 		'ebook'     => __( 'eBook', 'book-database' ),
 		'hardcover' => __( 'Hardcover', 'book-database' ),

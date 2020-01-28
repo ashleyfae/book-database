@@ -18,6 +18,8 @@ class Reading_Log extends Base_Object {
 
 	protected $book_id = 0;
 
+	protected $edition_id = null;
+
 	protected $user_id = 0;
 
 	protected $date_started = '';

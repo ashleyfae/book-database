@@ -107,7 +107,7 @@ var BDB_Reading_Logs = {
 				const selectEditionWrap = $( '#bdb-new-log-edition-id-wrap' );
 				const selectEditionDropdown = $( '#bdb-new-log-edition-id' );
 
-				selectEditionDropdown.empty();
+				selectEditionDropdown.empty().append( '<option value="">' + bdbVars.none + '</option>' );
 
 				$.each( BDB_Reading_Logs.editions, function( key, edition ) {
 					selectEditionDropdown.append( '<option value="' + edition.id + '">' + edition.isbn + ' - ' + edition.format_name + '</option>' );
@@ -135,7 +135,7 @@ var BDB_Reading_Logs = {
 					const editionList = $( this );
 					const selectedEdition = editionList.data( 'selected' );
 
-					editionList.empty().append( '<option value="">None</option>' );
+					editionList.empty().append( '<option value="">' + bdbVars.none + '</option>' );
 
 					$.each( BDB_Reading_Logs.editions, function( key, edition ) {
 						let selected = edition.id == selectedEdition ? ' selected="selected"' : '';

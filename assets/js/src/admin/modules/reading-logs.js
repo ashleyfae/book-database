@@ -24,6 +24,8 @@ var BDB_Reading_Logs = {
 
 	userFilter: false,
 
+	editions: [],
+
 	/**
 	 * Initialize
 	 */
@@ -40,6 +42,7 @@ var BDB_Reading_Logs = {
 		}
 
 		this.maxPages = $( '#bdb-book-pages' ).val();
+		this.loadEditions();
 		$( '#bdb-add-reading-log' ).on( 'click', this.toggleNewLogFields );
 		$( '#bdb-submit-new-reading-log' ).on( 'click', this.addLog );
 		$( document ).on( 'click', '.bdb-reading-log-toggle-editable', this.toggleEditableFields );
@@ -74,6 +77,15 @@ var BDB_Reading_Logs = {
 	},
 
 	/**
+	 * Load editions
+	 *
+	 * @returns {Promise}
+	 */
+	loadEditions: function () {
+		return apiRequest( 'v1/edition', { book_id: BDB_Reading_Logs.bookID, number: 50 }, 'GET' );
+	},
+
+	/**
 	 * Get the reading logs
 	 */
 	getLogs: function() {
@@ -87,7 +99,25 @@ var BDB_Reading_Logs = {
 			args.user_id = BDB_Reading_Logs.userID;
 		}
 
-		apiRequest( 'v1/reading-log', args, 'GET' ).then( function( response ) {
+		BDB_Reading_Logs.loadEditions().then( function( editions ) {
+			BDB_Reading_Logs.editions = editions;
+
+			// Populate editions in "New Log".
+			if ( BDB_Reading_Logs.editions.length ) {
+				const selectEditionWrap = $( '#bdb-new-log-edition-id-wrap' );
+				const selectEditionDropdown = $( '#bdb-new-log-edition-id' );
+
+				selectEditionDropdown.empty();
+
+				$.each( BDB_Reading_Logs.editions, function( key, edition ) {
+					selectEditionDropdown.append( '<option value="' + edition.id + '">' + edition.isbn + ' - ' + edition.format_name + '</option>' );
+				} );
+
+				selectEditionWrap.show();
+			}
+
+			return apiRequest( 'v1/reading-log', args, 'GET' );
+		} ).then( function( response ) {
 
 			BDB_Reading_Logs.tableBody.empty();
 
@@ -99,6 +129,19 @@ var BDB_Reading_Logs = {
 					readingLog = BDB_Reading_Logs.shapeObject( readingLog );
 
 					BDB_Reading_Logs.tableBody.append( BDB_Reading_Logs.rowTemplate( readingLog ) );
+				} );
+
+				BDB_Reading_Logs.tableBody.find( '.bdb-book-edition-list' ).each( function() {
+					const editionList = $( this );
+					const selectedEdition = editionList.data( 'selected' );
+
+					editionList.empty().append( '<option value="">None</option>' );
+
+					$.each( BDB_Reading_Logs.editions, function( key, edition ) {
+						let selected = edition.id == selectedEdition ? ' selected="selected"' : '';
+
+						editionList.append( '<option value="' + edition.id + '"' + selected + '>' + edition.isbn + ' - ' + edition.format_name + '</option>' );
+					} );
 				} );
 			}
 

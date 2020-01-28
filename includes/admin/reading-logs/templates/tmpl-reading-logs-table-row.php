@@ -44,6 +44,23 @@ namespace Book_Database;
 		</div>
 	</td>
 
+	<td class="bdb-reading-log-edition" data-colname="<?php esc_attr_e( 'Edition', 'book-database' ); ?>">
+		<div class="bdb-table-display-value">
+			<# if ( data.edition ) { #>
+			{{ data.edition.isbn }}
+			<# } else { #>
+			&ndash;
+			<# } #>
+		</div>
+
+		<div class="bdb-table-edit-value">
+			<label for="bdb-reading-log-edition-id-{{ data.id }}" class="screen-reader-text"><?php _e( 'Edition', 'book-database' ); ?></label>
+			<select id="bdb-reading-log-edition-id-{{ data.id }}" class="bdb-book-edition-list" data-selected="{{ data.edition_id }}">
+				<option value=""><?php _e( 'None', 'book-database' ); ?></option>
+			</select>
+		</div>
+	</td>
+
 	<td class="bdb-reading-log-review-id" data-colname="<?php esc_attr_e( 'Review ID', 'book-database' ); ?>">
 		<div class="bdb-table-display-value">
 			<# if ( data.review_id && '0' !== data.review_id ) { #>

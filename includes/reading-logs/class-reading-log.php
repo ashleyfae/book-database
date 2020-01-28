@@ -40,6 +40,15 @@ class Reading_Log extends Base_Object {
 	}
 
 	/**
+	 * Get the ID of the associated edition
+	 *
+	 * @return int|null
+	 */
+	public function get_edition_id() {
+		return ! empty( $this->edition_id ) ? absint( $this->edition_id ) : null;
+	}
+
+	/**
 	 * Get the ID of the user who made this entry
 	 *
 	 * @return int
@@ -129,6 +138,10 @@ class Reading_Log extends Base_Object {
 
 		$vars['is_complete'] = $this->is_complete();
 		$vars['is_dnf']      = $this->is_dnf();
+
+		// Get the edition.
+		$edition         = $this->get_edition_id() ? get_edition( $this->get_edition_id() ) : null;
+		$vars['edition'] = $edition instanceof Edition ? $edition->export_vars() : null;
 
 		// Get the review ID.
 		$review = get_review_by( 'reading_log_id', $this->get_id() );

@@ -37,6 +37,7 @@ function reading_logs_table( $book ) {
 				<tr>
 					<th class="column-primary"><?php _e( 'Date Started', 'book-database' ); ?></th>
 					<th><?php _e( 'Date Finished', 'book-database' ); ?></th>
+					<th><?php _e( 'Edition', 'book-database' ); ?></th>
 					<th><?php _e( 'Review ID', 'book-database' ); ?></th>
 					<th><?php _e( 'User ID', 'book-database' ); ?></th>
 					<th><?php _e( '% Complete', 'book-database' ); ?></th>
@@ -46,13 +47,13 @@ function reading_logs_table( $book ) {
 				</thead>
 				<tbody>
 				<tr>
-					<td colspan="7"><?php _e( 'Loading...', 'book-database' ); ?></td>
+					<td colspan="8"><?php _e( 'Loading...', 'book-database' ); ?></td>
 				</tr>
 				</tbody>
 				<?php if ( user_can_edit_books() ) : ?>
 					<tfoot>
 					<tr>
-						<td colspan="7">
+						<td colspan="8">
 							<button type="button" id="bdb-add-reading-log" class="button"><?php _e( 'Add Reading Log', 'book-database' ); ?></button>
 						</td>
 					</tr>
@@ -62,6 +63,15 @@ function reading_logs_table( $book ) {
 
 			<?php if ( user_can_edit_books() ) : ?>
 				<div id="bdb-new-reading-log-fields">
+					<div id="bdb-new-log-edition-id-wrap" class="bdb-meta-row" style="display: none;">
+						<label for="bdb-new-log-edition-id"><?php _e( 'Edition', 'book-database' ); ?></label>
+						<div class="bdb-meta-value">
+							<select id="bdb-new-log-edition-id" class="bdb-book-edition-list">
+								<option value=""><?php _e( 'Loading...', 'book-database' ); ?></option>
+							</select>
+							<p class="description"><?php _e( 'Edition that you read (optional).', 'book-database' ); ?></p>
+						</div>
+					</div>
 					<div class="bdb-meta-row">
 						<label for="bdb-new-log-start-date"><?php _e( 'Start Date', 'book-database' ); ?></label>
 						<div class="bdb-meta-value">

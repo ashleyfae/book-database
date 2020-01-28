@@ -50,6 +50,8 @@ var BDB_Reading_Logs = {
 		$( document ).on( 'click', '.bdb-update-reading-log', this.updateLog );
 		$( document ).on( 'click', '.bdb-remove-reading-log', this.removeLog );
 
+		$( document ).on( 'bdb_reading_log_added', this.fillLogEditions );
+
 		this.userFilter.on( 'change', this.getLogs );
 		this.userFilter.trigger( 'change' );
 
@@ -132,16 +134,7 @@ var BDB_Reading_Logs = {
 				} );
 
 				BDB_Reading_Logs.tableBody.find( '.bdb-book-edition-list' ).each( function() {
-					const editionList = $( this );
-					const selectedEdition = editionList.data( 'selected' );
-
-					editionList.empty().append( '<option value="">' + bdbVars.none + '</option>' );
-
-					$.each( BDB_Reading_Logs.editions, function( key, edition ) {
-						let selected = edition.id == selectedEdition ? ' selected="selected"' : '';
-
-						editionList.append( '<option value="' + edition.id + '"' + selected + '>' + edition.isbn + ' - ' + edition.format_name + '</option>' );
-					} );
+					BDB_Reading_Logs.fillLogEditions( $( this ) );
 				} );
 			}
 
@@ -169,6 +162,27 @@ var BDB_Reading_Logs = {
 	},
 
 	/**
+	 * Fill the log editions for a specific <select> dropdown.
+	 *
+	 * @param editionList
+	 */
+	fillLogEditions: function ( editionList ) {
+
+		console.log( 'Fill log editions list', editionList );
+
+		const selectedEdition = editionList.data( 'selected' );
+
+		editionList.empty().append( '<option value="">' + bdbVars.none + '</option>' );
+
+		$.each( BDB_Reading_Logs.editions, function( key, edition ) {
+			let selected = edition.id == selectedEdition ? ' selected="selected"' : '';
+
+			editionList.append( '<option value="' + edition.id + '"' + selected + '>' + edition.isbn + ' - ' + edition.format_name + '</option>' );
+		} );
+
+	},
+
+	/**
 	 * Add a new reading log
 	 *
 	 * @param e
@@ -188,8 +202,11 @@ var BDB_Reading_Logs = {
 			percentage = 0;
 		}
 
+		const selectedEditionID = $( '#bdb-new-log-edition-id' ).val();
+
 		let args = {
 			book_id: BDB_Reading_Logs.bookID,
+			edition_id: selectedEditionID.length > 0 ? selectedEditionID : null,
 			user_id: BDB_Reading_Logs.userID,
 			date_started: dateLocalToUTC( $( '#bdb-new-log-start-date' ).val() ),
 			date_finished: dateLocalToUTC( $( '#bdb-new-log-end-date' ).val() ),
@@ -203,6 +220,12 @@ var BDB_Reading_Logs = {
 			$( '#bdb-book-reading-logs-empty' ).remove();
 
 			BDB_Reading_Logs.tableBody.append( BDB_Reading_Logs.rowTemplate( apiResponse ) );
+
+			const editionDropdown = $( '#bdb-reading-log-edition-id-' + apiResponse.id );
+			console.log( 'Edition Dropdown', editionDropdown );
+			if ( editionDropdown.length ) {
+				BDB_Reading_Logs.fillLogEditions( editionDropdown );
+			}
 
 			// Wipe new field values.
 			let newFieldsWrap = $( '#bdb-new-reading-log-fields' );
@@ -311,9 +334,12 @@ var BDB_Reading_Logs = {
 			}
 		}
 
+		const selectedEditionID = wrap.find( '.bdb-book-edition-list' ).val();
+
 		let args = {
 			date_started: dateLocalToUTC( wrap.find( '.bdb-reading-log-date-started input' ).val() ),
 			date_finished: dateLocalToUTC( wrap.find( '.bdb-reading-log-date-finished input' ).val() ),
+			edition_id: selectedEditionID.length > 0 ? selectedEditionID : null,
 			user_id: wrap.find( '.bdb-reading-log-user-id input' ).val(),
 			percentage_complete: percentage,
 			rating: wrap.find( '.bdb-reading-log-rating select' ).val()

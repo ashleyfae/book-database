@@ -104,6 +104,14 @@ class Reading_Log extends Controller {
 						return absint( $param );
 					}
 				),
+				'edition_id'          => array(
+					'validate_callback' => function ( $param, $request, $key ) {
+						return is_numeric( $param ) || empty( $param );
+					},
+					'sanitize_callback' => function ( $param, $request, $key ) {
+						return ! empty( $param ) ? absint( $param ) : null;
+					}
+				),
 				'user_id'             => array(
 					'required'          => true,
 					'validate_callback' => function ( $param, $request, $key ) {

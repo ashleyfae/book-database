@@ -189,6 +189,14 @@ class Reading_Log extends Controller {
 						return absint( $param );
 					}
 				),
+				'edition_id'          => array(
+					'validate_callback' => function ( $param, $request, $key ) {
+						return is_numeric( $param ) || empty( $param );
+					},
+					'sanitize_callback' => function ( $param, $request, $key ) {
+						return ! empty( $param ) ? absint( $param ) : null;
+					}
+				),
 				'user_id'             => array(
 					'validate_callback' => function ( $param, $request, $key ) {
 						return is_numeric( $param );
@@ -333,6 +341,7 @@ class Reading_Log extends Controller {
 		try {
 			$whitelist = array(
 				'book_id',
+				'edition_id',
 				'user_id',
 				'date_started',
 				'date_finished',

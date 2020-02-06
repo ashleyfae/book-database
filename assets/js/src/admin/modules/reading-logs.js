@@ -2,6 +2,7 @@
 
 import { apiRequest, spinButton, unspinButton } from 'utils';
 import { dateLocalToUTC, dateUTCtoLocal } from "./dates";
+import { fillEditionsDropdown } from "./editions";
 
 /**
  * Editions
@@ -42,7 +43,6 @@ var BDB_Reading_Logs = {
 		}
 
 		this.maxPages = $( '#bdb-book-pages' ).val();
-		this.loadEditions();
 		$( '#bdb-add-reading-log' ).on( 'click', this.toggleNewLogFields );
 		$( '#bdb-submit-new-reading-log' ).on( 'click', this.addLog );
 		$( document ).on( 'click', '.bdb-reading-log-toggle-editable', this.toggleEditableFields );
@@ -50,10 +50,11 @@ var BDB_Reading_Logs = {
 		$( document ).on( 'click', '.bdb-update-reading-log', this.updateLog );
 		$( document ).on( 'click', '.bdb-remove-reading-log', this.removeLog );
 
-		$( document ).on( 'bdb_reading_log_added', this.fillLogEditions );
-
 		this.userFilter.on( 'change', this.getLogs );
 		this.userFilter.trigger( 'change' );
+
+		// Update editions array.
+		$( document ).on( 'bdb_edition_added', this.updateEditions );
 
 	},
 
@@ -134,7 +135,7 @@ var BDB_Reading_Logs = {
 				} );
 
 				BDB_Reading_Logs.tableBody.find( '.bdb-book-edition-list' ).each( function() {
-					BDB_Reading_Logs.fillLogEditions( $( this ) );
+					fillEditionsDropdown( $( this ), BDB_Reading_Logs.editions );
 				} );
 			}
 
@@ -158,27 +159,6 @@ var BDB_Reading_Logs = {
 		}
 
 		$( '#bdb-new-reading-log-fields' ).slideToggle();
-
-	},
-
-	/**
-	 * Fill the log editions for a specific <select> dropdown.
-	 *
-	 * @param editionList
-	 */
-	fillLogEditions: function ( editionList ) {
-
-		console.log( 'Fill log editions list', editionList );
-
-		const selectedEdition = editionList.data( 'selected' );
-
-		editionList.empty().append( '<option value="">' + bdbVars.none + '</option>' );
-
-		$.each( BDB_Reading_Logs.editions, function( key, edition ) {
-			let selected = edition.id == selectedEdition ? ' selected="selected"' : '';
-
-			editionList.append( '<option value="' + edition.id + '"' + selected + '>' + edition.isbn + ' - ' + edition.format_name + '</option>' );
-		} );
 
 	},
 
@@ -222,9 +202,8 @@ var BDB_Reading_Logs = {
 			BDB_Reading_Logs.tableBody.append( BDB_Reading_Logs.rowTemplate( apiResponse ) );
 
 			const editionDropdown = $( '#bdb-reading-log-edition-id-' + apiResponse.id );
-			console.log( 'Edition Dropdown', editionDropdown );
 			if ( editionDropdown.length ) {
-				BDB_Reading_Logs.fillLogEditions( editionDropdown );
+				fillEditionsDropdown( editionDropdown, BDB_Reading_Logs.editions );
 			}
 
 			// Wipe new field values.
@@ -348,6 +327,12 @@ var BDB_Reading_Logs = {
 		apiRequest( 'v1/reading-log/update/' + wrap.data( 'id' ), args, 'POST' ).then( function( apiResponse ) {
 			apiResponse = BDB_Reading_Logs.shapeObject( apiResponse );
 			wrap.replaceWith( BDB_Reading_Logs.rowTemplate( apiResponse ) );
+
+			const editionDropdown = $( '#bdb-reading-log-edition-id-' + apiResponse.id );
+			if ( editionDropdown.length ) {
+				fillEditionsDropdown( editionDropdown, BDB_Reading_Logs.editions );
+			}
+
 			$( document ).trigger( 'bdb_reading_log_updated', apiResponse );
 		} ).catch( function( errorMessage ) {
 			BDB_Reading_Logs.errorWrap.append( errorMessage ).show();
@@ -386,6 +371,16 @@ var BDB_Reading_Logs = {
 			unspinButton( button );
 		} );
 
+	},
+
+	/**
+	 * When a new edition is added, insert it into our array
+	 *
+	 * @param e
+	 * @param {object} newEdition
+	 */
+	updateEditions: function ( e, newEdition ) {
+		BDB_Reading_Logs.editions.push( newEdition );
 	}
 
 };

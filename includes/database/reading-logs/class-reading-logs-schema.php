@@ -52,7 +52,8 @@ class Reading_Logs_Schema extends BerlinDB\Database\Schema {
 			'unsigned'   => true,
 			'sortable'   => true,
 			'allow_null' => true,
-			'default'    => null
+			'default'    => null,
+			'validate'   => '\Book_Database\BerlinDB\Sanitization\absint_allow_null'
 		),
 
 		// user_id

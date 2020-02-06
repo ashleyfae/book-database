@@ -12,7 +12,6 @@ namespace Book_Database\REST_API\v1;
 use Book_Database\Exception;
 use Book_Database\REST_API\Controller;
 use function Book_Database\add_reading_log;
-use function Book_Database\book_database;
 use function Book_Database\delete_reading_log;
 use function Book_Database\get_available_ratings;
 use function Book_Database\get_edition;

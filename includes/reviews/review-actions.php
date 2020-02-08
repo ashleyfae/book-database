@@ -40,7 +40,7 @@ function sync_review_publish_date( $new_status, $old_status, $post ) {
 			return;
 		}
 
-		$post_date = get_the_date( 'Y-m-d H:i:s', $post->ID );
+		$post_date = date( 'Y-m-d H:i:s', strtotime( $post->post_date_gmt ) );
 
 		foreach ( $reviews as $review ) {
 			try {

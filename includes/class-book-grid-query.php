@@ -127,6 +127,11 @@ class Book_Grid_Query extends Book_Reviews_Query {
 			);
 		}
 
+		// Include review link (left join).
+		if ( ! empty( $atts['show-review-link'] ) ) {
+			$this->args['include_review'] = true;
+		}
+
 		// Review dates.
 		if ( ! empty( $atts['review-date-after'] ) || ! empty( $atts['review-date-before'] ) ) {
 			$date_query = array();

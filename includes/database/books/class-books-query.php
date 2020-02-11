@@ -98,6 +98,7 @@ class Books_Query extends BerlinDB\Database\Query {
 			'orderby'           => 'book.id',
 			'order'             => 'DESC',
 			'include_rating'    => true,
+			'include_review'    => false, // Whether or not to always include review data.
 			'number'            => 20,
 			'offset'            => 0,
 			'count'             => false
@@ -176,6 +177,9 @@ class Books_Query extends BerlinDB\Database\Query {
 			$clause_engine->set_table_query( new Reviews_Query() );
 			$clause_engine->set_args( $args['review_query'] );
 			$where = array_merge( $where, $clause_engine->get_clauses() );
+		} elseif ( ! empty( $args['include_review'] ) ) {
+			// Include review data, but as a LEFT JOIN.
+			$join['review_query'] = "LEFT JOIN {$tbl_reviews} AS review ON (book.id = review.book_id)";
 		}
 
 		// Unread books only
@@ -201,7 +205,7 @@ class Books_Query extends BerlinDB\Database\Query {
 		}
 
 		// Select review data if we have a review query.
-		if ( ! empty( $args['review_query'] ) && ! empty( $join['review_query'] ) ) {
+		if ( ( ! empty( $args['review_query'] ) || ! empty( $args['include_review'] ) ) && ! empty( $join['review_query'] ) ) {
 			$select[] = 'review.id AS review_id, review.user_id AS review_user_id, review.post_id AS review_post_id, review.url AS review_url, review.date_written AS review_date_written, review.date_published AS review_date_published';
 		}
 

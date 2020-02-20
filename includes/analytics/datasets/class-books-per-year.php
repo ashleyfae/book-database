@@ -32,13 +32,11 @@ class Books_Per_Year extends Dataset {
 
 		$graph = new Horizontal_Bar_Graph( array(
 			'options' => array(
-				'chartArea'       => array(
+				'chartArea' => array(
 					'width'  => '95%',
 					'height' => '80%'
 				),
-				'legend'          => array(
-					'position' => 'top'
-				)
+				'legend'    => 'none'
 			)
 		) );
 

@@ -43,7 +43,6 @@ class Ratings_Breakdown extends Dataset {
 				'id'      => 'rating',
 				'label'   => esc_html__( 'Rating', 'book-database' ),
 				'type'    => 'string',
-				'display' => esc_html__( '%s Stars', 'book-database' )
 			),
 			array(
 				'id'      => 'count',

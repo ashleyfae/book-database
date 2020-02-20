@@ -20,7 +20,7 @@ function ratings() {
 		<section class="bdb-analytics-block bdb-dataset-type-table bdb-flexbox-third" data-dataset="Ratings_Breakdown" data-canvas="bdb-dataset-ratings-breakdown">
 			<h3><?php _e( 'Ratings Breakdown', 'book-database' ); ?></h3>
 			<div>
-				<canvas id="bdb-dataset-ratings-breakdown"></canvas>
+				<div id="bdb-dataset-ratings-breakdown"></div>
 			</div>
 		</section>
 
@@ -77,13 +77,6 @@ function ratings() {
 				<?php require_once BDB_DIR . 'includes/admin/analytics/templates/tmpl-lowest-rated-books-none.php'; ?>
 			</script>
 		</section>
-	</div>
-
-	<div class="bdb-analytics-block bdb-dataset-type-graph bdb-flexbox-full" data-dataset="Ratings_Over_Time" data-canvas="bdb-dataset-ratings-over-time">
-		<h3><?php _e( 'Ratings Over Time', 'book-database' ); ?></h3>
-		<div>
-			<canvas id="bdb-dataset-ratings-over-time"></canvas>
-		</div>
 	</div>
 	<?php
 }

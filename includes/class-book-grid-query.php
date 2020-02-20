@@ -57,7 +57,7 @@ class Book_Grid_Query extends Book_Reviews_Query {
 		if ( ! empty( $atts['rating'] ) ) {
 			$this->args['reading_log_query'][] = array(
 				'field' => 'rating',
-				'value' => floatval( $atts['series'] )
+				'value' => floatval( $atts['rating'] )
 			);
 		}
 

@@ -65,6 +65,12 @@ class Editions_Over_Time extends Dataset {
 
 		$graph->set_range( $start, $end );
 
+		try {
+			$graph->set_timestamps();
+		} catch ( \Exception $e ) {
+			return $graph->get_args();
+		}
+
 		// Figure out our group by, based on the date interval.
 		if ( 'month' === $graph->get_interval() ) {
 			$groupby = "YEAR(date_acquired), MONTH(date_acquired)";
@@ -72,25 +78,21 @@ class Editions_Over_Time extends Dataset {
 			$groupby = "YEAR(date_acquired), MONTH(date_acquired), DAY(date_acquired)";
 		}
 
-		$raw_rows = $this->get_db()->get_results(
-			"SELECT date_acquired, COUNT(id) AS number_books
+		$query = "SELECT date_acquired, COUNT(id) AS number_books
 			FROM {$tbl_editions}
 			WHERE date_acquired IS NOT NULL
 			{$this->get_date_condition( 'date_acquired', 'date_acquired' )}
 			GROUP BY {$groupby}
-			ORDER BY date_acquired ASC;"
-		);
+			ORDER BY date_acquired ASC;";
+
+		$this->log( $query, __CLASS__ );
+
+		$raw_rows = $this->get_db()->get_results( $query );
 
 		$result_array = array();
 
 		foreach ( $raw_rows as $row ) {
 			$result_array[ $row->date_acquired ] = absint( $row->number_books );
-		}
-
-		try {
-			$graph->set_timestamps();
-		} catch ( \Exception $e ) {
-			return $graph->get_args();
 		}
 
 		// Now convert back to objects.

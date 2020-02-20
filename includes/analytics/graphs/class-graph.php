@@ -103,7 +103,7 @@ class Graph {
 
 		$diff = $this->date_start->diff( $this->date_end );
 
-		if ( $diff->days >= 230 ) {
+		if ( $diff->days >= 65 ) {
 			$this->interval         = 'month';
 			$period                 = new \DatePeriod( $this->date_start, new \DateInterval( 'P1M' ), $this->date_end );
 			$this->timestamp_format = 'M Y';
@@ -118,8 +118,7 @@ class Graph {
 			 * @var \DateTime $datetime
 			 */
 
-			$this->timestamps[]             = $datetime->format( $this->timestamp_format );
-			$this->args['data']['labels'][] = $datetime->format( $this->timestamp_format );
+			$this->timestamps[] = $datetime->format( $this->timestamp_format );
 		}
 
 	}

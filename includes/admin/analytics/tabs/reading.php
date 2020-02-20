@@ -49,6 +49,13 @@ function reading() {
 				<div id="bdb-dataset-pages-breakdown"></div>
 			</div>
 		</section>
+
+		<section class="bdb-analytics-block bdb-dataset-type-table bdb-flexbox-half" data-dataset="Format_Breakdown" data-canvas="bdb-dataset-format-breakdown">
+			<h3><?php _e( 'Format Breakdown', 'book-database' ); ?></h3>
+			<div>
+				<div id="bdb-dataset-format-breakdown"></div>
+			</div>
+		</section>
 	</div>
 	<?php
 }

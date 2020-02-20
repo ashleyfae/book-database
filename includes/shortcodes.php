@@ -76,6 +76,8 @@ function book_reviews_shortcode( $atts, $content = '' ) {
 		'cover-size'  => 'medium'
 	), $atts, 'book-reviews' );
 
+	$atts['hide-future'] = filter_var( $atts['hide-future'], FILTER_VALIDATE_BOOLEAN );
+
 	$query   = new Book_Reviews_Query( $atts );
 	$filters = explode( ' ', $atts['filters'] );
 
@@ -325,6 +327,12 @@ function book_grid_shortcode( $atts, $content = '' ) {
 	}
 
 	$atts = shortcode_atts( $default_atts, $atts, 'book-grid' );
+
+	// Validate booleans.
+	$booleans = array( 'reviews-only', 'show-ratings', 'show-pub-date', 'show-goodreads-link', 'show-purchase-links', 'show-review-link' );
+	foreach ( $booleans as $boolean ) {
+		$atts[ $boolean ] = filter_var( $atts[ $boolean ], FILTER_VALIDATE_BOOLEAN );
+	}
 
 	// Replace "review-start-date" and "review-end-date".
 	if ( ! empty( $atts['review-start-date'] ) ) {

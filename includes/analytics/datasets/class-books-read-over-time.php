@@ -1,6 +1,6 @@
 <?php
 /**
- * Dataset: Editions Acquired Over Time
+ * Dataset: Books Read Over Time
  *
  * @package   book-database
  * @copyright Copyright (c) 2020, Ashley Gibson
@@ -12,16 +12,16 @@ namespace Book_Database\Analytics;
 use function Book_Database\book_database;
 
 /**
- * Class Editions_Over_Time
+ * Class Books_Read_Over_Time
  *
  * @package Book_Database\Analytics
  */
-class Editions_Over_Time extends Dataset {
+class Books_Read_Over_Time extends Dataset {
 
 	protected $type = 'graph';
 
 	/**
-	 * Graph editions acquired over time
+	 * Graph books read over time
 	 *
 	 * @return array Array of Chart settings.
 	 */
@@ -36,27 +36,27 @@ class Editions_Over_Time extends Dataset {
 				),
 				'legend'    => 'none',
 				'hAxis'     => array(
-					'title' => __( 'Date Acquired', 'book-database' )
+					'title' => __( 'Date Finished', 'book-database' )
 				)
 			)
 		) );
 
-		$tbl_editions = book_database()->get_table( 'editions' )->get_table_name();
+		$tbl_log = book_database()->get_table( 'reading_log' )->get_table_name();
 
 		if ( ! empty( $this->date_start ) && ! empty( $this->date_end ) ) {
 			$start = $this->date_start;
 			$end   = $this->date_end;
 		} else {
 			$start = $this->get_db()->get_var(
-				"SELECT date_acquired FROM {$tbl_editions}
-				WHERE date_acquired IS NOT NULL 
-				ORDER BY date_acquired ASC LIMIT 1"
+				"SELECT date_finished FROM {$tbl_log}
+				WHERE date_finished IS NOT NULL 
+				ORDER BY date_finished ASC LIMIT 1"
 			);
 
 			$end = $this->get_db()->get_var(
-				"SELECT date_acquired FROM {$tbl_editions}
-				WHERE date_acquired IS NOT NULL 
-				ORDER BY date_acquired DESC LIMIT 1"
+				"SELECT date_finished FROM {$tbl_log}
+				WHERE date_finished IS NOT NULL 
+				ORDER BY date_finished DESC LIMIT 1"
 			);
 		}
 
@@ -70,17 +70,17 @@ class Editions_Over_Time extends Dataset {
 
 		// Figure out our group by, based on the date interval.
 		if ( 'month' === $graph->get_interval() ) {
-			$groupby = "YEAR(date_acquired), MONTH(date_acquired)";
+			$groupby = "YEAR(date_finished), MONTH(date_finished)";
 		} else {
-			$groupby = "YEAR(date_acquired), MONTH(date_acquired), DAY(date_acquired)";
+			$groupby = "YEAR(date_finished), MONTH(date_finished), DAY(date_finished)";
 		}
 
-		$query = "SELECT date_acquired, COUNT(id) AS number_books
-			FROM {$tbl_editions}
-			WHERE date_acquired IS NOT NULL
-			{$this->get_date_condition( 'date_acquired', 'date_acquired' )}
+		$query = "SELECT date_finished, COUNT(id) AS number_books
+			FROM {$tbl_log}
+			WHERE date_finished IS NOT NULL
+			{$this->get_date_condition( 'date_finished', 'date_finished' )}
 			GROUP BY {$groupby}
-			ORDER BY date_acquired ASC;";
+			ORDER BY date_finished ASC;";
 
 		$this->log( $query, __CLASS__ );
 
@@ -89,7 +89,7 @@ class Editions_Over_Time extends Dataset {
 		$result_array = array();
 
 		foreach ( $raw_rows as $row ) {
-			$result_array[ $row->date_acquired ] = absint( $row->number_books );
+			$result_array[ $row->date_finished ] = absint( $row->number_books );
 		}
 
 		// Now convert back to objects.
@@ -109,7 +109,7 @@ class Editions_Over_Time extends Dataset {
 			),
 			array(
 				'id'    => 'number_books',
-				'label' => esc_html__( 'Editions Added', 'book-database' ),
+				'label' => esc_html__( 'Books Read', 'book-database' ),
 				'type'  => 'number',
 			)
 		);

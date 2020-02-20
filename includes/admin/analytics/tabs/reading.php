@@ -75,6 +75,13 @@ function reading() {
 			</div>
 		</section>
 	</div>
+
+	<div class="bdb-analytics-block bdb-dataset-type-graph bdb-flexbox-full" data-dataset="Books_Read_Over_Time" data-canvas="bdb-dataset-books-read-over-time">
+		<h3><?php _e( 'Books Read Over Time', 'book-database' ); ?></h3>
+		<div>
+			<div id="bdb-dataset-books-read-over-time"></div>
+		</div>
+	</div>
 	<?php
 }
 

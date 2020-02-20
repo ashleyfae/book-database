@@ -258,26 +258,6 @@ class Graph {
 		}
 	}
 
-	protected function random_colour() {
-
-		$colours = array(
-			'54, 162, 235', // Blue
-			'75, 192, 192', // Teal
-			'86, 255, 97', // Green
-			'153, 102, 255', // Purple
-			//'201, 203, 207', // Grey
-			'252, 108,18', // Orange (dark)
-			'252, 221, 18', // Yellow (bright)
-			'255, 86, 86', // Red
-			'255, 99, 132', // Pink
-			'255, 159, 64', // Orange (medium)
-			'255, 205, 86', // Yellow (pale)
-		);
-
-		return $colours[ rand( 0, count( $colours ) - 1 ) ];
-
-	}
-
 	/**
 	 * Get all the arguments
 	 *

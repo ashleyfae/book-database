@@ -37,7 +37,7 @@ class Books_Per_Year extends Dataset {
 					'height' => '80%'
 				),
 				'legend'          => array(
-					'display' => false
+					'position' => 'top'
 				)
 			)
 		) );

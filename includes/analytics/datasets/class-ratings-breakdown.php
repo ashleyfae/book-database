@@ -37,23 +37,32 @@ class Ratings_Breakdown extends Dataset {
 			ORDER BY rating DESC";
 
 		$results   = $this->get_db()->get_results( $query );
-		$breakdown = array();
+
+		$columns = array(
+			array(
+				'id'      => 'rating',
+				'label'   => esc_html__( 'Rating', 'book-database' ),
+				'type'    => 'string',
+				'display' => esc_html__( '%s Stars', 'book-database' )
+			),
+			array(
+				'id'      => 'count',
+				'label'   => esc_html__( 'Number of Books', 'book-database' ),
+				'type'    => 'number',
+				'display' => esc_html__( '%d Books', 'book-database' )
+			)
+		);
 
 		if ( ! empty( $results ) ) {
-			foreach ( $results as $result ) {
-				$key = is_null( $result->rating ) ? __( 'None', 'book-database' ) : sprintf( __( '%s Stars', 'book-database' ), $result->rating * 1 );
+			foreach ( $results as $index => $result ) {
+				$result->rating = is_null( $result->rating ) ? __( 'None', 'book-database' ) : sprintf( __( '%s Stars', 'book-database' ), $result->rating * 1 );
+				$result->count  = absint( $result->count );
 
-				$breakdown[ $key ] = absint( $result->count );
+				$results[ $index ] = $result;
 			}
 		}
 
-		$args = array(
-			'label' => __( 'Rating Breakdown', 'book-database' ),
-			//'fill'  => false
-		);
-
-		$chart->add_dataset( $args, array_values( $breakdown ), false, true );
-		$chart->set_labels( array_map( 'strval', array_keys( $breakdown ) ) );
+		$chart->add_dataset( $columns, $results );
 
 		return $chart->get_args();
 

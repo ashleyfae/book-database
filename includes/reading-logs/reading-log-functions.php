@@ -51,6 +51,7 @@ function get_reading_log_by( $column_name, $column_value ) {
  * @type array        $id__not_in          An array of item IDs to exclude. Default empty.
  * @type int          $book_id             Filter by book ID. Default empty.
  * @type array        $book_id__in         An array of book IDs to include. Default empty.
+ * @type int          $edition_id          Filter by edition ID. Default empty.
  * @type int          $user_id             Filter by user ID. Default empty.
  * @type array        $user_id__in         An array of user IDs to include. Default empty.
  * @type array        $user_id__not_in     An array of user IDs to exclude. Default empty.
@@ -116,6 +117,7 @@ function count_reading_logs( $args = array() ) {
  * @param array      $args                {
  *
  * @type int         $book_id             Required. ID of the book that was read.
+ * @type int|null    $edition_id          Optional. ID of the edition that was read.
  * @type int         $user_id             Optional. ID of the user who read the log. Defaults to current user.
  * @type string|null $date_started        Optional. Date the book was started in UTC / MySQL format.
  * @type string|null $date_finished       Optional. Date the book was finished in UTC / MySQL format.
@@ -130,6 +132,7 @@ function add_reading_log( $args = array() ) {
 
 	$args = wp_parse_args( $args, array(
 		'book_id'             => 0,
+		'edition_id'          => null,
 		'user_id'             => get_current_user_id(),
 		'date_started'        => null,
 		'date_finished'       => null,

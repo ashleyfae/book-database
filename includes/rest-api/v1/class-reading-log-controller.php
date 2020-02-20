@@ -12,9 +12,9 @@ namespace Book_Database\REST_API\v1;
 use Book_Database\Exception;
 use Book_Database\REST_API\Controller;
 use function Book_Database\add_reading_log;
-use function Book_Database\book_database;
 use function Book_Database\delete_reading_log;
 use function Book_Database\get_available_ratings;
+use function Book_Database\get_edition;
 use function Book_Database\get_reading_log;
 use function Book_Database\get_reading_logs;
 use function Book_Database\update_reading_log;
@@ -104,6 +104,22 @@ class Reading_Log extends Controller {
 						return absint( $param );
 					}
 				),
+				'edition_id'          => array(
+					'validate_callback' => function ( $param, $request, $key ) {
+						if ( empty( $param ) ) {
+							return true;
+						}
+
+						if ( ! is_numeric( $param ) ) {
+							return false;
+						}
+
+						return get_edition( absint( $param ) ) instanceof \Book_Database\Edition;
+					},
+					'sanitize_callback' => function ( $param, $request, $key ) {
+						return ! empty( absint( $param ) ) ? absint( $param ) : null;
+					}
+				),
 				'user_id'             => array(
 					'required'          => true,
 					'validate_callback' => function ( $param, $request, $key ) {
@@ -179,6 +195,22 @@ class Reading_Log extends Controller {
 					},
 					'sanitize_callback' => function ( $param, $request, $key ) {
 						return absint( $param );
+					}
+				),
+				'edition_id'          => array(
+					'validate_callback' => function ( $param, $request, $key ) {
+						if ( empty( $param ) ) {
+							return true;
+						}
+
+						if ( ! is_numeric( $param ) ) {
+							return false;
+						}
+
+						return get_edition( absint( $param ) ) instanceof \Book_Database\Edition;
+					},
+					'sanitize_callback' => function ( $param, $request, $key ) {
+						return ! empty( absint( $param ) ) ? absint( $param ) : null;
 					}
 				),
 				'user_id'             => array(
@@ -292,6 +324,7 @@ class Reading_Log extends Controller {
 		try {
 			$args = array(
 				'book_id'             => $request->get_param( 'book_id' ),
+				'edition_id'          => $request->get_param( 'edition_id' ),
 				'user_id'             => $request->get_param( 'user_id' ),
 				'date_started'        => $request->get_param( 'date_started' ),
 				'date_finished'       => $request->get_param( 'date_finished' ),
@@ -325,6 +358,7 @@ class Reading_Log extends Controller {
 		try {
 			$whitelist = array(
 				'book_id',
+				'edition_id',
 				'user_id',
 				'date_started',
 				'date_finished',

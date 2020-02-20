@@ -24,7 +24,7 @@ class Reading_Logs_Table extends BerlinDB\Database\Table {
 	/**
 	 * @var int Database version in format {YYYY}{MM}{DD}{1}
 	 */
-	protected $version = 201910271;
+	protected $version = 202001281;
 
 	/**
 	 * @var array Upgrades to perform
@@ -34,7 +34,7 @@ class Reading_Logs_Table extends BerlinDB\Database\Table {
 		'201910133' => 201910133,
 		'201910141' => 201910141,
 		'201910142' => 201910142,
-		'201910271' => 201910271
+		'202001281' => 202001281
 	);
 
 	/**
@@ -50,6 +50,7 @@ class Reading_Logs_Table extends BerlinDB\Database\Table {
 	protected function set_schema() {
 		$this->schema = "id bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY,
 			book_id bigint(20) UNSIGNED NOT NULL DEFAULT 0,
+			edition_id bigint(20) UNSIGNED DEFAULT NULL,
 			user_id bigint(20) UNSIGNED NOT NULL DEFAULT 0,
 			date_started datetime DEFAULT NULL,
 			date_finished datetime DEFAULT NULL,
@@ -168,6 +169,24 @@ class Reading_Logs_Table extends BerlinDB\Database\Table {
 		$result = $this->get_db()->query( "UPDATE {$this->table_name} SET rating = NULL WHERE rating = 'dnf'" );
 
 		$result = $this->get_db()->query( "ALTER TABLE {$this->table_name} MODIFY rating decimal(4,2) DEFAULT NULL" );
+
+		return $this->is_success( $result );
+
+	}
+
+	/**
+	 * Upgrade to version 202001281
+	 *      - Add `edition_id` column
+	 *
+	 * @return bool
+	 */
+	protected function __202001281() {
+
+		$result = $this->column_exists( 'edition_id' );
+
+		if ( ! $result ) {
+			$result = $this->get_db()->query( "ALTER TABLE {$this->table_name} ADD COLUMN edition_id bigint(20) UNSIGNED DEFAULT NULL AFTER book_id" );
+		}
 
 		return $this->is_success( $result );
 

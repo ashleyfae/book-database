@@ -122,6 +122,9 @@ var BDB_Editions = {
 
 			BDB_Editions.toggleNewEditionFields();
 
+			// Add this edition to all dropdowns.
+			addEditionToDropdown( apiResponse );
+
 			// Trigger event.
 			$( document ).trigger( 'bdb_edition_added', apiResponse );
 
@@ -182,6 +185,10 @@ var BDB_Editions = {
 			apiResponse.date_acquired           = dateUTCtoLocal( apiResponse.date_acquired );
 
 			wrap.replaceWith( BDB_Editions.rowTemplate( apiResponse ) );
+
+			// Update edition in dropdowns.
+			addEditionToDropdown( apiResponse );
+
 			$( document ).trigger( 'bdb_edition_updated', apiResponse );
 
 		} ).catch( function( errorMessage ) {
@@ -211,10 +218,12 @@ var BDB_Editions = {
 		spinButton( button );
 		BDB_Editions.errorWrap.empty().hide();
 
-		let wrap = button.closest( 'tr' );
+		const wrap = button.closest( 'tr' );
+		const editionID = wrap.data( 'id' );
 
-		apiRequest( 'v1/edition/delete/' + wrap.data( 'id' ), {}, 'DELETE' ).then( function( apiResponse ) {
+		apiRequest( 'v1/edition/delete/' + editionID, {}, 'DELETE' ).then( function( apiResponse ) {
 			wrap.remove();
+			removeEditionFromDropdown( editionID );
 		} ).catch( function( errorMessage ) {
 			BDB_Editions.errorWrap.append( errorMessage ).show();
 		} ).finally( function() {
@@ -226,3 +235,55 @@ var BDB_Editions = {
 };
 
 export { BDB_Editions }
+
+/**
+ *
+ * Fill a provided <select> element with the Edition values
+ *
+ * @param {object} dropdown
+ * @param {Array} editionsArray
+ */
+export function fillEditionsDropdown( dropdown, editionsArray ) {
+
+	const selectedEdition = dropdown.data( 'selected' );
+
+	dropdown.empty().append( '<option value="">' + bdbVars.none + '</option>' );
+
+	$.each( editionsArray, function( key, edition ) {
+		let selected = edition.id == selectedEdition ? ' selected="selected"' : '';
+
+		dropdown.append( '<option value="' + edition.id + '"' + selected + '>' + edition.isbn + ' - ' + edition.format_name + '</option>' );
+	} );
+
+}
+
+/**
+ * Add a new edition to the dropdowns
+ *
+ * @param {object} edition
+ */
+export function addEditionToDropdown( edition ) {
+	$( '.bdb-book-edition-list' ).each( function() {
+		const dropdown = $( this );
+		const existingEdition = dropdown.find( 'option[value="' + edition.id + '"]' );
+
+		if ( existingEdition.length ) {
+			existingEdition.text( edition.isbn + ' - ' + edition.format_name );
+		} else {
+			dropdown.append( '<option value="' + edition.id + '">' + edition.isbn + ' - ' + edition.format_name + '</option>' );
+		}
+	} );
+}
+
+/**
+ * Remove an edition from the dropdowns
+ *
+ * @param {number} editionID
+ */
+export function removeEditionFromDropdown( editionID ) {
+	$( '.bdb-book-edition-list' ).each( function() {
+		const dropdown = $( this );
+
+		dropdown.find( 'option[value="' + editionID + '"]' ).remove();
+	} );
+}

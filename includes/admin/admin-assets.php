@@ -50,6 +50,7 @@ function enqueue_admin_assets( $hook ) {
 		'error_required_fields'         => esc_html__( 'Please fill out all the required fields.', 'book-database' ),
 		'generic_error'                 => esc_html__( 'An unexpected error has occurred.', 'book-database' ),
 		'is_admin'                      => is_admin(),
+		'none'                          => esc_html__( 'None', 'book-database' ),
 		'on_track_month'                => esc_html__( 'On track to read %d books this month.', 'book-database' ),
 		'on_track_year'                 => esc_html__( 'On track to read %d books this year.', 'book-database' ),
 		'please_wait'                   => esc_html__( 'Please wait...', 'book-database' ),
@@ -99,13 +100,13 @@ function enqueue_admin_global_assets( $hook ) {
 	}
 
 	// CSS
-	wp_enqueue_style( 'book-database-global', BDB_URL . 'assets/css/admin-style-global.min.css', array(), time() );
+	wp_enqueue_style( 'book-database-global', BDB_URL . 'assets/css/admin-style-global.min.css', array(), BDB_VERSION );
 
 	// JS
 	wp_register_script( 'moment', BDB_URL . 'assets/js/build/moment.min.js', array(), '2.24.0', true );
 
 	$deps = array( 'jquery', 'wp-util', 'moment' );
-	wp_enqueue_script( 'book-database-global', BDB_URL . 'assets/js/build/admin-global.min.js', $deps, time(), true );
+	wp_enqueue_script( 'book-database-global', BDB_URL . 'assets/js/build/admin-global.min.js', $deps, BDB_VERSION, true );
 
 	$localized = array(
 		'api_base'                          => esc_url_raw( rest_url() ),

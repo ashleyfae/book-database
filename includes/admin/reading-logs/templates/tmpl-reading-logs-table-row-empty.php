@@ -10,5 +10,5 @@
 namespace Book_Database;
 ?>
 <tr id="bdb-book-reading-logs-empty">
-	<td colspan="7"><?php esc_html_e( 'No reading logs added.', 'book-database' ); ?></td>
+	<td colspan="8"><?php esc_html_e( 'No reading logs added.', 'book-database' ); ?></td>
 </tr>

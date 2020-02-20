@@ -13,17 +13,6 @@ const IgnoreEmitPlugin = require( 'ignore-emit-webpack-plugin' );
 
 const production = process.env.NODE_ENV === '';
 
-const wplib = [
-	'blocks',
-	'components',
-	'date',
-	'editor',
-	'element',
-	'i18n',
-	'utils',
-	'data',
-];
-
 module.exports = {
 	...defaultConfig,
 

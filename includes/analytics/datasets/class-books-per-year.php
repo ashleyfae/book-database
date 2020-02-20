@@ -98,8 +98,7 @@ class Books_Per_Year extends Dataset {
 			array(
 				'id'      => 'number_books',
 				'label'   => esc_html__( 'Books Read', 'book-database' ),
-				'type'    => 'number',
-				'display' => esc_html__( '%d Books', 'book-database' )
+				'type'    => 'number'
 			)
 		);
 

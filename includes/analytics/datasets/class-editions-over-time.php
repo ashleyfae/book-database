@@ -111,10 +111,9 @@ class Editions_Over_Time extends Dataset {
 				'type'  => 'string'
 			),
 			array(
-				'id'      => 'number_books',
-				'label'   => esc_html__( 'Editions Added', 'book-database' ),
-				'type'    => 'number',
-				'display' => esc_html__( '%d Editions', 'book-database' )
+				'id'    => 'number_books',
+				'label' => esc_html__( 'Editions Added', 'book-database' ),
+				'type'  => 'number',
 			)
 		);
 

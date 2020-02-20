@@ -29,7 +29,7 @@ class Average_Days_Finish_Book extends Dataset {
 		FROM {$tbl_log}
 		WHERE date_started IS NOT NULL 
 		AND date_finished IS NOT NULL 
-		{$this->get_date_condition()}";
+		{$this->get_date_condition( 'date_finished', 'date_finished' )}";
 
 		return $this->get_db()->get_var( $query );
 

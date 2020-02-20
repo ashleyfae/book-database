@@ -17,6 +17,24 @@ function reading() {
 	<h2><?php _e( 'Reading', 'book-database' ); ?></h2>
 
 	<div class="bdb-flexbox-container">
+		<section class="bdb-analytics-block bdb-dataset-type-value" data-dataset="Average_Days_Finish_Book">
+			<h3><?php _e( 'Average # Days to Finish a Book', 'book-database' ); ?></h3>
+			<span class="bdb-dataset-value"></span>
+			<span class="bdb-dataset-period"></span>
+		</section>
+
+		<section class="bdb-analytics-block bdb-dataset-type-value" data-dataset="Shortest_Book_Read">
+			<h3><?php _e( 'Shortest Book', 'book-database' ); ?></h3>
+			<span class="bdb-dataset-value"></span>
+			<span class="bdb-dataset-period"></span>
+		</section>
+
+		<section class="bdb-analytics-block bdb-dataset-type-value" data-dataset="Longest_Book_Read">
+			<h3><?php _e( 'Longest Book', 'book-database' ); ?></h3>
+			<span class="bdb-dataset-value"></span>
+			<span class="bdb-dataset-period"></span>
+		</section>
+
 		<section class="bdb-analytics-block bdb-dataset-type-table bdb-flexbox-half" data-dataset="Most_Read_Genres">
 			<h3><?php _e( 'Most Read Genres', 'book-database' ); ?></h3>
 

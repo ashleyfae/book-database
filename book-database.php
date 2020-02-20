@@ -248,7 +248,7 @@ final class Book_Database {
 			'reading-overview', 'number-different-series-read', 'number-standalones-read', 'pages-read',
 			'number-different-authors-read', 'number-reviews-written', 'average-rating', 'reading-track',
 			'books-per-year', 'most-read-genres', 'pages-breakdown', 'ratings-breakdown', 'highest-rated-books',
-			'lowest-rated-books', 'format-breakdown'
+			'lowest-rated-books', 'format-breakdown', 'average-days-finish-book', 'shortest-book-read', 'longest-book-read',
 		);
 		foreach ( $datasets as $dataset ) {
 			if ( file_exists( BDB_DIR . 'includes/analytics/datasets/class-' . $dataset . '.php' ) ) {

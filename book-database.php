@@ -249,6 +249,7 @@ final class Book_Database {
 			'number-different-authors-read', 'number-reviews-written', 'average-rating', 'reading-track',
 			'books-per-year', 'most-read-genres', 'pages-breakdown', 'ratings-breakdown', 'highest-rated-books',
 			'lowest-rated-books', 'format-breakdown', 'average-days-finish-book', 'shortest-book-read', 'longest-book-read',
+			'number-editions', 'edition-format-breakdown', 'editions-over-time',
 		);
 		foreach ( $datasets as $dataset ) {
 			if ( file_exists( BDB_DIR . 'includes/analytics/datasets/class-' . $dataset . '.php' ) ) {
@@ -363,6 +364,7 @@ final class Book_Database {
 		require_once BDB_DIR . 'includes/admin/analytics/tabs/overview.php';
 		require_once BDB_DIR . 'includes/admin/analytics/tabs/reading.php';
 		require_once BDB_DIR . 'includes/admin/analytics/tabs/ratings.php';
+		require_once BDB_DIR . 'includes/admin/analytics/tabs/editions.php';
 
 		// Authors
 		require_once BDB_DIR . 'includes/admin/authors/author-actions.php';

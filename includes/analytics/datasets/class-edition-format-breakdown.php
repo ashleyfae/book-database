@@ -1,6 +1,6 @@
 <?php
 /**
- * Dataset: Format Breakdown
+ * Dataset: Edition Format Breakdown
  *
  * @package   book-database
  * @copyright Copyright (c) 2020, Ashley Gibson
@@ -13,11 +13,11 @@ use function Book_Database\book_database;
 use function Book_Database\get_book_formats;
 
 /**
- * Class Format_Breakdown
+ * Class Edition_Format_Breakdown
  *
  * @package Book_Database\Analytics
  */
-class Format_Breakdown extends Dataset {
+class Edition_Format_Breakdown extends Dataset {
 
 	protected $type = 'graph';
 
@@ -28,18 +28,14 @@ class Format_Breakdown extends Dataset {
 
 		$chart = new Pie_Chart();
 
-		$tbl_log      = book_database()->get_table( 'reading_log' )->get_table_name();
 		$tbl_editions = book_database()->get_table( 'editions' )->get_table_name();
 
-		$query = "SELECT format, COUNT( log.id ) AS count
-			FROM {$tbl_log} AS log 
-			LEFT JOIN {$tbl_editions} AS edition ON( log.edition_id = edition.id )
-			WHERE date_finished IS NOT NULL
-			{$this->get_date_condition( 'date_finished', 'date_finished' )} 
+		$query = "SELECT format, COUNT( id ) AS count
+			FROM {$tbl_editions} 
+			WHERE date_acquired IS NOT NULL
+			{$this->get_date_condition( 'date_acquired', 'date_acquired' )} 
 			GROUP BY format
 			ORDER BY format DESC";
-
-		//error_log( $query );
 
 		$results = $this->get_db()->get_results( $query );
 

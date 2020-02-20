@@ -49,8 +49,6 @@ class Lowest_Rated_Books extends Dataset {
 		ORDER BY rating ASC 
 		LIMIT 5";
 
-		error_log($query);
-
 		$results = $this->get_db()->get_results( $query );
 
 		foreach ( $results as $key => $row ) {

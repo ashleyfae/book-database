@@ -1,3 +1,5 @@
+/* globals bdbBlocks */
+
 /** Components */
 import Book from './components/Book';
 
@@ -76,6 +78,10 @@ class BookGridEdit extends Component {
 		delete this.booksRequest;
 	}
 
+	getRatingOptions() {
+		return bdbBlocks.ratings;
+	}
+
 	getOrderOptions() {
 		return [
 			{ value: 'ASC', label: __( 'Ascending', 'book-database' ) },
@@ -147,6 +153,7 @@ class BookGridEdit extends Component {
 		const {
 			author,
 			series,
+			rating,
 			'pub-date-after' : pubDateAfter,
 			'pub-date-before' : pubDateBefore,
 			'read-status' : readStatus,
@@ -183,6 +190,12 @@ class BookGridEdit extends Component {
 						label={ __( 'Series', 'book-database' ) }
 						value={ series }
 						onChange={ (series) => setAttributes( { series } ) }
+					/>
+					<SelectControl
+						label={ __( 'Rating', 'book-database' ) }
+						value={ rating }
+						options={ this.getRatingOptions() }
+						onChange={ (rating) => setAttributes( { rating } ) }
 					/>
 					<TextControl
 						label={ __( 'Publication Date After', 'book-database' ) }

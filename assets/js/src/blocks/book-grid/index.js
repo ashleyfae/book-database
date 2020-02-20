@@ -10,7 +10,7 @@ const {	RawHTML } = wp.element;
 
 registerBlockType( 'book-database/book-grid', {
 	title: __( 'Book Grid', 'gutenberg-examples' ),
-	icon: 'book-alt',
+	icon: 'grid-view',
 	category: 'widgets',
 	supports: {
 		multiple: true,
@@ -23,6 +23,10 @@ registerBlockType( 'book-database/book-grid', {
 		},
 		series: {
 			type: 'string',
+			default: ''
+		},
+		rating: {
+			type: 'rating',
 			default: ''
 		},
 		'pub-date-after': {

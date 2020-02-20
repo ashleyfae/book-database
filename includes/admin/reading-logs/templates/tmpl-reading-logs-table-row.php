@@ -42,10 +42,23 @@ namespace Book_Database;
 			<label for="bdb-reading-log-date-finished-{{ data.id }}" class="screen-reader-text"><?php _e( 'Date Finished', 'book-database' ); ?></label>
 			<input type="text" id="bdb-reading-log-date-finished-{{ data.id }}" class="bdb-datepicker" value="{{ data.date_finished }}">
 		</div>
+	</td>
 
-		<button type="button" class="toggle-row">
-			<span class="screen-reader-text"><?php _e( 'Show more details', 'book-database' ); ?></span>
-		</button>
+	<td class="bdb-reading-log-edition" data-colname="<?php esc_attr_e( 'Edition', 'book-database' ); ?>">
+		<div class="bdb-table-display-value">
+			<# if ( data.edition ) { #>
+			{{ data.edition.isbn }}
+			<# } else { #>
+			&ndash;
+			<# } #>
+		</div>
+
+		<div class="bdb-table-edit-value">
+			<label for="bdb-reading-log-edition-id-{{ data.id }}" class="screen-reader-text"><?php _e( 'Edition', 'book-database' ); ?></label>
+			<select id="bdb-reading-log-edition-id-{{ data.id }}" class="bdb-book-edition-list" data-selected="{{ data.edition_id }}">
+				<option value=""><?php _e( 'None', 'book-database' ); ?></option>
+			</select>
+		</div>
 	</td>
 
 	<td class="bdb-reading-log-review-id" data-colname="<?php esc_attr_e( 'Review ID', 'book-database' ); ?>">
@@ -77,19 +90,21 @@ namespace Book_Database;
 		</div>
 
 		<div class="bdb-table-edit-value">
-			<span class="bdb-reading-log-percentage-complete-wrap">
-				<label for="bdb-reading-log-percentage-complete-{{ data.id }}" class="screen-reader-text"><?php _e( 'Percentage Complete', 'book-database' ); ?></label>
-				<input type="number" id="bdb-reading-log-percentage-complete-{{ data.id }}" class="bdb-input-has-suffix" value="{{ data.percentage_complete }}">
-			</span>
-			<span class="bdb-reading-log-page-wrap" style="display: none;">
-				<label for="bdb-reading-log-page-{{ data.id }}" class="screen-reader-text"><?php _e( 'Current Page Number', 'book-database' ); ?></label>
-				<span>
-					<input type="number" id="bdb-reading-log-page-{{ data.id }}" class="bdb-input-has-suffix" value="{{ data.page }}">
-					<span class="bdb-reading-log-max-pages"><?php _e( 'of', 'book-database' ); ?> <span>{{ data.max_pages }}</span></span>
+			<span class="bdb-reading-log-progress-wrap">
+				<span class="bdb-reading-log-percentage-complete-wrap">
+					<label for="bdb-reading-log-percentage-complete-{{ data.id }}" class="screen-reader-text"><?php _e( 'Percentage Complete', 'book-database' ); ?></label>
+					<input type="number" id="bdb-reading-log-percentage-complete-{{ data.id }}" class="bdb-input-has-suffix" value="{{ data.percentage_complete }}">
 				</span>
+				<span class="bdb-reading-log-page-wrap" style="display: none;">
+					<label for="bdb-reading-log-page-{{ data.id }}" class="screen-reader-text"><?php _e( 'Current Page Number', 'book-database' ); ?></label>
+					<span>
+						<input type="number" id="bdb-reading-log-page-{{ data.id }}" class="bdb-input-has-suffix" value="{{ data.page }}">
+						<span class="bdb-reading-log-max-pages"><?php _e( 'of', 'book-database' ); ?> <span>{{ data.max_pages }}</span></span>
+					</span>
+				</span>
+				<a href="#" title="<?php esc_attr_e( 'Enter a percentage' ); ?>" class="bdb-input-suffix bdb-input-suffix-percentage bdb-input-suffix-selected">%</a>
+				<a href="#" title="<?php esc_attr_e( 'Enter a page number' ); ?>" class="bdb-input-suffix bdb-input-suffix-page">#</a>
 			</span>
-			<a href="#" title="<?php esc_attr_e( 'Enter a percentage' ); ?>" class="bdb-input-suffix bdb-input-suffix-percentage bdb-input-suffix-selected">%</a>
-			<a href="#" title="<?php esc_attr_e( 'Enter a page number' ); ?>" class="bdb-input-suffix bdb-input-suffix-page">#</a>
 		</div>
 	</td>
 

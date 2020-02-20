@@ -190,6 +190,18 @@ function delete_edition( $edition_id ) {
 		throw new Exception( 'database_error', __( 'Failed to delete the edition.', 'book-database' ), 500 );
 	}
 
+	// Find all reading logs with this edition ID and change their value to `null`.
+	$logs = get_reading_logs( array(
+		'edition_id' => $edition_id
+	) );
+	if ( $logs ) {
+		foreach ( $logs as $log ) {
+			update_reading_log( $log->get_id(), array(
+				'edition_id' => null
+			) );
+		}
+	}
+
 	return true;
 
 }
@@ -203,6 +215,7 @@ function get_book_formats() {
 
 	$formats = array(
 		'arc'       => __( 'ARC', 'book-database' ),
+		'audiobook' => __( 'Audiobook', 'book-database' ),
 		'earc'      => __( 'eARC', 'book-database' ),
 		'ebook'     => __( 'eBook', 'book-database' ),
 		'hardcover' => __( 'Hardcover', 'book-database' ),

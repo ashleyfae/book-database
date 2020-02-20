@@ -46,48 +46,59 @@ class Editions_Over_Time extends Dataset {
 
 		$tbl_editions = book_database()->get_table( 'editions' )->get_table_name();
 
-		$periods  = $final_periods = array();
+		if ( ! empty( $this->date_start ) && ! empty( $this->date_end ) ) {
+			$start = $this->date_start;
+			$end   = $this->date_end;
+		} else {
+			$start = $this->get_db()->get_var(
+				"SELECT date_acquired FROM {$tbl_editions}
+				WHERE date_acquired IS NOT NULL 
+				ORDER BY date_acquired ASC LIMIT 1"
+			);
+
+			$end = $this->get_db()->get_var(
+				"SELECT date_acquired FROM {$tbl_editions}
+				WHERE date_acquired IS NOT NULL 
+				ORDER BY date_acquired DESC LIMIT 1"
+			);
+		}
+
+		$graph->set_range( $start, $end );
+
+		// Figure out our group by, based on the date interval.
+		if ( 'month' === $graph->get_interval() ) {
+			$groupby = "YEAR(date_acquired), MONTH(date_acquired)";
+		} else {
+			$groupby = "YEAR(date_acquired), MONTH(date_acquired), DAY(date_acquired)";
+		}
+
 		$raw_rows = $this->get_db()->get_results(
-			"SELECT DATE_FORMAT( date_acquired, '%Y-%m' ) AS period, COUNT(id) AS number_books
+			"SELECT date_acquired, COUNT(id) AS number_books
 			FROM {$tbl_editions}
 			WHERE date_acquired IS NOT NULL
-			GROUP BY period
-			ORDER BY period ASC;"
+			{$this->get_date_condition( 'date_acquired', 'date_acquired' )}
+			GROUP BY {$groupby}
+			ORDER BY date_acquired ASC;"
 		);
 
-		if ( empty( $raw_rows ) ) {
+		$result_array = array();
+
+		foreach ( $raw_rows as $row ) {
+			$result_array[ $row->date_acquired ] = absint( $row->number_books );
+		}
+
+		try {
+			$graph->set_timestamps();
+		} catch ( \Exception $e ) {
 			return $graph->get_args();
 		}
 
-		$first_period = $raw_rows[0]->period ?? false;
-		$last_period  = ( new DateTime() )->modify( '+1 month' )->format( 'Y-m' ); // Add +1 because DatePeriod doesn't include the end date.
-
-		// If possible, fill up our array with default values.
-		if ( ! empty( $first_period ) && ! empty( $last_period ) ) {
-			try {
-				$period = new DatePeriod( new DateTime( sprintf( '%s-01', $first_period ) ), new DateInterval( 'P1M' ), new DateTime( sprintf( '%s-01', $last_period ) ) );
-
-				foreach ( $period as $datetime ) {
-					/**
-					 * @var \DateTime $datetime
-					 */
-					$periods[ $datetime->format( 'Y-m' ) ] = 0;
-				}
-			} catch ( \Exception $e ) {
-
-			}
-		}
-
-		// Now fill up with our legit values.
-		foreach ( $raw_rows as $raw_row ) {
-			$periods[ $raw_row->period ] = absint( $raw_row->number_books );
-		}
-
 		// Now convert back to objects.
-		foreach ( $periods as $date => $value ) {
+		$final_periods = array();
+		foreach ( $graph->fill_data( $result_array ) as $date => $value ) {
 			$dataset               = new \stdClass();
 			$dataset->period       = $date;
-			$dataset->number_books = absint( $value );
+			$dataset->number_books = $value;
 			$final_periods[]       = $dataset;
 		}
 

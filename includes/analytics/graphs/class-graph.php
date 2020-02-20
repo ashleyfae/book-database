@@ -40,6 +40,11 @@ class Graph {
 
 	protected $interval = 'day';
 
+	/**
+	 * @var string Timestamp key format.
+	 */
+	protected $timestamp_format = 'U';
+
 	protected $timestamps = array();
 
 	/**
@@ -98,18 +103,14 @@ class Graph {
 
 		$diff = $this->date_start->diff( $this->date_end );
 
-		if ( $diff->days <= 2 ) {
-			$this->interval = 'hour';
-			$period         = new \DatePeriod( $this->date_start, new \DateInterval( 'P1H' ), $this->date_end );
-			$format         = 'g:i A';
-		} elseif ( $diff->days >= 230 ) {
-			$this->interval = 'month';
-			$period         = new \DatePeriod( $this->date_start, new \DateInterval( 'P1M' ), $this->date_end );
-			$format         = 'M Y';
+		if ( $diff->days >= 230 ) {
+			$this->interval         = 'month';
+			$period                 = new \DatePeriod( $this->date_start, new \DateInterval( 'P1M' ), $this->date_end );
+			$this->timestamp_format = 'M Y';
 		} else {
-			$this->interval = 'day';
-			$period         = new \DatePeriod( $this->date_start, new \DateInterval( 'P1D' ), $this->date_end );
-			$format         = 'j M Y';
+			$this->interval         = 'day';
+			$period                 = new \DatePeriod( $this->date_start, new \DateInterval( 'P1D' ), $this->date_end );
+			$this->timestamp_format = 'j M Y';
 		}
 
 		foreach ( $period as $datetime ) {
@@ -117,8 +118,8 @@ class Graph {
 			 * @var \DateTime $datetime
 			 */
 
-			$this->timestamps[]             = $datetime->getTimestamp();
-			$this->args['data']['labels'][] = $datetime->format( $format );
+			$this->timestamps[]             = $datetime->format( $this->timestamp_format );
+			$this->args['data']['labels'][] = $datetime->format( $this->timestamp_format );
 		}
 
 	}
@@ -130,15 +131,6 @@ class Graph {
 	 */
 	public function get_interval() {
 		return $this->interval;
-	}
-
-	/**
-	 * Set the graph labels
-	 *
-	 * @param array $labels
-	 */
-	public function set_labels( $labels = array() ) {
-		$this->args['data']['labels'] = $labels;
 	}
 
 	/**
@@ -163,12 +155,8 @@ class Graph {
 			$datetime->setTimezone( get_site_timezone() );
 
 			switch ( $this->interval ) {
-				case 'hour' :
-					$datetime->setTime( $datetime->format( 'H' ), 0, 0 );
-					break;
-
 				case 'month' :
-					$datetime->setDate( $datetime->format( 'Y' ), $datetime->format( 'M' ), 1 )->setTime( 0, 0, 0 );
+					$datetime->setDate( $datetime->format( 'Y' ), $datetime->format( 'm' ), 1 )->setTime( 0, 0, 0 );
 					break;
 
 				default :
@@ -176,14 +164,14 @@ class Graph {
 					break;
 			}
 
-			$timestamp = $datetime->getTimestamp();
+			$timestamp = $datetime->format( $this->timestamp_format );
 
 			if ( isset( $final_dates[ $timestamp ] ) ) {
 				$final_dates[ $timestamp ] = $value;
 			}
 		}
 
-		return array_values( $final_dates );
+		return $final_dates;
 
 	}
 

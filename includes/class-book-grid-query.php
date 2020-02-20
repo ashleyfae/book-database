@@ -57,7 +57,7 @@ class Book_Grid_Query extends Book_Reviews_Query {
 		if ( ! empty( $atts['rating'] ) ) {
 			$this->args['reading_log_query'][] = array(
 				'field' => 'rating',
-				'value' => floatval( $atts['series'] )
+				'value' => floatval( $atts['rating'] )
 			);
 		}
 
@@ -125,6 +125,11 @@ class Book_Grid_Query extends Book_Reviews_Query {
 				'value'    => null,
 				'operator' => 'IS NOT'
 			);
+		}
+
+		// Include review link (left join).
+		if ( ! empty( $atts['show-review-link'] ) ) {
+			$this->args['include_review'] = true;
 		}
 
 		// Review dates.

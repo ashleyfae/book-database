@@ -1,5 +1,7 @@
 /* global $, bdbVars, wp */
 
+import flatpickr from "flatpickr";
+
 /**
  * Datepicker
  */
@@ -26,17 +28,28 @@ var BDB_Datepicker = {
 
 	/**
 	 * Set datepickers
+	 *
+	 * altInput is disabled because when it's enabled it breaks the ability to
+	 * manually delete the input value and have that reflected in the DOM.
+	 * @link https://github.com/nosegraze/book-database/issues/194
+	 * @link https://github.com/flatpickr/flatpickr/issues/1910
 	 */
 	setDatepickers: function() {
-		$( '.bdb-datepicker' ).datepicker( {
-			dateFormat: 'yy-mm-dd',
-			beforeShow: function() {
-				$( this ).datepicker( 'widget' ).addClass( 'bdb-datepicker-wrap' );
-			},
-			onClose: function() {
-				$( this ).datepicker( 'widget' ).removeClass( 'bdb-datepicker-wrap' );
-			}
-		} );
+		let dateField = $( '.bdb-datepicker' ),
+			config = {
+				allowInput: true,
+				//altInput: true,
+				//altFormat: 'F J, Y',
+				dateFormat: 'Y-m-d'
+			};
+
+		if ( dateField.hasClass( 'bdb-timepicker' ) ) {
+			config.enableTime = true;
+			config.dateFormat = 'Y-m-d H:i';
+			config.altFormat = 'F J, Y, h:i K';
+		}
+
+		dateField.flatpickr( config );
 	}
 
 };

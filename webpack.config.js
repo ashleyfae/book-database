@@ -40,7 +40,8 @@ module.exports = {
 		},
 		'wp.data': {
 			window: ['wp', 'data']
-		}
+		},
+		moment: 'moment'
 	},
 
 	resolve: {

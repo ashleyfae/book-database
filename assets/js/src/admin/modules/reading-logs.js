@@ -2,6 +2,7 @@
 
 import { apiRequest, spinButton, unspinButton } from 'utils';
 import { dateLocalToUTC, dateUTCtoLocal } from "./dates";
+import { fillEditionsDropdown } from "./editions";
 
 /**
  * Editions
@@ -23,6 +24,8 @@ var BDB_Reading_Logs = {
 	errorWrap: '',
 
 	userFilter: false,
+
+	editions: [],
 
 	/**
 	 * Initialize
@@ -50,6 +53,9 @@ var BDB_Reading_Logs = {
 		this.userFilter.on( 'change', this.getLogs );
 		this.userFilter.trigger( 'change' );
 
+		// Update editions array.
+		$( document ).on( 'bdb_edition_added', this.updateEditions );
+
 	},
 
 	/**
@@ -74,6 +80,15 @@ var BDB_Reading_Logs = {
 	},
 
 	/**
+	 * Load editions
+	 *
+	 * @returns {Promise}
+	 */
+	loadEditions: function () {
+		return apiRequest( 'v1/edition', { book_id: BDB_Reading_Logs.bookID, number: 50 }, 'GET' );
+	},
+
+	/**
 	 * Get the reading logs
 	 */
 	getLogs: function() {
@@ -87,7 +102,25 @@ var BDB_Reading_Logs = {
 			args.user_id = BDB_Reading_Logs.userID;
 		}
 
-		apiRequest( 'v1/reading-log', args, 'GET' ).then( function( response ) {
+		BDB_Reading_Logs.loadEditions().then( function( editions ) {
+			BDB_Reading_Logs.editions = editions;
+
+			// Populate editions in "New Log".
+			if ( BDB_Reading_Logs.editions.length ) {
+				const selectEditionWrap = $( '#bdb-new-log-edition-id-wrap' );
+				const selectEditionDropdown = $( '#bdb-new-log-edition-id' );
+
+				selectEditionDropdown.empty().append( '<option value="">' + bdbVars.none + '</option>' );
+
+				$.each( BDB_Reading_Logs.editions, function( key, edition ) {
+					selectEditionDropdown.append( '<option value="' + edition.id + '">' + edition.isbn + ' - ' + edition.format_name + '</option>' );
+				} );
+
+				selectEditionWrap.show();
+			}
+
+			return apiRequest( 'v1/reading-log', args, 'GET' );
+		} ).then( function( response ) {
 
 			BDB_Reading_Logs.tableBody.empty();
 
@@ -99,6 +132,10 @@ var BDB_Reading_Logs = {
 					readingLog = BDB_Reading_Logs.shapeObject( readingLog );
 
 					BDB_Reading_Logs.tableBody.append( BDB_Reading_Logs.rowTemplate( readingLog ) );
+				} );
+
+				BDB_Reading_Logs.tableBody.find( '.bdb-book-edition-list' ).each( function() {
+					fillEditionsDropdown( $( this ), BDB_Reading_Logs.editions );
 				} );
 			}
 
@@ -145,8 +182,11 @@ var BDB_Reading_Logs = {
 			percentage = 0;
 		}
 
+		const selectedEditionID = $( '#bdb-new-log-edition-id' ).val();
+
 		let args = {
 			book_id: BDB_Reading_Logs.bookID,
+			edition_id: selectedEditionID.length > 0 ? selectedEditionID : null,
 			user_id: BDB_Reading_Logs.userID,
 			date_started: dateLocalToUTC( $( '#bdb-new-log-start-date' ).val() ),
 			date_finished: dateLocalToUTC( $( '#bdb-new-log-end-date' ).val() ),
@@ -160,6 +200,11 @@ var BDB_Reading_Logs = {
 			$( '#bdb-book-reading-logs-empty' ).remove();
 
 			BDB_Reading_Logs.tableBody.append( BDB_Reading_Logs.rowTemplate( apiResponse ) );
+
+			const editionDropdown = $( '#bdb-reading-log-edition-id-' + apiResponse.id );
+			if ( editionDropdown.length ) {
+				fillEditionsDropdown( editionDropdown, BDB_Reading_Logs.editions );
+			}
 
 			// Wipe new field values.
 			let newFieldsWrap = $( '#bdb-new-reading-log-fields' );
@@ -268,9 +313,12 @@ var BDB_Reading_Logs = {
 			}
 		}
 
+		const selectedEditionID = wrap.find( '.bdb-book-edition-list' ).val();
+
 		let args = {
 			date_started: dateLocalToUTC( wrap.find( '.bdb-reading-log-date-started input' ).val() ),
 			date_finished: dateLocalToUTC( wrap.find( '.bdb-reading-log-date-finished input' ).val() ),
+			edition_id: selectedEditionID.length > 0 ? selectedEditionID : null,
 			user_id: wrap.find( '.bdb-reading-log-user-id input' ).val(),
 			percentage_complete: percentage,
 			rating: wrap.find( '.bdb-reading-log-rating select' ).val()
@@ -279,6 +327,12 @@ var BDB_Reading_Logs = {
 		apiRequest( 'v1/reading-log/update/' + wrap.data( 'id' ), args, 'POST' ).then( function( apiResponse ) {
 			apiResponse = BDB_Reading_Logs.shapeObject( apiResponse );
 			wrap.replaceWith( BDB_Reading_Logs.rowTemplate( apiResponse ) );
+
+			const editionDropdown = $( '#bdb-reading-log-edition-id-' + apiResponse.id );
+			if ( editionDropdown.length ) {
+				fillEditionsDropdown( editionDropdown, BDB_Reading_Logs.editions );
+			}
+
 			$( document ).trigger( 'bdb_reading_log_updated', apiResponse );
 		} ).catch( function( errorMessage ) {
 			BDB_Reading_Logs.errorWrap.append( errorMessage ).show();
@@ -317,6 +371,16 @@ var BDB_Reading_Logs = {
 			unspinButton( button );
 		} );
 
+	},
+
+	/**
+	 * When a new edition is added, insert it into our array
+	 *
+	 * @param e
+	 * @param {object} newEdition
+	 */
+	updateEditions: function ( e, newEdition ) {
+		BDB_Reading_Logs.editions.push( newEdition );
 	}
 
 };

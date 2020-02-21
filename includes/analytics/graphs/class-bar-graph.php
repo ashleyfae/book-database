@@ -19,6 +19,11 @@ class Bar_Graph extends Graph {
 	/**
 	 * @var string Type of graph.
 	 */
-	protected $type = 'ColumnChart';
+	protected $type = 'XYChart';
+
+	/**
+	 * @var string Type of series.
+	 */
+	protected $series_type = 'ColumnSeries';
 
 }

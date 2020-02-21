@@ -20,6 +20,7 @@
   },
   "main": "webpack.config.js",
   "devDependencies": {
+    "@amcharts/amcharts4": "^4.9.1",
     "@wordpress/scripts": "^5.1.0",
     "css-loader": "^3.2.0",
     "ignore-emit-webpack-plugin": "^2.0.2",

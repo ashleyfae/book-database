@@ -1,6 +1,6 @@
 <?php
 /**
- * ChartJS Graph
+ * Graph
  *
  * @package   book-database
  * @copyright Copyright (c) 2020, Ashley Gibson
@@ -21,7 +21,12 @@ class Graph {
 	/**
 	 * @var string Type of graph.
 	 */
-	protected $type = 'line';
+	protected $type = 'PieChart';
+
+	/**
+	 * @var string Type of series.
+	 */
+	protected $series_type = 'PieSeries';
 
 	/**
 	 * @var array Graph arguments.
@@ -38,6 +43,9 @@ class Graph {
 	 */
 	protected $date_end;
 
+	/**
+	 * @var string Interval used in date charts.
+	 */
 	protected $interval = 'day';
 
 	/**
@@ -45,6 +53,9 @@ class Graph {
 	 */
 	protected $timestamp_format = 'U';
 
+	/**
+	 * @var array All collected timestamps.
+	 */
 	protected $timestamps = array();
 
 	/**
@@ -54,19 +65,10 @@ class Graph {
 	 */
 	public function __construct( $args = array() ) {
 
-		$this->args = wp_parse_args( $args, array(
-			'type'    => $this->type,
-			'options' => array(
-				'backgroundColor' => 'transparent',
-				'chartArea'       => array(
-					'width'  => '100%',
-					'height' => '80%'
-				),
-				'legend'          => array(
-					'position' => 'top'
-				)
-			)
-		) );
+		$this->args = array(
+			'type'  => $this->type,
+			'chart' => $args
+		);
 
 	}
 
@@ -177,85 +179,28 @@ class Graph {
 	/**
 	 * Add a data set
 	 *
-	 * @param array $columns Column labels.
-	 * @param array $rows    Rows values.
+	 * @param array $series Series data.
+	 * @param array $data   Data.
 	 */
-	public function add_dataset( $columns = array(), $rows = array() ) {
+	public function add_dataset( $data = array() ) {
+		$this->args['chart']['data'] = $this->shape_data( $data );
+	}
 
-		$this->args['chart']['cols'] = $this->shape_columns( $columns );
-		$this->args['chart']['rows'] = $this->shape_rows( $columns, $rows );
-
+	protected function shape_series( $series ) {
+		return $series;
 	}
 
 	/**
-	 * Shape columns
-	 *
-	 * @param array $columns
-	 *
-	 * @return array
-	 */
-	protected function shape_columns( $columns ) {
-
-		foreach ( $columns as $key => $value ) {
-			unset( $columns[ $key ]['display'] );
-		}
-
-		return $columns;
-
-	}
-
-	/**
-	 * Shape rows
+	 * Shape data
 	 *
 	 * Format and sanitize.
 	 *
-	 * @param array $columns
-	 * @param array $rows
+	 * @param array $data
 	 *
 	 * @return array
 	 */
-	protected function shape_rows( $columns, $rows ) {
-
-		$formatted_rows = array();
-
-		foreach ( $rows as $row ) {
-			$values = array();
-
-			foreach ( $columns as $column ) {
-				$this_value = array(
-					'v' => isset( $row->{$column['id']} ) ? $this->sanitize_row_value( $row->{$column['id']}, $column['type'] ) : null
-				);
-
-				if ( ! empty( $column['display'] ) ) {
-					$this_value['f'] = sprintf( $column['display'], $this_value['v'] );
-				}
-
-				$values[] = $this_value;
-			}
-
-			$formatted_rows[] = array(
-				'c' => $values
-			);
-		}
-
-		return $formatted_rows;
-
-	}
-
-	protected function sanitize_row_value( $value, $type ) {
-		switch ( $type ) {
-			case 'number' :
-				return is_int( $value ) ? intval( $value ) : floatval( $value );
-				break;
-
-			case 'date' :
-				return 'new Date( ' . esc_attr( sanitize_text_field( $value ) ) . ' )';
-				break;
-
-			default :
-				return sanitize_text_field( $value );
-				break;
-		}
+	protected function shape_data( $data ) {
+		return $data;
 	}
 
 	/**

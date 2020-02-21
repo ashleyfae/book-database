@@ -34,7 +34,7 @@ function editions() {
 	<div class="bdb-analytics-block bdb-dataset-type-graph bdb-flexbox-full" data-dataset="Editions_Over_Time" data-canvas="bdb-dataset-editions-over-time">
 		<h3><?php _e( 'Editions Acquired Over Time', 'book-database' ); ?></h3>
 		<div>
-			<div id="bdb-dataset-editions-over-time"></div>
+			<div id="bdb-dataset-editions-over-time" style="min-height: 500px;"></div>
 		</div>
 	</div>
 	<?php

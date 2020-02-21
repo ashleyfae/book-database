@@ -30,13 +30,43 @@ class Books_Per_Year extends Dataset {
 	 */
 	protected function _get_dataset() {
 
-		$graph = new Horizontal_Bar_Graph( array(
-			'options' => array(
-				'chartArea' => array(
-					'width'  => '90%',
-					'height' => '80%'
-				),
-				'legend'    => 'none'
+		$graph = new Bar_Graph( array(
+			'series' => array(
+				array(
+					'type'       => 'ColumnSeries',
+					'name'       => __( 'Books Read Per Year', 'book-database' ),
+					'dataFields' => array(
+						'valueX'    => 'number_books',
+						'categoryY' => 'year'
+					),
+					'columns'    => array(
+						'tooltipText' => __( 'Books Read in {categoryY}: {valueX}', 'book-database' ),
+					)
+				)
+			),
+			'yAxes'  => array(
+				array(
+					'type'       => 'CategoryAxis',
+					'title'      => array(
+						'text' => __( 'Year', 'book-database' )
+					),
+					'dataFields' => array(
+						'category' => 'year'
+					),
+				)
+			),
+			'xAxes'  => array(
+				array(
+					'type'         => 'ValueAxis',
+					'title'        => array(
+						'text' => __( 'Number of Books Read', 'book-database' )
+					),
+					'maxPrecision' => 0,
+					'min'          => 0
+				)
+			),
+			'cursor' => array(
+				'type' => 'XYCursor'
 			)
 		) );
 
@@ -84,25 +114,12 @@ class Books_Per_Year extends Dataset {
 		// Now convert back to objects.
 		foreach ( $years as $year => $value ) {
 			$dataset               = new \stdClass();
-			$dataset->year         = absint( $year );
+			$dataset->year         = (string) absint( $year );
 			$dataset->number_books = absint( $value );
 			$final_years[]         = $dataset;
 		}
 
-		$columns = array(
-			array(
-				'id'    => 'year',
-				'label' => esc_html__( 'Year', 'book-database' ),
-				'type'  => 'string'
-			),
-			array(
-				'id'      => 'number_books',
-				'label'   => esc_html__( 'Books Read', 'book-database' ),
-				'type'    => 'number'
-			)
-		);
-
-		$graph->add_dataset( $columns, $final_years );
+		$graph->add_dataset( $final_years );
 
 		return $graph->get_args();
 

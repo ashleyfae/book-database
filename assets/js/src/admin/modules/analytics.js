@@ -1,8 +1,8 @@
-/* global $, bdbVars, wp, google */
+/* global $, bdbVars, wp */
 
-import { dateLocalToUTC, dateUTCtoLocal } from "./dates";
 import { apiRequest, spinButton, unspinButton } from 'utils';
-import { BDB_Datepicker } from './datepicker';
+import * as am4core from "@amcharts/amcharts4/core";
+import * as am4charts from "@amcharts/amcharts4/charts";
 
 /**
  * Analytics
@@ -18,8 +18,6 @@ var BDB_Analytics = {
 		if ( ! document.getElementById( 'bdb-book-analytics-wrap') ) {
 			return;
 		}
-
-		google.charts.load( 'current', { packages: [ 'corechart', 'calendar' ] } );
 
 		this.getBlockValues();
 
@@ -93,6 +91,8 @@ var BDB_Analytics = {
 				console.log( apiResponse.type, apiResponse );
 				BDB_Analytics.renderDataset( blockWrap, apiResponse );
 			} ).catch( function( error ) {
+				console.log( 'Render error', error );
+
 				blockWrap.find( '.bdb-dataset-value' ).empty().append( error );
 			} );
 
@@ -116,23 +116,24 @@ var BDB_Analytics = {
 
 			case 'graph' :
 				if ( 'undefined' === typeof apiResponse.type ) {
+					console.log( ' undefined type' );
+
 					return;
 				}
 
-				let id = blockWrap.data( 'canvas' );
+				const id = blockWrap.data( 'canvas' );
 
 				if ( 'undefined' === typeof id || '' === id ) {
+					console.log( 'undefined ID' );
+
 					return;
 				}
 
 				const type = apiResponse.data.type;
-				const options = apiResponse.data.options || {};
-				const data = new google.visualization.DataTable( apiResponse.data.chart );
-				console.log( 'Chart Data', data );
+				console.log( 'Chart Data', apiResponse.data.chart.data );
 				console.log( 'Chart Type', type );
-				const chart = new google.visualization[ type ]( document.getElementById( id ) );
-				console.log( 'Chart', chart );
-				chart.draw( data, options );
+
+				am4core.createFromConfig( apiResponse.data.chart, id, type );
 				break;
 
 			case 'table' :

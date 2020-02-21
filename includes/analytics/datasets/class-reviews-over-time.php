@@ -28,17 +28,42 @@ class Reviews_Over_Time extends Dataset {
 	protected function _get_dataset() {
 
 		$graph = new Bar_Graph( array(
-			'options' => array(
-				'height'    => 500,
-				'chartArea' => array(
-					'width'  => '95%',
-					'height' => '80%'
-				),
-				'legend'    => 'none',
-				'hAxis'     => array(
-					'title' => __( 'Date Written', 'book-database' ),
-					//'textPosition' => 'in'
+			'series' => array(
+				array(
+					'type'       => 'ColumnSeries',
+					'name'       => __( 'Reviews Written Over Time', 'book-database' ),
+					'dataFields' => array(
+						'categoryX' => 'date',
+						'valueY'    => 'number_reviews'
+					),
+					'columns'    => array(
+						'tooltipText' => __( 'Reviews Written in {categoryX}: {valueY}', 'book-database' ),
+					)
 				)
+			),
+			'yAxes'  => array(
+				array(
+					'type'         => 'ValueAxis',
+					'title'        => array(
+						'text' => __( 'Number of Reviews Written', 'book-database' )
+					),
+					'maxPrecision' => 0,
+					'min'          => 0
+				)
+			),
+			'xAxes'  => array(
+				array(
+					'type'       => 'CategoryAxis',
+					'title'      => array(
+						'text' => __( 'Date', 'book-database' )
+					),
+					'dataFields' => array(
+						'category' => 'date'
+					),
+				)
+			),
+			'cursor' => array(
+				'type' => 'XYCursor'
 			)
 		) );
 
@@ -97,25 +122,12 @@ class Reviews_Over_Time extends Dataset {
 		$final_periods = array();
 		foreach ( $graph->fill_data( $result_array ) as $date => $value ) {
 			$dataset                 = new \stdClass();
-			$dataset->period         = $date;
+			$dataset->date           = $date;
 			$dataset->number_reviews = $value;
 			$final_periods[]         = $dataset;
 		}
 
-		$columns = array(
-			array(
-				'id'    => 'period',
-				'label' => esc_html__( 'Date', 'book-database' ),
-				'type'  => 'string'
-			),
-			array(
-				'id'    => 'number_reviews',
-				'label' => esc_html__( 'Reviews Written', 'book-database' ),
-				'type'  => 'number',
-			)
-		);
-
-		$graph->add_dataset( $columns, $final_periods );
+		$graph->add_dataset( $final_periods );
 
 		return $graph->get_args();
 

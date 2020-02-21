@@ -25,7 +25,27 @@ class Pages_Breakdown extends Dataset {
 	 */
 	protected function _get_dataset() {
 
-		$chart = new Pie_Chart();
+		$chart = new Pie_Chart( array(
+			'series' => array(
+				array(
+					'type'       => 'PieSeries',
+					'name'       => __( 'Pages Breakdown', 'book-database' ),
+					'dataFields' => array(
+						'category' => 'page_range',
+						'value'    => 'number_books'
+					),
+					'slices'    => array(
+						'tooltipText' => '{category}: {value.value}',
+					),
+				)
+			),
+			'legend' => array(
+				'type' => 'Legend',
+				'valueLabels' => array(
+					'text' => '{value.value}'
+				)
+			)
+		) );
 
 		$tbl_log      = book_database()->get_table( 'reading_log' )->get_table_name();
 		$tbl_books    = book_database()->get_table( 'books' )->get_table_name();
@@ -51,22 +71,7 @@ class Pages_Breakdown extends Dataset {
 
 		$results = $this->get_db()->get_results( $query );
 
-		$columns = array(
-			array(
-				'id'      => 'page_range',
-				'label'   => esc_html__( 'Number of Pages', 'book-database' ),
-				'type'    => 'string',
-				'display' => esc_html__( '%s Pages', 'book-database' )
-			),
-			array(
-				'id'      => 'number_books',
-				'label'   => esc_html__( 'Number of Books', 'book-database' ),
-				'type'    => 'number',
-				'display' => esc_html__( '%d Books', 'book-database' )
-			)
-		);
-
-		$chart->add_dataset( $columns, $results );
+		$chart->add_dataset( $results );
 
 		return $chart->get_args();
 

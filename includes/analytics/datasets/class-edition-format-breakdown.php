@@ -26,7 +26,24 @@ class Edition_Format_Breakdown extends Dataset {
 	 */
 	protected function _get_dataset() {
 
-		$chart = new Pie_Chart();
+		$chart = new Pie_Chart( array(
+			'series' => array(
+				array(
+					'type'       => 'PieSeries',
+					'name'       => __( 'Edition Format Breakdown', 'book-database' ),
+					'dataFields' => array(
+						'category' => 'format',
+						'value'    => 'count'
+					),
+					'slices'     => array(
+						'tooltipText' => '{category}: {value.value} Books',
+					),
+				)
+			),
+			'legend' => array(
+				'type'        => 'Legend',
+			),
+		) );
 
 		$tbl_editions = book_database()->get_table( 'editions' )->get_table_name();
 
@@ -38,20 +55,6 @@ class Edition_Format_Breakdown extends Dataset {
 			ORDER BY format DESC";
 
 		$results = $this->get_db()->get_results( $query );
-
-		$columns = array(
-			array(
-				'id'    => 'format',
-				'label' => esc_html__( 'Format', 'book-database' ),
-				'type'  => 'string',
-			),
-			array(
-				'id'      => 'count',
-				'label'   => esc_html__( 'Number of Books', 'book-database' ),
-				'type'    => 'number',
-				'display' => esc_html__( '%d Books', 'book-database' )
-			)
-		);
 
 		$formats = get_book_formats();
 
@@ -69,7 +72,7 @@ class Edition_Format_Breakdown extends Dataset {
 			}
 		}
 
-		$chart->add_dataset( $columns, $results );
+		$chart->add_dataset( $results );
 
 		return $chart->get_args();
 

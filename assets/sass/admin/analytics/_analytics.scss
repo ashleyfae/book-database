@@ -1,3 +1,13 @@
+#bdb-book-analytics-wrap {
+    hr {
+        margin: 3em 0;
+    }
+
+    .bdb-flexbox-container {
+        align-items: normal;
+    }
+}
+
 .bdb-analytics-block {
     flex-grow: 1;
     position: relative;
@@ -10,9 +20,12 @@
     &.bdb-dataset-type-graph {
         max-width: 100%;
         width: inherit !important;
+    }
 
-        canvas {
-            width: auto;
+    &.bdb-dataset-type-graph,
+    &.bdb-dataset-type-chart {
+        > div > div {
+            min-height: 500px;
         }
     }
 
@@ -45,9 +58,5 @@
         position: absolute;
         bottom: 0;
         right: 0;
-    }
-
-    svg > g > g:last-child {
-        pointer-events: none;
     }
 }

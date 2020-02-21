@@ -43,13 +43,6 @@ function reviews() {
 				<?php require_once BDB_DIR . 'includes/admin/analytics/templates/tmpl-reviews-written-none.php'; ?>
 			</script>
 		</section>
-
-		<section class="bdb-analytics-block bdb-dataset-type-table bdb-flexbox-half" data-dataset="Edition_Format_Breakdown" data-canvas="bdb-dataset-edition-format-breakdown">
-			<h3><?php _e( 'Format Breakdown', 'book-database' ); ?></h3>
-			<div>
-				<div id="bdb-dataset-edition-format-breakdown"></div>
-			</div>
-		</section>
 	</div>
 
 	<div class="bdb-analytics-block bdb-dataset-type-graph bdb-flexbox-full" data-dataset="Reviews_Over_Time" data-canvas="bdb-dataset-reviews-over-time">

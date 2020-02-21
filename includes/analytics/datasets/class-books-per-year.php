@@ -64,9 +64,6 @@ class Books_Per_Year extends Dataset {
 					'maxPrecision' => 0,
 					'min'          => 0
 				)
-			),
-			'cursor' => array(
-				'type' => 'XYCursor'
 			)
 		) );
 

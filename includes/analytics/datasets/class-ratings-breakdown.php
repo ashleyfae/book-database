@@ -25,11 +25,28 @@ class Ratings_Breakdown extends Dataset {
 	 */
 	protected function _get_dataset() {
 
-		$chart = new Pie_Chart();
+		$chart = new Pie_Chart( array(
+			'series' => array(
+				array(
+					'type'       => 'PieSeries',
+					'name'       => __( 'Rating Breakdown', 'book-database' ),
+					'dataFields' => array(
+						'category' => 'rating',
+						'value'    => 'number_books'
+					),
+					'slices'     => array(
+						'tooltipText' => '{category}: {value.value}',
+					),
+				)
+			),
+			'legend' => array(
+				'type'        => 'Legend',
+			),
+		) );
 
 		$tbl_log = book_database()->get_table( 'reading_log' )->get_table_name();
 
-		$query = "SELECT rating, COUNT( IFNULL( rating, 1 ) ) AS count
+		$query = "SELECT rating, COUNT( IFNULL( rating, 1 ) ) AS number_books
 			FROM {$tbl_log} AS log 
 			WHERE date_finished IS NOT NULL
 			{$this->get_date_condition( 'date_finished', 'date_finished' )} 
@@ -38,30 +55,16 @@ class Ratings_Breakdown extends Dataset {
 
 		$results   = $this->get_db()->get_results( $query );
 
-		$columns = array(
-			array(
-				'id'      => 'rating',
-				'label'   => esc_html__( 'Rating', 'book-database' ),
-				'type'    => 'string',
-			),
-			array(
-				'id'      => 'count',
-				'label'   => esc_html__( 'Number of Books', 'book-database' ),
-				'type'    => 'number',
-				'display' => esc_html__( '%d Books', 'book-database' )
-			)
-		);
-
 		if ( ! empty( $results ) ) {
 			foreach ( $results as $index => $result ) {
 				$result->rating = is_null( $result->rating ) ? __( 'None', 'book-database' ) : sprintf( __( '%s Stars', 'book-database' ), $result->rating * 1 );
-				$result->count  = absint( $result->count );
+				$result->number_books  = absint( $result->number_books );
 
 				$results[ $index ] = $result;
 			}
 		}
 
-		$chart->add_dataset( $columns, $results );
+		$chart->add_dataset( $results );
 
 		return $chart->get_args();
 

@@ -61,14 +61,14 @@ function reading() {
 			</script>
 		</section>
 
-		<section class="bdb-analytics-block bdb-dataset-type-table bdb-flexbox-half" data-dataset="Pages_Breakdown" data-canvas="bdb-dataset-pages-breakdown">
+		<section class="bdb-analytics-block bdb-dataset-type-chart bdb-flexbox-half" data-dataset="Pages_Breakdown" data-canvas="bdb-dataset-pages-breakdown">
 			<h3><?php _e( 'Pages Breakdown', 'book-database' ); ?></h3>
 			<div>
 				<div id="bdb-dataset-pages-breakdown"></div>
 			</div>
 		</section>
 
-		<section class="bdb-analytics-block bdb-dataset-type-table bdb-flexbox-half" data-dataset="Format_Breakdown" data-canvas="bdb-dataset-format-breakdown">
+		<section class="bdb-analytics-block bdb-dataset-type-chart bdb-flexbox-half" data-dataset="Format_Breakdown" data-canvas="bdb-dataset-format-breakdown">
 			<h3><?php _e( 'Format Breakdown', 'book-database' ); ?></h3>
 			<div>
 				<div id="bdb-dataset-format-breakdown"></div>
@@ -79,7 +79,7 @@ function reading() {
 	<div class="bdb-analytics-block bdb-dataset-type-graph bdb-flexbox-full" data-dataset="Books_Read_Over_Time" data-canvas="bdb-dataset-books-read-over-time">
 		<h3><?php _e( 'Books Read Over Time', 'book-database' ); ?></h3>
 		<div>
-			<div id="bdb-dataset-books-read-over-time" style="min-height: 500px;"></div>
+			<div id="bdb-dataset-books-read-over-time"></div>
 		</div>
 	</div>
 	<?php

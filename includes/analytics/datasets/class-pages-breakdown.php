@@ -34,17 +34,14 @@ class Pages_Breakdown extends Dataset {
 						'category' => 'page_range',
 						'value'    => 'number_books'
 					),
-					'slices'    => array(
+					'slices'     => array(
 						'tooltipText' => '{category}: {value.value}',
 					),
 				)
 			),
 			'legend' => array(
 				'type' => 'Legend',
-				'valueLabels' => array(
-					'text' => '{value.value}'
-				)
-			)
+			),
 		) );
 
 		$tbl_log      = book_database()->get_table( 'reading_log' )->get_table_name();

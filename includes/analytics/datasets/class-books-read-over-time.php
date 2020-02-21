@@ -61,9 +61,6 @@ class Books_Read_Over_Time extends Dataset {
 						'category' => 'date'
 					),
 				)
-			),
-			'cursor' => array(
-				'type' => 'XYCursor'
 			)
 		) );
 

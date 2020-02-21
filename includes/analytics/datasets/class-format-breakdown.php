@@ -26,12 +26,29 @@ class Format_Breakdown extends Dataset {
 	 */
 	protected function _get_dataset() {
 
-		$chart = new Pie_Chart();
+		$chart = new Pie_Chart( array(
+			'series' => array(
+				array(
+					'type'       => 'PieSeries',
+					'name'       => __( 'Format Breakdown', 'book-database' ),
+					'dataFields' => array(
+						'category' => 'format',
+						'value'    => 'number_books'
+					),
+					'slices'     => array(
+						'tooltipText' => '{category}: {value.value}',
+					),
+				)
+			),
+			'legend' => array(
+				'type' => 'Legend',
+			),
+		) );
 
 		$tbl_log      = book_database()->get_table( 'reading_log' )->get_table_name();
 		$tbl_editions = book_database()->get_table( 'editions' )->get_table_name();
 
-		$query = "SELECT format, COUNT( log.id ) AS count
+		$query = "SELECT format, COUNT( log.id ) AS number_books
 			FROM {$tbl_log} AS log 
 			LEFT JOIN {$tbl_editions} AS edition ON( log.edition_id = edition.id )
 			WHERE date_finished IS NOT NULL
@@ -43,25 +60,11 @@ class Format_Breakdown extends Dataset {
 
 		$results = $this->get_db()->get_results( $query );
 
-		$columns = array(
-			array(
-				'id'    => 'format',
-				'label' => esc_html__( 'Format', 'book-database' ),
-				'type'  => 'string',
-			),
-			array(
-				'id'      => 'count',
-				'label'   => esc_html__( 'Number of Books', 'book-database' ),
-				'type'    => 'number',
-				'display' => esc_html__( '%d Books', 'book-database' )
-			)
-		);
-
 		$formats = get_book_formats();
 
 		if ( ! empty( $results ) ) {
 			foreach ( $results as $index => $result ) {
-				$result->count = absint( $result->count );
+				$result->number_books = absint( $result->number_books );
 
 				if ( is_null( $result->format ) || ! array_key_exists( $result->format, $formats ) ) {
 					$result->format = __( 'Unknown', 'book-database' );
@@ -73,7 +76,7 @@ class Format_Breakdown extends Dataset {
 			}
 		}
 
-		$chart->add_dataset( $columns, $results );
+		$chart->add_dataset( $results );
 
 		return $chart->get_args();
 

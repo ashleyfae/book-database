@@ -55,7 +55,8 @@ class Edition_Genre_Breakdown extends Dataset {
 		WHERE t.taxonomy = 'genre'
 		AND edition.date_acquired IS NOT NULL 
 		{$this->get_date_condition( 'date_acquired', 'date_acquired' )}
-		GROUP BY t.name";
+		GROUP BY t.name
+		LIMIT 10";
 
 		$this->log( $query, __CLASS__ );
 

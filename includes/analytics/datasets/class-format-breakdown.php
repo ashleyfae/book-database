@@ -36,7 +36,7 @@ class Format_Breakdown extends Dataset {
 						'value'    => 'number_books'
 					),
 					'slices'     => array(
-						'tooltipText' => '{category}: {value.value}',
+						'tooltipText' => __( '{category}: {value.value} Books', 'book-database' ),
 					),
 				)
 			),

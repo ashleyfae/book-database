@@ -83,6 +83,9 @@ class Books_Read_Over_Time extends Dataset {
 			);
 		}
 
+		$this->log( sprintf( 'Start: %s', $start ), __CLASS__ );
+		$this->log( sprintf( 'End: %s', $end ), __CLASS__ );
+
 		$graph->set_range( $start, $end );
 
 		try {

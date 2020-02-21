@@ -25,7 +25,7 @@ namespace Book_Database\Analytics;
 		{{ row.number_reviews }}
 	</td>
 	<td data-colname="<?php esc_attr_e( 'Average Rating', 'book-database' ); ?>">
-		{{ row.average_rating_formatted }}
+		{{{ row.average_rating_formatted }}}
 	</td>
 </tr>
 <# } ); #>

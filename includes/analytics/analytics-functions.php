@@ -110,7 +110,7 @@ function get_date_filter_range( $option = '', $format = 'Y-m-d H:i:s' ) {
 				break;
 
 			case 'this_year' :
-				$range['start'] = new \DateTime( 'first day of this year', get_site_timezone() );
+				$range['start'] = new \DateTime( date( 'Y-01-01' ), get_site_timezone() );
 				$range['end']   = new \DateTime( date( 'Y-12-31' ), get_site_timezone() );
 				break;
 

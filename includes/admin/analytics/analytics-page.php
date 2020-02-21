@@ -20,9 +20,9 @@ function get_analytics_tabs() {
 			'title'    => __( 'Overview', 'book-database' ),
 			'dashicon' => 'dashboard'
 		),
-		'books'    => array(
-			'title'    => __( 'Books', 'book-database' ),
-			'dashicon' => 'book'
+		'library'  => array(
+			'title'    => __( 'Library', 'book-database' ),
+			'dashicon' => 'admin-home'
 		),
 		'reading'  => array(
 			'title'    => __( 'Reading', 'book-database' ),

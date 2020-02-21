@@ -33,6 +33,15 @@ function editions() {
 				<span class="bdb-dataset-value"></span>
 				<span class="bdb-dataset-period"></span>
 			</div>
+
+			<hr>
+
+			<div class="bdb-analytics-block bdb-dataset-type-value" data-dataset="Average_Days_Acquired_to_Read">
+				<h3><?php _e( 'Average # Days from Acquired to Read', 'book-database' ); ?></h3>
+				<p><?php _e( 'Average number of days between the date you acquire a book and the date you start reading. Unread books are excluded.', 'book-database' ); ?></p>
+				<span class="bdb-dataset-value"></span>
+				<span class="bdb-dataset-period"></span>
+			</div>
 		</section>
 
 		<section class="bdb-analytics-block bdb-dataset-type-chart bdb-flexbox-half" data-dataset="Edition_Genre_Breakdown" data-canvas="bdb-dataset-edition-genre-breakdown">

@@ -156,3 +156,19 @@ FROM wp_bdb_reading_log
 WHERE date_started IS NOT NULL
 AND date_finished IS NOT NULL
 ```
+
+Average number of days between the date you acquire a book and the date you first start reading it.
+
+```mysql
+SELECT ROUND( AVG( DATEDIFF( date_started, date_acquired ) ) ) + 1 AS number_days_to_start
+FROM wp_bdb_owned_editions AS edition
+INNER JOIN wp_bdb_reading_log AS log ON log.id = (
+	SELECT id
+	FROM wp_bdb_reading_log AS log2
+	WHERE edition_id = edition.id
+	AND date_started IS NOT NULL
+	ORDER BY date_started
+	LIMIT 1
+)
+WHERE date_acquired IS NOT NULL
+```

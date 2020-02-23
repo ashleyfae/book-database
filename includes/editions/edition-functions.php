@@ -112,14 +112,14 @@ function count_editions( $args = array() ) {
 /**
  * Add a new edition
  *
- * @param array   $args          {
+ * @param array      $args          {
  *
- * @type int      $book_id       Required. ID of the corresponding book.
- * @type string   $isbn          Optional. ISBN or ASIN.
- * @type string   $format        Optional. Format of the book (e.g. `hardcover`, `paperback`, etc.)
- * @type string   $date_acquired Optional. Date you acquired the book, in UTC / MySQL format.
- * @type int|null $source_id     Optional. ID of the `source` term.
- * @type int|null $signed        Optional. `1` if the book is signed, `null` if not.
+ * @type int         $book_id       Required. ID of the corresponding book.
+ * @type string      $isbn          Optional. ISBN or ASIN.
+ * @type string      $format        Optional. Format of the book (e.g. `hardcover`, `paperback`, etc.)
+ * @type string|null $date_acquired Optional. Date you acquired the book, in UTC / MySQL format.
+ * @type int|null    $source_id     Optional. ID of the `source` term.
+ * @type int|null    $signed        Optional. `1` if the book is signed, `null` if not.
  * }
  *
  * @return int ID of the newly created edition.

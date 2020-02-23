@@ -69,7 +69,8 @@ class Graph {
 			'type'  => $this->type,
 			'chart' => wp_parse_args( $args, array(
 				'exporting' => array(
-					'menu' => array()
+					'menu'       => array(),
+					'filePrefix' => 'book-database'
 				)
 			) )
 		);

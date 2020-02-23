@@ -32,7 +32,7 @@ class Book_Terms_List_Table extends List_Table {
 			'number'  => 1,
 			'orderby' => 'name',
 			'order'   => 'ASC',
-			'fields'  => 'name'
+			'fields'  => 'slug'
 		) );
 
 		if ( ! empty( $taxonomies ) ) {
@@ -129,6 +129,8 @@ class Book_Terms_List_Table extends List_Table {
 	 * Render the "Name" column.
 	 *
 	 * @param Book_Term $item
+	 *
+	 * @return string
 	 */
 	public function column_name( $item ) {
 

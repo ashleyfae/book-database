@@ -38,7 +38,7 @@ class Library_Book_Releases extends Dataset {
 		WHERE pub_date IS NOT NULL
 		{$this->get_date_condition( 'pub_date', 'pub_date' )}
 		GROUP BY book.id
-		ORDER BY pub_date DESC
+		ORDER BY pub_date ASC
 		LIMIT 20";
 
 		$this->log( $query, __CLASS__ );

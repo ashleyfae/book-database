@@ -30,7 +30,7 @@ class Number_Distinct_Authors_Added extends Dataset {
 			FROM {$tbl_books} AS book
 			INNER JOIN {$tbl_author_r} AS ar ON( book.id = ar.book_id )
 			WHERE 1=1
-			{$this->get_date_condition( 'date_created', 'date_created' )}";
+			{$this->get_date_condition( 'book.date_created', 'book.date_created' )}";
 
 		return absint( $this->get_db()->get_var( $query ) );
 

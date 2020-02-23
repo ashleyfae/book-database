@@ -63,7 +63,7 @@ function render_book_terms_page() {
 										</div>
 										<div class="form-field">
 											<label for="bdb-book-term-description"><?php _e( 'Description', 'book-database' ); ?></label>
-											<textarea id="bdb-book-term-slug" name="description" rows="5" cols="50" class="large-text"></textarea>
+											<textarea id="bdb-book-term-description" name="description" rows="5" cols="50" class="large-text"></textarea>
 										</div>
 										<?php
 										do_action( 'book-database/terms/add-term-fields' );

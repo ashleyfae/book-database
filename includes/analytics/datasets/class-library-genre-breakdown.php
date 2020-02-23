@@ -53,7 +53,7 @@ class Library_Genre_Breakdown extends Dataset {
 		INNER JOIN {$tbl_term_r} AS tr ON( book.id = tr.book_id )
 		INNER JOIN {$tbl_terms} AS t ON( tr.term_id = t.id )
 		WHERE t.taxonomy = 'genre'
-		{$this->get_date_condition( 'date_created', 'date_created' )}
+		{$this->get_date_condition( 'book.date_created', 'book.date_created' )}
 		GROUP BY t.name
 		LIMIT 10";
 

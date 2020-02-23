@@ -81,6 +81,8 @@ abstract class Dataset {
 	 *
 	 * The data may either be a single value or table/graph data.
 	 *
+	 * @todo caching
+	 *
 	 * @return array
 	 */
 	public function get_dataset() {

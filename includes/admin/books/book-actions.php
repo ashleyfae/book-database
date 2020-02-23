@@ -184,9 +184,11 @@ function process_update_book() {
 		if ( ! empty( $_POST['authors'] ) ) {
 			$authors_array = is_array( $_POST['authors'] ) ? $_POST['authors'] : explode( ',', $_POST['authors'] );
 			$authors_array = array_unique( array_map( 'trim', $authors_array ) );
+		} else {
+			$authors_array = array();
+		}
 
 			set_book_authors( $book_id, $authors_array );
-		}
 
 		// Set the terms.
 		if ( ! empty( $_POST['book_terms'] ) && is_array( $_POST['book_terms'] ) ) {

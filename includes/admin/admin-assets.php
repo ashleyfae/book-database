@@ -62,7 +62,7 @@ function enqueue_admin_assets( $hook ) {
 
 		$deps = array( 'jquery', 'wp-util' );
 
-		wp_enqueue_script( 'book-database-analytics', BDB_URL . 'assets/js/build/analytics.min.js', $deps, time(), true );
+		wp_enqueue_script( 'book-database-analytics', BDB_URL . 'assets/js/build/book-graphs.min.js', $deps, time(), true );
 		wp_localize_script( 'book-database-analytics', 'bdbVars', $localized );
 
 	} else {

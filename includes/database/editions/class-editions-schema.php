@@ -64,7 +64,8 @@ class Editions_Schema extends BerlinDB\Database\Schema {
 		array(
 			'name'       => 'date_acquired',
 			'type'       => 'datetime',
-			'default'    => '0000-00-00 00:00:00',
+			'default'    => null,
+			'allow_null' => true,
 			'date_query' => true,
 			'sortable'   => true,
 		),

@@ -19,29 +19,28 @@ function editions() {
 	<p><?php _e( 'Results are pulled from editions you\'ve acquired over the selected period.', 'book-database' ); ?></p>
 
 	<div class="bdb-flexbox-container">
-		<section class="bdb-analytics-block">
-			<div class="bdb-analytics-block bdb-dataset-type-value" data-dataset="Number_Editions">
-				<h3><?php _e( 'Editions Added', 'book-database' ); ?></h3>
-				<span class="bdb-dataset-value"></span>
-				<span class="bdb-dataset-period"></span>
-			</div>
+		<section class="bdb-analytics-block bdb-dataset-type-value" data-dataset="Number_Editions">
+			<h3><?php _e( 'Editions Added', 'book-database' ); ?></h3>
+			<span class="bdb-dataset-value"></span>
+			<span class="bdb-dataset-period"></span>
+		</section>
 
-			<hr>
+		<section class="bdb-analytics-block bdb-dataset-type-value" data-dataset="Number_Signed_Editions">
+			<h3><?php _e( 'Signed Copies Added', 'book-database' ); ?></h3>
+			<span class="bdb-dataset-value"></span>
+			<span class="bdb-dataset-period"></span>
+		</section>
 
-			<div class="bdb-analytics-block bdb-dataset-type-value" data-dataset="Number_Signed_Editions">
-				<h3><?php _e( 'Signed Copies Added', 'book-database' ); ?></h3>
-				<span class="bdb-dataset-value"></span>
-				<span class="bdb-dataset-period"></span>
-			</div>
+		<section class="bdb-analytics-block bdb-dataset-type-value" data-dataset="Average_Days_Acquired_to_Read">
+			<h3><?php _e( 'Average # Days from Acquired to Read', 'book-database' ); ?></h3>
+			<span class="bdb-dataset-value"></span>
+			<span class="bdb-dataset-period"><?php _e( 'this period', 'book-database' ); ?></span>
+		</section>
 
-			<hr>
-
-			<div class="bdb-analytics-block bdb-dataset-type-value" data-dataset="Average_Days_Acquired_to_Read">
-				<h3><?php _e( 'Average # Days from Acquired to Read', 'book-database' ); ?></h3>
-				<p><?php _e( 'Average number of days between the date you acquire a book and the date you start reading. Unread books are excluded.', 'book-database' ); ?></p>
-				<span class="bdb-dataset-value"></span>
-				<span class="bdb-dataset-period"></span>
-			</div>
+		<section class="bdb-analytics-block bdb-dataset-type-value" data-dataset="Average_Days_Acquired_to_Read" data-arg_date_option="all_time">
+			<h3><?php _e( 'Average # Days from Acquired to Read', 'book-database' ); ?></h3>
+			<span class="bdb-dataset-value"></span>
+			<span class="bdb-dataset-period"><?php _e( 'all time', 'book-database' ); ?></span>
 		</section>
 
 		<section class="bdb-analytics-block bdb-dataset-type-chart bdb-flexbox-half" data-dataset="Edition_Genre_Breakdown" data-canvas="bdb-dataset-edition-genre-breakdown">

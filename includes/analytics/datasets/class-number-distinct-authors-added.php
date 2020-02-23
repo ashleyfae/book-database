@@ -26,11 +26,13 @@ class Number_Distinct_Authors_Added extends Dataset {
 		$tbl_books    = book_database()->get_table( 'books' )->get_table_name();
 		$tbl_author_r = book_database()->get_table( 'book_author_relationships' )->get_table_name();
 
-		$query = "SELECT DISTINCT author_id
+		$query = "SELECT COUNT(DISTINCT author_id)
 			FROM {$tbl_books} AS book
 			INNER JOIN {$tbl_author_r} AS ar ON( book.id = ar.book_id )
 			WHERE 1=1
 			{$this->get_date_condition( 'book.date_created', 'book.date_created' )}";
+
+		$this->log( $query, __CLASS__ );
 
 		return absint( $this->get_db()->get_var( $query ) );
 

@@ -11,9 +11,11 @@ namespace Book_Database\REST_API\v1;
 
 use Book_Database\Exception;
 use Book_Database\REST_API\Controller;
+use function Book_Database\add_book_term;
 use function Book_Database\add_edition;
 use function Book_Database\delete_edition;
 use function Book_Database\get_book_formats;
+use function Book_Database\get_book_term;
 use function Book_Database\get_book_term_by_name_and_taxonomy;
 use function Book_Database\get_book_terms;
 use function Book_Database\get_edition;
@@ -127,7 +129,7 @@ class Edition extends Controller {
 				'date_acquired' => array(
 					'default'           => '',
 					'sanitize_callback' => function ( $param, $request, $key ) {
-						return sanitize_text_field( $param );
+						return ! empty( $param ) ? sanitize_text_field( $param ) : null;
 					}
 				),
 				'source_id'     => array(
@@ -138,16 +140,10 @@ class Edition extends Controller {
 						}
 
 						if ( is_numeric( $param ) ) {
-							$sources = get_book_terms( array(
-								'id__in'   => array( $param ),
-								'taxonomy' => 'source',
-								'fields'   => 'ids'
-							) );
-						} else {
-							$sources = get_book_term_by_name_and_taxonomy( $param, 'source' );
+							return get_book_term( $param ) instanceof \Book_Database\Book_Term;
 						}
 
-						return ! empty( $sources );
+						return true;
 					},
 					'sanitize_callback' => function ( $param, $request, $key ) {
 						if ( empty( $param ) ) {
@@ -158,14 +154,28 @@ class Edition extends Controller {
 							return absint( $param );
 						}
 
-						// Convert source name to ID.
-						$source = get_book_term_by_name_and_taxonomy( $param, 'source' );
+						try {
+							// Convert source name to ID.
+							$source = get_book_term_by_name_and_taxonomy( $param, 'source' );
 
-						if ( empty( $source ) ) {
+							if ( empty( $source ) ) {
+								// Add a new source.
+								$source_id = add_book_term( array(
+									'taxonomy' => 'source',
+									'name'     => sanitize_text_field( $param )
+								) );
+
+								$source = get_book_term( $source_id );
+							}
+
+							if ( ! isset( $source ) || ! $source instanceof \Book_Database\Book_Term ) {
+								throw new \Exception();
+							}
+
+							return absint( $source->get_id() );
+						} catch ( \Exception $e ) {
 							return null;
 						}
-
-						return absint( $source->get_id() );
 					}
 				),
 				'signed'        => array(
@@ -219,7 +229,7 @@ class Edition extends Controller {
 				),
 				'date_acquired' => array(
 					'sanitize_callback' => function ( $param, $request, $key ) {
-						return sanitize_text_field( $param );
+						return ! empty( $param ) ? sanitize_text_field( $param ) : null;
 					}
 				),
 				'source_id'     => array(
@@ -229,16 +239,10 @@ class Edition extends Controller {
 						}
 
 						if ( is_numeric( $param ) ) {
-							$sources = get_book_terms( array(
-								'id__in'   => array( $param ),
-								'taxonomy' => 'source',
-								'fields'   => 'ids'
-							) );
-						} else {
-							$sources = get_book_term_by_name_and_taxonomy( $param, 'source' );
+							return get_book_term( $param ) instanceof \Book_Database\Book_Term;
 						}
 
-						return ! empty( $sources );
+						return true;
 					},
 					'sanitize_callback' => function ( $param, $request, $key ) {
 						if ( empty( $param ) ) {
@@ -249,14 +253,28 @@ class Edition extends Controller {
 							return absint( $param );
 						}
 
-						// Convert source name to ID.
-						$source = get_book_term_by_name_and_taxonomy( $param, 'source' );
+						try {
+							// Convert source name to ID.
+							$source = get_book_term_by_name_and_taxonomy( $param, 'source' );
 
-						if ( empty( $source ) ) {
+							if ( empty( $source ) ) {
+								// Add a new source.
+								$source_id = add_book_term( array(
+									'taxonomy' => 'source',
+									'name'     => sanitize_text_field( $source )
+								) );
+
+								$source = get_book_term( $source_id );
+							}
+
+							if ( ! isset( $source ) || ! $source instanceof \Book_Database\Book_Term ) {
+								throw new \Exception();
+							}
+
+							return absint( $source->get_id() );
+						} catch ( \Exception $e ) {
 							return null;
 						}
-
-						return absint( $source->get_id() );
 					}
 				),
 				'signed'        => array(

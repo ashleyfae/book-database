@@ -43,7 +43,7 @@ class Books_Read_by_Publication_Year extends Dataset {
 							'type'        => 'CircleBullet',
 							'tooltipText' => __( "[bold]{title}:[/]\nDate Read: {categoryX}\nPublication Year: {valueY}", 'book-database' ),
 							'circle'      => array(
-								'radius'        => 10,
+								'radius'        => 5,
 								'fillOpacity'   => 0.7,
 								'strokeOpacity' => 0
 							),

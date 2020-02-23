@@ -69,7 +69,34 @@ class Graph {
 			'type'  => $this->type,
 			'chart' => wp_parse_args( $args, array(
 				'exporting' => array(
-					'menu'       => array(),
+					'menu'       => array(
+						'items' => array(
+							array(
+								'label' => '...',
+								'menu'  => array(
+									array(
+										'label' => __( 'Image', 'book-database' ),
+										'menu'  => array(
+											array( 'type' => 'png', 'label' => __( 'PNG', 'book-database' ) ),
+											array( 'type' => 'jpg', 'label' => __( 'JPG', 'book-database' ) ),
+											array( 'type' => 'svg', 'label' => __( 'SVG', 'book-database' ) )
+										)
+									),
+									array(
+										'label' => __( 'Data', 'book-database' ),
+										'menu'  => array(
+											array( 'type' => 'json', 'label' => __( 'JSON', 'book-database' ) ),
+											array( 'type' => 'csv', 'label' => __( 'CSV', 'book-database' ) )
+										)
+									),
+									array(
+										'label' => __( 'Print', 'book-database' ),
+										'type'  => 'print'
+									)
+								)
+							)
+						)
+					),
 					'filePrefix' => 'book-database'
 				)
 			) )

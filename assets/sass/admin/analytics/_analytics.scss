@@ -29,6 +29,22 @@
         }
     }
 
+    .bdb-dataset-book-grid {
+        justify-content: start;
+
+        figure {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 5px;
+            width: 25%;
+
+            img {
+                height: auto;
+                max-width: 100%;
+            }
+        }
+    }
+
     &.bdb-dataset-type-dataset {
         display: flex;
 

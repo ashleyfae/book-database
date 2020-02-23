@@ -18,7 +18,7 @@ use function Book_Database\book_database;
  */
 class Most_Read_Genres extends Dataset {
 
-	protected $type = 'table';
+	protected $type = 'template';
 
 	/**
 	 * @inheritDoc

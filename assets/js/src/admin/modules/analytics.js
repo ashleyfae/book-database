@@ -136,7 +136,7 @@ var BDB_Analytics = {
 				am4core.createFromConfig( apiResponse.data.chart, id, type );
 				break;
 
-			case 'table' :
+			case 'template' :
 				let templateID = '';
 
 				if ( apiResponse.data.length > 0 ) {

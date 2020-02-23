@@ -22,7 +22,7 @@ function terms() {
 
 	<div class="bdb-flexbox-container">
 		<?php foreach ( get_book_taxonomies() as $taxonomy ) : ?>
-			<section class="bdb-analytics-block bdb-dataset-type-table bdb-flexbox-half" data-dataset="Terms_Breakdown" data-arg_taxonomy="<?php echo esc_attr( $taxonomy->get_slug() ); ?>">
+			<section class="bdb-analytics-block bdb-dataset-type-template bdb-flexbox-half" data-dataset="Terms_Breakdown" data-arg_taxonomy="<?php echo esc_attr( $taxonomy->get_slug() ); ?>">
 				<h3><?php printf( __( '%s Breakdown', 'book-database' ), $taxonomy->get_name() ) ?></h3>
 
 				<table class="wp-list-table widefat fixed striped">

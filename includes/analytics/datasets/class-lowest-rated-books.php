@@ -20,7 +20,7 @@ use function Book_Database\format_date;
  */
 class Lowest_Rated_Books extends Dataset {
 
-	protected $type = 'table';
+	protected $type = 'template';
 
 	/**
 	 * @inheritDoc

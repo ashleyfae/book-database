@@ -64,7 +64,8 @@ class Books_Read_Over_Time extends Dataset {
 			)
 		) );
 
-		$tbl_log = book_database()->get_table( 'reading_log' )->get_table_name();
+		$tbl_log   = book_database()->get_table( 'reading_log' )->get_table_name();
+		$tbl_books = book_database()->get_table( 'books' )->get_table_name();
 
 		if ( ! empty( $this->date_start ) && ! empty( $this->date_end ) ) {
 			$start = $this->date_start;
@@ -96,13 +97,16 @@ class Books_Read_Over_Time extends Dataset {
 
 		// Figure out our group by, based on the date interval.
 		if ( 'month' === $graph->get_interval() ) {
-			$groupby = "YEAR(date_finished), MONTH(date_finished)";
+			$groupby     = "YEAR(date_finished), MONTH(date_finished)";
+			$date_format = "%Y-%m";
 		} else {
-			$groupby = "YEAR(date_finished), MONTH(date_finished), DAY(date_finished)";
+			$groupby     = "YEAR(date_finished), MONTH(date_finished), DAY(date_finished)";
+			$date_format = "%Y-%m-%d";
 		}
 
-		$query = "SELECT date_finished, COUNT(id) AS number_books
-			FROM {$tbl_log}
+		$query = "SELECT DATE_FORMAT( date_finished, '{$date_format}' ) AS date_finished, COUNT(log.id) AS number_books, GROUP_CONCAT(book.title SEPARATOR '\n') AS book_titles
+			FROM {$tbl_log} AS log
+			INNER JOIN {$tbl_books} AS book ON(log.book_id = book.id) 
 			WHERE date_finished IS NOT NULL
 			{$this->get_date_condition( 'date_finished', 'date_finished' )}
 			GROUP BY {$groupby}

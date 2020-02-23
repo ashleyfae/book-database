@@ -17,7 +17,7 @@ function reviews() {
 	<h2><?php _e( 'Reviews', 'book-database' ); ?></h2>
 
 	<div class="bdb-flexbox-container">
-		<section class="bdb-analytics-block bdb-dataset-type-table" data-dataset="Reviews_Written">
+		<section class="bdb-analytics-block bdb-dataset-type-template" data-dataset="Reviews_Written">
 			<h3><?php _e( 'Reviews Written (20 max)', 'book-database' ); ?></h3>
 
 			<table class="wp-list-table widefat fixed striped">

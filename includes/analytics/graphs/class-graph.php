@@ -67,7 +67,11 @@ class Graph {
 
 		$this->args = array(
 			'type'  => $this->type,
-			'chart' => $args
+			'chart' => wp_parse_args( $args, array(
+				'exporting' => array(
+					'menu' => array()
+				)
+			) )
 		);
 
 	}
@@ -184,10 +188,6 @@ class Graph {
 	 */
 	public function add_dataset( $data = array() ) {
 		$this->args['chart']['data'] = $this->shape_data( $data );
-	}
-
-	protected function shape_series( $series ) {
-		return $series;
 	}
 
 	/**

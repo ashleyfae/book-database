@@ -67,4 +67,5 @@ class Edition_Genre_Breakdown extends Dataset {
 		return $chart->get_args();
 
 	}
+
 }

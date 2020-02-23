@@ -25,7 +25,7 @@ function ratings() {
 		</section>
 
 		<section class="bdb-flexbox-half">
-			<div class="bdb-analytics-block bdb-dataset-type-table" data-dataset="Highest_Rated_Books">
+			<div class="bdb-analytics-block bdb-dataset-type-template" data-dataset="Highest_Rated_Books">
 				<h3><?php _e( '5 Highest Rated Books', 'book-database' ); ?></h3>
 
 				<table class="wp-list-table widefat fixed striped">
@@ -54,7 +54,7 @@ function ratings() {
 
 			<hr>
 
-			<div class="bdb-analytics-block bdb-dataset-type-table" data-dataset="Lowest_Rated_Books">
+			<div class="bdb-analytics-block bdb-dataset-type-template" data-dataset="Lowest_Rated_Books">
 				<h3><?php _e( '5 Lowest Rated Books', 'book-database' ); ?></h3>
 
 				<table class="wp-list-table widefat fixed striped">

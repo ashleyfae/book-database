@@ -35,7 +35,7 @@ function reading() {
 			<span class="bdb-dataset-period"></span>
 		</section>
 
-		<section class="bdb-analytics-block bdb-dataset-type-table bdb-flexbox-half" data-dataset="Most_Read_Genres">
+		<section class="bdb-analytics-block bdb-dataset-type-template bdb-flexbox-half" data-dataset="Most_Read_Genres">
 			<h3><?php _e( 'Most Read Genres', 'book-database' ); ?></h3>
 
 			<table class="wp-list-table widefat fixed striped">
@@ -80,6 +80,13 @@ function reading() {
 		<h3><?php _e( 'Books Read Over Time', 'book-database' ); ?></h3>
 		<div>
 			<div id="bdb-dataset-books-read-over-time"></div>
+		</div>
+	</div>
+
+	<div class="bdb-analytics-block bdb-dataset-type-graph bdb-flexbox-full" data-dataset="Books_Read_by_Publication_Year" data-canvas="bdb-dataset-books-read-by-publication-year">
+		<h3><?php _e( 'Book Publication Year', 'book-database' ); ?></h3>
+		<div>
+			<div id="bdb-dataset-books-read-by-publication-year"></div>
 		</div>
 	</div>
 	<?php

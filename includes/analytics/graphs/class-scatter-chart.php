@@ -16,6 +16,14 @@ namespace Book_Database\Analytics;
  */
 class Scatter_Chart extends Graph {
 
-	protected $type = 'scatter';
+	/**
+	 * @var string Type of graph.
+	 */
+	protected $type = 'XYChart';
+
+	/**
+	 * @var string Type of series.
+	 */
+	protected $series_type = 'LineSeries';
 
 }

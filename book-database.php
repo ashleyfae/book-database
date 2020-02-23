@@ -251,7 +251,9 @@ final class Book_Database {
 			'lowest-rated-books', 'format-breakdown', 'average-days-finish-book', 'shortest-book-read', 'longest-book-read',
 			'number-editions', 'edition-format-breakdown', 'editions-over-time', 'reviews-over-time', 'reviews-written',
 			'books-read-over-time', 'terms-breakdown', 'number-signed-editions', 'edition-genre-breakdown',
-			'edition-source-breakdown', 'average-days-acquired-to-read',
+			'edition-source-breakdown', 'average-days-acquired-to-read', 'number-books-added', 'number-series-books-added',
+			'number-standalones-added', 'number-distinct-authors-added', 'library-genre-breakdown', 'library-book-releases',
+			'books-read-by-publication-year',
 		);
 		foreach ( $datasets as $dataset ) {
 			if ( file_exists( BDB_DIR . 'includes/analytics/datasets/class-' . $dataset . '.php' ) ) {
@@ -364,6 +366,7 @@ final class Book_Database {
 		// Analytics
 		require_once BDB_DIR . 'includes/admin/analytics/analytics-page.php';
 		require_once BDB_DIR . 'includes/admin/analytics/tabs/overview.php';
+		require_once BDB_DIR . 'includes/admin/analytics/tabs/library.php';
 		require_once BDB_DIR . 'includes/admin/analytics/tabs/reading.php';
 		require_once BDB_DIR . 'includes/admin/analytics/tabs/ratings.php';
 		require_once BDB_DIR . 'includes/admin/analytics/tabs/editions.php';

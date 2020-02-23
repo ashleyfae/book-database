@@ -19,7 +19,7 @@ use function Book_Database\book_database;
  */
 class Terms_Breakdown extends Dataset {
 
-	protected $type = 'table';
+	protected $type = 'template';
 
 	/**
 	 * @inheritDoc

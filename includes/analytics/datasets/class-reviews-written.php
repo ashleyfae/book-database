@@ -20,7 +20,7 @@ use function Book_Database\format_date;
  */
 class Reviews_Written extends Dataset {
 
-	protected $type = 'table';
+	protected $type = 'template';
 
 	/**
 	 * @inheritDoc

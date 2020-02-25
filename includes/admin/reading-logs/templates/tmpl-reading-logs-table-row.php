@@ -130,7 +130,7 @@ namespace Book_Database;
 
 	<td class="bdb-reading-log-actions" data-colname="<?php esc_attr_e( 'Actions', 'book-database' ); ?>">
 		<?php if ( user_can_edit_books() ) : ?>
-			<button type="button" class="button bdb-reading-log-toggle-editable"><?php _e( 'Edit', 'book-database' ); ?></button>
+			<button type="button" class="button bdb-reading-log-toggle-editable bdb-edit-row-with-datepicker"><?php _e( 'Edit', 'book-database' ); ?></button>
 			<button type="button" class="button bdb-remove-reading-log"><?php _e( 'Remove', 'book-database' ); ?></button>
 		<?php endif; ?>
 	</td>

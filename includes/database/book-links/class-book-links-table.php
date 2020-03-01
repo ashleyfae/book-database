@@ -46,8 +46,8 @@ class Book_Links_Table extends BerlinDB\Database\Table {
 			book_id bigint(20) UNSIGNED NOT NULL,
 			retailer_id bigint(20) UNSIGNED NOT NULL,
 			url text NOT NULL DEFAULT '',
-			date_created datetime NOT NULL DEFAULT '0000-00-00 00:00:00',
-			date_modified datetime NOT NULL DEFAULT '0000-00-00 00:00:00',
+			date_created datetime NOT NULL,
+			date_modified datetime NOT NULL,
 			INDEX book_id (book_id)";
 	}
 

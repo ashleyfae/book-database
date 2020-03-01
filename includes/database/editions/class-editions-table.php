@@ -58,8 +58,8 @@ class Editions_Table extends BerlinDB\Database\Table {
 			date_acquired datetime DEFAULT NULL,
 			source_id bigint(20) UNSIGNED DEFAULT NULL,
 			signed int(1) UNSIGNED DEFAULT NULL,
-			date_created datetime NOT NULL DEFAULT '0000-00-00 00:00:00',
-			date_modified datetime NOT NULL DEFAULT '0000-00-00 00:00:00',
+			date_created datetime NOT NULL,
+			date_modified datetime NOT NULL,
 			INDEX book_id (book_id),
 			INDEX isbn (isbn),
 			INDEX date_acquired (date_acquired)";

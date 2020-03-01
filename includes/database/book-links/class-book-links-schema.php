@@ -66,7 +66,7 @@ class Book_Links_Schema extends BerlinDB\Database\Schema {
 		array(
 			'name'       => 'date_created',
 			'type'       => 'datetime',
-			'default'    => '0000-00-00 00:00:00',
+			'default'    => '', // True default is current time, set in query class
 			'created'    => true,
 			'date_query' => true,
 			'sortable'   => true,
@@ -76,7 +76,7 @@ class Book_Links_Schema extends BerlinDB\Database\Schema {
 		array(
 			'name'       => 'date_modified',
 			'type'       => 'datetime',
-			'default'    => '0000-00-00 00:00:00',
+			'default'    => '', // True default is current time, set in query class
 			'modified'   => true,
 			'date_query' => true,
 			'sortable'   => true,

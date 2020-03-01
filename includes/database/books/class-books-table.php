@@ -59,8 +59,8 @@ class Books_Table extends BerlinDB\Database\Table {
 			pages bigint(20) UNSIGNED DEFAULT NULL,
 			synopsis longtext NOT NULL,
 			goodreads_url text NOT NULL,
-			date_created datetime NOT NULL DEFAULT '0000-00-00 00:00:00',
-			date_modified datetime NOT NULL DEFAULT '0000-00-00 00:00:00',
+			date_created datetime NOT NULL,
+			date_modified datetime NOT NULL,
 			INDEX title( title(64) ),
 			INDEX series_id ( series_id )";
 	}

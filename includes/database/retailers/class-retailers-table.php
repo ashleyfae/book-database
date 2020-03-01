@@ -47,8 +47,8 @@ class Retailers_Table extends BerlinDB\Database\Table {
 		$this->schema = "id bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY,
 			name varchar(200) NOT NULL DEFAULT '',
 			template text NOT NULL DEFAULT '',
-			date_created datetime NOT NULL DEFAULT '0000-00-00 00:00:00',
-			date_modified datetime NOT NULL DEFAULT '0000-00-00 00:00:00',
+			date_created datetime NOT NULL,
+			date_modified datetime NOT NULL,
 			INDEX name (name)";
 	}
 

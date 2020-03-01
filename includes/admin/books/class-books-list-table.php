@@ -354,10 +354,9 @@ class Books_List_Table extends List_Table {
 			switch ( $read_status ) {
 				case 'reading' :
 					$args['reading_log_query'][] = array(
-						'field' => 'date_started',
-						'value' => array(
-							'after' => '0000-00-00 00:00:00'
-						)
+						'field'    => 'date_started',
+						'value'    => null,
+						'operator' => 'IS NOT'
 					);
 					$args['reading_log_query'][] = array(
 						'field'    => 'date_finished',
@@ -368,16 +367,14 @@ class Books_List_Table extends List_Table {
 
 				case 'read' :
 					$args['reading_log_query'][] = array(
-						'field' => 'date_started',
-						'value' => array(
-							'after' => '0000-00-00 00:00:00'
-						)
+						'field'    => 'date_started',
+						'value'    => null,
+						'operator' => 'IS NOT'
 					);
 					$args['reading_log_query'][] = array(
-						'field' => 'date_finished',
-						'value' => array(
-							'after' => '0000-00-00 00:00:00'
-						)
+						'field'    => 'date_finished',
+						'value'    => null,
+						'operator' => 'IS NOT'
 					);
 					break;
 
@@ -393,10 +390,9 @@ class Books_List_Table extends List_Table {
 			switch ( $edition ) {
 				case 'owned' :
 					$args['edition_query'][] = array(
-						'field' => 'date_acquired',
-						'value' => array(
-							'after' => '0000-00-00 00:00:00'
-						)
+						'field'    => 'date_acquired',
+						'value'    => null,
+						'operator' => 'IS NOT'
 					);
 					break;
 

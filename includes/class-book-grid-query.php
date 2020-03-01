@@ -85,10 +85,9 @@ class Book_Grid_Query extends Book_Reviews_Query {
 			switch ( $atts['read-status'] ) {
 				case 'reading' :
 					$this->args['reading_log_query'][] = array(
-						'field' => 'date_started',
-						'value' => array(
-							'after' => '0000-00-00 00:00:00'
-						)
+						'field'    => 'date_started',
+						'value'    => null,
+						'operator' => 'IS NOT'
 					);
 					$this->args['reading_log_query'][] = array(
 						'field'    => 'date_finished',
@@ -100,15 +99,13 @@ class Book_Grid_Query extends Book_Reviews_Query {
 				case 'read' :
 					$this->args['reading_log_query'][] = array(
 						'field' => 'date_started',
-						'value' => array(
-							'after' => '0000-00-00 00:00:00'
-						)
+						'value'    => null,
+						'operator' => 'IS NOT'
 					);
 					$this->args['reading_log_query'][] = array(
 						'field' => 'date_finished',
-						'value' => array(
-							'after' => '0000-00-00 00:00:00'
-						)
+						'value'    => null,
+						'operator' => 'IS NOT'
 					);
 					break;
 

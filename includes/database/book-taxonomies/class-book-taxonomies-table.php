@@ -46,8 +46,8 @@ class Book_Taxonomies_Table extends BerlinDB\Database\Table {
 			name varchar(32) NOT NULL DEFAULT '',
 			slug varchar(32) NOT NULL DEFAULT '',
 			format varchar(32) NOT NULL DEFAULT 'text',
-			date_created datetime NOT NULL DEFAULT '0000-00-00 00:00:00',
-			date_modified datetime NOT NULL DEFAULT '0000-00-00 00:00:00',
+			date_created datetime NOT NULL,
+			date_modified datetime NOT NULL,
 			INDEX slug( slug )";
 	}
 

@@ -22,6 +22,7 @@ Things I'm focusing on:
 ## Requirements:
 
 * PHP 7.0+
+* MySQL 5.6.5+
 * 64-bit
 
 ## Fun Queries:

@@ -45,8 +45,8 @@ class Book_Author_Relationships_Table extends BerlinDB\Database\Table {
 		$this->schema = "id bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY,
 			author_id bigint(20) UNSIGNED NOT NULL DEFAULT 0,
 			book_id bigint(20) UNSIGNED NOT NULL DEFAULT 0,
-			date_created datetime NOT NULL DEFAULT '0000-00-00 00:00:00',
-			date_modified datetime NOT NULL DEFAULT '0000-00-00 00:00:00',
+			date_created datetime NOT NULL,
+			date_modified datetime NOT NULL,
 			INDEX author_id (author_id),
 			INDEX book_id (book_id)";
 	}

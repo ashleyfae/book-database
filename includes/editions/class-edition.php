@@ -23,7 +23,7 @@ class Edition extends Base_Object {
 
 	protected $date_acquired = null;
 
-	protected $source_id = 0;
+	protected $source_id = null;
 
 	protected $signed = null;
 
@@ -69,10 +69,10 @@ class Edition extends Base_Object {
 	/**
 	 * Get the ID of the source term
 	 *
-	 * @return int
+	 * @return int|null
 	 */
 	public function get_source_id() {
-		return absint( $this->source_id );
+		return ! empty( $this->source_id ) ? absint( $this->source_id ) : null;
 	}
 
 	/**

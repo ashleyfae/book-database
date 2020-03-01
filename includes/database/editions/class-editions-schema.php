@@ -72,11 +72,14 @@ class Editions_Schema extends BerlinDB\Database\Schema {
 
 		// source_id
 		array(
-			'name'     => 'source_id',
-			'type'     => 'bigint',
-			'length'   => '20',
-			'unsigned' => true,
-			'sortable' => true
+			'name'       => 'source_id',
+			'type'       => 'bigint',
+			'length'     => '20',
+			'unsigned'   => true,
+			'sortable'   => true,
+			'default'    => null,
+			'allow_null' => true,
+			'validate'   => '\Book_Database\BerlinDB\Sanitization\absint_allow_null'
 		),
 
 		// signed

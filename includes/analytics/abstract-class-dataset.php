@@ -49,10 +49,12 @@ abstract class Dataset {
 
 		//$this->log( var_export( $args, true ), __METHOD__ );
 
+		$date_filter = get_current_date_filter();
+
 		$defaults = array(
-			'date_option' => get_current_date_filter()['option'],
-			'start'       => '',
-			'end'         => ''
+			'date_option' => $date_filter['option'],
+			'start'       => 'custom' === $date_filter['option'] ? $date_filter['start'] : '',
+			'end'         => 'custom' === $date_filter['option'] ? $date_filter['end'] : ''
 		);
 
 		if ( 'custom' !== $defaults['date_option'] && array_key_exists( $defaults['date_option'], get_dates_filter_options() ) ) {

@@ -71,7 +71,8 @@ function get_analytics_admin_page_url( $args = array() ) {
  */
 function render_analytics_page() {
 
-	$view = ! empty( $_GET['view'] ) ? urldecode( $_GET['view'] ) : 'overview';
+	$view                = ! empty( $_GET['view'] ) ? urldecode( $_GET['view'] ) : 'overview';
+	$current_date_filter = Analytics\get_current_date_filter();
 	?>
 	<div id="bdb-book-analytics-wrap" class="wrap">
 		<h1><?php _e( 'Reading &amp; Review Analytics', 'book-database' ); ?></h1>
@@ -80,11 +81,14 @@ function render_analytics_page() {
 			<label for="bdb-analytics-date-range-select" class="screen-reader-text"><?php _e( 'Date Range', 'book-database' ); ?></label>
 			<select id="bdb-analytics-date-range-select" name="range">
 				<?php foreach ( Analytics\get_dates_filter_options() as $filter_key => $filter_value ) : ?>
-					<option value="<?php echo esc_attr( $filter_key ); ?>" <?php selected( $filter_key, Analytics\get_current_date_filter()['option'] ); ?>>
+					<option value="<?php echo esc_attr( $filter_key ); ?>" <?php selected( $filter_key, $current_date_filter['option'] ); ?>>
 						<?php echo esc_html( $filter_value ); ?>
 					</option>
 				<?php endforeach; ?>
 			</select>
+
+			<input type="text" id="bdb-analytics-start-date" class="bdb-datepicker" value="<?php echo 'custom' === $current_date_filter['option'] ? esc_attr( $current_date_filter['start'] ) : ''; ?>"<?php echo 'custom' !== $current_date_filter['option'] ? ' style="display: none;"' : ''; ?>>
+			<input type="text" id="bdb-analytics-end-date" class="bdb-datepicker" value="<?php echo 'custom' === $current_date_filter['option'] ? esc_attr( $current_date_filter['end'] ) : ''; ?>"<?php echo 'custom' !== $current_date_filter['option'] ? ' style="display: none;"' : ''; ?>>
 
 			<?php wp_nonce_field( 'bdb_set_analytics_date_filter', 'bdb_analytics_date_filter_nonce' ); ?>
 			<input type="hidden" name="bdb_analytics_view" value="<?php echo esc_attr( $view ); ?>">

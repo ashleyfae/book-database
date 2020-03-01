@@ -21,7 +21,29 @@ var BDB_Analytics = {
 
 		this.getBlockValues();
 
+		$( '#bdb-analytics-date-range-select' ).on( 'change', this.maybeToggleCustomFields );
 		$( '#bdb-analytics-date-range' ).on( 'submit', this.setDateRange );
+	},
+
+	/**
+	 * Show the start and end fields if the range is set to "custom".
+	 *
+	 * @param e
+	 */
+	maybeToggleCustomFields: function ( e ) {
+
+		const range = $( this ).val(),
+			start = $( '#bdb-analytics-start-date' ),
+			end = $( '#bdb-analytics-end-date' );
+
+		if ( 'custom' === range ) {
+			start.show();
+			end.show();
+		} else {
+			start.hide().val( '' );
+			end.hide().val( '' );
+		}
+
 	},
 
 	/**
@@ -36,6 +58,11 @@ var BDB_Analytics = {
 		let args = {
 			option: $( '#bdb-analytics-date-range-select' ).val()
 		};
+
+		if ( 'custom' === args.option ) {
+			args.start = $( '#bdb-analytics-start-date' ).val();
+			args.end = $( '#bdb-analytics-end-date' ).val();
+		}
 
 		const button = $( '#bdb-analytics-set-date-range' );
 

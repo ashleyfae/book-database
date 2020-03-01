@@ -59,13 +59,15 @@ function get_current_date_filter() {
  */
 function set_current_date_filter( $args = array() ) {
 
-	$args = wp_parse_args( $args, array(
+	$defaults = array(
 		'option' => 'last_30_days',
 		'start'  => '',
 		'end'    => ''
-	) );
+	);
 
-	update_option( 'bdb_reports_date_filter', $args, false );
+	$args = wp_parse_args( $args, $defaults );
+
+	update_option( 'bdb_reports_date_filter', array_intersect_key( $args, $defaults ), false );
 
 }
 

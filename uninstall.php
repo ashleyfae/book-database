@@ -22,9 +22,10 @@ if ( ! defined( 'WP_UNINSTALL_PLUGIN' ) ) {
 
 // Load BDB
 include_once( 'book-database.php' );
+book_database();
 
 // Bail if delete isn't enabled.
-if ( ! bdb_get_option( 'delete_on_uninstall' ) ) {
+if ( ! function_exists( __NAMESPACE__ . '\bdb_get_option' ) || ! bdb_get_option( 'delete_on_uninstall' ) ) {
 	return;
 }
 

@@ -56,7 +56,7 @@ class Reading_Logs_Table extends BerlinDB\Database\Table {
 			date_finished datetime DEFAULT NULL,
 			percentage_complete decimal(5,4) UNSIGNED NOT NULL DEFAULT 0.00,
 			rating decimal(4,2) DEFAULT NULL,
-			date_modified datetime NOT NULL DEFAULT '0000-00-00 00:00:00',
+			date_modified datetime NOT NULL,
 			INDEX book_id (book_id),
 			INDEX percentage_complete (percentage_complete),
 			INDEX date_finished_book_id (date_finished, book_id),

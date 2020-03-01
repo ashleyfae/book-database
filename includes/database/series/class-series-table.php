@@ -51,8 +51,8 @@ class Series_Table extends BerlinDB\Database\Table {
 			slug varchar(200) NOT NULL DEFAULT '',
 			description longtext NOT NULL DEFAULT '',
 			number_books bigint(20) UNSIGNED NOT NULL DEFAULT 0,
-			date_created datetime NOT NULL DEFAULT '0000-00-00 00:00:00',
-			date_modified datetime NOT NULL DEFAULT '0000-00-00 00:00:00',
+			date_created datetime NOT NULL,
+			date_modified datetime NOT NULL,
 			INDEX name (name)";
 	}
 

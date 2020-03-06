@@ -201,7 +201,7 @@ function book_reviews_shortcode( $atts, $content = '' ) {
 
 							$terms = get_book_terms( array(
 								'taxonomy' => $taxonomy->get_slug(),
-								'number'   => 50,
+								'number'   => 300,
 								'orderby'  => 'name',
 								'order'    => 'ASC'
 							) );

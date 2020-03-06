@@ -21,9 +21,9 @@ class Edition extends Base_Object {
 
 	protected $format = '';
 
-	protected $date_acquired = '';
+	protected $date_acquired = null;
 
-	protected $source_id = 0;
+	protected $source_id = null;
 
 	protected $signed = null;
 
@@ -60,7 +60,7 @@ class Edition extends Base_Object {
 	 * @param bool   $formatted Whether or not to format the date for display.
 	 * @param string $format    Format to display the formatted date in. Default to site format.
 	 *
-	 * @return string
+	 * @return string|null
 	 */
 	public function get_date_acquired( $formatted = false, $format = '' ) {
 		return ( ! empty( $this->date_acquired ) && $formatted ) ? format_date( $this->date_acquired, $format ) : $this->date_acquired;
@@ -69,10 +69,10 @@ class Edition extends Base_Object {
 	/**
 	 * Get the ID of the source term
 	 *
-	 * @return int
+	 * @return int|null
 	 */
 	public function get_source_id() {
-		return absint( $this->source_id );
+		return ! empty( $this->source_id ) ? absint( $this->source_id ) : null;
 	}
 
 	/**

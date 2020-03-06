@@ -26,7 +26,7 @@ class Editions_Table extends BerlinDB\Database\Table {
 	/**
 	 * @var int Database version in format {YYYY}{MM}{DD}{1}
 	 */
-	protected $version = 201910141;
+	protected $version = 202002231;
 
 	/**
 	 * @var array Upgrades to perform
@@ -36,7 +36,8 @@ class Editions_Table extends BerlinDB\Database\Table {
 		'201910133' => 201910133,
 		'201910134' => 201910134,
 		'201910135' => 201910135,
-		'201910141' => 201910141
+		'201910141' => 201910141,
+		'202002231' => 202002231
 	);
 
 	/**
@@ -54,11 +55,11 @@ class Editions_Table extends BerlinDB\Database\Table {
 			book_id bigint(20) UNSIGNED NOT NULL DEFAULT 0,
 			isbn varchar(13) NOT NULL DEFAULT '',
 			format varchar(200) NOT NULL DEFAULT '',
-			date_acquired datetime NOT NULL DEFAULT '0000-00-00 00:00:00',
+			date_acquired datetime DEFAULT NULL,
 			source_id bigint(20) UNSIGNED DEFAULT NULL,
 			signed int(1) UNSIGNED DEFAULT NULL,
-			date_created datetime NOT NULL DEFAULT '0000-00-00 00:00:00',
-			date_modified datetime NOT NULL DEFAULT '0000-00-00 00:00:00',
+			date_created datetime NOT NULL,
+			date_modified datetime NOT NULL,
 			INDEX book_id (book_id),
 			INDEX isbn (isbn),
 			INDEX date_acquired (date_acquired)";
@@ -161,6 +162,20 @@ class Editions_Table extends BerlinDB\Database\Table {
 		$result = $this->get_db()->query( "ALTER TABLE {$this->table_name} ADD INDEX date_acquired (date_acquired)" );
 
 		return $result;
+
+	}
+
+	/**
+	 * Upgrade to version 202002231
+	 *      - Allow `date_acquired` to be `null`.
+	 *
+	 * @return bool
+	 */
+	protected function __202002231() {
+
+		$result = $this->get_db()->query( "ALTER TABLE {$this->table_name} MODIFY date_acquired datetime DEFAULT NULL" );
+
+		return $this->is_success( $result );
 
 	}
 

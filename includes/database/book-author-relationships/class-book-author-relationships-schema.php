@@ -56,7 +56,7 @@ class Book_Author_Relationships_Schema extends BerlinDB\Database\Schema {
 		array(
 			'name'       => 'date_created',
 			'type'       => 'datetime',
-			'default'    => '0000-00-00 00:00:00',
+			'default'    => '',
 			'created'    => true,
 			'date_query' => true,
 			'sortable'   => true,
@@ -66,7 +66,7 @@ class Book_Author_Relationships_Schema extends BerlinDB\Database\Schema {
 		array(
 			'name'       => 'date_modified',
 			'type'       => 'datetime',
-			'default'    => '0000-00-00 00:00:00',
+			'default'    => '',
 			'modified'   => true,
 			'date_query' => true,
 			'sortable'   => true,

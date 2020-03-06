@@ -64,18 +64,22 @@ class Editions_Schema extends BerlinDB\Database\Schema {
 		array(
 			'name'       => 'date_acquired',
 			'type'       => 'datetime',
-			'default'    => '0000-00-00 00:00:00',
+			'default'    => null,
+			'allow_null' => true,
 			'date_query' => true,
 			'sortable'   => true,
 		),
 
 		// source_id
 		array(
-			'name'     => 'source_id',
-			'type'     => 'bigint',
-			'length'   => '20',
-			'unsigned' => true,
-			'sortable' => true
+			'name'       => 'source_id',
+			'type'       => 'bigint',
+			'length'     => '20',
+			'unsigned'   => true,
+			'sortable'   => true,
+			'default'    => null,
+			'allow_null' => true,
+			'validate'   => '\Book_Database\BerlinDB\Sanitization\absint_allow_null'
 		),
 
 		// signed
@@ -94,7 +98,7 @@ class Editions_Schema extends BerlinDB\Database\Schema {
 		array(
 			'name'       => 'date_created',
 			'type'       => 'datetime',
-			'default'    => '0000-00-00 00:00:00',
+			'default'    => '', // True default is current time, set in query class
 			'created'    => true,
 			'date_query' => true,
 			'sortable'   => true,
@@ -104,7 +108,7 @@ class Editions_Schema extends BerlinDB\Database\Schema {
 		array(
 			'name'       => 'date_modified',
 			'type'       => 'datetime',
-			'default'    => '0000-00-00 00:00:00',
+			'default'    => '', // True default is current time, set in query class
 			'modified'   => true,
 			'date_query' => true,
 			'sortable'   => true,

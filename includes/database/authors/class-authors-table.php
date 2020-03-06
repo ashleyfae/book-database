@@ -49,8 +49,8 @@ class Authors_Table extends BerlinDB\Database\Table {
 			image_id bigint(20) UNSIGNED DEFAULT NULL,
 			links longtext NOT NULL DEFAULT '',
 			book_count bigint(20) UNSIGNED NOT NULL DEFAULT 0,
-			date_created datetime NOT NULL DEFAULT '0000-00-00 00:00:00',
-			date_modified datetime NOT NULL DEFAULT '0000-00-00 00:00:00',
+			date_created datetime NOT NULL,
+			date_modified datetime NOT NULL,
 			INDEX name (name),
 			INDEX slug (slug)";
 	}

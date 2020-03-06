@@ -1,7 +1,7 @@
 {
   "name": "book-database",
   "title": "Book Database",
-  "version": "1.0.4",
+  "version": "1.0.6",
   "description": "Maintain a database of books and reviews.",
   "author": "Ashley Gibson",
   "license": "GPL-2.0-or-later",
@@ -28,7 +28,7 @@
     "css-loader": "^3.2.0",
     "ignore-emit-webpack-plugin": "^2.0.2",
     "mini-css-extract-plugin": "^0.8.0",
-    "node-sass": "^4.13.0",
+    "node-sass": "^4.13.1",
     "postcss-loader": "^3.0.0",
     "postcss-preset-env": "^6.7.0",
     "sass-loader": "^8.0.0",
@@ -46,7 +46,7 @@
   },
   "dependencies": {
     "flatpickr": "^4.6.3",
-    "npm": "^6.13.1",
+    "npm": "^6.14.2",
     "sass": "^1.23.7"
   }
 }

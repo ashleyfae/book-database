@@ -50,7 +50,7 @@ function process_add_book() {
 		if ( ! empty( $_POST['authors'] ) ) {
 			$authors_array   = is_array( $_POST['authors'] ) ? $_POST['authors'] : explode( ',', $_POST['authors'] );
 			$authors_array   = array_unique( array_map( 'trim', $authors_array ) );
-			$args['authors'] = $authors_array;
+			$args['authors'] = stripslashes_deep( $authors_array );
 		}
 
 		// Set the series.
@@ -75,7 +75,7 @@ function process_add_book() {
 				$taxonomy                   = sanitize_key( $taxonomy );
 				$term_array                 = is_array( $term_string ) ? $term_string : explode( ',', $term_string );
 				$term_array                 = array_unique( array_map( 'trim', $term_array ) );
-				$args['terms'][ $taxonomy ] = $term_array;
+				$args['terms'][ $taxonomy ] = stripslashes_deep( $term_array );
 			}
 		}
 
@@ -184,19 +184,24 @@ function process_update_book() {
 		if ( ! empty( $_POST['authors'] ) ) {
 			$authors_array = is_array( $_POST['authors'] ) ? $_POST['authors'] : explode( ',', $_POST['authors'] );
 			$authors_array = array_unique( array_map( 'trim', $authors_array ) );
-
-			set_book_authors( $book_id, $authors_array );
+		} else {
+			$authors_array = array();
 		}
+		set_book_authors( $book_id, stripslashes_deep( $authors_array ) );
 
 		// Set the terms.
-		if ( ! empty( $_POST['book_terms'] ) && is_array( $_POST['book_terms'] ) ) {
-			foreach ( $_POST['book_terms'] as $taxonomy => $term_string ) {
-				$taxonomy   = sanitize_key( $taxonomy );
-				$term_array = is_array( $term_string ) ? $term_string : explode( ',', $term_string );
-				$term_array = array_unique( array_map( 'trim', $term_array ) );
+		$taxonomy_terms = ! empty( $_POST['book_terms'] ) && is_array( $_POST['book_terms'] ) ? $_POST['book_terms'] : array();
 
-				set_book_terms( $book_id, $term_array, $taxonomy );
-			}
+		// Strip slashes. They'll be readded later if we do end up inserting anything.
+		$taxonomy_terms = stripslashes_deep( $taxonomy_terms );
+
+		$taxonomy_terms = wp_parse_args( $taxonomy_terms, array_fill_keys( array_values( get_book_taxonomies( array( 'number' => 100, 'fields' => 'slug' ) ) ), array() ) );
+		foreach ( $taxonomy_terms as $taxonomy => $term_string ) {
+			$taxonomy   = sanitize_key( $taxonomy );
+			$term_array = is_array( $term_string ) ? $term_string : explode( ',', $term_string );
+			$term_array = array_unique( array_map( 'trim', $term_array ) );
+
+			set_book_terms( $book_id, $term_array, $taxonomy );
 		}
 
 		$edit_url = get_books_admin_page_url( array(

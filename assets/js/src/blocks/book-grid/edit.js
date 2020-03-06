@@ -1,8 +1,5 @@
 /* globals bdbBlocks */
 
-/** Components */
-import Book from './components/Book';
-
 const {	Component, Fragment, RawHTML } = wp.element;
 
 const {
@@ -125,7 +122,6 @@ class BookGridEdit extends Component {
 			if ( this.booksRequest !== request ) {
 				return;
 			}
-			console.log( 'Books', books );
 
 			this.setState( { books, isLoading: false } );
 		} ).catch( ( error ) => {

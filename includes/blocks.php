@@ -2,8 +2,8 @@
 /**
  * Gutenberg Blocks
  *
- * @package   wp
- * @copyright Copyright (c) 2019, Ashley Gibson
+ * @package   book-database
+ * @copyright Copyright (c) 2020, Ashley Gibson
  * @license   GPL2+
  */
 
@@ -11,6 +11,8 @@ namespace Book_Database;
 
 /**
  * Register Gutenberg blocks
+ *
+ * @since 1.1
  */
 function register_blocks() {
 
@@ -50,3 +52,31 @@ function register_blocks() {
 }
 
 add_action( 'init', __NAMESPACE__ . '\register_blocks' );
+
+/**
+ * Render book-grid block
+ *
+ * @param string $block_content The block content about to be appended.
+ * @param array  $block         The full block, including name and attributes.
+ *
+ * @since 1.1
+ * @return string
+ */
+function render_book_grid_block( $block_content, $block ) {
+
+	if ( 'book-database/book-grid' !== $block['blockName'] ) {
+		return $block_content;
+	}
+
+	$attributes = array();
+
+	foreach ( $block['attrs'] as $key => $value ) {
+		$attributes[] = sprintf( '%s="%s"', $key, esc_attr( $value ) );
+	}
+
+	$block_content = trim( '[book-grid ' . implode( ' ', $attributes ) ) . ']';
+
+	return $block_content;
+}
+
+add_filter( 'render_block', __NAMESPACE__ . '\render_book_grid_block', 10, 2 );

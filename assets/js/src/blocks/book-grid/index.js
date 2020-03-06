@@ -6,8 +6,6 @@ const {
 	registerBlockType,
 } = wp.blocks;
 
-const {	RawHTML } = wp.element;
-
 registerBlockType( 'book-database/book-grid', {
 	title: __( 'Book Grid', 'gutenberg-examples' ),
 	icon: 'grid-view',
@@ -56,14 +54,6 @@ registerBlockType( 'book-database/book-grid', {
 	},
 	edit,
 	save: ( props ) => {
-		let shortcodeArgs = '';
-
-		Object.keys( props.attributes ).map( ( key, index ) => {
-			shortcodeArgs += ' ' + key + '="' + props.attributes[ key ] + '"';
-		} );
-
-		const shortcode = '[book-grid' + shortcodeArgs + ']';
-
-		return <RawHTML>{ shortcode }</RawHTML>;
+		return null;
 	},
 } );

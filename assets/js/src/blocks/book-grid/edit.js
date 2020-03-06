@@ -7,7 +7,6 @@ const {
 	PanelBody,
 	Placeholder,
 	TextControl,
-	ToggleControl,
 	RangeControl,
 	SelectControl,
 	Spinner,
@@ -16,7 +15,6 @@ const {
 const { __ } = wp.i18n;
 
 const {
-	BlockControls,
 	InspectorControls,
 } = wp.blockEditor;
 
@@ -45,7 +43,6 @@ class BookGridEdit extends Component {
 			"read-status" : readStatus, "reviews-only" : reviewsOnly, orderby, order, "cover-size" : coverSize,
 			"per-page": perPage, 'show-ratings' : showRatings
 		} = this.props.attributes;
-		const { alignWide } = wp.data.select( "core/editor" ).getEditorSettings();
 
 		const prevProp = prevProps.attributes;
 
@@ -66,12 +63,6 @@ class BookGridEdit extends Component {
 		) {
 			// Fetch new array of books when various controls are updated and store them in state.
 			this.fetchBooks();
-		}
-
-		// Clear "align" attribute if theme does not support wide images.
-		// This prevents the attribute from being "stuck" on a particular setting if the theme is switched.
-		if ( ! alignWide ) {
-			//this.props.setAttributes( { align: undefined } );
 		}
 	}
 

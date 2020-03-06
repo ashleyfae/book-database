@@ -3,6 +3,7 @@
 const {	Component, Fragment, RawHTML } = wp.element;
 
 const {
+	CheckboxControl,
 	PanelBody,
 	Placeholder,
 	TextControl,
@@ -39,7 +40,11 @@ class BookGridEdit extends Component {
 	}
 
 	componentDidUpdate( prevProps ) {
-		const { ids, author, series, rating, "pub-date-after" : pubDateAfter, "pub-date-before" : pubDateBefore, "read-status" : readStatus, "reviews-only" : reviewsOnly, orderby, order, "cover-size" : coverSize, "per-page": perPage } = this.props.attributes;
+		const {
+			ids, author, series, rating, "pub-date-after" : pubDateAfter, "pub-date-before" : pubDateBefore,
+			"read-status" : readStatus, "reviews-only" : reviewsOnly, orderby, order, "cover-size" : coverSize,
+			"per-page": perPage, 'show-ratings' : showRatings
+		} = this.props.attributes;
 		const { alignWide } = wp.data.select( "core/editor" ).getEditorSettings();
 
 		const prevProp = prevProps.attributes;
@@ -56,7 +61,8 @@ class BookGridEdit extends Component {
 			orderby !== prevProp.orderby ||
 			order !== prevProp.order ||
 			coverSize !== prevProp.coverSize ||
-			perPage !== prevProp['per-page']
+			perPage !== prevProp['per-page'] ||
+			showRatings !== prevProp['show-ratings']
 		) {
 			// Fetch new array of books when various controls are updated and store them in state.
 			this.fetchBooks();
@@ -153,9 +159,15 @@ class BookGridEdit extends Component {
 			'pub-date-after' : pubDateAfter,
 			'pub-date-before' : pubDateBefore,
 			'read-status' : readStatus,
+			'reviews-only' : reviewsOnly,
 			'per-page' : perPage,
 			orderby,
-			order
+			order,
+			'show-ratings' : showRatings,
+			'show-pub-date' : showPubDate,
+			'show-goodreads-link' : showGoodreadsLink,
+			'show-purchase-links' : showPurchaseLinks,
+			'show-review-link' : showReviewLink
 		} = attributes;
 
 		const { isLoading, books } = this.state;
@@ -209,6 +221,11 @@ class BookGridEdit extends Component {
 						options={ this.getReadStatusOptions() }
 						onChange={ (readStatus) => setAttributes( { 'read-status' : readStatus } ) }
 					/>
+					<CheckboxControl
+						label={ __( 'Only include reviewed books', 'book-database' ) }
+						checked={ reviewsOnly }
+						onChange={ (reviewsOnly) => setAttributes( { 'reviews-only' : reviewsOnly } ) }
+					/>
 				</PanelBody>
 				<PanelBody title={ __( 'Limits & Ordering', 'book-database' ) }>
 					<RangeControl
@@ -231,6 +248,33 @@ class BookGridEdit extends Component {
 						value={ order }
 						options={ this.getOrderOptions() }
 						onChange={ ( order ) => setAttributes( { order } ) }
+					/>
+				</PanelBody>
+				<PanelBody title={ __( 'Display', 'book-database' ) }>
+					<CheckboxControl
+						label={ __( 'Show ratings', 'book-database' ) }
+						checked={ showRatings }
+						onChange={ (showRatings) => setAttributes( { 'show-ratings' : showRatings } ) }
+					/>
+					<CheckboxControl
+						label={ __( 'Show publication dates', 'book-database' ) }
+						checked={ showPubDate }
+						onChange={ (showPubDate) => setAttributes( { 'show-pub-date' : showPubDate } ) }
+					/>
+					<CheckboxControl
+						label={ __( 'Show goodreads links', 'book-database' ) }
+						checked={ showGoodreadsLink }
+						onChange={ (showGoodreadsLink) => setAttributes( { 'show-goodreads-link' : showGoodreadsLink } ) }
+					/>
+					<CheckboxControl
+						label={ __( 'Show purchase links', 'book-database' ) }
+						checked={ showPurchaseLinks }
+						onChange={ (showPurchaseLinks) => setAttributes( { 'show-purchase-links' : showPurchaseLinks } ) }
+					/>
+					<CheckboxControl
+						label={ __( 'Show review links', 'book-database' ) }
+						checked={ showReviewLink }
+						onChange={ (showReviewLink) => setAttributes( { 'show-review-link' : showReviewLink } ) }
 					/>
 				</PanelBody>
 			</InspectorControls>

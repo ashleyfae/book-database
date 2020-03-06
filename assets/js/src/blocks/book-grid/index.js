@@ -39,6 +39,10 @@ registerBlockType( 'book-database/book-grid', {
 			type: 'string',
 			default: ''
 		},
+		'reviews-only' : {
+			type: 'boolean',
+			default: false
+		},
 		'per-page': {
 			type: 'number',
 			default: 20
@@ -50,7 +54,27 @@ registerBlockType( 'book-database/book-grid', {
 		order: {
 			type: 'string',
 			default: 'DESC'
-		}
+		},
+		'show-ratings' : {
+			type: 'boolean',
+			default: false
+		},
+		'show-pub-date' : {
+			type: 'boolean',
+			default: true
+		},
+		'show-goodreads-link' : {
+			type: 'boolean',
+			default: false
+		},
+		'show-purchase-links' : {
+			type: 'boolean',
+			default: false
+		},
+		'show-review-link' : {
+			type: 'boolean',
+			default: false
+		},
 	},
 	edit,
 	save: ( props ) => {

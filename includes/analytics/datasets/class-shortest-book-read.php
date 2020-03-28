@@ -37,6 +37,7 @@ class Shortest_Book_Read extends Dataset {
 		WHERE book.pages IS NOT NULL 
 		AND book.pages > 0
 		AND date_finished IS NOT NULL 
+		AND percentage_complete >= 1
 		{$this->get_date_condition( 'log.date_finished', 'log.date_finished' )}
 		ORDER BY book.pages {$this->orderby} 
 		LIMIT 1";

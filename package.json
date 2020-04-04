@@ -41,6 +41,7 @@
     "watch-css": "npm run build-css && npm run build-css -- -w"
   },
   "dependencies": {
+    "@amcharts/amcharts4": "^4.9.1",
     "flatpickr": "^4.6.3",
     "npm": "^6.13.1",
     "sass": "^1.23.7"

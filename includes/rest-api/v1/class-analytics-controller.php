@@ -11,9 +11,15 @@ namespace Book_Database\REST_API\v1;
 
 use Book_Database\Exception;
 use Book_Database\REST_API\Controller;
+use function Book_Database\Analytics\get_dataset_value;
+use function Book_Database\Analytics\get_date_filter_range;
+use function Book_Database\Analytics\get_dates_filter_options;
+use function Book_Database\Analytics\set_current_date_filter;
+use function Book_Database\format_date;
 
 /**
  * Class Analytics
+ *
  * @package Book_Database\REST_API\v1
  */
 class Analytics extends Controller {
@@ -25,6 +31,7 @@ class Analytics extends Controller {
 	 */
 	public function register_routes() {
 
+		// Get all analytics -- deprecated
 		register_rest_route( $this->namespace, $this->rest_base, array(
 			'methods'             => \WP_REST_Server::READABLE,
 			'callback'            => array( $this, 'get_analytics' ),
@@ -63,6 +70,50 @@ class Analytics extends Controller {
 			)
 		) );
 
+		// Get a dataset
+		register_rest_route( $this->namespace, $this->rest_base . '/dataset/(?P<dataset>[a-zA-Z-_]+)', array(
+			'methods'             => \WP_REST_Server::READABLE,
+			'callback'            => array( $this, 'get_item' ),
+			'permission_callback' => array( $this, 'can_view' ),
+			'args'                => array(
+				'dataset'     => array(
+					'required'          => true,
+					'validate_callback' => function ( $param, $request, $key ) {
+						return class_exists( '\\Book_Database\\Analytics\\' . $param );
+					}
+				),
+				'date_option' => array()
+			)
+		) );
+
+		// Set the date range.
+		register_rest_route( $this->namespace, $this->rest_base . '/range', array(
+			'methods'             => \WP_REST_Server::EDITABLE,
+			'callback'            => array( $this, 'set_dates' ),
+			'permission_callback' => array( $this, 'can_view' ),
+			'args'                => array(
+				'option' => array(
+					'required'          => true,
+					'validate_callback' => function ( $param, $request, $key ) {
+						return array_key_exists( $param, get_dates_filter_options() );
+					},
+					'sanitize_callback' => function ( $param, $request, $key ) {
+						return sanitize_text_field( strtolower( $param ) );
+					}
+				),
+				'start'  => array(
+					'sanitize_callback' => function ( $param, $request, $key ) {
+						return date( 'Y-m-d H:i:s', strtotime( $param ) );
+					}
+				),
+				'end'    => array(
+					'sanitize_callback' => function ( $param, $request, $key ) {
+						return date( 'Y-m-d H:i:s', strtotime( $param ) );
+					}
+				)
+			)
+		) );
+
 	}
 
 	/**
@@ -94,6 +145,49 @@ class Analytics extends Controller {
 			}
 
 			return new \WP_REST_Response( $stats );
+		} catch ( Exception $e ) {
+			return new \WP_REST_Response( $e->getMessage(), $e->getCode() );
+		}
+
+	}
+
+	/**
+	 * Get a single dataset value
+	 *
+	 * @param \WP_REST_Request $request
+	 *
+	 * @return \WP_Error|\WP_REST_Response
+	 */
+	public function get_item( $request ) {
+
+		try {
+			return new \WP_REST_Response( get_dataset_value( $request->get_param( 'dataset' ), $request->get_params() ) );
+		} catch ( Exception $e ) {
+			return new \WP_REST_Response( $e->getMessage(), $e->getCode() );
+		}
+
+	}
+
+	/**
+	 * Save the date filter
+	 *
+	 * @param \WP_REST_Request $request
+	 *
+	 * @return \WP_Error|\WP_REST_Response
+	 */
+	public function set_dates( $request ) {
+
+		try {
+
+			set_current_date_filter( $request->get_params() );
+
+			$range = get_date_filter_range();
+
+			$range['start_formatted'] = format_date( $range['start'] );
+			$range['end_formatted']   = format_date( $range['end'] );
+
+			return new \WP_REST_Response( $range );
+
 		} catch ( Exception $e ) {
 			return new \WP_REST_Response( $e->getMessage(), $e->getCode() );
 		}

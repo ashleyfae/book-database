@@ -1,0 +1,123 @@
+.bdb-panels-wrap {
+    background: white;
+    border: 1px solid #e5e5e5;
+    margin: 1em 0;
+    min-height: 350px;
+    overflow: hidden;
+
+    @media(min-width: 768px) {
+        display: flex;
+    }
+}
+
+.bdb-tabs {
+    background: #f5f5f5;
+    border-right: 1px solid #e5e5e5;
+    box-sizing: border-box;
+    min-height: 1em;
+    margin: 0;
+    padding: 0 0 10px;
+    position: relative;
+
+    @media(min-width: 768px) {
+        min-width: 25%;
+    }
+
+    > li {
+        background: #fcfcfc;
+        display: block;
+        margin: 0;
+        padding: 0;
+
+        > a {
+            border-bottom: 1px solid #e5e5e5;
+            box-shadow: none;
+            display: block;
+            line-height: 20px;
+            margin: 0;
+            padding: 10px;
+            text-decoration: none;
+
+            &:focus {
+                box-shadow: none;
+            }
+
+            .dashicons {
+                color: #888;
+            }
+        }
+
+        &.bdb-tab-active > a {
+            background: white;
+            border-left: 5px solid;
+            border-right: none;
+            color: #555;
+            font: {
+                weight: bold;
+            }
+
+            .dashicons {
+                color: #555;
+            }
+
+            .admin-color-fresh & {
+                border-left-color: #0073aa;
+            }
+            .admin-color-blue & {
+                border-left-color: #096484;
+            }
+            .admin-color-coffee & {
+                border-left-color: #096484;
+            }
+            .admin-color-ectoplasm & {
+                border-left-color: #a3b745;
+            }
+            .admin-color-midnight & {
+                border-left-color: #26292c;
+            }
+            .admin-color-ocean & {
+                border-left-color: #627c83;
+            }
+            .admin-color-sunrise & {
+                border-left-color: #be3631;
+            }
+            .admin-color-light & {
+                border-left-color: #888;
+            }
+            .admin-color-evergreen & {
+                border-left-color: #36533f;
+            }
+            .admin-color-mint & {
+                border-left-color: #4f6d59;
+            }
+        }
+    }
+}
+
+.bdb-panels {
+    flex: 1;
+}
+
+.bdb-panel {
+    padding: 0 30px 30px;
+
+    > h2 {
+        border-bottom: 1px solid #e5e5e5;
+        font: {
+            size: 14px;
+            weight: 600;
+        }
+        margin: 0 -30px 1em -30px;
+        padding: 11px 30px 11px;
+        text-align: left;
+
+        &:not(:first-child) {
+            border-top: 1px solid #e5e5e5;
+            margin-top: 1em;
+        }
+    }
+
+    &:not(.bdb-panel-active) {
+        display: none;
+    }
+}

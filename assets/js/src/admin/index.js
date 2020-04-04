@@ -6,7 +6,6 @@
  * @license GPL2+
  */
 
-import { BDB_Analytics } from "./modules/analytics";
 import { BDB_Book_Layout } from './modules/book-layout.js';
 import { BDB_Book_Index_Title } from './modules/book-index-title';
 import { BDB_Book_Links } from "./modules/book-links";
@@ -23,7 +22,6 @@ import { BDB_Book_Taxonomies } from './modules/taxonomies.js';
 
 ( function ( $ ) {
 
-	BDB_Analytics.init();
 	BDB_Book_Layout.init();
 	BDB_Book_Index_Title.init();
 	BDB_Book_Links.init();

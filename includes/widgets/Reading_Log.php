@@ -51,19 +51,26 @@ class Reading_Log extends \WP_Widget {
 			echo $args['before_title'] . apply_filters( 'widget_title', $instance['title'] ) . $args['after_title'];
 		}
 
-		$format = ( isset( $instance['display'] ) && 'images' == $instance['display'] ) ? 'images' : 'list';
-
-		$logs = $this->query_books( $instance );
+		$logs = $this->query_reading_logs( $instance );
 
 		if ( ! empty( $logs ) ) {
-			$this->display_images( $logs, $instance );
+			$this->display_books( $logs, $instance );
+		} else {
+			echo wpautop( __( 'No books found.', 'book-database' ) );
 		}
 
 		echo $args['after_widget'] ?? '';
 
 	}
 
-	protected function query_books( $args ) {
+	/**
+	 * Queries for reading logs
+	 *
+	 * @param array $args
+	 *
+	 * @return \Book_Database\Reading_Log[]
+	 */
+	protected function query_reading_logs( $args ) {
 
 		global $wpdb;
 
@@ -101,12 +108,12 @@ class Reading_Log extends \WP_Widget {
 	}
 
 	/**
-	 * Displays results as images
+	 * Displays results
 	 *
 	 * @param \Book_Database\Reading_Log[] $logs
 	 * @param array                        $args
 	 */
-	protected function display_images( $logs, $args ) {
+	protected function display_books( $logs, $args ) {
 		?>
 		<div class="<?php echo count( $logs ) > 1 ? 'bdb-book-grid ' : ''; ?>bdb-reading-log-widget-list">
 			<?php foreach ( $logs as $log ) :

@@ -46,6 +46,7 @@ module.exports = {
 		"admin": './assets/js/src/admin/index.js',
 		"admin-global": './assets/js/src/admin/global.js',
 		"blocks": './assets/js/src/blocks/blocks.js',
+		"book-graphs": './assets/js/src/admin/analytics.js',
 
 		// CSS
 		"admin-style": './assets/sass/admin.scss',

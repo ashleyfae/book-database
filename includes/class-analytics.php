@@ -101,6 +101,9 @@ class Analytics {
 	 *
 	 * Returns an array of `finished`, `dnf`, `rereads`, and `new`.
 	 *
+	 * @see Analytics\Books_Finished_Count
+	 * @see Analytics\Books_DNF_Count
+	 *
 	 * @return array
 	 */
 	public function get_number_books_read_breakdown() {
@@ -250,6 +253,8 @@ class Analytics {
 
 	/**
 	 * Get the number of pages read
+	 *
+	 * @see Analytics\Pages_Read
 	 *
 	 * @return int
 	 */

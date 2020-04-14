@@ -1,7 +1,7 @@
 {
   "name": "book-database",
   "title": "Book Database",
-  "version": "1.0.6",
+  "version": "1.0.7",
   "description": "Maintain a database of books and reviews.",
   "author": "Ashley Gibson",
   "license": "GPL-2.0-or-later",
@@ -25,15 +25,15 @@
     "@wordpress/components": "^8.1.0",
     "@wordpress/i18n": "^3.7.0",
     "@wordpress/scripts": "^5.1.0",
-    "css-loader": "^3.2.0",
+    "css-loader": "^3.5.2",
     "ignore-emit-webpack-plugin": "^2.0.2",
-    "mini-css-extract-plugin": "^0.8.0",
+    "mini-css-extract-plugin": "^0.8.2",
     "node-sass": "^4.13.1",
     "postcss-loader": "^3.0.0",
     "postcss-preset-env": "^6.7.0",
-    "sass-loader": "^8.0.0",
-    "webpack": "^4.41.2",
-    "webpack-cli": "^3.3.10"
+    "sass-loader": "^8.0.2",
+    "webpack": "^4.42.1",
+    "webpack-cli": "^3.3.11"
   },
   "scripts": {
     "build": "wp-scripts build",
@@ -45,8 +45,9 @@
     "watch-css": "npm run build-css && npm run build-css -- -w"
   },
   "dependencies": {
+    "@amcharts/amcharts4": "^4.9.16",
     "flatpickr": "^4.6.3",
     "npm": "^6.14.2",
-    "sass": "^1.23.7"
+    "sass": "^1.26.3"
   }
 }

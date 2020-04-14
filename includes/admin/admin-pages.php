@@ -52,7 +52,17 @@ function is_admin_page() {
 
 	$screen = get_current_screen();
 
-	return in_array( $screen->id, $bdb_admin_pages );
+	$is_admin_page = in_array( $screen->id, $bdb_admin_pages );
+
+	/**
+	 * Filters whether or not the current page is a BDB admin page.
+	 *
+	 * If this returns `true`, BDB assets get loaded.
+	 *
+	 * @param bool       $is_admin_page
+	 * @param \WP_Screen $screen
+	 */
+	return apply_filters( 'book-database/is-admin-page', $is_admin_page, $screen );
 
 }
 

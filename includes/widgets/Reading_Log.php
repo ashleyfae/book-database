@@ -11,10 +11,8 @@
 namespace Book_Database\Widgets;
 
 use Book_Database\Book;
-use Book_Database\Books_Query;
 use Book_Database\Rating;
 use function Book_Database\book_database;
-use function Book_Database\format_date;
 use function Book_Database\get_book;
 
 /**
@@ -115,7 +113,7 @@ class Reading_Log extends \WP_Widget {
 	 */
 	protected function display_books( $logs, $args ) {
 		?>
-		<div class="<?php echo count( $logs ) > 1 ? 'bdb-book-grid ' : ''; ?>bdb-reading-log-widget-list">
+		<div class="<?php echo count( $logs ) > 1 ? 'bdb-book-grid bdb-book-grid-col-2 ' : ''; ?>bdb-reading-log-widget-list">
 			<?php foreach ( $logs as $log ) :
 				$book = get_book( $log->get_book_id() );
 
@@ -140,11 +138,9 @@ class Reading_Log extends \WP_Widget {
 					if ( ! empty( $args['link_goodreads'] ) && $book->get_goodreads_url() ) {
 						echo '<a href="' . esc_url( $book->get_goodreads_url() ) . '" target="_blank">';
 					}
-
 					?>
 					<span class="bdb-reading-log-book-title"><?php printf( __( '%s by %s', 'book-database' ), $book->get_title(), $book->get_author_names( true ) ); ?></span>
 					<?php
-
 					if ( ! empty( $args['link_goodreads'] ) && $book->get_goodreads_url() ) {
 						echo '</a>';
 					}
@@ -314,10 +310,10 @@ class Reading_Log extends \WP_Widget {
 			'user_id'          => ! empty( $new_instance['user_id'] ) ? absint( $new_instance['user_id'] ) : '',
 			'number'           => ! empty( $new_instance['number'] ) ? absint( $new_instance['number'] ) : 5,
 			'status'           => isset( $new_instance['status'] ) && 'recent' === $new_instance['status'] ? 'recent' : 'current',
-			'show_book_cover'  => $new_instance['show_book_cover'] ?? '',
-			'show_start_date'  => $new_instance['show_start_date'] ?? '',
-			'show_finish_date' => $new_instance['show_finish_date'] ?? '',
-			'link_goodreads'   => $new_instance['link_goodreads'] ?? '',
+			'show_book_cover'  => ! empty( $new_instance['show_book_cover'] ) ? 1 : '',
+			'show_start_date'  => ! empty( $new_instance['show_start_date'] ) ? 1 : '',
+			'show_finish_date' => ! empty( $new_instance['show_finish_date'] ) ? 1 : '',
+			'link_goodreads'   => ! empty( $new_instance['link_goodreads'] ) ? 1 : '',
 			'rating_format'    => ! empty( $new_instance['rating_format'] ) ? sanitize_text_field( $new_instance['rating_format'] ) : false
 		);
 	}

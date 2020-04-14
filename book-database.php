@@ -338,6 +338,7 @@ final class Book_Database {
 
 		// Widgets
 		require_once BDB_DIR . 'includes/widgets/Reading_Log.php';
+		require_once BDB_DIR . 'includes/widgets/Reviews.php';
 
 		// Misc.
 		require_once BDB_DIR . 'includes/capabilities.php';

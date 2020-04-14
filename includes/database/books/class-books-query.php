@@ -168,7 +168,8 @@ class Books_Query extends BerlinDB\Database\Query {
 			$join['reading_log_query'] = "INNER JOIN {$tbl_log} AS log ON (book.id = log.book_id)";
 			$clause_engine->set_table_query( new Reading_Logs_Query() );
 			$clause_engine->set_args( $args['reading_log_query'] );
-			$where = array_merge( $where, $clause_engine->get_clauses() );
+			$where    = array_merge( $where, $clause_engine->get_clauses() );
+			$select[] = 'log.id AS log_id, log.user_id AS log_user_id, log.date_started AS date_started, log.date_finished AS date_finished, log.percentage_complete AS percentage_complete, log.rating AS rating';
 		}
 
 		// Review query
@@ -284,6 +285,13 @@ class Books_Query extends BerlinDB\Database\Query {
 					'avg_rating.date_finished',
 					'avg_rating.percentage_complete',
 					'avg_rating.rating'
+				);
+		}
+		if ( ! empty( $args['reading_log_query'] ) ) {
+			$valid_orderbys = $valid_orderbys + array(
+					'log.date_started',
+					'log.date_finished',
+					'log.percentage_complete'
 				);
 		}
 

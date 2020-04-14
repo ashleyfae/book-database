@@ -339,6 +339,10 @@ final class Book_Database {
 		require_once BDB_DIR . 'includes/rest-api/v1/class-taxonomy-controller.php';
 		require_once BDB_DIR . 'includes/rest-api/v1/class-utility-controller.php';
 
+		// Widgets
+		require_once BDB_DIR . 'includes/widgets/Reading_Log.php';
+		require_once BDB_DIR . 'includes/widgets/Reviews.php';
+
 		// Misc.
 		require_once BDB_DIR . 'includes/capabilities.php';
 		require_once BDB_DIR . 'includes/class-analytics.php';

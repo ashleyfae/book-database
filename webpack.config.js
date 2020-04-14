@@ -21,6 +21,15 @@ module.exports = {
 	externals: {
 		jquery: 'jQuery',
 		$: 'jQuery',
+		'wp.blocks': {
+			window: ['wp', 'blocks'],
+		},
+		'wp.i18n': {
+			window: ['wp', 'i18n'],
+		},
+		'wp.data': {
+			window: ['wp', 'data']
+		},
 		moment: 'moment'
 	},
 
@@ -36,11 +45,13 @@ module.exports = {
 		// JS
 		"admin": './assets/js/src/admin/index.js',
 		"admin-global": './assets/js/src/admin/global.js',
+		"blocks": './assets/js/src/blocks/blocks.js',
 		"book-graphs": './assets/js/src/admin/analytics.js',
 
 		// CSS
 		"admin-style": './assets/sass/admin.scss',
 		"admin-style-global": './assets/sass/admin-global.scss',
+		"admin-style-blocks": './assets/sass/admin-blocks.scss',
 		"front-end": './assets/sass/front-end.scss'
 	},
 
@@ -104,7 +115,7 @@ module.exports = {
 			$: 'jquery',
 		} ),
 
-		new IgnoreEmitPlugin( [ 'admin-style.min.js', 'front-end.min.js', 'front-end.js' ] ),
+		new IgnoreEmitPlugin( [ 'admin-style.min.js', 'admin-style-blocks.min.js', 'admin-style-global.min.js', 'front-end.min.js', 'front-end.js' ] ),
 
 		new MiniCssExtractPlugin( {
 			filename: 'assets/css/[name].min.css',

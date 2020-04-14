@@ -13,6 +13,7 @@ use Book_Database\Books_Query;
 use Book_Database\Exception;
 use Book_Database\REST_API\Controller;
 use function Book_Database\add_book;
+use function Book_Database\book_grid_shortcode;
 use function Book_Database\delete_book;
 use function Book_Database\generate_book_index_title;
 use function Book_Database\get_book;
@@ -34,20 +35,21 @@ class Book extends Controller {
 
 		// Get all books. (this is /books)
 		register_rest_route( $this->namespace, $this->rest_base . 's', array(
-			'methods'             => \WP_REST_Server::READABLE,
+			'methods'             => sprintf( '%s, %s', \WP_REST_Server::READABLE, \WP_REST_Server::CREATABLE ),
 			'callback'            => array( $this, 'get_books' ),
 			'permission_callback' => array( $this, 'can_view' ),
 			'args'                => array(
-				'number'  => array(
+				'cover_size' => 'large',
+				'number'     => array(
 					'default'           => 20,
 					'sanitize_callback' => function ( $param, $request, $key ) {
 						return absint( $param );
 					}
 				),
-				'orderby' => array(
+				'orderby'    => array(
 					'default' => 'book.date_created'
 				),
-				'order'   => array(
+				'order'      => array(
 					'default' => 'ASC'
 				)
 			)
@@ -172,6 +174,27 @@ class Book extends Controller {
 			)
 		) );
 
+		// Get book grid HTML.
+		register_rest_route( $this->namespace, $this->rest_base . '/grid', array(
+			'methods'             => sprintf( '%s, %s', \WP_REST_Server::READABLE, \WP_REST_Server::CREATABLE ),
+			'callback'            => array( $this, 'get_book_grid' ),
+			'permission_callback' => array( $this, 'can_view' ),
+			'args'                => array(
+				'number'  => array(
+					'default'           => 20,
+					'sanitize_callback' => function ( $param, $request, $key ) {
+						return absint( $param );
+					}
+				),
+				'orderby' => array(
+					'default' => 'book.id'
+				),
+				'order'   => array(
+					'default' => 'DESC'
+				)
+			)
+		) );
+
 	}
 
 	/**
@@ -191,6 +214,14 @@ class Book extends Controller {
 
 			$query = new Books_Query();
 			$books = $query->get_books( $args );
+
+			foreach ( $books as $key => $book ) {
+				if ( ! empty( $book->cover_id ) ) {
+					$books[ $key ]->cover_url = wp_get_attachment_image_url( absint( $book->cover_id ), $request->get_param( 'cover_size' ) );
+				} else {
+					$books[ $key ]->cover_url = false;
+				}
+			}
 
 			return new \WP_REST_Response( $books );
 		} catch ( Exception $e ) {
@@ -292,6 +323,19 @@ class Book extends Controller {
 			return new \WP_REST_Response( $e->getMessage(), $e->getCode() );
 		}
 
+	}
+
+	/**
+	 * Get book grid HTML
+	 *
+	 * @param \WP_REST_Request $request
+	 *
+	 * @return \WP_Error|\WP_REST_Response
+	 */
+	public function get_book_grid( $request ) {
+		return new \WP_REST_Response( array(
+			'grid' => book_grid_shortcode( $request->get_params() )
+		) );
 	}
 
 }

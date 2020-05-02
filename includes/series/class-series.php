@@ -82,7 +82,16 @@ class Series extends Base_Object {
 		$log_table  = book_database()->get_table( 'reading_log' )->get_table_name();
 		$book_table = book_database()->get_table( 'books' )->get_table_name();
 
-		$query       = $wpdb->prepare( "SELECT COUNT( DISTINCT book_id ) FROM {$log_table} log INNER JOIN {$book_table} b ON log.book_id = b.id WHERE series_id = %d AND date_finished IS NOT NULL", $this->get_id() );
+		$query       = $wpdb->prepare(
+			"SELECT COUNT( DISTINCT book_id )
+				FROM {$log_table} log
+			    INNER JOIN {$book_table} b ON log.book_id = b.id
+			WHERE series_id = %d
+			  AND date_finished IS NOT NULL
+			  AND user_id = %d",
+			$this->get_id(),
+			get_current_user_id()
+		);
 		$number_read = $wpdb->get_var( $query );
 
 		return absint( $number_read );

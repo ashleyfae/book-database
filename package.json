@@ -1,7 +1,7 @@
 {
   "name": "book-database",
   "title": "Book Database",
-  "version": "1.0.7",
+  "version": "1.1",
   "description": "Maintain a database of books and reviews.",
   "author": "Ashley Gibson",
   "license": "GPL-2.0-or-later",
@@ -10,13 +10,13 @@
     "wordpress",
     "wordpress-plugin"
   ],
-  "homepage": "https://github.com/nosegraze/book-database#readme",
+  "homepage": "https://github.com/ashleyfae/book-database#readme",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/nosegraze/book-database.git"
+    "url": "git+https://github.com/ashleyfae/book-database.git"
   },
   "bugs": {
-    "url": "https://github.com/nosegraze/book-database/issues"
+    "url": "https://github.com/ashleyfae/book-database/issues"
   },
   "main": "webpack.config.js",
   "devDependencies": {

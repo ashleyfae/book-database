@@ -2,6 +2,18 @@
     display: flex;
     flex-flow: row wrap;
     margin: 0 -10px;
+
+    &:not(.bdb-book-grid-col-2) {
+        .bdb-grid-entry {
+            @media (min-width: 768px) {
+                flex: 0 33.3%;
+            }
+
+            @media (min-width: 992px) {
+                flex: 0 25%;
+            }
+        }
+    }
 }
 
 .bdb-grid-entry {
@@ -27,15 +39,5 @@
 @media (min-width: 768px) {
     .bdb-book-grid-number-results {
         text-align: right;
-    }
-
-    .bdb-grid-entry {
-        flex: 0 33.3%;
-    }
-}
-
-@media (min-width: 992px) {
-    .bdb-grid-entry {
-        flex: 0 25%;
     }
 }

@@ -1,0 +1,53 @@
+.bdb-flexbox-container {
+    box-sizing: border-box;
+    display: flex;
+    flex-flow: row wrap;
+    justify-content: space-between;
+    align-items: flex-start;
+
+    #bdb-client-overview & {
+        margin: 0 -30px;
+    }
+
+    > section {
+        background: #fafafa;
+        border: 1px solid #e5e5e5;
+        box-sizing: border-box;
+        margin: 1em 0;
+        padding: 15px;
+        width: 100%;
+
+        h3 {
+            font: {
+                size: 16px;
+            }
+            margin-top: 0;
+        }
+
+        @media(min-width: 992px) {
+            margin: 1em;
+            /*width: 32%;*/
+            width: auto;
+
+            &.bdb-flexbox-third {
+                flex-grow: 0;
+                margin-left: 1%;
+                margin-right: 1%;
+                width: 31%;
+            }
+
+            &.bdb-flexbox-half {
+                flex-grow: 0;
+                margin-left: 1%;
+                margin-right: 1%;
+                width: 48%;
+            }
+
+            &.bdb-flexbox-full {
+                flex-grow: 0;
+                flex-shrink: 0;
+                width: 100%;
+            }
+        }
+    }
+}

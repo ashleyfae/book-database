@@ -1,30 +1,15 @@
 /* global $, bdbVars, wp */
 
-import {dateLocalToUTC, dateUTCtoLocal} from "./dates";
 import { apiRequest, spinButton, unspinButton } from 'utils';
-import { BDB_Datepicker } from './datepicker';
+import * as am4core from "@amcharts/amcharts4/core";
+import * as am4charts from "@amcharts/amcharts4/charts";
 
 /**
  * Analytics
  */
 var BDB_Analytics = {
 
-	/**
-	 * Selected date range value
-	 */
-	range: 'this-year',
-
-	batches: [],
-
-	numbers: [
-		'number-books-finished', 'number-dnf', 'number-new-books', 'number-rereads', 'number-pages-read', 'reading-track',
-		'number-reviews', 'avg-rating', 'number-different-series', 'number-standalones', 'number-authors'
-	],
-
-	tables: [
-		'rating-breakdown', 'pages-breakdown',
-		'reviews-written', 'read-not-reviewed'
-	],
+	spinner: '<div id="bdb-circleG"><div id="bdb-circleG_1" class="bdb-circleG"></div><div id="bdb-circleG_2" class="bdb-circleG"></div><div id="bdb-circleG_3" class="bdb-circleG"></div></div>',
 
 	/**
 	 * Initialize
@@ -34,130 +19,183 @@ var BDB_Analytics = {
 			return;
 		}
 
-		$( '.bdb-taxonomy-breakdown' ).each( function() {
-			let id = $( this ).attr( 'id' ).replace( 'bdb-', '' );
-			BDB_Analytics.tables.push( id );
-		} );
+		this.getBlockValues();
 
-		BDB_Analytics.batches = [
-			BDB_Analytics.numbers,
-			BDB_Analytics.tables
-		];
-
-		$( '#bdb-range' ).on( 'change', this.setRanges );
-		$( '#bdb-date-range button' ).on( 'click', function ( e ) {
-			e.preventDefault();
-
-			BDB_Analytics.getStats();
-		} ).trigger( 'click' );
+		$( '#bdb-analytics-date-range-select' ).on( 'change', this.maybeToggleCustomFields );
+		$( '#bdb-analytics-date-range' ).on( 'submit', this.setDateRange );
 	},
 
 	/**
-	 * Set the date ranges
+	 * Show the start and end fields if the range is set to "custom".
 	 *
 	 * @param e
 	 */
-	setRanges: function ( e ) {
+	maybeToggleCustomFields: function ( e ) {
 
-		BDB_Analytics.range = $( this ).val();
+		const range = $( this ).val(),
+			start = $( '#bdb-analytics-start-date' ),
+			end = $( '#bdb-analytics-end-date' );
 
-		if ( 'custom' === BDB_Analytics.range ) {
-
-			$( '#bdb-start' ).val( '' ).attr( 'type', 'text' ).addClass( 'bdb-datepicker' );
-			$( '#bdb-end' ).val( '' ).attr( 'type', 'text' ).addClass( 'bdb-datepicker' );
-
-			BDB_Datepicker.setDatepickers();
-
+		if ( 'custom' === range ) {
+			start.show();
+			end.show();
 		} else {
-
-			let selected = $( this ).find( 'option:selected' );
-			$( '#bdb-start' ).val( selected.data( 'start' ) ).attr( 'type', 'hidden' ).removeClass( 'bdb-datepicker' );
-			$( '#bdb-end' ).val( selected.data( 'end' ) ).attr( 'type', 'hidden' ).removeClass( 'bdb-datepicker' );
-
+			start.hide().val( '' );
+			end.hide().val( '' );
 		}
 
 	},
 
 	/**
-	 * Get the HTML string to insert into the DOM to indicate the stat is loading.
+	 * Set the date range
 	 *
-	 * @returns {string}
+	 * @param e
 	 */
-	getLoadingString: function () {
-		return '<div id="bdb-circleG"><div id="bdb-circleG_1" class="bdb-circleG"></div><div id="bdb-circleG_2" class="bdb-circleG"></div><div id="bdb-circleG_3" class="bdb-circleG"></div></div>';
+	setDateRange: function ( e ) {
+
+		e.preventDefault();
+
+		let args = {
+			option: $( '#bdb-analytics-date-range-select' ).val()
+		};
+
+		if ( 'custom' === args.option ) {
+			args.start = $( '#bdb-analytics-start-date' ).val();
+			args.end = $( '#bdb-analytics-end-date' ).val();
+		}
+
+		const button = $( '#bdb-analytics-set-date-range' );
+
+		spinButton( button );
+
+		apiRequest( 'v1/analytics/range', args, 'POST' ).then( function( apiResponse ) {
+			$( '.bdb-analytics-start-date' ).text( apiResponse.start );
+			$( '.bdb-analytics-end-date' ).text( apiResponse.end );
+			$( '.bdb-analytics-start-date-formatted' ).text( apiResponse.start_formatted );
+			$( '.bdb-analytics-end-date-formatted' ).text( apiResponse.end_formatted );
+
+			return BDB_Analytics.getBlockValues();
+		} ).catch( function( error ) {
+			console.log( 'Set date range error', error );
+		} ).finally( function() {
+			unspinButton( button );
+		} );
+
 	},
 
 	/**
-	 * Get the stats for the provided date range
+	 * Get values of all the blocks
 	 */
-	getStats: function () {
+	getBlockValues: function() {
 
-		// Empty the results and set up spinners.
-		$( '.bdb-result' ).empty();
-		$( '.bdb-loading' ).html( BDB_Analytics.getLoadingString() ).show();
+		$( '.bdb-analytics-block' ).each( function( blockIndex, block ) {
 
-		for ( let i = 0; i < BDB_Analytics.batches.length; i++ ) {
+			const blockWrap = $( this );
+			const dataset = blockWrap.data( 'dataset' );
 
-			let args = {
-				start_date: dateLocalToUTC( $( '#bdb-start' ).val() ),
-				end_date: dateLocalToUTC( $( '#bdb-end' ).val() ),
-				stats: BDB_Analytics.batches[ i ],
-				args: {
-					rating_format: 'text'
+			// Spinners
+			if ( blockWrap.hasClass( 'bdb-dataset-type-value' ) || blockWrap.hasClass( 'bdb-dataset-type-dataset' ) ) {
+				blockWrap.find( '.bdb-dataset-value' ).empty().append( BDB_Analytics.spinner );
+			}
+
+			let args = {};
+
+			if ( 'undefined' !== typeof blockWrap.data( 'period' ) ) {
+				args.date_option = blockWrap.data( 'period' );
+			}
+
+			if ( 'undefined' === typeof dataset ) {
+				return;
+			}
+
+			$.each( blockWrap.data(), function( argKey, argValue ) {
+				if ( 0 === argKey.indexOf( 'arg_' ) ) {
+					args[ argKey.replace( 'arg_', '' ) ] = argValue;
 				}
-			};
-
-			apiRequest( 'v1/analytics', args, 'GET' ).then( function( apiResponse ) {
-
-				$.each( apiResponse, function( statKey, statValue ) {
-					let wrap = $( '#bdb-' + statKey );
-
-					// Set up format for "on track to read".
-					if ( 'reading-track' === statKey ) {
-						if ( 'this-month' === BDB_Analytics.range ) {
-							statValue = bdbVars.on_track_month.replace( '%d', statValue );
-						} else if ( 'this-year' === BDB_Analytics.range ) {
-							statValue = bdbVars.on_track_year.replace( '%d', statValue );
-						} else {
-							statValue = '';
-						}
-					}
-
-					// Date conversions.
-					if ( 'reviews-written' === statKey && Array === statValue.constructor ) {
-						$.each( statValue, function( statItemKey, statItem ) {
-							statValue[ statItemKey ].date_written_formatted = dateUTCtoLocal( statItem.date_written, 'display' );
-						} );
-					}
-					if ( 'read-not-reviewed' === statKey && Array === statValue.constructor ) {
-						$.each( statValue, function( statItemKey, statItem ) {
-							statValue[ statItemKey ].date_finished_formatted = dateUTCtoLocal( statItem.date_finished, 'display' );
-						} );
-					}
-
-					// Check for an Underscore.js template.
-					let templateID = statKey;
-					if ( templateID.includes( 'taxonomy-' ) ) {
-						templateID = 'taxonomy-breakdown';
-					}
-					if ( Array === statValue.constructor && document.getElementById( 'tmpl-bdb-analytics-' + templateID + '-table-row' ) ) {
-						let template = wp.template( 'bdb-analytics-' + templateID + '-table-row' );
-						let html = '';
-
-						$.each( statValue, function( statItemKey, statItem ) {
-							html += template( statItem );
-						} );
-
-						statValue = html;
-					}
-
-					wrap.find( '.bdb-result' ).empty().append( statValue );
-					wrap.find( '.bdb-loading' ).empty().hide();
-				} )
-
-			} ).catch( function( error ) {
-
 			} );
+
+			apiRequest( 'v1/analytics/dataset/' + dataset, args, 'GET' ).then( function( apiResponse ) {
+				BDB_Analytics.renderDataset( blockWrap, apiResponse );
+			} ).catch( function( error ) {
+				console.log( 'Render error', error );
+
+				blockWrap.find( '.bdb-dataset-value' ).empty().append( error );
+			} );
+
+		} );
+
+	},
+
+	/**
+	 * Render an individual dataset
+	 *
+	 * @param {object} blockWrap
+	 * @param {object} apiResponse
+	 */
+	renderDataset: function ( blockWrap, apiResponse ) {
+
+		if ( 'undefined' === typeof apiResponse.data ) {
+			return;
+		}
+
+		switch( apiResponse.type ) {
+
+			case 'graph' :
+				if ( 'undefined' === typeof apiResponse.type ) {
+					console.log( ' undefined type' );
+
+					return;
+				}
+
+				const id = blockWrap.data( 'canvas' );
+
+				if ( 'undefined' === typeof id || '' === id ) {
+					console.log( 'undefined ID' );
+
+					return;
+				}
+
+				const type = apiResponse.data.type;
+
+				am4core.createFromConfig( apiResponse.data.chart, id, type );
+				break;
+
+			case 'template' :
+				let templateID = '';
+
+				if ( apiResponse.data.length > 0 ) {
+					templateID = blockWrap.find( '.bdb-analytics-template' ).attr( 'id' );
+				} else {
+					templateID = blockWrap.find( '.bdb-analytics-template-none' ).attr( 'id' );
+				}
+
+				if ( 'undefined' === typeof templateID || '' === templateID ) {
+					return;
+				}
+
+				// Strip tmpl-
+				templateID = templateID.replace( 'tmpl-', '' );
+
+				const template = wp.template( templateID );
+
+				blockWrap.find( '.bdb-dataset-value' ).empty().append( template( apiResponse.data ) );
+				break;
+
+			case 'dataset' :
+				// Multiple values
+				if ( 0 === apiResponse.data.length ) {
+					blockWrap.find( '.bdb-dataset-value' ).empty().append( '&ndash;' );
+				} else {
+					$.each( apiResponse.data, function( datasetID, dataValue ) {
+						blockWrap.find( '#bdb-dataset-' + datasetID + ' .bdb-dataset-value' ).empty().append( dataValue );
+					} );
+				}
+				break;
+
+			default :
+				// Simple text value
+				blockWrap.find( '.bdb-dataset-value' ).empty().append( apiResponse.data );
+				break;
 
 		}
 

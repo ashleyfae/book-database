@@ -1,6 +1,6 @@
 /* globals bdbBlocks */
 
-const {	Component, Fragment, RawHTML } = wp.element;
+const { Component, Fragment, RawHTML } = wp.element;
 
 const {
 	CheckboxControl,

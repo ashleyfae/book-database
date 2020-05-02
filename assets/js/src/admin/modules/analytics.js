@@ -115,7 +115,6 @@ var BDB_Analytics = {
 			} );
 
 			apiRequest( 'v1/analytics/dataset/' + dataset, args, 'GET' ).then( function( apiResponse ) {
-				console.log( apiResponse.type, apiResponse );
 				BDB_Analytics.renderDataset( blockWrap, apiResponse );
 			} ).catch( function( error ) {
 				console.log( 'Render error', error );
@@ -157,8 +156,6 @@ var BDB_Analytics = {
 				}
 
 				const type = apiResponse.data.type;
-				console.log( 'Chart Data', apiResponse.data.chart.data );
-				console.log( 'Chart Type', type );
 
 				am4core.createFromConfig( apiResponse.data.chart, id, type );
 				break;
@@ -201,40 +198,6 @@ var BDB_Analytics = {
 				break;
 
 		}
-
-	},
-
-	shapeConfig: function ( config ) {
-
-		console.log( config );
-
-		return config;
-
-		const letters = '0123456789ABCDEF'.split('');
-
-		if ( 'pie' === config.type ) {
-			for ( let dataSet = 0; dataSet < config.data.datasets.length; dataSet++ ) {
-				config.data.datasets[dataSet].backgroundColor = [];
-				config.data.datasets[dataSet].borderColor = '#ffffff';
-
-				for ( let labels = 0; labels < config.data.labels.length; labels++ ) {
-
-					let colour = '#';
-
-					for ( let i = 0; i < 6; i++ ) {
-						colour += letters[Math.floor( Math.random() * 16 )];
-					}
-
-					console.log( 'Colour', colour );
-
-					config.data.datasets[dataSet].backgroundColor.push( colour );
-				}
-			}
-		}
-
-		console.log( config );
-
-		return config;
 
 	}
 

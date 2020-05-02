@@ -367,6 +367,7 @@ final class Book_Database {
 
 		require_once BDB_DIR . 'includes/admin/abstract-class-list-table.php';
 		require_once BDB_DIR . 'includes/admin/admin-assets.php';
+		require_once BDB_DIR . 'includes/admin/admin-bar.php';
 		require_once BDB_DIR . 'includes/admin/admin-notices.php';
 		require_once BDB_DIR . 'includes/admin/admin-pages.php';
 

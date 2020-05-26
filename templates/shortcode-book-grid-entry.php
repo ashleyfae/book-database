@@ -28,7 +28,7 @@ namespace Book_Database;
 		<p class="book-grid-rating">
 			<?php
 			$rating = new Rating( $book_data->avg_rating );
-			echo $rating->format( get_option( 'rating_display', 'html_stars' ) );
+			echo $rating->format( bdb_get_option( 'rating_display', 'html_stars' ) );
 			?>
 		</p>
 		<?php

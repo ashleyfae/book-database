@@ -33,7 +33,7 @@ $target       = $review->is_external() ? 'blank' : 'self';
 	if ( ! empty( $review_data->rating ) ) {
 		?>
 		<p class="book-review-rating">
-			<?php echo $rating->format( get_option( 'rating_display', 'html_stars' ) ); ?>
+			<?php echo $rating->format( bdb_get_option( 'rating_display', 'html_stars' ) ); ?>
 		</p>
 		<?php
 	} elseif ( $reading_log->is_dnf() ) {

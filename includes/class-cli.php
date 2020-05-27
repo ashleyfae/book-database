@@ -41,7 +41,7 @@ class CLI extends \WP_CLI_Command {
 	 * @param array $assoc_args
 	 */
 	public function export( $args, $assoc_args ) {
-		$format     = WP_CLI\Utils\get_flag_value($assoc_args, 'format', 'json');
+		$format     = WP_CLI\Utils\get_flag_value( $assoc_args, 'format', 'json' );
 		$upload_dir = WP_CLI\Utils\get_flag_value( $assoc_args, 'upload-dir', wp_upload_dir()['basedir'] );
 
 		if ( ! is_writeable( $upload_dir ) ) {
@@ -49,8 +49,9 @@ class CLI extends \WP_CLI_Command {
 		}
 
 		// Create our file.
+		$ending    = $format === 'json' ? 'json' : 'csv';
 		$file_name = sprintf( 'book-export-%s', date( 'Y-m-d' ) );
-		$file_path = trailingslashit( $upload_dir ) . '' . $file_name . '.json';
+		$file_path = trailingslashit( $upload_dir ) . '' . $file_name . '.' . $ending;
 
 		$query = new Books_Query();
 		$books = $query->get_books( array(
@@ -77,7 +78,7 @@ class CLI extends \WP_CLI_Command {
 			'pub_date', 'pages', 'synopsis', 'goodreads_url', 'average_rating', 'publishers',
 		);
 
-		array_merge($headers, get_book_taxonomies(array('fields' => 'name')));
+		array_merge( $headers, get_book_taxonomies( array( 'fields' => 'name' ) ) );
 
 		$progress = \WP_CLI\Utils\make_progress_bar( __( 'Exporting books', 'book-database' ), count( $books ) );
 
@@ -122,12 +123,12 @@ class CLI extends \WP_CLI_Command {
 			foreach ( $terms as $term ) {
 				$taxonomies[ $term->taxonomy ][] = $term->name;
 			}
-			foreach ($taxonomies as $taxonomy => $tax_terms) {
-				$book_row[$taxonomy] = implode(',', $tax_terms);
+			foreach ( $taxonomies as $taxonomy => $tax_terms ) {
+				$book_row[ $taxonomy ] = implode( ',', $tax_terms );
 			}
 
 			$row_data = '';
-			$i = 1;
+			$i        = 1;
 			foreach ( $headers as $header ) {
 				if ( array_key_exists( $header, $book_row ) ) {
 					$row_data .= sprintf( '"%s"', addslashes( preg_replace( "/\"/", "'", $book_row[ $header ] ) ) );
@@ -137,7 +138,7 @@ class CLI extends \WP_CLI_Command {
 			}
 			$row_data .= "\r\n";
 
-			file_put_contents($file_path, $row_data, FILE_APPEND);
+			file_put_contents( $file_path, $row_data, FILE_APPEND );
 
 			$progress->tick();
 		}

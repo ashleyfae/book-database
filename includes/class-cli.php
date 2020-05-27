@@ -31,6 +31,9 @@ class CLI extends \WP_CLI_Command {
 	 *
 	 * ## OPTIONS
 	 *
+	 * [--format=<string>]
+	 * : Export format
+	 *
 	 * [--upload-dir=<int>]
 	 * : Desired directory to save the file. Default is uploads directory.
 	 *
@@ -38,149 +41,232 @@ class CLI extends \WP_CLI_Command {
 	 * @param array $assoc_args
 	 */
 	public function export( $args, $assoc_args ) {
-		global $wpdb;
-
-		$format     = $assoc_args['format'] ?? 'json';
+		$format     = WP_CLI\Utils\get_flag_value($assoc_args, 'format', 'json');
 		$upload_dir = WP_CLI\Utils\get_flag_value( $assoc_args, 'upload-dir', wp_upload_dir()['basedir'] );
 
 		if ( ! is_writeable( $upload_dir ) ) {
 			WP_CLI::error( 'Upload directory not writable.' );
 		}
 
-		$file = array();
-
-		if ( 'json' === $format ) {
-			$query = new Books_Query();
-			$books = $query->get_books( array(
-				'number'  => 99999,
-				'orderby' => 'book.id',
-				'order'   => 'ASC'
-			) );
-
-			$progress = \WP_CLI\Utils\make_progress_bar( __( 'Exporting books', 'book-database' ), count( $books ) );
-
-			foreach ( $books as $book ) {
-				// Gather authors.
-				$authors      = array();
-				$author_ids   = explode( ',', $book->author_id );
-				$author_names = explode( ',', $book->author_name );
-
-				if ( ! empty( $author_names ) ) {
-					foreach ( $author_names as $author_name_key => $author_name ) {
-						$authors[] = array(
-							'name' => $author_name,
-							'id'   => $author_ids[ $author_name_key ] ?? null
-						);
-					}
-				}
-
-				// Gather editions.
-				$editions = array();
-				foreach ( get_editions( array( 'book_id' => $book->id, 'number' => 999 ) ) as $edition ) {
-					$source = get_book_term( $edition->get_source_id() );
-
-					$editions[] = array(
-						'edition_id'    => $edition->get_id(),
-						'isbn'          => $edition->get_isbn(),
-						'format'        => $edition->get_format(),
-						'date_acquired' => $edition->get_date_acquired(),
-						'source'        => $source instanceof Book_Term ? $source->get_name() : null,
-						'is_signed'     => $edition->is_signed(),
-						'date_created'  => $edition->get_date_created(),
-						'date_modified' => $edition->get_date_modified()
-					);
-				}
-
-				// Gather reading logs.
-				$reading_logs = array();
-				foreach ( get_reading_logs( array( 'book_id' => $book->id, 'number' => 999 ) ) as $reading_log ) {
-					$reading_logs[] = array(
-						'edition_id'          => $reading_log->get_edition_id(),
-						'user_id'             => $reading_log->get_user_id(),
-						'date_started'        => $reading_log->get_date_started(),
-						'date_finished'       => $reading_log->get_date_finished(),
-						'percentage_complete' => $reading_log->get_percentage_complete(),
-						'rating'              => $reading_log->get_rating(),
-						'date_modified'       => $reading_log->get_date_modified()
-					);
-				}
-
-				// Gather reviews.
-				$reviews = array();
-				foreach ( get_reviews( array( 'book_id' => $book->id, 'number' => 999 ) ) as $review ) {
-					$reviews[] = array(
-						'review_id'      => $review->id,
-						'reading_log_id' => $review->reading_log_id,
-						'user_id'        => $review->user_id,
-						'post_id'        => $review->post_id,
-						'external_url'   => $review->url,
-						'review'         => $review->review,
-						'date_written'   => $review->date_written,
-						'date_published' => $review->date_published,
-						'date_created'   => $review->date_created,
-						'date_modified'  => $review->date_modified
-					);
-				}
-
-				// Gather all terms.
-				$publishers = $genres = $tags = array();
-				$tbl_terms  = book_database()->get_table( 'book_terms' )->get_table_name();
-				$tbl_term_r = book_database()->get_table( 'book_term_relationships' )->get_table_name();
-				$terms      = $wpdb->get_results( $wpdb->prepare(
-					"SELECT term.id, term.taxonomy, term.name, term.slug FROM {$tbl_terms} AS term
-					INNER JOIN {$tbl_term_r} AS term_r ON term_r.term_id = term.id
-					WHERE term_r.book_id = %d",
-					$book->id
-				) );
-				foreach ( $terms as $term ) {
-					switch ( $term->taxonomy ) {
-						case 'publisher' :
-							$publishers[] = $term->name;
-							break;
-						case 'genre' :
-							$genres[] = $term->name;
-							break;
-						default :
-							$tags[ $term->taxonomy ][] = $term->name;
-							break;
-					}
-				}
-
-				$file[] = array(
-					'book_id'         => $book->id,
-					'cover'           => ! empty( $book->cover_id ) ? wp_get_attachment_image_url( $book->cover_id, 'full' ) : null,
-					'title'           => $book->title ?? null,
-					'index_title'     => $book->index_title ?? null,
-					'authors'         => $authors,
-					'series_id'       => $book->series_id ?? null,
-					'series_name'     => $book->series_name ?? null,
-					'series_position' => $book->series_position ?? null,
-					'pub_date'        => $book->pub_date ?? null,
-					'pages'           => $book->pages ?? null,
-					'synopsis'        => $book->synopsis ?? null,
-					'goodreads_url'   => $book->goodreads_url ?? null,
-					'average_rating'  => $book->avg_rating ?? null,
-					'publishers'      => $publishers,
-					'genres'          => $genres,
-					'tags'            => $tags,
-					'editions'        => $editions,
-					'reading_logs'    => $reading_logs,
-					'reviews'         => $reviews
-				);
-
-				$progress->tick();
-			}
-
-			$progress->finish();
-		}
-
 		// Create our file.
 		$file_name = sprintf( 'book-export-%s', date( 'Y-m-d' ) );
 		$file_path = trailingslashit( $upload_dir ) . '' . $file_name . '.json';
 
-		file_put_contents( $file_path, json_encode( $file ) );
+		$query = new Books_Query();
+		$books = $query->get_books( array(
+			'number'  => 99999,
+			'orderby' => 'book.id',
+			'order'   => 'ASC'
+		) );
+
+		if ( 'json' === $format ) {
+			$this->export_json( $file_path, $books );
+		} else {
+			$this->export_csv( $file_path, $books );
+		}
 
 		WP_CLI::success( sprintf( 'Export available at: %s', $file_path ) );
+
+	}
+
+	private function export_csv( $file_path, $books ) {
+		global $wpdb;
+
+		$headers = array(
+			'book_id', 'cover', 'title', 'index_title', 'authors', 'series_id', 'series_name', 'series_position',
+			'pub_date', 'pages', 'synopsis', 'goodreads_url', 'average_rating', 'publishers',
+		);
+
+		array_merge($headers, get_book_taxonomies(array('fields' => 'name')));
+
+		$progress = \WP_CLI\Utils\make_progress_bar( __( 'Exporting books', 'book-database' ), count( $books ) );
+
+		$header_row = '';
+		$i          = 1;
+		foreach ( $headers as $header ) {
+			$header_row .= sprintf( '"%s"', addslashes( $header ) );
+			$header_row .= $i === count( $headers ) ? '' : ',';
+			$i++;
+		}
+		$header_row .= "\r\n";
+
+		file_put_contents( $file_path, $header_row );
+
+		foreach ( $books as $book ) {
+			$book_row = array(
+				'book_id'         => $book->id,
+				'cover'           => ! empty( $book->cover_id ) ? wp_get_attachment_image_url( $book->cover_id, 'full' ) : null,
+				'title'           => $book->title ?? null,
+				'index_title'     => $book->index_title ?? null,
+				'authors'         => $book->author_name,
+				'series_id'       => $book->series_id ?? null,
+				'series_name'     => $book->series_name ?? null,
+				'series_position' => $book->series_position ?? null,
+				'pub_date'        => $book->pub_date ?? null,
+				'pages'           => $book->pages ?? null,
+				'synopsis'        => $book->synopsis ?? null,
+				'goodreads_url'   => $book->goodreads_url ?? null,
+				'average_rating'  => $book->avg_rating ?? null,
+			);
+
+			// Gather all terms.
+			$taxonomies = array();
+			$tbl_terms  = book_database()->get_table( 'book_terms' )->get_table_name();
+			$tbl_term_r = book_database()->get_table( 'book_term_relationships' )->get_table_name();
+			$terms      = $wpdb->get_results( $wpdb->prepare(
+				"SELECT term.id, term.taxonomy, term.name, term.slug FROM {$tbl_terms} AS term
+					INNER JOIN {$tbl_term_r} AS term_r ON term_r.term_id = term.id
+					WHERE term_r.book_id = %d",
+				$book->id
+			) );
+			foreach ( $terms as $term ) {
+				$taxonomies[ $term->taxonomy ][] = $term->name;
+			}
+			foreach ($taxonomies as $taxonomy => $tax_terms) {
+				$book_row[$taxonomy] = implode(',', $tax_terms);
+			}
+
+			$row_data = '';
+			$i = 1;
+			foreach ( $headers as $header ) {
+				if ( array_key_exists( $header, $book_row ) ) {
+					$row_data .= sprintf( '"%s"', addslashes( preg_replace( "/\"/", "'", $book_row[ $header ] ) ) );
+					$row_data .= $i === count( $headers ) ? '' : ',';
+					$i++;
+				}
+			}
+			$row_data .= "\r\n";
+
+			file_put_contents($file_path, $row_data, FILE_APPEND);
+
+			$progress->tick();
+		}
+
+		$progress->finish();
+	}
+
+	private function export_json( $file_path, $books ) {
+		global $wpdb;
+
+		$file = array();
+
+		$progress = \WP_CLI\Utils\make_progress_bar( __( 'Exporting books', 'book-database' ), count( $books ) );
+
+		foreach ( $books as $book ) {
+			// Gather authors.
+			$authors      = array();
+			$author_ids   = explode( ',', $book->author_id );
+			$author_names = explode( ',', $book->author_name );
+
+			if ( ! empty( $author_names ) ) {
+				foreach ( $author_names as $author_name_key => $author_name ) {
+					$authors[] = array(
+						'name' => $author_name,
+						'id'   => $author_ids[ $author_name_key ] ?? null
+					);
+				}
+			}
+
+			// Gather editions.
+			$editions = array();
+			foreach ( get_editions( array( 'book_id' => $book->id, 'number' => 999 ) ) as $edition ) {
+				$source = get_book_term( $edition->get_source_id() );
+
+				$editions[] = array(
+					'edition_id'    => $edition->get_id(),
+					'isbn'          => $edition->get_isbn(),
+					'format'        => $edition->get_format(),
+					'date_acquired' => $edition->get_date_acquired(),
+					'source'        => $source instanceof Book_Term ? $source->get_name() : null,
+					'is_signed'     => $edition->is_signed(),
+					'date_created'  => $edition->get_date_created(),
+					'date_modified' => $edition->get_date_modified()
+				);
+			}
+
+			// Gather reading logs.
+			$reading_logs = array();
+			foreach ( get_reading_logs( array( 'book_id' => $book->id, 'number' => 999 ) ) as $reading_log ) {
+				$reading_logs[] = array(
+					'edition_id'          => $reading_log->get_edition_id(),
+					'user_id'             => $reading_log->get_user_id(),
+					'date_started'        => $reading_log->get_date_started(),
+					'date_finished'       => $reading_log->get_date_finished(),
+					'percentage_complete' => $reading_log->get_percentage_complete(),
+					'rating'              => $reading_log->get_rating(),
+					'date_modified'       => $reading_log->get_date_modified()
+				);
+			}
+
+			// Gather reviews.
+			$reviews = array();
+			foreach ( get_reviews( array( 'book_id' => $book->id, 'number' => 999 ) ) as $review ) {
+				$reviews[] = array(
+					'review_id'      => $review->id,
+					'reading_log_id' => $review->reading_log_id,
+					'user_id'        => $review->user_id,
+					'post_id'        => $review->post_id,
+					'external_url'   => $review->url,
+					'review'         => $review->review,
+					'date_written'   => $review->date_written,
+					'date_published' => $review->date_published,
+					'date_created'   => $review->date_created,
+					'date_modified'  => $review->date_modified
+				);
+			}
+
+			// Gather all terms.
+			$publishers = $genres = $tags = array();
+			$tbl_terms  = book_database()->get_table( 'book_terms' )->get_table_name();
+			$tbl_term_r = book_database()->get_table( 'book_term_relationships' )->get_table_name();
+			$terms      = $wpdb->get_results( $wpdb->prepare(
+				"SELECT term.id, term.taxonomy, term.name, term.slug FROM {$tbl_terms} AS term
+					INNER JOIN {$tbl_term_r} AS term_r ON term_r.term_id = term.id
+					WHERE term_r.book_id = %d",
+				$book->id
+			) );
+			foreach ( $terms as $term ) {
+				switch ( $term->taxonomy ) {
+					case 'publisher' :
+						$publishers[] = $term->name;
+						break;
+					case 'genre' :
+						$genres[] = $term->name;
+						break;
+					default :
+						$tags[ $term->taxonomy ][] = $term->name;
+						break;
+				}
+			}
+
+			$file[] = array(
+				'book_id'         => $book->id,
+				'cover'           => ! empty( $book->cover_id ) ? wp_get_attachment_image_url( $book->cover_id, 'full' ) : null,
+				'title'           => $book->title ?? null,
+				'index_title'     => $book->index_title ?? null,
+				'authors'         => $authors,
+				'series_id'       => $book->series_id ?? null,
+				'series_name'     => $book->series_name ?? null,
+				'series_position' => $book->series_position ?? null,
+				'pub_date'        => $book->pub_date ?? null,
+				'pages'           => $book->pages ?? null,
+				'synopsis'        => $book->synopsis ?? null,
+				'goodreads_url'   => $book->goodreads_url ?? null,
+				'average_rating'  => $book->avg_rating ?? null,
+				'publishers'      => $publishers,
+				'genres'          => $genres,
+				'tags'            => $tags,
+				'editions'        => $editions,
+				'reading_logs'    => $reading_logs,
+				'reviews'         => $reviews
+			);
+
+			$progress->tick();
+		}
+
+		file_put_contents( $file_path, json_encode( $file ) );
+
+		$progress->finish();
 
 	}
 

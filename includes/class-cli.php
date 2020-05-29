@@ -27,7 +27,7 @@ class CLI extends \WP_CLI_Command {
 	}
 
 	/**
-	 * Exports all books and associated records to a JSON file
+	 * Exports all books and associated records to a CSV or JSON file
 	 *
 	 * ## OPTIONS
 	 *
@@ -73,12 +73,15 @@ class CLI extends \WP_CLI_Command {
 	private function export_csv( $file_path, $books ) {
 		global $wpdb;
 
+		$tbl_log      = book_database()->get_table( 'reading_log' )->get_table_name();
+		$tbl_editions = book_database()->get_table( 'editions' )->get_table_name();
+
 		$headers = array(
 			'book_id', 'cover', 'title', 'index_title', 'authors', 'series_id', 'series_name', 'series_position',
-			'pub_date', 'pages', 'synopsis', 'goodreads_url', 'average_rating', 'publishers',
+			'pub_date', 'pages', 'synopsis', 'goodreads_url', 'average_rating', 'dates_read', 'owned'
 		);
 
-		array_merge( $headers, get_book_taxonomies( array( 'fields' => 'name' ) ) );
+		$headers = array_merge( $headers, get_book_taxonomies( array( 'fields' => 'slug' ) ) );
 
 		$progress = \WP_CLI\Utils\make_progress_bar( __( 'Exporting books', 'book-database' ), count( $books ) );
 
@@ -127,14 +130,62 @@ class CLI extends \WP_CLI_Command {
 				$book_row[ $taxonomy ] = implode( ',', $tax_terms );
 			}
 
+			// Get the dates read and link them with editions.
+			$reading_logs = $wpdb->get_results( $wpdb->prepare(
+				"SELECT log.date_started AS date_started, log.date_finished AS date_finished, log.percentage_complete AS percentage_complete,
+				log.rating AS rating, edition.isbn AS isbn, edition.format AS format
+				FROM {$tbl_log} AS log
+				LEFT JOIN {$tbl_editions} AS edition ON(log.edition_id = edition.id)
+				WHERE log.book_id = %d",
+				$book->id
+			) );
+
+			$dates_read = array();
+			if ( $reading_logs ) {
+				foreach ( $reading_logs as $log ) {
+					$dates_read[] = sprintf(
+						'%s|%s|%s|%s|%s|%s',
+						$log->isbn,
+						$log->date_started,
+						$log->date_finished,
+						$log->percentage_complete,
+						$log->rating,
+						$log->format
+					);
+				}
+			}
+
+			$book_row['dates_read'] = implode( ',', $dates_read );
+
+			// Get the owned editions.
+			$owned_editions = $wpdb->get_results( $wpdb->prepare(
+				"SELECT isbn, format, date_acquired, signed FROM {$tbl_editions}
+				WHERE book_id = %d",
+				$book->id
+			) );
+
+			if ( $owned_editions ) {
+				$editions = array();
+				foreach ( $owned_editions as $edition ) {
+					$editions[] = sprintf(
+						'%s|%s|%s|%s',
+						$edition->isbn,
+						$edition->format,
+						$edition->date_acquired,
+						$edition->signed
+					);
+				}
+				$book_row['owned'] = implode( ',', $editions );
+			}
+
 			$row_data = '';
 			$i        = 1;
 			foreach ( $headers as $header ) {
 				if ( array_key_exists( $header, $book_row ) ) {
 					$row_data .= sprintf( '"%s"', addslashes( preg_replace( "/\"/", "'", $book_row[ $header ] ) ) );
-					$row_data .= $i === count( $headers ) ? '' : ',';
-					$i++;
 				}
+				$row_data .= $i === count( $headers ) ? '' : ',';
+				$i++;
 			}
 			$row_data .= "\r\n";
 

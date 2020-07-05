@@ -308,7 +308,7 @@ class CLI extends \WP_CLI_Command {
 				'isbn'            => $result->isbn ?? '',
 				'date_started'    => $result->date_started ?? '',
 				'date_finished'   => $result->date_finished ?? '',
-				'percentage_read' => $result->percentage_read ?? '',
+				'percentage_read' => $result->percentage_complete ?? '',
 				'rating'          => $result->rating ?? ''
 			);
 

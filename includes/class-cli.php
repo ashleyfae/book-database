@@ -31,6 +31,9 @@ class CLI extends \WP_CLI_Command {
 	 *
 	 * ## OPTIONS
 	 *
+	 * <type>
+	 * : Export type.
+	 *
 	 * [--format=<string>]
 	 * : Export format
 	 *
@@ -39,9 +42,12 @@ class CLI extends \WP_CLI_Command {
 	 *
 	 * @param array $args
 	 * @param array $assoc_args
+	 *
+	 * @throws WP_CLI\ExitException
 	 */
 	public function export( $args, $assoc_args ) {
-		$format     = WP_CLI\Utils\get_flag_value( $assoc_args, 'format', 'json' );
+		$type       = $args[0] ?? 'library';
+		$format     = WP_CLI\Utils\get_flag_value( $assoc_args, 'format', 'csv' );
 		$upload_dir = WP_CLI\Utils\get_flag_value( $assoc_args, 'upload-dir', wp_upload_dir()['basedir'] );
 
 		if ( ! is_writeable( $upload_dir ) ) {
@@ -50,10 +56,25 @@ class CLI extends \WP_CLI_Command {
 
 		// Create our file.
 		$ending    = $format === 'json' ? 'json' : 'csv';
-		$file_name = sprintf( 'book-export-%s', date( 'Y-m-d' ) );
+		$file_name = sprintf( 'book-export-%s-%s', $type, date( 'Y-m-d' ) );
 		$file_path = trailingslashit( $upload_dir ) . '' . $file_name . '.' . $ending;
 
-		$query = new Books_Query();
+		switch ( $type ) {
+			case 'library' :
+				$this->export_library( $file_path );
+				break;
+			case 'owned' :
+				$this->export_owned( $file_path );
+				break;
+			case 'read' :
+				$this->export_read( $file_path );
+				break;
+			default :
+				WP_CLI::error( 'Invalid export type' );
+				break;
+		}
+
+		/*$query = new Books_Query();
 		$books = $query->get_books( array(
 			'number'  => 99999,
 			'orderby' => 'book.id',
@@ -64,10 +85,250 @@ class CLI extends \WP_CLI_Command {
 			$this->export_json( $file_path, $books );
 		} else {
 			$this->export_csv( $file_path, $books );
-		}
+		}*/
 
 		WP_CLI::success( sprintf( 'Export available at: %s', $file_path ) );
 
+	}
+
+	private function export_library( $file_path ) {
+		global $wpdb;
+
+		$query = new Books_Query();
+		$books = $query->get_books( array(
+			'number'  => 99999,
+			'orderby' => 'book.id',
+			'order'   => 'ASC'
+		) );
+
+		$tbl_log      = book_database()->get_table( 'reading_log' )->get_table_name();
+		$tbl_editions = book_database()->get_table( 'editions' )->get_table_name();
+
+		$headers = array(
+			'book_id', 'cover', 'title', 'index_title', 'authors', 'series_id', 'series_name', 'series_position',
+			'pub_date', 'pages', 'synopsis', 'goodreads_url', 'average_rating', 'isbn', 'status'
+		);
+
+		$headers = array_merge( $headers, get_book_taxonomies( array( 'fields' => 'slug' ) ) );
+
+		$progress = \WP_CLI\Utils\make_progress_bar( __( 'Exporting books', 'book-database' ), count( $books ) );
+
+		$header_row = '';
+		$i          = 1;
+		foreach ( $headers as $header ) {
+			$header_row .= sprintf( '"%s"', addslashes( $header ) );
+			$header_row .= $i === count( $headers ) ? '' : ',';
+			$i++;
+		}
+		$header_row .= "\r\n";
+
+		file_put_contents( $file_path, $header_row );
+
+		foreach ( $books as $book ) {
+			$isbn = $wpdb->get_var( $wpdb->prepare(
+				"SELECT isbn FROM {$tbl_editions} WHERE book_id = %d AND isbn IS NOT NULL AND isbn != ''",
+				$book->id
+			) );
+
+			$readingLogs = $wpdb->get_results( $wpdb->prepare(
+				"SELECT * FROM {$tbl_log} WHERE book_id = %d",
+				$book->id
+			) );
+			$status      = '';
+			if ( ! empty( $readingLogs ) ) {
+				$status = 'dnf';
+
+				foreach ( $readingLogs as $readingLog ) {
+					if ( ! empty( $readingLog->date_finished ) && $readingLog->percentage_complete == 1 ) {
+						$status = 'read';
+						break;
+					}
+				}
+			}
+
+			$book_row = array(
+				'book_id'         => $book->id,
+				'cover'           => ! empty( $book->cover_id ) ? wp_get_attachment_image_url( $book->cover_id, 'full' ) : null,
+				'title'           => $book->title ?? null,
+				'index_title'     => $book->index_title ?? null,
+				'authors'         => $book->author_name,
+				'series_id'       => $book->series_id ?? null,
+				'series_name'     => $book->series_name ?? null,
+				'series_position' => $book->series_position ?? null,
+				'pub_date'        => $book->pub_date ?? null,
+				'pages'           => $book->pages ?? null,
+				'synopsis'        => $book->synopsis ?? null,
+				'goodreads_url'   => $book->goodreads_url ?? null,
+				'average_rating'  => $book->avg_rating ?? null,
+				'isbn'            => $isbn ?? null,
+				'status'          => $status ?? ''
+			);
+
+			// Gather all terms.
+			$taxonomies = array();
+			$tbl_terms  = book_database()->get_table( 'book_terms' )->get_table_name();
+			$tbl_term_r = book_database()->get_table( 'book_term_relationships' )->get_table_name();
+			$terms      = $wpdb->get_results( $wpdb->prepare(
+				"SELECT term.id, term.taxonomy, term.name, term.slug FROM {$tbl_terms} AS term
+					INNER JOIN {$tbl_term_r} AS term_r ON term_r.term_id = term.id
+					WHERE term_r.book_id = %d",
+				$book->id
+			) );
+			foreach ( $terms as $term ) {
+				$taxonomies[ $term->taxonomy ][] = $term->name;
+			}
+			foreach ( $taxonomies as $taxonomy => $tax_terms ) {
+				$book_row[ $taxonomy ] = implode( ',', $tax_terms );
+			}
+
+			$row_data = '';
+			$i        = 1;
+			foreach ( $headers as $header ) {
+				if ( array_key_exists( $header, $book_row ) ) {
+					$row_data .= sprintf( '"%s"', addslashes( preg_replace( "/\"/", "'", $book_row[ $header ] ) ) );
+				}
+				$row_data .= $i === count( $headers ) ? '' : ',';
+				$i++;
+			}
+			$row_data .= "\r\n";
+
+			file_put_contents( $file_path, $row_data, FILE_APPEND );
+
+			$progress->tick();
+		}
+
+		$progress->finish();
+	}
+
+	private function export_owned( $file_path ) {
+		global $wpdb;
+
+		$tbl_books    = book_database()->get_table( 'books' )->get_table_name();
+		$tbl_owned    = book_database()->get_table( 'editions' )->get_table_name();
+		$tbl_terms    = book_database()->get_table( 'book_terms' )->get_table_name();
+		$tbl_authors  = book_database()->get_table( 'authors' )->get_table_name();
+		$tbl_author_r = book_database()->get_table( 'book_author_relationships' )->get_table_name();
+
+		$headers = array(
+			'book_title', 'author_name', 'isbn', 'format', 'date_acquired', 'signed', 'source', 'date_added'
+		);
+
+		$header_row = '';
+		$i          = 1;
+		foreach ( $headers as $header ) {
+			$header_row .= sprintf( '"%s"', addslashes( $header ) );
+			$header_row .= $i === count( $headers ) ? '' : ',';
+			$i++;
+		}
+		$header_row .= "\r\n";
+
+		file_put_contents( $file_path, $header_row );
+
+		$query   = "SELECT owned.isbn, owned.format, owned.date_acquired, owned.signed, owned.date_created,
+       			author.name AS author_name, book.title AS book_title, source.name AS source
+			FROM {$tbl_owned} AS owned
+			LEFT JOIN {$tbl_terms} AS source ON(owned.source_id = source.id)
+			INNER JOIN {$tbl_books} AS book ON(owned.book_id = book.id)
+			INNER JOIN {$tbl_author_r} AS ar ON(book.id = ar.book_id)
+			INNER JOIN {$tbl_authors} AS author ON(ar.author_id = author.id)";
+		$results = $wpdb->get_results( $query );
+
+		$progress = \WP_CLI\Utils\make_progress_bar( __( 'Exporting books', 'book-database' ), count( $results ) );
+
+		foreach ( $results as $result ) {
+			$row = array(
+				'book_title'    => $result->book_title ?? '',
+				'author_name'   => $result->author_name ?? '',
+				'isbn'          => $result->isbn ?? '',
+				'format'        => $result->format ?? '',
+				'date_acquired' => $result->date_acquired ?? '',
+				'signed'        => $result->signed ?? '',
+				'source'        => $result->source ?? '',
+				'date_added'    => $result->date_created ?? ''
+			);
+
+			$row_data = '';
+			$i        = 1;
+			foreach ( $headers as $header ) {
+				if ( array_key_exists( $header, $row ) ) {
+					$row_data .= sprintf( '"%s"', addslashes( preg_replace( "/\"/", "'", $row[ $header ] ) ) );
+				}
+				$row_data .= $i === count( $headers ) ? '' : ',';
+				$i++;
+			}
+			$row_data .= "\r\n";
+
+			file_put_contents( $file_path, $row_data, FILE_APPEND );
+
+			$progress->tick();
+		}
+
+		$progress->finish();
+	}
+
+	private function export_read( $file_path ) {
+		global $wpdb;
+
+		$tbl_books    = book_database()->get_table( 'books' )->get_table_name();
+		$tbl_log      = book_database()->get_table( 'reading_log' )->get_table_name();
+		$tbl_editions = book_database()->get_table( 'editions' )->get_table_name();
+		$tbl_authors  = book_database()->get_table( 'authors' )->get_table_name();
+		$tbl_author_r = book_database()->get_table( 'book_author_relationships' )->get_table_name();
+
+		$headers = array(
+			'book_title', 'author_name', 'isbn', 'date_started', 'date_finished', 'percentage_read', 'rating'
+		);
+
+		$header_row = '';
+		$i          = 1;
+		foreach ( $headers as $header ) {
+			$header_row .= sprintf( '"%s"', addslashes( $header ) );
+			$header_row .= $i === count( $headers ) ? '' : ',';
+			$i++;
+		}
+		$header_row .= "\r\n";
+
+		file_put_contents( $file_path, $header_row );
+
+		$query   = "SELECT log.date_started, log.date_finished, log.percentage_complete, log.rating, edition.isbn,
+       			book.title AS book_title, author.name AS author_name
+			FROM {$tbl_log} AS log
+			INNER JOIN {$tbl_books} AS book ON(log.book_id = book.id)
+			LEFT JOIN {$tbl_editions} AS edition ON(log.edition_id = edition.id)
+			INNER JOIN {$tbl_author_r} AS ar ON(book.id = ar.book_id)
+			INNER JOIN {$tbl_authors} AS author ON(ar.author_id = author.id)";
+		$results = $wpdb->get_results( $query );
+
+		$progress = \WP_CLI\Utils\make_progress_bar( __( 'Exporting books', 'book-database' ), count( $results ) );
+
+		foreach ( $results as $result ) {
+			$row = array(
+				'book_title'      => $result->book_title ?? '',
+				'author_name'     => $result->author_name ?? '',
+				'isbn'            => $result->isbn ?? '',
+				'date_started'    => $result->date_started ?? '',
+				'date_finished'   => $result->date_finished ?? '',
+				'percentage_read' => $result->percentage_read ?? '',
+				'rating'          => $result->rating ?? ''
+			);
+
+			$row_data = '';
+			$i        = 1;
+			foreach ( $headers as $header ) {
+				if ( array_key_exists( $header, $row ) ) {
+					$row_data .= sprintf( '"%s"', addslashes( preg_replace( "/\"/", "'", $row[ $header ] ) ) );
+				}
+				$row_data .= $i === count( $headers ) ? '' : ',';
+				$i++;
+			}
+			$row_data .= "\r\n";
+
+			file_put_contents( $file_path, $row_data, FILE_APPEND );
+
+			$progress->tick();
+		}
+
+		$progress->finish();
 	}
 
 	private function export_csv( $file_path, $books ) {

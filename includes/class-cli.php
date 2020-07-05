@@ -142,6 +142,9 @@ class CLI extends \WP_CLI_Command {
 					if ( ! empty( $readingLog->date_finished ) && $readingLog->percentage_complete == 1 ) {
 						$status = 'read';
 						break;
+					} elseif ( ! empty( $readingLog->date_started ) && empty( $readingLog->date_finished ) ) {
+						$status = 'currently_reading';
+						break;
 					}
 				}
 			}

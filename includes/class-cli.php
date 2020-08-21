@@ -228,12 +228,13 @@ class CLI extends \WP_CLI_Command {
 		file_put_contents( $file_path, $header_row );
 
 		$query   = "SELECT owned.isbn, owned.format, owned.date_acquired, owned.signed, owned.date_created,
-       			author.name AS author_name, book.title AS book_title, source.name AS source
+				author.name as author_name, book.title AS book_title, source.name AS source
 			FROM {$tbl_owned} AS owned
 			LEFT JOIN {$tbl_terms} AS source ON(owned.source_id = source.id)
 			INNER JOIN {$tbl_books} AS book ON(owned.book_id = book.id)
 			INNER JOIN {$tbl_author_r} AS ar ON(book.id = ar.book_id)
-			INNER JOIN {$tbl_authors} AS author ON(ar.author_id = author.id)";
+			INNER JOIN {$tbl_authors} AS author ON(ar.author_id = author.id)
+			GROUP BY owned.id";
 		$results = $wpdb->get_results( $query );
 
 		$progress = \WP_CLI\Utils\make_progress_bar( __( 'Exporting books', 'book-database' ), count( $results ) );
@@ -299,7 +300,8 @@ class CLI extends \WP_CLI_Command {
 			INNER JOIN {$tbl_books} AS book ON(log.book_id = book.id)
 			LEFT JOIN {$tbl_editions} AS edition ON(log.edition_id = edition.id)
 			INNER JOIN {$tbl_author_r} AS ar ON(book.id = ar.book_id)
-			INNER JOIN {$tbl_authors} AS author ON(ar.author_id = author.id)";
+			INNER JOIN {$tbl_authors} AS author ON(ar.author_id = author.id)
+			GROUP BY log.id";
 		$results = $wpdb->get_results( $query );
 
 		$progress = \WP_CLI\Utils\make_progress_bar( __( 'Exporting books', 'book-database' ), count( $results ) );

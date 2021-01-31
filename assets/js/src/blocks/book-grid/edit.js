@@ -33,7 +33,6 @@ class BookGridEdit extends Component {
 	}
 
 	componentDidMount() {
-		console.log('mounted');
 		this.state.isMounted = true;
 		this.fetchBooks();
 	}

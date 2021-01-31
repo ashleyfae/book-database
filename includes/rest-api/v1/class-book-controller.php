@@ -39,7 +39,9 @@ class Book extends Controller {
 			'callback'            => array( $this, 'get_books' ),
 			'permission_callback' => array( $this, 'can_view' ),
 			'args'                => array(
-				'cover_size' => 'large',
+				'cover_size' => array(
+					'default' => 'large'
+				),
 				'number'     => array(
 					'default'           => 20,
 					'sanitize_callback' => function ( $param, $request, $key ) {

@@ -33,6 +33,7 @@ class BookGridEdit extends Component {
 	}
 
 	componentDidMount() {
+		console.log('mounted');
 		this.state.isMounted = true;
 		this.fetchBooks();
 	}
@@ -54,10 +55,10 @@ class BookGridEdit extends Component {
 			pubDateAfter !== prevProp['pub-date-after'] ||
 			pubDateBefore !== prevProp['pub-date-before'] ||
 			readStatus !== prevProp['read-status'] ||
-			reviewsOnly !== prevProp.reviewsOnly ||
+			reviewsOnly !== prevProp['reviews-only'] ||
 			orderby !== prevProp.orderby ||
 			order !== prevProp.order ||
-			coverSize !== prevProp.coverSize ||
+			coverSize !== prevProp['cover-size'] ||
 			perPage !== prevProp['per-page'] ||
 			showRatings !== prevProp['show-ratings']
 		) {

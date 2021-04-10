@@ -22,7 +22,6 @@ class BookEdit extends Component {
 		super( ...arguments );
 
 		this.state = {
-			isMounted: false,
 			bookLayout: false
 		}
 
@@ -30,12 +29,7 @@ class BookEdit extends Component {
 	}
 
 	componentDidMount() {
-		this.state.isMounted = true;
 		this.maybeLoadBook();
-	}
-
-	componentWillUnmount() {
-		this.state.isMounted = false;
 	}
 
 	componentDidUpdate( prevProps ) {
@@ -59,8 +53,8 @@ class BookEdit extends Component {
 			// We have a book to either fetch or render.
 			return this.renderBook();
 		} else {
+			// Still need to search for a book.
 			return <BookSearchResults selectHandler={ this.handleSearchResultSelection } />
-			// Still need to pick for a book.
 		}
 	}
 

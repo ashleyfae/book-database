@@ -9,10 +9,6 @@ const { __ } = wp.i18n;
 class BookSearchForm extends Component {
 	constructor( props ) {
 		super( props );
-
-		this.state = {
-			search: ''
-		}
 	}
 
 	render() {

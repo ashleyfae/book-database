@@ -19,7 +19,6 @@ use function Book_Database\delete_book;
 use function Book_Database\generate_book_index_title;
 use function Book_Database\get_available_ratings;
 use function Book_Database\get_book;
-use function Book_Database\get_books;
 use function Book_Database\get_books_admin_page_url;
 use function Book_Database\update_book;
 

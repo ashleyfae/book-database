@@ -1,0 +1,10 @@
+.bdb-book-info {
+    clear: both;
+    overflow: hidden;
+}
+
+.bdb-block-book-search-result {
+    &:hover {
+        cursor: pointer;
+    }
+}

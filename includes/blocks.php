@@ -10,6 +10,27 @@
 namespace Book_Database;
 
 /**
+ * Adds a new block category for Book Database.
+ *
+ * @param array    $categories
+ * @param \WP_Post $post
+ *
+ * @since 1.2
+ * @return array
+ */
+function register_block_category( $categories, $post ) {
+	$categories[] = array(
+		'slug'  => 'book-database',
+		'title' => __( 'Book Database', 'book-database' ),
+		'icon'  => 'book'
+	);
+
+	return $categories;
+}
+
+add_filter( 'block_categories', __NAMESPACE__ . '\register_block_category', 10, 2 );
+
+/**
  * Register Gutenberg blocks
  *
  * @since 1.1
@@ -47,6 +68,12 @@ function register_blocks() {
 	register_block_type( 'book-database/book-grid', array(
 		'editor_script' => 'bdb-blocks',
 		'editor_style'  => 'bdb-blocks',
+	) );
+
+	// Book Info
+	register_block_type( 'book-database/book', array(
+		'editor_script' => 'bdb-blocks',
+		'editor_style'  => 'bdb-blocks'
 	) );
 
 }

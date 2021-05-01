@@ -177,6 +177,7 @@ var BDB_Post_Metabox = {
 			let logOptions = $( '#bdb-review-reading-log' );
 
 			if ( apiResponse.length > 0 ) {
+				logOptions.empty();
 				$.each( apiResponse, function( key, log ) {
 					logOptions.append( '<option value="' + log.id + '">' + BDB_Post_Metabox.shapeLog( log ) + '</option>' );
 				} )

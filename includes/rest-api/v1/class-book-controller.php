@@ -14,10 +14,12 @@ use Book_Database\Exception;
 use Book_Database\REST_API\Controller;
 use function Book_Database\add_book;
 use function Book_Database\book_grid_shortcode;
+use function Book_Database\book_shortcode;
 use function Book_Database\delete_book;
 use function Book_Database\generate_book_index_title;
+use function Book_Database\get_available_ratings;
 use function Book_Database\get_book;
-use function Book_Database\get_books;
+use function Book_Database\get_books_admin_page_url;
 use function Book_Database\update_book;
 
 /**
@@ -197,6 +199,44 @@ class Book extends Controller {
 			)
 		) );
 
+		register_rest_route( $this->namespace, $this->rest_base . '/(?P<id>\d+)', array(
+			'methods'             => \WP_REST_Server::READABLE,
+			'callback'            => array( $this, 'get_book_info' ),
+			'permission_callback' => array( $this, 'can_view' ),
+			'args'                => array(
+				'id'     => array(
+					'required'          => true,
+					'validate_callback' => function ( $param, $request, $key ) {
+						$book = get_book( $param );
+
+						return ! empty( $book );
+					},
+					'sanitize_callback' => function ( $param, $request, $key ) {
+						return absint( $param );
+					}
+				),
+				'rating' => array(
+					'required'          => false,
+					'validate_callback' => function ( $param, $request, $key ) {
+						return array_key_exists( strval( $param ), get_available_ratings() );
+					},
+					'sanitize_callback' => function ( $param, $request, $key ) {
+						return strval( $param );
+					}
+				),
+				'format' => array(
+					'required'          => false,
+					'default'           => 'html',
+					'validate_callback' => function ( $param, $request, $key ) {
+						return in_array( $param, array(
+							'json',
+							'html'
+						) );
+					}
+				)
+			)
+		) );
+
 	}
 
 	/**
@@ -222,6 +262,13 @@ class Book extends Controller {
 					$books[ $key ]->cover_url = wp_get_attachment_image_url( absint( $book->cover_id ), $request->get_param( 'cover_size' ) );
 				} else {
 					$books[ $key ]->cover_url = false;
+				}
+
+				if ( $this->can_edit( $request ) ) {
+					$books[ $key ]->admin_url = get_books_admin_page_url( array(
+						'view'    => 'edit',
+						'book_id' => urlencode( $book->id )
+					) );
 				}
 			}
 
@@ -338,6 +385,27 @@ class Book extends Controller {
 		return new \WP_REST_Response( array(
 			'grid' => book_grid_shortcode( $request->get_params() )
 		) );
+	}
+
+	/**
+	 * Returns information about a specific book.
+	 *
+	 * @param \WP_REST_Request $request
+	 *
+	 * @return \WP_REST_Response
+	 */
+	public function get_book_info( $request ) {
+		if ( 'html' === $request->get_param( 'format' ) ) {
+			$response = book_shortcode( array(
+				'id'     => $request->get_param( 'id' ),
+				'rating' => $request->get_param( 'rating' )
+			) );
+		} else {
+			// @todo JSON
+			$response = array();
+		}
+
+		return new \WP_REST_Response( $response );
 	}
 
 }

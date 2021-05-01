@@ -4,3 +4,13 @@ npm-debug.log
 *.sass.map
 *.scss.map
 /node_modules/
+
+# amcharts spam
+assets/js/build/vendors~canvg.min.js
+assets/js/build/vendors~canvg.min.js.map
+assets/js/build/vendors~pdfmake.min.js
+assets/js/build/vendors~pdfmake.min.js.map
+assets/js/build/vendors~xlsx.min.js
+assets/js/build/vendors~xlsx.min.js.map
+assets/js/build/xlsx.min.js
+assets/js/build/xlsx.min.js.map

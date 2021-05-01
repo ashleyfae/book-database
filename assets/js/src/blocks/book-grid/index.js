@@ -7,9 +7,9 @@ const {
 } = wp.blocks;
 
 registerBlockType( 'book-database/book-grid', {
-	title: __( 'Book Grid', 'gutenberg-examples' ),
+	title: __( 'Book Grid', 'book-database' ),
 	icon: 'grid-view',
-	category: 'widgets',
+	category: 'book-database',
 	supports: {
 		multiple: true,
 		customClassName: false

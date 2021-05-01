@@ -1,4 +1,4 @@
-.bdb-book-grid{display:flex;flex-flow:row wrap;margin:0 -10px}@media (min-width: 768px){.bdb-book-grid:not(.bdb-book-grid-col-2) .bdb-grid-entry{flex:0 33.3%}}@media (min-width: 992px){.bdb-book-grid:not(.bdb-book-grid-col-2) .bdb-grid-entry{flex:0 25%}}.bdb-grid-entry{flex:0 50%;margin-bottom:3em;padding:10px;text-align:center}.bdb-grid-entry a{border:none}.bdb-read-review-link{display:block;width:100%}.bdb-pagination{margin:1.5em 0}@media (min-width: 768px){.bdb-book-grid-number-results{text-align:right}}
+.bdb-book-info{clear:both;overflow:hidden}.bdb-block-book-search-result:hover{cursor:pointer}.bdb-book-grid{display:flex;flex-flow:row wrap;margin:0 -10px}@media (min-width: 768px){.bdb-book-grid:not(.bdb-book-grid-col-2) .bdb-grid-entry{flex:0 33.3%}}@media (min-width: 992px){.bdb-book-grid:not(.bdb-book-grid-col-2) .bdb-grid-entry{flex:0 25%}}.bdb-grid-entry{flex:0 50%;margin-bottom:3em;padding:10px;text-align:center}.bdb-grid-entry a{border:none}.bdb-read-review-link{display:block;width:100%}.bdb-pagination{margin:1.5em 0}@media (min-width: 768px){.bdb-book-grid-number-results{text-align:right}}
 
 
 /*# sourceMappingURL=admin-style-blocks.min.css.map*/

@@ -1,0 +1,17 @@
+{
+  "name": "ashleyfae/book-database",
+  "type": "wordpress-plugin",
+  "license": "GPL-2.0-or-later",
+  "description": "Maintain a database of books and reviews.",
+  "autoload": {
+    "files": [
+      "src/Deprecated/class-names.php"
+    ],
+    "psr-4": {
+      "Book_Database\\": "src/"
+    }
+  },
+  "require": {
+    "php": "^7.0|^8.0"
+  }
+}

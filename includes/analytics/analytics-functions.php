@@ -169,8 +169,7 @@ function get_date_filter_range( $option = '', $format = 'Y-m-d H:i:s' ) {
  * @throws Exception
  */
 function get_dataset_value( $dataset, $args = array() ) {
-
-	$class_name = __NAMESPACE__ . '\\' . $dataset;
+	$class_name = __NAMESPACE__ . '\\Datasets\\' . $dataset;
 
 	if ( class_exists( $class_name ) ) {
 		$dataset = new $class_name( $args );
@@ -182,5 +181,4 @@ function get_dataset_value( $dataset, $args = array() ) {
 	}
 
 	throw new Exception( 'invalid-dataset', __( 'Invalid dataset.', 'book-database' ), 404 );
-
 }

@@ -151,9 +151,7 @@ final class Book_Database {
 	 * Include global files
 	 */
 	private function include_files() {
-
-		require_once BDB_DIR . 'includes/abstract-class-base-object.php';
-		require_once BDB_DIR . 'includes/class-exception.php';
+		require_once BDB_DIR . 'vendor/autoload.php';
 
 		// Database engine
 		require_once BDB_DIR . 'includes/database/engine/base.php';
@@ -237,126 +235,62 @@ final class Book_Database {
 		require_once BDB_DIR . 'includes/database/series/class-series-query.php';
 
 		// Analytics
-		require_once BDB_DIR . 'includes/analytics/abstract-class-dataset.php';
 		require_once BDB_DIR . 'includes/analytics/analytics-functions.php';
-		require_once BDB_DIR . 'includes/analytics/graphs/class-graph.php';
-		require_once BDB_DIR . 'includes/analytics/graphs/class-bar-graph.php';
-		require_once BDB_DIR . 'includes/analytics/graphs/class-horizontal-bar-graph.php';
-		require_once BDB_DIR . 'includes/analytics/graphs/class-pie-chart.php';
-		require_once BDB_DIR . 'includes/analytics/graphs/class-scatter-chart.php';
-		$datasets = array(
-			'reading-overview', 'number-different-series-read', 'number-standalones-read', 'pages-read',
-			'number-different-authors-read', 'number-reviews-written', 'average-rating', 'reading-track',
-			'books-per-year', 'most-read-genres', 'pages-breakdown', 'ratings-breakdown', 'highest-rated-books',
-			'lowest-rated-books', 'format-breakdown', 'average-days-finish-book', 'shortest-book-read', 'longest-book-read',
-			'number-editions', 'edition-format-breakdown', 'editions-over-time', 'reviews-over-time', 'reviews-written',
-			'books-read-over-time', 'terms-breakdown', 'number-signed-editions', 'edition-genre-breakdown',
-			'edition-source-breakdown', 'average-days-acquired-to-read', 'number-books-added', 'number-series-books-added',
-			'number-standalones-added', 'number-distinct-authors-added', 'library-genre-breakdown', 'library-book-releases',
-			'books-read-by-publication-year',
-		);
-		foreach ( $datasets as $dataset ) {
-			if ( file_exists( BDB_DIR . 'includes/analytics/datasets/class-' . $dataset . '.php' ) ) {
-				require_once BDB_DIR . 'includes/analytics/datasets/class-' . $dataset . '.php';
-			}
-		}
 
 		// Authors
-		require_once BDB_DIR . 'includes/authors/class-author.php';
 		require_once BDB_DIR . 'includes/authors/author-functions.php';
 
 		// Blocks
 		require_once BDB_DIR . 'includes/blocks.php';
 
 		// Book Author Relationships
-		require_once BDB_DIR . 'includes/book-author-relationships/class-book-author-relationship.php';
 		require_once BDB_DIR . 'includes/book-author-relationships/book-author-relationship-actions.php';
 		require_once BDB_DIR . 'includes/book-author-relationships/book-author-relationship-functions.php';
 
 		// Books
-		require_once BDB_DIR . 'includes/books/class-book.php';
-		require_once BDB_DIR . 'includes/books/class-book-layout.php';
 		require_once BDB_DIR . 'includes/books/book-functions.php';
 		require_once BDB_DIR . 'includes/books/book-layout-functions.php';
 		require_once BDB_DIR . 'includes/books/book-meta.php';
 
 		// Book Links
-		require_once BDB_DIR . 'includes/book-links/class-book-link.php';
 		require_once BDB_DIR . 'includes/book-links/book-link-functions.php';
 
 		// Book Taxonomies
-		require_once BDB_DIR . 'includes/book-taxonomies/class-book-taxonomy.php';
 		require_once BDB_DIR . 'includes/book-taxonomies/book-taxonomy-functions.php';
 
 		// Book Term Relationships
-		require_once BDB_DIR . 'includes/book-term-relationships/class-book-term-relationship.php';
 		require_once BDB_DIR . 'includes/book-term-relationships/book-term-relationship-actions.php';
 		require_once BDB_DIR . 'includes/book-term-relationships/book-term-relationship-functions.php';
 
 		// Book Terms
-		require_once BDB_DIR . 'includes/book-terms/class-book-term.php';
 		require_once BDB_DIR . 'includes/book-terms/book-term-functions.php';
 
 		// Editions
-		require_once BDB_DIR . 'includes/editions/class-edition.php';
 		require_once BDB_DIR . 'includes/editions/edition-functions.php';
 
 		// Ratings
-		require_once BDB_DIR . 'includes/ratings/class-rating.php';
 		require_once BDB_DIR . 'includes/ratings/rating-functions.php';
 
 		// Reading Logs
-		require_once BDB_DIR . 'includes/reading-logs/class-reading-log.php';
 		require_once BDB_DIR . 'includes/reading-logs/reading-log-functions.php';
 
 		// Retailers
-		require_once BDB_DIR . 'includes/retailers/class-retailer.php';
 		require_once BDB_DIR . 'includes/retailers/retailer-functions.php';
 
 		// Reviews
-		require_once BDB_DIR . 'includes/reviews/class-review.php';
 		require_once BDB_DIR . 'includes/reviews/review-actions.php';
 		require_once BDB_DIR . 'includes/reviews/review-functions.php';
 		require_once BDB_DIR . 'includes/reviews/review-meta.php';
 
 		// Series
-		require_once BDB_DIR . 'includes/series/class-series.php';
 		require_once BDB_DIR . 'includes/series/series-functions.php';
-
-		// REST API
-		require_once BDB_DIR . 'includes/rest-api/class-rest-api.php';
-		require_once BDB_DIR . 'includes/rest-api/abstract-class-controller.php';
-		require_once BDB_DIR . 'includes/rest-api/v1/class-analytics-controller.php';
-		require_once BDB_DIR . 'includes/rest-api/v1/class-author-controller.php';
-		require_once BDB_DIR . 'includes/rest-api/v1/class-book-controller.php';
-		require_once BDB_DIR . 'includes/rest-api/v1/class-book-link-controller.php';
-		require_once BDB_DIR . 'includes/rest-api/v1/class-book-term-controller.php';
-		require_once BDB_DIR . 'includes/rest-api/v1/class-edition-controller.php';
-		require_once BDB_DIR . 'includes/rest-api/v1/class-reading-log-controller.php';
-		require_once BDB_DIR . 'includes/rest-api/v1/class-retailer-controller.php';
-		require_once BDB_DIR . 'includes/rest-api/v1/class-review-controller.php';
-		require_once BDB_DIR . 'includes/rest-api/v1/class-series-controller.php';
-		require_once BDB_DIR . 'includes/rest-api/v1/class-taxonomy-controller.php';
-		require_once BDB_DIR . 'includes/rest-api/v1/class-utility-controller.php';
-
-		// Widgets
-		require_once BDB_DIR . 'includes/widgets/Reading_Log.php';
-		require_once BDB_DIR . 'includes/widgets/Reviews.php';
 
 		// Misc.
 		require_once BDB_DIR . 'includes/capabilities.php';
-		require_once BDB_DIR . 'includes/class-analytics.php';
-		require_once BDB_DIR . 'includes/class-book-reviews-query.php';
-		require_once BDB_DIR . 'includes/class-book-grid-query.php';
-		require_once BDB_DIR . 'includes/class-html.php';
 		require_once BDB_DIR . 'includes/misc-functions.php';
 		require_once BDB_DIR . 'includes/rewrites.php';
 		require_once BDB_DIR . 'includes/shortcodes.php';
 		require_once BDB_DIR . 'includes/template-functions.php';
-
-		if ( defined( 'WP_CLI' ) && WP_CLI ) {
-			require_once BDB_DIR . 'includes/class-cli.php';
-		}
 
 	}
 

@@ -10,7 +10,6 @@
 namespace Book_Database\Analytics\Datasets;
 
 use Book_Database\Analytics\Dataset;
-use function absint;
 use function Book_Database\book_database;
 
 /**

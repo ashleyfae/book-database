@@ -9,9 +9,14 @@
 
 namespace Book_Database\Models;
 
+use Book_Database\Database\Series\SeriesQuery;
+use Book_Database\Exceptions\Exception;
+use Book_Database\Exceptions\ModelNotFoundException;
 use function Book_Database\book_database;
 use function Book_Database\count_books;
 use function Book_Database\get_books;
+use function Book_Database\unique_book_slug;
+use function Book_Database\update_book;
 
 /**
  * Class Series
@@ -21,6 +26,7 @@ use function Book_Database\get_books;
  */
 class Series extends Model
 {
+    protected static $queryInterfaceClass = SeriesQuery::class;
 
     protected $name = '';
 
@@ -29,6 +35,72 @@ class Series extends Model
     protected $description = '';
 
     protected $number_books = 0;
+
+    public static function create(array $args): int
+    {
+        $args = wp_parse_args($args, array(
+            'name'         => '',
+            'slug'         => '',
+            'description'  => '',
+            'number_books' => 1,
+        ));
+
+        if (empty($args['name'])) {
+            throw new Exception('missing_required_parameter', __('A taxonomy name is required.', 'book-database'), 400);
+        }
+
+        // Generate a slug.
+        $args['slug'] = ! empty($args['slug'])
+            ? unique_book_slug($args['slug'], 'series')
+            : unique_book_slug(sanitize_title($args['name']), 'series');
+
+        // Sanitize.
+        $args['slug'] = sanitize_key($args['slug']);
+
+        return parent::create($args);
+    }
+
+    public static function update(int $id, array $args): bool
+    {
+        try {
+            /** @var Series $series */
+            $series = static::find($id);
+        } catch (ModelNotFoundException $e) {
+            throw new Exception('invalid_id', __('Invalid series ID.', 'book-database'), 400);
+        }
+
+        // If the slug is changing, let's re-generate it.
+        if (isset($args['slug']) && $args['slug'] !== $series->get_slug()) {
+            $args['slug'] = unique_book_slug($args['slug'], 'series');
+        }
+
+        return parent::update($id, $args);
+    }
+
+    public static function delete(int $id): void
+    {
+        parent::delete($id);
+
+        // Get all the books in this series.
+        $books = get_books(array(
+            'series_id' => absint($id),
+            'number'    => 9999,
+            'fields'    => 'id'
+        ));
+
+        if ($books) {
+            /**
+             * @var int[] $books
+             */
+            // Remove series_id and series_position from each book.
+            foreach ($books as $book_id) {
+                update_book($book_id, array(
+                    'series_id'       => 0,
+                    'series_position' => null
+                ));
+            }
+        }
+    }
 
     /**
      * Get the name of the series
@@ -135,7 +207,7 @@ class Series extends Model
         $log_table  = book_database()->get_table('reading_log')->get_table_name();
         $book_table = book_database()->get_table('books')->get_table_name();
 
-        $query   = $wpdb->prepare(
+        $query = $wpdb->prepare(
             "SELECT ROUND( AVG( rating ), 2 ) FROM {$log_table} log INNER JOIN {$book_table} b ON log.book_id = b.id WHERE series_id = %d AND rating IS NOT NULL",
             $this->get_id()
         );

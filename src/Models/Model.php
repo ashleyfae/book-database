@@ -11,6 +11,7 @@
 
 namespace Book_Database\Models;
 
+use Book_Database\Traits\HasQueryInterface;
 use function Book_Database\format_date;
 
 /**
@@ -21,6 +22,7 @@ use function Book_Database\format_date;
  */
 abstract class Model
 {
+    use HasQueryInterface;
 
     protected $id = 0;
 
@@ -45,7 +47,6 @@ abstract class Model
      */
     protected function set_vars($args = array())
     {
-
         // Bail if empty.
         if (empty($args)) {
             return;
@@ -63,7 +64,6 @@ abstract class Model
 
             $this->{$key} = $value;
         }
-
     }
 
     /**

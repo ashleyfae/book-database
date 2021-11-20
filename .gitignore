@@ -4,6 +4,7 @@ npm-debug.log
 *.sass.map
 *.scss.map
 /node_modules/
+/vendor/
 
 # amcharts spam
 assets/js/build/vendors~canvg.min.js

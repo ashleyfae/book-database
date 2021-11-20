@@ -10,6 +10,9 @@
 namespace Book_Database;
 
 use Book_Database\BerlinDB\Database\Queries\Tax;
+use Book_Database\Database\Authors\AuthorsQuery;
+use Book_Database\Database\Books\BooksQuery;
+use Book_Database\Database\Editions\EditionsQuery;
 
 /**
  * Class Reviews_Query
@@ -165,14 +168,14 @@ class Reviews_Query extends BerlinDB\Database\Query {
 
 		// Author query
 		if ( ! empty( $args['author_query'] ) ) {
-			$clause_engine->set_table_query( new Authors_Query() );
+			$clause_engine->set_table_query( new AuthorsQuery() );
 			$clause_engine->set_args( $args['author_query'] );
 			$where = array_merge( $where, $clause_engine->get_clauses() );
 		}
 
 		// Book query
 		if ( ! empty( $args['book_query'] ) ) {
-			$clause_engine->set_table_query( new Books_Query() );
+			$clause_engine->set_table_query( new BooksQuery() );
 			$clause_engine->set_args( $args['book_query'] );
 			$where = array_merge( $where, $clause_engine->get_clauses() );
 		}
@@ -180,7 +183,7 @@ class Reviews_Query extends BerlinDB\Database\Query {
 		// Edition query
 		if ( ! empty( $args['edition_query'] ) ) {
 			$join['edition_query'] = "INNER JOIN {$tbl_ed} AS ed ON (review.book_id = ed.book_id)";
-			$clause_engine->set_table_query( new Editions_Query() );
+			$clause_engine->set_table_query( new EditionsQuery() );
 			$clause_engine->set_args( $args['edition_query'] );
 			$where = array_merge( $where, $clause_engine->get_clauses() );
 		}

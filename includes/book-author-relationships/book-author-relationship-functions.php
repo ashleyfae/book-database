@@ -9,6 +9,8 @@
 
 namespace Book_Database;
 
+use Book_Database\Database\BookAuthor\BookAuthorQuery;
+
 /**
  * Get a single book-author-relationship by its ID
  *
@@ -18,7 +20,7 @@ namespace Book_Database;
  */
 function get_book_author_relationship( $relationship_id ) {
 
-	$query = new Book_Author_Relationships_Query();
+	$query = new BookAuthorQuery();
 
 	return $query->get_item( $relationship_id );
 
@@ -87,7 +89,7 @@ function get_book_author_relationships( $args = array() ) {
 		'number' => 20
 	) );
 
-	$query = new Book_Author_Relationships_Query();
+	$query = new BookAuthorQuery();
 
 	return $query->query( $args );
 
@@ -108,7 +110,7 @@ function count_book_author_relationships( $args = array() ) {
 		'count' => true
 	) );
 
-	$query = new Book_Author_Relationships_Query( $args );
+	$query = new BookAuthorQuery( $args );
 
 	return absint( $query->found_items );
 
@@ -141,7 +143,7 @@ function add_book_author_relationship( $args ) {
 		throw new Exception( 'missing_required_parameter', __( 'A book ID is required.', 'book-database' ), 400 );
 	}
 
-	$query           = new Book_Author_Relationships_Query();
+	$query           = new BookAuthorQuery();
 	$relationship_id = $query->add_item( $args );
 
 	if ( empty( $relationship_id ) ) {
@@ -179,7 +181,7 @@ function delete_book_author_relationship( $relationship_id ) {
 		return true;
 	}
 
-	$query   = new Book_Author_Relationships_Query();
+	$query   = new BookAuthorQuery();
 	$deleted = $query->delete_item( $relationship_id );
 
 	if ( ! $deleted ) {

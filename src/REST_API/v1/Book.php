@@ -9,7 +9,7 @@
 
 namespace Book_Database\REST_API\v1;
 
-use Book_Database\Books_Query;
+use Book_Database\Database\Books\BooksQuery;
 use Book_Database\Exception;
 use Book_Database\REST_API\Controller;
 use function Book_Database\add_book;
@@ -254,7 +254,7 @@ class Book extends Controller {
 				'order'   => 'ASC'
 			) );
 
-			$query = new Books_Query();
+			$query = new BooksQuery();
 			$books = $query->get_books( $args );
 
 			foreach ( $books as $key => $book ) {

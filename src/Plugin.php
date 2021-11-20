@@ -12,6 +12,15 @@ namespace Book_Database;
 
 use Book_Database\Container\Container;
 use Book_Database\Container\Exceptions\BindingResolutionException;
+use Book_Database\Database\Authors\AuthorsTable;
+use Book_Database\Database\BookAuthor\BookAuthorTable;
+use Book_Database\Database\BookLinks\BookLinksTable;
+use Book_Database\Database\Books\BookMetaTable;
+use Book_Database\Database\Books\BooksTable;
+use Book_Database\Database\BookTaxonomies\BookTaxonomiesTable;
+use Book_Database\Database\BookTerm\BookTermRelationshipsTable;
+use Book_Database\Database\BookTerms\BookTermsTable;
+use Book_Database\Database\Editions\EditionsTable;
 use Book_Database\ServiceProviders\LegacyServiceProvider;
 use Book_Database\ServiceProviders\ServiceProvider;
 
@@ -126,15 +135,15 @@ final class Plugin
         self::$instance->loadServiceProviders();
 
         self::$instance->tables = array(
-            'authors'                   => new Authors_Table(),
-            'book_author_relationships' => new Book_Author_Relationships_Table(),
-            'book_links'                => new Book_Links_Table(),
-            'book_taxonomies'           => new Book_Taxonomies_Table(),
-            'book_term_relationships'   => new Book_Term_Relationships_Table(),
-            'book_terms'                => new Book_Terms_Table(),
-            'books'                     => new Books_Table(),
-            'book_meta'                 => new Book_Meta_Table(),
-            'editions'                  => new Editions_Table(),
+            'authors'                   => new AuthorsTable(),
+            'book_author_relationships' => new BookAuthorTable(),
+            'book_links'                => new BookLinksTable(),
+            'book_taxonomies'           => new BookTaxonomiesTable(),
+            'book_term_relationships'   => new BookTermRelationshipsTable(),
+            'book_terms'                => new BookTermsTable(),
+            'books'                     => new BooksTable(),
+            'book_meta'                 => new BookMetaTable(),
+            'editions'                  => new EditionsTable(),
             'reading_log'               => new Reading_Logs_Table(),
             'retailers'                 => new Retailers_Table(),
             'reviews'                   => new Reviews_Table(),

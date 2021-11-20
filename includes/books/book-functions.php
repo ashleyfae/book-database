@@ -9,6 +9,8 @@
 
 namespace Book_Database;
 
+use Book_Database\Database\Books\BooksQuery;
+
 /**
  * Get a single book by its ID
  *
@@ -18,7 +20,7 @@ namespace Book_Database;
  */
 function get_book( $book_id ) {
 
-	$query = new Books_Query();
+	$query = new BooksQuery();
 
 	return $query->get_item( $book_id );
 
@@ -34,7 +36,7 @@ function get_book( $book_id ) {
  */
 function get_book_by( $column_name, $column_value ) {
 
-	$query = new Books_Query();
+	$query = new BooksQuery();
 
 	return $query->get_item_by( $column_name, $column_value );
 
@@ -44,7 +46,8 @@ function get_book_by( $column_name, $column_value ) {
  * Query for books
  *
  * Note: An alternative to this function is Books_Query::get_books().
- * @see Books_Query::get_books()
+ *
+ * @see BooksQuery::get_books()
  *
  * Here's how they differ:
  *
@@ -112,7 +115,7 @@ function get_books( $args = array() ) {
 		'number' => 20
 	) );
 
-	$query = new Books_Query();
+	$query = new BooksQuery();
 
 	return $query->query( $args );
 
@@ -133,7 +136,7 @@ function count_books( $args = array() ) {
 		'count' => true
 	) );
 
-	$query = new Books_Query( $args );
+	$query = new BooksQuery( $args );
 
 	return absint( $query->found_items );
 
@@ -181,7 +184,7 @@ function add_book( $args = array() ) {
 		throw new Exception( 'missing_parameter', __( 'Book title is required.', 'book-database' ), 400 );
 	}
 
-	$query   = new Books_Query();
+	$query   = new BooksQuery();
 	$book_id = $query->add_item( $args );
 
 	if ( empty( $book_id ) ) {
@@ -213,7 +216,7 @@ function add_book( $args = array() ) {
  */
 function update_book( $book_id, $args = array() ) {
 
-	$query   = new Books_Query();
+	$query   = new BooksQuery();
 	$updated = $query->update_item( $book_id, $args );
 
 	if ( ! $updated ) {
@@ -239,7 +242,7 @@ function delete_book( $book_id ) {
 
 	global $wpdb;
 
-	$query   = new Books_Query();
+	$query   = new BooksQuery();
 	$deleted = $query->delete_item( $book_id );
 
 	if ( ! $deleted ) {

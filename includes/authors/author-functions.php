@@ -9,6 +9,8 @@
 
 namespace Book_Database;
 
+use Book_Database\Database\Authors\AuthorsQuery;
+
 /**
  * Get a single author by its ID
  *
@@ -18,7 +20,7 @@ namespace Book_Database;
  */
 function get_book_author( $author_id ) {
 
-	$query = new Authors_Query();
+	$query = new AuthorsQuery();
 
 	return $query->get_item( $author_id );
 
@@ -34,7 +36,7 @@ function get_book_author( $author_id ) {
  */
 function get_book_author_by( $column_name, $column_value ) {
 
-	$query = new Authors_Query();
+	$query = new AuthorsQuery();
 
 	return $query->get_item_by( $column_name, $column_value );
 
@@ -80,7 +82,7 @@ function get_book_authors( $args = array() ) {
 		'number' => 20
 	) );
 
-	$query = new Authors_Query();
+	$query = new AuthorsQuery();
 
 	return $query->query( $args );
 
@@ -101,7 +103,7 @@ function count_book_authors( $args = array() ) {
 		'count' => true
 	) );
 
-	$query = new Authors_Query( $args );
+	$query = new AuthorsQuery( $args );
 
 	return absint( $query->found_items );
 
@@ -141,7 +143,7 @@ function add_book_author( $args = array() ) {
 	// Generate a slug.
 	$args['slug'] = ! empty( $args['slug'] ) ? unique_book_slug( $args['slug'], 'book_taxonomy' ) : unique_book_slug( sanitize_title( $args['name'] ), 'author' );
 
-	$query     = new Authors_Query();
+	$query     = new AuthorsQuery();
 	$author_id = $query->add_item( $args );
 
 	if ( empty( $author_id ) ) {
@@ -174,7 +176,7 @@ function update_book_author( $author_id, $args = array() ) {
 		$args['slug'] = unique_book_slug( $args['slug'], 'author' );
 	}
 
-	$query   = new Authors_Query();
+	$query   = new AuthorsQuery();
 	$updated = $query->update_item( $author_id, $args );
 
 	if ( ! $updated ) {
@@ -195,7 +197,7 @@ function update_book_author( $author_id, $args = array() ) {
  */
 function delete_book_author( $author_id ) {
 
-	$query   = new Authors_Query();
+	$query   = new AuthorsQuery();
 	$deleted = $query->delete_item( $author_id );
 
 	if ( ! $deleted ) {

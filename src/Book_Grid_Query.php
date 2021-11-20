@@ -11,8 +11,11 @@
 
 namespace Book_Database;
 
+use Book_Database\Database\Books\BooksQuery;
+
 /**
  * Class Book_Grid_Query
+ *
  * @package Book_Database
  */
 class Book_Grid_Query extends Book_Reviews_Query {
@@ -155,7 +158,7 @@ class Book_Grid_Query extends Book_Reviews_Query {
 	 */
 	public function get_results() {
 
-		$query   = new Books_Query();
+		$query   = new BooksQuery();
 		$results = $query->get_books( $this->args );
 
 		$count_args          = $this->args;

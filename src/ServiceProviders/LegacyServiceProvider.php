@@ -9,6 +9,31 @@
 
 namespace Book_Database\ServiceProviders;
 
+use Book_Database\Database\Authors\AuthorsQuery;
+use Book_Database\Database\Authors\AuthorsSchema;
+use Book_Database\Database\Authors\AuthorsTable;
+use Book_Database\Database\BookAuthor\BookAuthorQuery;
+use Book_Database\Database\BookAuthor\BookAuthorSchema;
+use Book_Database\Database\BookAuthor\BookAuthorTable;
+use Book_Database\Database\BookLinks\BookLinksQuery;
+use Book_Database\Database\BookLinks\BookLinksSchema;
+use Book_Database\Database\BookLinks\BookLinksTable;
+use Book_Database\Database\Books\BookMetaTable;
+use Book_Database\Database\Books\BooksQuery;
+use Book_Database\Database\Books\BooksSchema;
+use Book_Database\Database\Books\BooksTable;
+use Book_Database\Database\BookTaxonomies\BookTaxonomiesQuery;
+use Book_Database\Database\BookTaxonomies\BookTaxonomiesSchema;
+use Book_Database\Database\BookTaxonomies\BookTaxonomiesTable;
+use Book_Database\Database\BookTerm\BookTermRelationshipQuery;
+use Book_Database\Database\BookTerm\BookTermRelationshipsSchema;
+use Book_Database\Database\BookTerm\BookTermRelationshipsTable;
+use Book_Database\Database\BookTerms\BookTermsQuery;
+use Book_Database\Database\BookTerms\BookTermsSchema;
+use Book_Database\Database\BookTerms\BookTermsTable;
+use Book_Database\Database\Editions\EditionsQuery;
+use Book_Database\Database\Editions\EditionsSchema;
+use Book_Database\Database\Editions\EditionsTable;
 use Book_Database\HTML;
 use Book_Database\Plugin;
 use Book_Database\REST_API;
@@ -56,47 +81,6 @@ class LegacyServiceProvider implements ServiceProvider
         require_once BDB_DIR.'includes/database/engine/reading-log.php';
         require_once BDB_DIR.'includes/database/engine/class-where-clause.php';
         require_once BDB_DIR.'includes/database/sanitization.php';
-
-        // Database - authors
-        require_once BDB_DIR.'includes/database/authors/class-authors-table.php';
-        require_once BDB_DIR.'includes/database/authors/class-authors-schema.php';
-        require_once BDB_DIR.'includes/database/authors/class-authors-query.php';
-
-        // Database - book_author_relationships
-        require_once BDB_DIR.'includes/database/book-author-relationships/class-book-author-relationships-table.php';
-        require_once BDB_DIR.'includes/database/book-author-relationships/class-book-author-relationships-schema.php';
-        require_once BDB_DIR.'includes/database/book-author-relationships/class-book-author-relationships-query.php';
-
-        // Database - books
-        require_once BDB_DIR.'includes/database/books/class-books-table.php';
-        require_once BDB_DIR.'includes/database/books/class-books-schema.php';
-        require_once BDB_DIR.'includes/database/books/class-books-query.php';
-        require_once BDB_DIR.'includes/database/books/class-book-meta-table.php';
-
-        // Database - book_links
-        require_once BDB_DIR.'includes/database/book-links/class-book-links-table.php';
-        require_once BDB_DIR.'includes/database/book-links/class-book-links-schema.php';
-        require_once BDB_DIR.'includes/database/book-links/class-book-links-query.php';
-
-        // Database - book_taxonomies
-        require_once BDB_DIR.'includes/database/book-taxonomies/class-book-taxonomies-table.php';
-        require_once BDB_DIR.'includes/database/book-taxonomies/class-book-taxonomies-schema.php';
-        require_once BDB_DIR.'includes/database/book-taxonomies/class-book-taxonomies-query.php';
-
-        // Database - book_term_relationships
-        require_once BDB_DIR.'includes/database/book-term-relationships/class-book-term-relationships-table.php';
-        require_once BDB_DIR.'includes/database/book-term-relationships/class-book-term-relationships-schema.php';
-        require_once BDB_DIR.'includes/database/book-term-relationships/class-book-term-relationships-query.php';
-
-        // Database - book_terms
-        require_once BDB_DIR.'includes/database/book-terms/class-book-terms-table.php';
-        require_once BDB_DIR.'includes/database/book-terms/class-book-terms-schema.php';
-        require_once BDB_DIR.'includes/database/book-terms/class-book-terms-query.php';
-
-        // Database - owned_editions
-        require_once BDB_DIR.'includes/database/editions/class-editions-table.php';
-        require_once BDB_DIR.'includes/database/editions/class-editions-schema.php';
-        require_once BDB_DIR.'includes/database/editions/class-editions-query.php';
 
         // Database - reading_log
         require_once BDB_DIR.'includes/database/reading-logs/class-reading-logs-table.php';
@@ -254,6 +238,40 @@ class LegacyServiceProvider implements ServiceProvider
     private function registerClassAliases(): void
     {
         class_alias(Plugin::class, 'Book_Database\\Book_Database');
+
+        // Databases
+        class_alias(AuthorsTable::class, 'Book_Database\\Authors_Table');
+        class_alias(AuthorsQuery::class, 'Book_Database\\Authors_Query');
+        class_alias(AuthorsSchema::class, 'Book_Database\\Authors_Schema');
+
+        class_alias(BookAuthorQuery::class, 'Book_Database\\Book_Author_Relationships_Query');
+        class_alias(BookAuthorSchema::class, 'Book_Database\\Book_Author_Relationships_Schema');
+        class_alias(BookAuthorTable::class, 'Book_Database\\Book_Author_Relationships_Table');
+
+        class_alias(BookLinksQuery::class, 'Book_Database\\Book_Links_Query');
+        class_alias(BookLinksSchema::class, 'Book_Database\\Book_Links_Schema');
+        class_alias(BookLinksTable::class, 'Book_Database\\Book_Links_Table');
+
+        class_alias(BookTaxonomiesQuery::class, 'Book_Database\\Book_Taxonomies_Query');
+        class_alias(BookTaxonomiesSchema::class, 'Book_Database\\Book_Taxonomies_Schema');
+        class_alias(BookTaxonomiesTable::class, 'Book_Database\\Book_Taxonomies_Table');
+
+        class_alias(BookTermRelationshipQuery::class, 'Book_Database\\Book_Term_Relationships_Query');
+        class_alias(BookTermRelationshipsSchema::class, 'Book_Database\\Book_Term_Relationships_Schema');
+        class_alias(BookTermRelationshipsTable::class, 'Book_Database\\Book_Term_Relationships_Table');
+
+        class_alias(BookTermsQuery::class, 'Book_Database\\Book_Terms_Query');
+        class_alias(BookTermsSchema::class, 'Book_Database\\Book_Terms_Schema');
+        class_alias(BookTermsTable::class, 'Book_Database\\Book_Terms_Table');
+
+        class_alias(BookMetaTable::class, 'Book_Database\\Book_Meta_Table');
+        class_alias(BooksQuery::class, 'Book_Database\\Books_Query');
+        class_alias(BooksSchema::class, 'Book_Database\\Books_Schema');
+        class_alias(BooksTable::class, 'Book_Database\\Books_Table');
+
+        class_alias(EditionsQuery::class, 'Book_Database\Editions_Query');
+        class_alias(EditionsSchema::class, 'Book_Database\\Editions_Schema');
+        class_alias(EditionsTable::class, 'Book_Database\\Editions_Table');
     }
 
     private function bindClasses(): void

@@ -13,7 +13,7 @@ namespace Book_Database\Widgets;
 use Book_Database\Book;
 use Book_Database\Rating;
 use Book_Database\Review;
-use Book_Database\Reviews_Query;
+use Book_Database\Database\Reviews\ReviewsQuery;
 
 /**
  * Class Reviews
@@ -105,7 +105,7 @@ class Reviews extends \WP_Widget {
 			);
 		}
 
-		$query = new Reviews_Query();
+		$query = new ReviewsQuery();
 
 		return $query->get_reviews( $query_args );
 

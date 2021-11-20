@@ -15,6 +15,8 @@ namespace Book_Database;
  * for the plural version. To get a single series by ID, use `get_book_series_by( 'id', $id )`
  */
 
+use Book_Database\Database\Series\SeriesQuery;
+
 /**
  * Get a single series by a column name/value combo
  *
@@ -25,7 +27,7 @@ namespace Book_Database;
  */
 function get_book_series_by( $column_name, $column_value ) {
 
-	$query = new Series_Query();
+	$query = new SeriesQuery();
 
 	return $query->get_item_by( $column_name, $column_value );
 
@@ -68,7 +70,7 @@ function get_book_series( $args = array() ) {
 		'number' => 20
 	) );
 
-	$query = new Series_Query();
+	$query = new SeriesQuery();
 
 	return $query->query( $args );
 
@@ -89,7 +91,7 @@ function count_book_series( $args = array() ) {
 		'count' => true
 	) );
 
-	$query = new Series_Query( $args );
+	$query = new SeriesQuery( $args );
 
 	return absint( $query->found_items );
 
@@ -128,7 +130,7 @@ function add_book_series( $args ) {
 	// Sanitize.
 	$args['slug'] = sanitize_key( $args['slug'] );
 
-	$query     = new Series_Query();
+	$query     = new SeriesQuery();
 	$series_id = $query->add_item( $args );
 
 	if ( empty( $series_id ) ) {
@@ -161,7 +163,7 @@ function update_book_series( $series_id, $args = array() ) {
 		$args['slug'] = unique_book_slug( $args['slug'], 'series' );
 	}
 
-	$query   = new Series_Query();
+	$query   = new SeriesQuery();
 	$updated = $query->update_item( $series_id, $args );
 
 	if ( ! $updated ) {
@@ -184,7 +186,7 @@ function update_book_series( $series_id, $args = array() ) {
  */
 function delete_book_series( $series_id ) {
 
-	$query   = new Series_Query();
+	$query   = new SeriesQuery();
 	$deleted = $query->delete_item( $series_id );
 
 	if ( ! $deleted ) {

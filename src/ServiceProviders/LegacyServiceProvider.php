@@ -34,6 +34,19 @@ use Book_Database\Database\BookTerms\BookTermsTable;
 use Book_Database\Database\Editions\EditionsQuery;
 use Book_Database\Database\Editions\EditionsSchema;
 use Book_Database\Database\Editions\EditionsTable;
+use Book_Database\Database\ReadingLogs\ReadingLogsQuery;
+use Book_Database\Database\ReadingLogs\ReadingLogsSchema;
+use Book_Database\Database\ReadingLogs\ReadingLogsTable;
+use Book_Database\Database\Retailers\RetailersQuery;
+use Book_Database\Database\Retailers\RetailersSchema;
+use Book_Database\Database\Retailers\RetailersTable;
+use Book_Database\Database\Reviews\ReviewMetaTable;
+use Book_Database\Database\Reviews\ReviewsQuery;
+use Book_Database\Database\Reviews\ReviewsSchema;
+use Book_Database\Database\Reviews\ReviewsTable;
+use Book_Database\Database\Series\SeriesQuery;
+use Book_Database\Database\Series\SeriesSchema;
+use Book_Database\Database\Series\SeriesTable;
 use Book_Database\HTML;
 use Book_Database\Plugin;
 use Book_Database\REST_API;
@@ -81,22 +94,6 @@ class LegacyServiceProvider implements ServiceProvider
         require_once BDB_DIR.'includes/database/engine/reading-log.php';
         require_once BDB_DIR.'includes/database/engine/class-where-clause.php';
         require_once BDB_DIR.'includes/database/sanitization.php';
-
-        // Database - reading_log
-        require_once BDB_DIR.'includes/database/reading-logs/class-reading-logs-table.php';
-        require_once BDB_DIR.'includes/database/reading-logs/class-reading-logs-schema.php';
-        require_once BDB_DIR.'includes/database/reading-logs/class-reading-logs-query.php';
-
-        // Database - retailers
-        require_once BDB_DIR.'includes/database/retailers/class-retailers-table.php';
-        require_once BDB_DIR.'includes/database/retailers/class-retailers-schema.php';
-        require_once BDB_DIR.'includes/database/retailers/class-retailers-query.php';
-
-        // Database - reviews
-        require_once BDB_DIR.'includes/database/reviews/class-reviews-table.php';
-        require_once BDB_DIR.'includes/database/reviews/class-reviews-schema.php';
-        require_once BDB_DIR.'includes/database/reviews/class-reviews-query.php';
-        require_once BDB_DIR.'includes/database/reviews/class-review-meta-table.php';
 
         // Database - series
         require_once BDB_DIR.'includes/database/series/class-series-table.php';
@@ -272,6 +269,23 @@ class LegacyServiceProvider implements ServiceProvider
         class_alias(EditionsQuery::class, 'Book_Database\Editions_Query');
         class_alias(EditionsSchema::class, 'Book_Database\\Editions_Schema');
         class_alias(EditionsTable::class, 'Book_Database\\Editions_Table');
+
+        class_alias(ReadingLogsQuery::class, 'Book_Database\\Reading_Logs_Query');
+        class_alias(ReadingLogsSchema::class, 'Book_Database\\Reading_Logs_Schema');
+        class_alias(ReadingLogsTable::class, 'Book_Database\\Reading_Logs_Table');
+
+        class_alias(RetailersQuery::class, 'Book_Database\\Retailers_Query');
+        class_alias(RetailersSchema::class, 'Book_Database\\Retailers_Schema');
+        class_alias(RetailersTable::class, 'Book_Database\\Retailers_Table');
+
+        class_alias(ReviewMetaTable::class, 'Book_Database\\Review_Meta_Table');
+        class_alias(ReviewsQuery::class, 'Book_Database\\Reviews_Query');
+        class_alias(ReviewsSchema::class, 'Book_Database\\Reviews_Schema');
+        class_alias(ReviewsTable::class, 'Book_Database\\Reviews_Table');
+
+        class_alias(SeriesQuery::class, 'Book_Database\\Series_Query');
+        class_alias(SeriesSchema::class, 'Book_Database\\Series_Schema');
+        class_alias(SeriesTable::class, 'Book_Database\\Series_Table');
     }
 
     private function bindClasses(): void

@@ -9,8 +9,11 @@
 
 namespace Book_Database;
 
+use Book_Database\Database\Reviews\ReviewsQuery;
+
 /**
  * Class Reviews_List_Table
+ *
  * @package Book_Database
  */
 class Reviews_List_Table extends List_Table {
@@ -327,7 +330,7 @@ class Reviews_List_Table extends List_Table {
 			);
 		}
 
-		$query = new Reviews_Query();
+		$query = new ReviewsQuery();
 
 		return $query->get_reviews( $args );
 

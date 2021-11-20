@@ -9,6 +9,8 @@
 
 namespace Book_Database;
 
+use Book_Database\Database\Retailers\RetailersQuery;
+
 /**
  * Get a single retailer by its ID
  *
@@ -18,7 +20,7 @@ namespace Book_Database;
  */
 function get_retailer( $retailer_id ) {
 
-	$query = new Retailers_Query();
+	$query = new RetailersQuery();
 
 	return $query->get_item( $retailer_id );
 
@@ -34,7 +36,7 @@ function get_retailer( $retailer_id ) {
  */
 function get_retailer_by( $column_name, $column_value ) {
 
-	$query = new Retailers_Query();
+	$query = new RetailersQuery();
 
 	return $query->get_item_by( $column_name, $column_value );
 
@@ -74,7 +76,7 @@ function get_retailers( $args = array() ) {
 		'number' => 20
 	) );
 
-	$query = new Retailers_Query();
+	$query = new RetailersQuery();
 
 	return $query->query( $args );
 
@@ -95,7 +97,7 @@ function count_retailers( $args = array() ) {
 		'count' => true
 	) );
 
-	$query = new Retailers_Query( $args );
+	$query = new RetailersQuery( $args );
 
 	return absint( $query->found_items );
 
@@ -124,7 +126,7 @@ function add_retailer( $args = array() ) {
 		throw new Exception( 'missing_required_parameter', __( 'An author name is required.', 'book-database' ), 400 );
 	}
 
-	$query       = new Retailers_Query();
+	$query       = new RetailersQuery();
 	$retailer_id = $query->add_item( $args );
 
 	if ( empty( $retailer_id ) ) {
@@ -146,7 +148,7 @@ function add_retailer( $args = array() ) {
  */
 function update_retailer( $retailer_id, $args = array() ) {
 
-	$query   = new Retailers_Query();
+	$query   = new RetailersQuery();
 	$updated = $query->update_item( $retailer_id, $args );
 
 	if ( ! $updated ) {
@@ -169,7 +171,7 @@ function delete_retailer( $retailer_id ) {
 
 	global $wpdb;
 
-	$query   = new Retailers_Query();
+	$query   = new RetailersQuery();
 	$deleted = $query->delete_item( $retailer_id );
 
 	if ( ! $deleted ) {

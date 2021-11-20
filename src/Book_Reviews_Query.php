@@ -11,8 +11,11 @@
 
 namespace Book_Database;
 
+use Book_Database\Database\Reviews\ReviewsQuery;
+
 /**
  * Class Book_Reviews_Query
+ *
  * @package Book_Database
  */
 class Book_Reviews_Query {
@@ -207,7 +210,7 @@ class Book_Reviews_Query {
 	 */
 	public function get_results() {
 
-		$query   = new Reviews_Query();
+		$query   = new ReviewsQuery();
 		$reviews = $query->get_reviews( $this->args );
 
 		$count_args          = $this->args;

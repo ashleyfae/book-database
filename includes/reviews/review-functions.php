@@ -9,6 +9,8 @@
 
 namespace Book_Database;
 
+use Book_Database\Database\Reviews\ReviewsQuery;
+
 /**
  * Get a single review by its ID
  *
@@ -18,7 +20,7 @@ namespace Book_Database;
  */
 function get_review( $review_id ) {
 
-	$query = new Reviews_Query();
+	$query = new ReviewsQuery();
 
 	return $query->get_item( $review_id );
 
@@ -34,7 +36,7 @@ function get_review( $review_id ) {
  */
 function get_review_by( $column_name, $column_value ) {
 
-	$query = new Reviews_Query();
+	$query = new ReviewsQuery();
 
 	return $query->get_item_by( $column_name, $column_value );
 
@@ -64,7 +66,7 @@ function get_review_by( $column_name, $column_value ) {
  */
 function get_reviews( $args = array() ) {
 
-	$query = new Reviews_Query();
+	$query = new ReviewsQuery();
 
 	return $query->get_reviews( $args );
 
@@ -85,7 +87,7 @@ function count_reviews( $args = array() ) {
 		'count' => true
 	) );
 
-	$query = new Reviews_Query( $args );
+	$query = new ReviewsQuery( $args );
 
 	return absint( $query->found_items );
 
@@ -125,7 +127,7 @@ function add_review( $args = array() ) {
 		throw new Exception( 'missing_parameter', __( 'Book ID is required.', 'book-database' ), 400 );
 	}
 
-	$query     = new Reviews_Query();
+	$query     = new ReviewsQuery();
 	$review_id = $query->add_item( $args );
 
 	if ( empty( $review_id ) ) {
@@ -147,7 +149,7 @@ function add_review( $args = array() ) {
  */
 function update_review( $review_id, $args = array() ) {
 
-	$query   = new Reviews_Query();
+	$query   = new ReviewsQuery();
 	$updated = $query->update_item( $review_id, $args );
 
 	if ( ! $updated ) {
@@ -168,7 +170,7 @@ function update_review( $review_id, $args = array() ) {
  */
 function delete_review( $review_id ) {
 
-	$query   = new Reviews_Query();
+	$query   = new ReviewsQuery();
 	$deleted = $query->delete_item( $review_id );
 
 	if ( ! $deleted ) {

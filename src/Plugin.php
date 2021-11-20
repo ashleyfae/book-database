@@ -21,6 +21,11 @@ use Book_Database\Database\BookTaxonomies\BookTaxonomiesTable;
 use Book_Database\Database\BookTerm\BookTermRelationshipsTable;
 use Book_Database\Database\BookTerms\BookTermsTable;
 use Book_Database\Database\Editions\EditionsTable;
+use Book_Database\Database\ReadingLogs\ReadingLogsTable;
+use Book_Database\Database\Retailers\RetailersTable;
+use Book_Database\Database\Reviews\ReviewMetaTable;
+use Book_Database\Database\Reviews\ReviewsTable;
+use Book_Database\Database\Series\SeriesTable;
 use Book_Database\ServiceProviders\LegacyServiceProvider;
 use Book_Database\ServiceProviders\ServiceProvider;
 
@@ -144,11 +149,11 @@ final class Plugin
             'books'                     => new BooksTable(),
             'book_meta'                 => new BookMetaTable(),
             'editions'                  => new EditionsTable(),
-            'reading_log'               => new Reading_Logs_Table(),
-            'retailers'                 => new Retailers_Table(),
-            'reviews'                   => new Reviews_Table(),
-            'review_meta'               => new Review_Meta_Table(),
-            'series'                    => new Series_Table(),
+            'reading_log'               => new ReadingLogsTable(),
+            'retailers'                 => new RetailersTable(),
+            'reviews'                   => new ReviewsTable(),
+            'review_meta'               => new ReviewMetaTable(),
+            'series'                    => new SeriesTable(),
         );
 
     }

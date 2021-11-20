@@ -9,6 +9,9 @@
 
 namespace Book_Database\Models;
 
+use Book_Database\Database\Reviews\ReviewsQuery;
+use Book_Database\Exceptions\Exception;
+use function Book_Database\book_database;
 use function Book_Database\format_date;
 
 /**
@@ -19,6 +22,7 @@ use function Book_Database\format_date;
  */
 class Review extends Model
 {
+    protected static $queryInterfaceClass = ReviewsQuery::class;
 
     /**
      * @var int ID of the associated book.
@@ -59,6 +63,41 @@ class Review extends Model
      * @var string|null Date the review was published.
      */
     protected $date_published = null;
+
+    public static function create(array $args): int
+    {
+        $args = wp_parse_args($args, array(
+            'book_id'        => 0,
+            'reading_log_id' => null,
+            'user_id'        => get_current_user_id(),
+            'post_id'        => null,
+            'url'            => '',
+            'review'         => '',
+            'date_written'   => current_time('mysql', true),
+            'date_published' => null,
+        ));
+
+        if (empty($args['book_id'])) {
+            throw new Exception(
+                'missing_parameter',
+                __('Book ID is required.', 'book-database'),
+                400
+            );
+        }
+
+        return parent::create($args);
+    }
+
+    public static function delete(int $id): void
+    {
+        parent::delete($id);
+
+        // Delete all review meta.
+        global $wpdb;
+        $tbl_meta = book_database()->get_table( 'review_meta' )->get_table_name();
+        $query    = $wpdb->prepare( "DELETE FROM {$tbl_meta} WHERE bdb_review_id = %d", $id );
+        $wpdb->query( $query );
+    }
 
     /**
      * Get the ID of the book

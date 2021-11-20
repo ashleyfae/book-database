@@ -3,7 +3,7 @@
  * Review Functions
  *
  * @package   book-database
- * @copyright Copyright (c) 2019, Ashley Gibson
+ * @copyright Copyright (c) 2021, Ashley Gibson
  * @license   GPL2+
  */
 
@@ -16,32 +16,34 @@ use Book_Database\Models\Review;
 /**
  * Get a single review by its ID
  *
- * @param int $review_id
+ * @param  int  $review_id
  *
  * @return Review|false
  */
-function get_review( $review_id ) {
-
-	$query = new ReviewsQuery();
-
-	return $query->get_item( $review_id );
-
+function get_review($review_id)
+{
+    try {
+        return Review::find($review_id);
+    } catch (\Exception $e) {
+        return false;
+    }
 }
 
 /**
  * Get a single review by a column name/value combo
  *
- * @param string $column_name
- * @param mixed  $column_value
+ * @param  string  $column_name
+ * @param  mixed  $column_value
  *
  * @return Review|false
  */
-function get_review_by( $column_name, $column_value ) {
-
-	$query = new ReviewsQuery();
-
-	return $query->get_item_by( $column_name, $column_value );
-
+function get_review_by(string $column_name, $column_value)
+{
+    try {
+        return Review::findBy($column_name, $column_value);
+    } catch (\Exception $e) {
+        return false;
+    }
 }
 
 /**
@@ -66,12 +68,13 @@ function get_review_by( $column_name, $column_value ) {
  *
  * @return object[] Array of database objects.
  */
-function get_reviews( $args = array() ) {
-
-	$query = new ReviewsQuery();
-
-	return $query->get_reviews( $args );
-
+function get_reviews(array $args = []): array
+{
+    try {
+        return Review::query($args);
+    } catch (\Exception $e) {
+        return [];
+    }
 }
 
 /**
@@ -83,16 +86,13 @@ function get_reviews( $args = array() ) {
  *
  * @return int
  */
-function count_reviews( $args = array() ) {
-
-	$args = wp_parse_args( $args, array(
-		'count' => true
-	) );
-
-	$query = new ReviewsQuery( $args );
-
-	return absint( $query->found_items );
-
+function count_reviews(array $args = []): int
+{
+    try {
+        return Review::count($args);
+    } catch (\Exception $e) {
+        return 0;
+    }
 }
 
 /**
@@ -112,32 +112,9 @@ function count_reviews( $args = array() ) {
  * @return int ID of the newly created review.
  * @throws Exception
  */
-function add_review( $args = array() ) {
-
-	$args = wp_parse_args( $args, array(
-		'book_id'        => 0,
-		'reading_log_id' => null,
-		'user_id'        => get_current_user_id(),
-		'post_id'        => null,
-		'url'            => '',
-		'review'         => '',
-		'date_written'   => current_time( 'mysql', true ),
-		'date_published' => null
-	) );
-
-	if ( empty( $args['book_id'] ) ) {
-		throw new Exception( 'missing_parameter', __( 'Book ID is required.', 'book-database' ), 400 );
-	}
-
-	$query     = new ReviewsQuery();
-	$review_id = $query->add_item( $args );
-
-	if ( empty( $review_id ) ) {
-		throw new Exception( 'database_error', __( 'Failed to insert new review into the database.', 'book-database' ), 500 );
-	}
-
-	return absint( $review_id );
-
+function add_review(array $args = []): int
+{
+    return Review::create($args);
 }
 
 /**
@@ -149,63 +126,42 @@ function add_review( $args = array() ) {
  * @return bool
  * @throws Exception
  */
-function update_review( $review_id, $args = array() ) {
-
-	$query   = new ReviewsQuery();
-	$updated = $query->update_item( $review_id, $args );
-
-	if ( ! $updated ) {
-		throw new Exception( 'database_error', __( 'Failed to update the review.', 'book-database' ), 500 );
-	}
-
-	return true;
-
+function update_review($review_id, array $args = []): bool
+{
+    return Review::update($review_id, $args);
 }
 
 /**
  * Delete a review
  *
- * @param int $review_id ID of the review to delete.
+ * @param  int  $review_id  ID of the review to delete.
  *
  * @return bool
  * @throws Exception
  */
-function delete_review( $review_id ) {
+function delete_review($review_id): bool
+{
+    Review::delete($review_id);
 
-	$query   = new ReviewsQuery();
-	$deleted = $query->delete_item( $review_id );
-
-	if ( ! $deleted ) {
-		throw new Exception( 'database_error', __( 'Failed to delete the review.', 'book-database' ), 500 );
-	}
-
-	// Delete all review meta.
-	global $wpdb;
-	$tbl_meta = book_database()->get_table( 'review_meta' )->get_table_name();
-	$query    = $wpdb->prepare( "DELETE FROM {$tbl_meta} WHERE bdb_review_id = %d", $review_id );
-	$wpdb->query( $query );
-
-	return true;
-
+    return true;
 }
 
 /**
  * Get the reviews admin page URL.
  *
- * @param array $args Query args to append to the URL.
+ * @param  array  $args  Query args to append to the URL.
  *
  * @return string
  */
-function get_reviews_admin_page_url( $args = array() ) {
+function get_reviews_admin_page_url(array $args = []): string
+{
+    $sanitized_args = array();
 
-	$sanitized_args = array();
+    foreach ($args as $key => $value) {
+        $sanitized_args[sanitize_key($key)] = urlencode($value);
+    }
 
-	foreach ( $args as $key => $value ) {
-		$sanitized_args[ sanitize_key( $key ) ] = urlencode( $value );
-	}
-
-	return add_query_arg( $sanitized_args, admin_url( 'admin.php?page=bdb-reviews' ) );
-
+    return add_query_arg($sanitized_args, admin_url('admin.php?page=bdb-reviews'));
 }
 
 /**
@@ -213,37 +169,32 @@ function get_reviews_admin_page_url( $args = array() ) {
  *
  * @return array
  */
-function get_reviewer_user_ids() {
+function get_reviewer_user_ids(): array
+{
+    global $wpdb;
 
-	global $wpdb;
+    $review_table = book_database()->get_table('reviews')->get_table_name();
 
-	$review_table = book_database()->get_table( 'reviews' )->get_table_name();
-
-	$results = $wpdb->get_col( "SELECT DISTINCT user_id FROM {$review_table}" );
-
-	return $results;
-
+    return $wpdb->get_col("SELECT DISTINCT user_id FROM {$review_table}");
 }
 
 /**
  * Returns an array of all the years that reviews have been written/published in.
  *
- * @param string $type  Date type - either `written` or `published`.
- * @param string $order Either ASC or DESC.
+ * @param  string  $type  Date type - either `written` or `published`.
+ * @param  string  $order  Either ASC or DESC.
  *
  * @return array
  */
-function get_review_years( $type = 'written', $order = 'DESC' ) {
+function get_review_years(string $type = 'written', string $order = 'DESC'): array
+{
+    global $wpdb;
 
-	global $wpdb;
+    $review_table = book_database()->get_table('reviews')->get_table_name();
+    $date_type    = 'written' === $type ? 'date_written' : 'date_published';
+    $order        = 'DESC' === $order ? 'DESC' : 'ASC';
 
-	$review_table = book_database()->get_table( 'reviews' )->get_table_name();
-	$date_type    = 'written' === $type ? 'date_written' : 'date_published';
-	$order        = 'DESC' === $order ? 'DESC' : 'ASC';
-	$years        = $wpdb->get_col( "SELECT DISTINCT YEAR( {$date_type} ) FROM {$review_table} WHERE {$date_type} IS NOT NULL ORDER BY {$date_type} {$order}" );
-
-	return $years;
-
+    return $wpdb->get_col("SELECT DISTINCT YEAR( {$date_type} ) FROM {$review_table} WHERE {$date_type} IS NOT NULL ORDER BY {$date_type} {$order}");
 }
 
 /**
@@ -251,8 +202,7 @@ function get_review_years( $type = 'written', $order = 'DESC' ) {
  *
  * @return array
  */
-function get_review_post_types() {
-	$post_types = array( 'post' );
-
-	return apply_filters( 'book-database/review-post-types', $post_types );
+function get_review_post_types(): array
+{
+    return apply_filters('book-database/review-post-types', ['post']);
 }

@@ -338,7 +338,7 @@ final class Book_Database {
 		require_once BDB_DIR . 'includes/admin/editions/edition-actions.php';
 
 		// Licensing
-		require_once BDB_DIR . 'vendor/class-edd-sl-plugin-updater.php';
+		require_once BDB_DIR . 'includes/class-edd-sl-plugin-updater.php';
 		require_once BDB_DIR . 'includes/admin/licensing/class-license-key.php';
 		require_once BDB_DIR . 'includes/admin/licensing/license-actions.php';
 

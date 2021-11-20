@@ -10,7 +10,7 @@
 namespace Book_Database\Database\BookTerm;
 
 use Book_Database\BerlinDB;
-use Book_Database\Book_Term_Relationship;
+use Book_Database\Models\BookTermRelationship;
 
 /**
  * Class BookTermRelationshipQuery
@@ -61,7 +61,7 @@ class BookTermRelationshipQuery extends BerlinDB\Database\Query
      *
      * @var string
      */
-    protected $item_shape = Book_Term_Relationship::class;
+    protected $item_shape = BookTermRelationship::class;
 
     /**
      * Group to cache queries and queried items to

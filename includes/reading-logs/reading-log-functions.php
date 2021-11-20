@@ -10,13 +10,15 @@
 namespace Book_Database;
 
 use Book_Database\Database\ReadingLogs\ReadingLogsQuery;
+use Book_Database\Exceptions\Exception;
+use Book_Database\Models\ReadingLog;
 
 /**
  * Get a single reading log entry by its ID
  *
  * @param int $log_id
  *
- * @return Reading_Log|false
+ * @return ReadingLog|false
  */
 function get_reading_log( $log_id ) {
 
@@ -32,7 +34,7 @@ function get_reading_log( $log_id ) {
  * @param string $column_name
  * @param mixed  $column_value
  *
- * @return Reading_Log|false
+ * @return ReadingLog|false
  */
 function get_reading_log_by( $column_name, $column_value ) {
 
@@ -78,7 +80,7 @@ function get_reading_log_by( $column_name, $column_value ) {
  * @type bool         $update_cache        Whether to prime the cache for found items. Default false.
  * }
  *
- * @return Reading_Log[] Array of Reading_Log objects.
+ * @return ReadingLog[] Array of Reading_Log objects.
  */
 function get_reading_logs( $args = array() ) {
 

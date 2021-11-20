@@ -10,7 +10,7 @@
 namespace Book_Database\Database\ReadingLogs;
 
 use Book_Database\BerlinDB;
-use Book_Database\Reading_Log;
+use Book_Database\Models\ReadingLog;
 
 /**
  * Class ReadingLogsQuery
@@ -61,7 +61,7 @@ class ReadingLogsQuery extends BerlinDB\Database\Query
      *
      * @var string
      */
-    protected $item_shape = Reading_Log::class;
+    protected $item_shape = ReadingLog::class;
 
     /**
      * Group to cache queries and queried items to

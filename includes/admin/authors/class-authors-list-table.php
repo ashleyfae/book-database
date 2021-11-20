@@ -9,8 +9,12 @@
 
 namespace Book_Database;
 
+use Book_Database\Exceptions\Exception;
+use Book_Database\Models\Author;
+
 /**
  * Class Authors_List_Table
+ *
  * @package Book_Database
  */
 class Authors_List_Table extends List_Table {

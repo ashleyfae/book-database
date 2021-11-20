@@ -9,7 +9,7 @@
 
 namespace Book_Database\Tests;
 
-use Book_Database\Series;
+use Book_Database\Models\Series;
 use function Book_Database\get_book_series_by;
 
 /**
@@ -48,21 +48,21 @@ class Test_Series_Functions extends UnitTestCase {
 	 * @covers ::\Book_Database\get_book_series_by()
 	 */
 	public function test_get_series_by_id() {
-		$this->assertInstanceOf( 'Book_Database\Series', get_book_series_by( 'id', self::$series[0] ) );
+		$this->assertInstanceOf( 'Book_Database\Models\Series', get_book_series_by( 'id', self::$series[0] ) );
 	}
 
 	/**
 	 * @covers ::\Book_Database\get_book_series_by()
 	 */
 	public function test_get_series_by_name() {
-		$this->assertInstanceOf( 'Book_Database\Series', get_book_series_by( 'name', 'My Trilogy' ) );
+		$this->assertInstanceOf( 'Book_Database\Models\Series', get_book_series_by( 'name', 'My Trilogy' ) );
 	}
 
 	/**
 	 * @covers ::\Book_Database\get_book_series_by()
 	 */
 	public function test_get_series_by_slug() {
-		$this->assertInstanceOf( 'Book_Database\Series', get_book_series_by( 'slug', 'my-trilogy' ) );
+		$this->assertInstanceOf( 'Book_Database\Models\Series', get_book_series_by( 'slug', 'my-trilogy' ) );
 	}
 
 	/**

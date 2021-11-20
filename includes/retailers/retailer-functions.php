@@ -10,6 +10,8 @@
 namespace Book_Database;
 
 use Book_Database\Database\Retailers\RetailersQuery;
+use Book_Database\Exceptions\Exception;
+use Book_Database\Models\Retailer;
 
 /**
  * Get a single retailer by its ID

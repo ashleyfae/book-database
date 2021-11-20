@@ -13,6 +13,10 @@ if ( ! defined( 'WP_CLI' ) || ! class_exists( '\WP_CLI' ) ) {
 	return;
 }
 
+use Book_Database\Exceptions\Exception;
+use Book_Database\Models\Author;
+use Book_Database\Models\Retailer;
+use Book_Database\Models\Review;
 use WP_CLI;
 
 WP_CLI::add_command( 'bdb', '\\Book_Database\\CLI' );

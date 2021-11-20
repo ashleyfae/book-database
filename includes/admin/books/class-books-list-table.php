@@ -10,6 +10,8 @@
 namespace Book_Database;
 
 use Book_Database\Database\Books\BooksQuery;
+use Book_Database\Models\Book;
+use Book_Database\ValueObjects\Rating;
 
 /**
  * Class Books_List_Table

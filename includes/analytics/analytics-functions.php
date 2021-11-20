@@ -9,7 +9,7 @@
 
 namespace Book_Database\Analytics;
 
-use Book_Database\Exception;
+use Book_Database\Exceptions\Exception;
 use function Book_Database\get_site_timezone;
 
 /**

@@ -9,6 +9,11 @@
 
 namespace Book_Database;
 
+use Book_Database\Models\Author;
+use Book_Database\Models\BookTerm;
+use Book_Database\Models\Series;
+use Book_Database\ValueObjects\Rating;
+
 /**
  * Get an array of all settings
  *
@@ -148,7 +153,7 @@ function link_book_terms() {
 /**
  * Get the term archive link
  *
- * @param Author|Book_Term|Series|Rating $term
+ * @param Author|BookTerm|Series|Rating $term
  *
  * @return bool
  */
@@ -163,7 +168,7 @@ function get_book_term_link( $term ) {
 
 	if ( $term instanceof Author ) {
 		$taxonomy = 'author';
-	} elseif ( $term instanceof Book_Term ) {
+	} elseif ( $term instanceof BookTerm ) {
 		$taxonomy = $term->get_taxonomy();
 	} elseif ( $term instanceof Series ) {
 		$taxonomy = 'series';
@@ -185,7 +190,7 @@ function get_book_term_link( $term ) {
 	 * @param string                         $final_url Final archive URL.
 	 * @param string                         $slug      Term slug.
 	 * @param string                         $taxonomy  Term taxonomy / type.
-	 * @param Author|Book_Term|Series|Rating $term      Term object.
+	 * @param Author|BookTerm|Series|Rating $term      Term object.
 	 */
 	return apply_filters( 'book-database/term-archive-link', $final_url, $slug, $taxonomy, $term );
 

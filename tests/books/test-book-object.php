@@ -9,7 +9,7 @@
 
 namespace Book_Database\Tests;
 
-use Book_Database\Book;
+use Book_Database\Models\Book;
 use function Book_Database\add_book;
 use function Book_Database\add_book_series;
 use function Book_Database\get_book;

@@ -10,6 +10,10 @@
 namespace Book_Database;
 
 use Book_Database\Database\Reviews\ReviewsQuery;
+use Book_Database\Exceptions\Exception;
+use Book_Database\Models\Book;
+use Book_Database\Models\Review;
+use Book_Database\ValueObjects\Rating;
 
 /**
  * Class Reviews_List_Table

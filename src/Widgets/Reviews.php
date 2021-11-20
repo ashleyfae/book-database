@@ -10,9 +10,9 @@
 
 namespace Book_Database\Widgets;
 
-use Book_Database\Book;
-use Book_Database\Rating;
-use Book_Database\Review;
+use Book_Database\Models\Book;
+use Book_Database\ValueObjects\Rating;
+use Book_Database\Models\Review;
 use Book_Database\Database\Reviews\ReviewsQuery;
 
 /**

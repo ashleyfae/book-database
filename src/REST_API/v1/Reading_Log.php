@@ -9,7 +9,7 @@
 
 namespace Book_Database\REST_API\v1;
 
-use Book_Database\Exception;
+use Book_Database\Exceptions\Exception;
 use Book_Database\REST_API\Controller;
 use function Book_Database\add_reading_log;
 use function Book_Database\delete_reading_log;
@@ -114,7 +114,7 @@ class Reading_Log extends Controller {
 							return false;
 						}
 
-						return get_edition( absint( $param ) ) instanceof \Book_Database\Edition;
+						return get_edition( absint( $param ) ) instanceof \Book_Database\Models\Edition;
 					},
 					'sanitize_callback' => function ( $param, $request, $key ) {
 						return ! empty( absint( $param ) ) ? absint( $param ) : null;
@@ -207,7 +207,7 @@ class Reading_Log extends Controller {
 							return false;
 						}
 
-						return get_edition( absint( $param ) ) instanceof \Book_Database\Edition;
+						return get_edition( absint( $param ) ) instanceof \Book_Database\Models\Edition;
 					},
 					'sanitize_callback' => function ( $param, $request, $key ) {
 						return ! empty( absint( $param ) ) ? absint( $param ) : null;

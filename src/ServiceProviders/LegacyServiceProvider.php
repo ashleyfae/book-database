@@ -9,6 +9,7 @@
 
 namespace Book_Database\ServiceProviders;
 
+use Book_Database\Analytics\Analytics;
 use Book_Database\Database\Authors\AuthorsQuery;
 use Book_Database\Database\Authors\AuthorsSchema;
 use Book_Database\Database\Authors\AuthorsTable;
@@ -47,9 +48,24 @@ use Book_Database\Database\Reviews\ReviewsTable;
 use Book_Database\Database\Series\SeriesQuery;
 use Book_Database\Database\Series\SeriesSchema;
 use Book_Database\Database\Series\SeriesTable;
-use Book_Database\HTML;
+use Book_Database\Exceptions\Exception;
+use Book_Database\Helpers\HTML;
+use Book_Database\Models\Author;
+use Book_Database\Models\Book;
+use Book_Database\Models\BookAuthorRelationship;
+use Book_Database\Models\BookLink;
+use Book_Database\Models\BookTaxonomy;
+use Book_Database\Models\BookTerm;
+use Book_Database\Models\BookTermRelationship;
+use Book_Database\Models\Edition;
+use Book_Database\Models\Model;
+use Book_Database\Models\ReadingLog;
+use Book_Database\Models\Retailer;
+use Book_Database\Models\Review;
+use Book_Database\Models\Series;
 use Book_Database\Plugin;
-use Book_Database\REST_API;
+use Book_Database\REST_API\RouteRegistration;
+use Book_Database\ValueObjects\Rating;
 use function Book_Database\book_database;
 
 class LegacyServiceProvider implements ServiceProvider
@@ -94,11 +110,6 @@ class LegacyServiceProvider implements ServiceProvider
         require_once BDB_DIR.'includes/database/engine/reading-log.php';
         require_once BDB_DIR.'includes/database/engine/class-where-clause.php';
         require_once BDB_DIR.'includes/database/sanitization.php';
-
-        // Database - series
-        require_once BDB_DIR.'includes/database/series/class-series-table.php';
-        require_once BDB_DIR.'includes/database/series/class-series-schema.php';
-        require_once BDB_DIR.'includes/database/series/class-series-query.php';
 
         // Analytics
         require_once BDB_DIR.'includes/analytics/analytics-functions.php';
@@ -232,6 +243,9 @@ class LegacyServiceProvider implements ServiceProvider
         require_once BDB_DIR.'includes/assets.php';
     }
 
+    /**
+     * These classes have been renamed.
+     */
     private function registerClassAliases(): void
     {
         class_alias(Plugin::class, 'Book_Database\\Book_Database');
@@ -286,12 +300,72 @@ class LegacyServiceProvider implements ServiceProvider
         class_alias(SeriesQuery::class, 'Book_Database\\Series_Query');
         class_alias(SeriesSchema::class, 'Book_Database\\Series_Schema');
         class_alias(SeriesTable::class, 'Book_Database\\Series_Table');
+
+        // Models
+        class_alias(Model::class, 'Book_Database\\Base_Object');
+        class_alias(Author::class, 'Book_Database\\Author');
+        class_alias(Book::class, 'Book_Database\\Book');
+        class_alias(BookAuthorRelationship::class, 'Book_Database\\Book_Author_Relationship');
+        class_alias(BookLink::class, 'Book_Database\\Book_Link');
+        class_alias(BookTaxonomy::class, 'Book_Database\\Book_Taxonomy');
+        class_alias(BookTerm::class, 'Book_Database\\Book_Term');
+        class_alias(BookTermRelationship::class, 'Book_Database\\Book_Term_Relationship');
+        class_alias(ReadingLog::class, 'Book_Database\\Reading_Log');
+        class_alias(Edition::class, 'Book_Database\\Edition');
+        class_alias(Retailer::class, 'Book_Database\\Retailer');
+        class_alias(Review::class, 'Book_Database\\Review');
+        class_alias(Series::class, 'Book_Database\\Series');
+
+        // Misc.
+        class_alias(Rating::class, 'Book_Database\\Rating');
+        class_alias(Exception::class, 'Book_Database\\Exception');
+        class_alias(HTML::class, 'Book_Database\\HTML');
+        class_alias(RouteRegistration::class, 'Book_Database\\REST_API');
+
+        // Analytics
+        class_alias(Analytics::class, 'Book_Database\\Analytics');
+        class_alias( \Book_Database\Analytics\Datasets\Average_Days_Acquired_to_Read::class, '\Book_Database\Analytics\Average_Days_Acquired_to_Read' );
+        class_alias( \Book_Database\Analytics\Datasets\Average_Days_Finish_Book::class, '\Book_Database\Analytics\Average_Days_Finish_Book' );
+        class_alias( \Book_Database\Analytics\Datasets\Average_Rating::class, '\Book_Database\Analytics\Average_Rating' );
+        class_alias( \Book_Database\Analytics\Datasets\Books_Per_Year::class, '\Book_Database\Analytics\Books_Per_Year' );
+        class_alias( \Book_Database\Analytics\Datasets\Books_Read_by_Publication_Year::class, '\Book_Database\Analytics\Books_Read_by_Publication_Year' );
+        class_alias( \Book_Database\Analytics\Datasets\Books_Read_Over_Time::class, '\Book_Database\Analytics\Books_Read_Over_Time' );
+        class_alias( \Book_Database\Analytics\Datasets\Edition_Format_Breakdown::class, '\Book_Database\Analytics\Edition_Format_Breakdown' );
+        class_alias( \Book_Database\Analytics\Datasets\Edition_Genre_Breakdown::class, '\Book_Database\Analytics\Edition_Genre_Breakdown' );
+        class_alias( \Book_Database\Analytics\Datasets\Edition_Source_Breakdown::class, '\Book_Database\Analytics\Edition_Source_Breakdown' );
+        class_alias( \Book_Database\Analytics\Datasets\Editions_Over_Time::class, '\Book_Database\Analytics\Editions_Over_Time' );
+        class_alias( \Book_Database\Analytics\Datasets\Format_Breakdown::class, '\Book_Database\Analytics\Format_Breakdown' );
+        class_alias( \Book_Database\Analytics\Datasets\Highest_Rated_Books::class, '\Book_Database\Analytics\Highest_Rated_Books' );
+        class_alias( \Book_Database\Analytics\Datasets\Library_Book_Releases::class, '\Book_Database\Analytics\Library_Book_Releases' );
+        class_alias( \Book_Database\Analytics\Datasets\Library_Genre_Breakdown::class, '\Book_Database\Analytics\Library_Genre_Breakdown' );
+        class_alias( \Book_Database\Analytics\Datasets\Longest_Book_Read::class, '\Book_Database\Analytics\Longest_Book_Read' );
+        class_alias( \Book_Database\Analytics\Datasets\Lowest_Rated_Books::class, '\Book_Database\Analytics\Lowest_Rated_Books' );
+        class_alias( \Book_Database\Analytics\Datasets\Most_Read_Genres::class, '\Book_Database\Analytics\Most_Read_Genres' );
+        class_alias( \Book_Database\Analytics\Datasets\Number_Books_Added::class, '\Book_Database\Analytics\Number_Books_Added' );
+        class_alias( \Book_Database\Analytics\Datasets\Number_Different_Authors_Read::class, '\Book_Database\Analytics\Number_Different_Authors_Read' );
+        class_alias( \Book_Database\Analytics\Datasets\Number_Different_Series_Read::class, '\Book_Database\Analytics\Number_Different_Series_Read' );
+        class_alias( \Book_Database\Analytics\Datasets\Number_Distinct_Authors_Added::class, '\Book_Database\Analytics\Number_Distinct_Authors_Added' );
+        class_alias( \Book_Database\Analytics\Datasets\Number_Editions::class, '\Book_Database\Analytics\Number_Editions' );
+        class_alias( \Book_Database\Analytics\Datasets\Number_Reviews_Written::class, '\Book_Database\Analytics\Number_Reviews_Written' );
+        class_alias( \Book_Database\Analytics\Datasets\Number_Series_Books_Added::class, '\Book_Database\Analytics\Number_Series_Books_Added' );
+        class_alias( \Book_Database\Analytics\Datasets\Number_Signed_Editions::class, '\Book_Database\Analytics\Number_Signed_Editions' );
+        class_alias( \Book_Database\Analytics\Datasets\Number_Standalones_Added::class, '\Book_Database\Analytics\Number_Standalones_Added' );
+        class_alias( \Book_Database\Analytics\Datasets\Number_Standalones_Read::class, '\Book_Database\Analytics\Number_Standalones_Read' );
+        class_alias( \Book_Database\Analytics\Datasets\Pages_Breakdown::class, '\Book_Database\Analytics\Pages_Breakdown' );
+        class_alias( \Book_Database\Analytics\Datasets\Pages_Read::class, '\Book_Database\Analytics\Pages_Read' );
+        class_alias( \Book_Database\Analytics\Datasets\Ratings_Breakdown::class, '\Book_Database\Analytics\Ratings_Breakdown' );
+        class_alias( \Book_Database\Analytics\Datasets\Reading_Overview::class, '\Book_Database\Analytics\Reading_Overview' );
+        class_alias( \Book_Database\Analytics\Datasets\Reading_Track::class, '\Book_Database\Analytics\Reading_Track' );
+        class_alias( \Book_Database\Analytics\Datasets\Reviews_Over_Time::class, '\Book_Database\Analytics\Reviews_Over_Time' );
+        class_alias( \Book_Database\Analytics\Datasets\Reviews_Written::class, '\Book_Database\Analytics\Reviews_Written' );
+        class_alias( \Book_Database\Analytics\Datasets\Shortest_Book_Read::class, '\Book_Database\Analytics\Shortest_Book_Read' );
+        class_alias( \Book_Database\Analytics\Datasets\Terms_Breakdown::class, '\Book_Database\Analytics\Terms_Breakdown' );
     }
 
     private function bindClasses(): void
     {
-        book_database()->bind(REST_API::class);
-        book_database()->alias(REST_API::class, 'rest_api');
+        book_database()->bind(RouteRegistration::class);
+        book_database()->alias(RouteRegistration::class, 'rest_api');
 
         book_database()->bind(HTML::class);
         book_database()->alias(HTML::class, 'html');

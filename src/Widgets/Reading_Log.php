@@ -10,8 +10,8 @@
 
 namespace Book_Database\Widgets;
 
-use Book_Database\Book;
-use Book_Database\Rating;
+use Book_Database\Models\Book;
+use Book_Database\ValueObjects\Rating;
 use function Book_Database\book_database;
 use function Book_Database\get_book;
 
@@ -66,7 +66,7 @@ class Reading_Log extends \WP_Widget {
 	 *
 	 * @param array $args
 	 *
-	 * @return \Book_Database\Reading_Log[]
+	 * @return \Book_Database\Models\ReadingLog[]
 	 */
 	protected function query_reading_logs( $args ) {
 
@@ -97,7 +97,7 @@ class Reading_Log extends \WP_Widget {
 
 		if ( ! empty( $results ) ) {
 			foreach ( $results as $key => $result ) {
-				$results[ $key ] = new \Book_Database\Reading_Log( $result );
+				$results[ $key ] = new \Book_Database\Models\ReadingLog( $result );
 			}
 		}
 
@@ -108,7 +108,7 @@ class Reading_Log extends \WP_Widget {
 	/**
 	 * Displays results
 	 *
-	 * @param \Book_Database\Reading_Log[] $logs
+	 * @param \Book_Database\Models\ReadingLog[] $logs
 	 * @param array                        $args
 	 */
 	protected function display_books( $logs, $args ) {
@@ -157,7 +157,7 @@ class Reading_Log extends \WP_Widget {
 	/**
 	 * Displays start and finish dates if enabled
 	 *
-	 * @param \Book_Database\Reading_Log $log
+	 * @param \Book_Database\Models\ReadingLog $log
 	 * @param array                      $args
 	 */
 	protected function maybe_show_dates( $log, $args ) {
@@ -194,7 +194,7 @@ class Reading_Log extends \WP_Widget {
 	/**
 	 * Displays rating if enabled
 	 *
-	 * @param \Book_Database\Reading_Log $log
+	 * @param \Book_Database\Models\ReadingLog $log
 	 * @param array                      $args
 	 */
 	protected function maybe_show_rating( $log, $args ) {

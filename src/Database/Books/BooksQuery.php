@@ -11,7 +11,7 @@ namespace Book_Database\Database\Books;
 
 use Book_Database\BerlinDB;
 use Book_Database\BerlinDB\Database\Queries\Tax;
-use Book_Database\Book;
+use Book_Database\Models\Book;
 use Book_Database\Database\Authors\AuthorsQuery;
 use Book_Database\Database\Editions\EditionsQuery;
 use Book_Database\Database\ReadingLogs\ReadingLogsQuery;

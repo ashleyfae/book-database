@@ -10,13 +10,15 @@
 namespace Book_Database;
 
 use Book_Database\Database\BookTaxonomies\BookTaxonomiesQuery;
+use Book_Database\Exceptions\Exception;
+use Book_Database\Models\BookTaxonomy;
 
 /**
  * Get a single taxonomy by its ID
  *
  * @param int $taxonomy_id
  *
- * @return Book_Taxonomy|false
+ * @return BookTaxonomy|false
  */
 function get_book_taxonomy( $taxonomy_id ) {
 
@@ -32,7 +34,7 @@ function get_book_taxonomy( $taxonomy_id ) {
  * @param string $column_name
  * @param mixed  $column_value
  *
- * @return Book_Taxonomy|false
+ * @return BookTaxonomy|false
  */
 function get_book_taxonomy_by( $column_name, $column_value ) {
 
@@ -74,7 +76,7 @@ function get_book_taxonomy_by( $column_name, $column_value ) {
  * @type bool         $update_cache        Whether to prime the cache for found items. Default false.
  * }
  *
- * @return Book_Taxonomy[]|array Array of Book_Taxonomy objects.
+ * @return BookTaxonomy[]|array Array of Book_Taxonomy objects.
  */
 function get_book_taxonomies( $args = array() ) {
 

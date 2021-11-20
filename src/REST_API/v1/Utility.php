@@ -9,7 +9,7 @@
 
 namespace Book_Database\REST_API\v1;
 
-use Book_Database\Exception;
+use Book_Database\Exceptions\Exception;
 use Book_Database\REST_API\Controller;
 
 /**

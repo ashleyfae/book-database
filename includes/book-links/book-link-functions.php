@@ -10,13 +10,15 @@
 namespace Book_Database;
 
 use Book_Database\Database\BookLinks\BookLinksQuery;
+use Book_Database\Exceptions\Exception;
+use Book_Database\Models\BookLink;
 
 /**
  * Get a single link by its ID
  *
  * @param int $link_id
  *
- * @return Book_Link|false
+ * @return BookLink|false
  */
 function get_book_link( $link_id ) {
 
@@ -32,7 +34,7 @@ function get_book_link( $link_id ) {
  * @param string $column_name
  * @param mixed  $column_value
  *
- * @return Book_Link|false
+ * @return BookLink|false
  */
 function get_book_link_by( $column_name, $column_value ) {
 
@@ -70,7 +72,7 @@ function get_book_link_by( $column_name, $column_value ) {
  * @type bool         $update_cache        Whether to prime the cache for found items. Default false.
  * }
  *
- * @return Book_Link[] Array of Book_Link objects.
+ * @return BookLink[] Array of Book_Link objects.
  */
 function get_book_links( $args = array() ) {
 

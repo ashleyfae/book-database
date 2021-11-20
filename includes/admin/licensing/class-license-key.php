@@ -9,8 +9,11 @@
 
 namespace Book_Database;
 
+use Book_Database\Exceptions\Exception;
+
 /**
  * Class License_Key
+ *
  * @package Book_Database
  */
 class License_Key {

@@ -10,7 +10,7 @@
 namespace Book_Database\Database\Retailers;
 
 use Book_Database\BerlinDB;
-use Book_Database\Retailer;
+use Book_Database\Models\Retailer;
 
 /**
  * Class RetailersQuery

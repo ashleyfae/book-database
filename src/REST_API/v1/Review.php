@@ -9,8 +9,8 @@
 
 namespace Book_Database\REST_API\v1;
 
-use Book_Database\Exception;
-use Book_Database\Rating;
+use Book_Database\Exceptions\Exception;
+use Book_Database\ValueObjects\Rating;
 use Book_Database\REST_API\Controller;
 use function Book_Database\add_review;
 use function Book_Database\delete_review;

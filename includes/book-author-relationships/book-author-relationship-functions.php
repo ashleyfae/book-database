@@ -10,13 +10,16 @@
 namespace Book_Database;
 
 use Book_Database\Database\BookAuthor\BookAuthorQuery;
+use Book_Database\Exceptions\Exception;
+use Book_Database\Models\Author;
+use Book_Database\Models\BookAuthorRelationship;
 
 /**
  * Get a single book-author-relationship by its ID
  *
  * @param int $relationship_id
  *
- * @return Book_Author_Relationship|false
+ * @return BookAuthorRelationship|false
  */
 function get_book_author_relationship( $relationship_id ) {
 
@@ -33,7 +36,7 @@ function get_book_author_relationship( $relationship_id ) {
  * @param int   $author_id ID of the author.
  * @param array $args      Query arguments to override the defaults.
  *
- * @return Book_Author_Relationship|false|mixed
+ * @return BookAuthorRelationship|false|mixed
  */
 function get_book_author_relationship_by_book_and_author( $book_id, $author_id, $args = array() ) {
 
@@ -81,7 +84,7 @@ function get_book_author_relationship_by_book_and_author( $book_id, $author_id, 
  * @type bool         $update_cache        Whether to prime the cache for found items. Default false.
  * }
  *
- * @return Book_Author_Relationship[] Array of Book_Author_Relationship objects.
+ * @return BookAuthorRelationship[] Array of Book_Author_Relationship objects.
  */
 function get_book_author_relationships( $args = array() ) {
 
@@ -177,7 +180,7 @@ function delete_book_author_relationship( $relationship_id ) {
 
 	$relationship = get_book_author_relationship( $relationship_id );
 
-	if ( ! $relationship instanceof Book_Author_Relationship ) {
+	if ( ! $relationship instanceof BookAuthorRelationship ) {
 		return true;
 	}
 

@@ -10,6 +10,8 @@
 namespace Book_Database;
 
 use Book_Database\Database\Editions\EditionsQuery;
+use Book_Database\Exceptions\Exception;
+use Book_Database\Models\Edition;
 
 /**
  * Get a single edition by its ID

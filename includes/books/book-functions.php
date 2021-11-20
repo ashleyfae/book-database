@@ -10,6 +10,8 @@
 namespace Book_Database;
 
 use Book_Database\Database\Books\BooksQuery;
+use Book_Database\Exceptions\Exception;
+use Book_Database\Models\Book;
 
 /**
  * Get a single book by its ID

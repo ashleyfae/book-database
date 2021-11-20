@@ -10,6 +10,8 @@
 namespace Book_Database;
 
 use Book_Database\Database\Authors\AuthorsQuery;
+use Book_Database\Exceptions\Exception;
+use Book_Database\Models\Author;
 
 /**
  * Get a single author by its ID

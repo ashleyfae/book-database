@@ -26,6 +26,9 @@ use Book_Database\Database\Retailers\RetailersTable;
 use Book_Database\Database\Reviews\ReviewMetaTable;
 use Book_Database\Database\Reviews\ReviewsTable;
 use Book_Database\Database\Series\SeriesTable;
+use Book_Database\Exceptions\Exception;
+use Book_Database\Helpers\HTML;
+use Book_Database\ServiceProviders\ApiServiceProvider;
 use Book_Database\ServiceProviders\LegacyServiceProvider;
 use Book_Database\ServiceProviders\ServiceProvider;
 
@@ -49,6 +52,7 @@ final class Plugin
      */
     private $serviceProviders = [
         LegacyServiceProvider::class,
+        ApiServiceProvider::class,
     ];
 
     /**

@@ -16,6 +16,8 @@ namespace Book_Database;
  */
 
 use Book_Database\Database\Series\SeriesQuery;
+use Book_Database\Exceptions\Exception;
+use Book_Database\Models\Series;
 
 /**
  * Get a single series by a column name/value combo

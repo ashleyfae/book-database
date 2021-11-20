@@ -9,7 +9,7 @@
 
 namespace Book_Database\REST_API\v1;
 
-use Book_Database\Exception;
+use Book_Database\Exceptions\Exception;
 use Book_Database\REST_API\Controller;
 use function Book_Database\Analytics\get_dataset_value;
 use function Book_Database\Analytics\get_date_filter_range;
@@ -129,7 +129,7 @@ class Analytics extends Controller {
 
 			$stat_types = $request->get_param( 'stats' );
 			$stats      = array();
-			$analytics  = new \Book_Database\Analytics( $request->get_param( 'start_date' ), $request->get_param( 'end_date' ), $request->get_param( 'args' ) );
+			$analytics  = new \Book_Database\Analytics\Analytics( $request->get_param( 'start_date' ), $request->get_param( 'end_date' ), $request->get_param( 'args' ) );
 
 			foreach ( $stat_types as $stat_type ) {
 				$method = 'get_' . str_replace( '-', '_', $stat_type );

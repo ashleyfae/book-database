@@ -9,6 +9,15 @@
 
 namespace Book_Database;
 
+use Book_Database\Models\Author;
+use Book_Database\Models\Book;
+use Book_Database\Models\BookTaxonomy;
+use Book_Database\Models\BookTerm;
+use Book_Database\Models\ReadingLog;
+use Book_Database\Models\Review;
+use Book_Database\Models\Series;
+use Book_Database\ValueObjects\Rating;
+
 /**
  * Book
  *
@@ -195,7 +204,7 @@ function book_reviews_shortcode( $atts, $content = '' ) {
 						default :
 							$taxonomy = get_book_taxonomy_by( 'slug', $filter );
 
-							if ( ! $taxonomy instanceof Book_Taxonomy ) {
+							if ( ! $taxonomy instanceof BookTaxonomy ) {
 								break;
 							}
 
@@ -213,7 +222,7 @@ function book_reviews_shortcode( $atts, $content = '' ) {
 								$slug = $wp_query->query_vars['book_term'];
 								$term = get_book_term_by( 'slug', $slug );
 
-								if ( $term instanceof Book_Term ) {
+								if ( $term instanceof BookTerm ) {
 									$selected_term = $term->get_id();
 								}
 							}
@@ -254,7 +263,7 @@ function book_reviews_shortcode( $atts, $content = '' ) {
 					'pub_date'        => $review_data->book_pub_date ?? '',
 					'series_position' => $review_data->series_position ?? ''
 				) );
-				$reading_log = new Reading_Log( array(
+				$reading_log = new ReadingLog( array(
 					'date_started'        => $review_data->date_started_reading ?? null,
 					'date_finished'       => $review_data->date_finished_reading ?? null,
 					'percentage_complete' => $review_data->percentage_complete ?? null,

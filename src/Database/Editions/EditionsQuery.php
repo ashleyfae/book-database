@@ -10,7 +10,7 @@
 namespace Book_Database\Database\Editions;
 
 use Book_Database\BerlinDB;
-use Book_Database\Edition;
+use Book_Database\Models\Edition;
 
 /**
  * Class EditionsQuery

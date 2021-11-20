@@ -10,7 +10,7 @@
 namespace Book_Database\REST_API\v1;
 
 use \Book_Database\REST_API\Controller;
-use \Book_Database\Exception;
+use Book_Database\Exceptions\Exception;
 use function Book_Database\add_book_taxonomy;
 use function Book_Database\delete_book_taxonomy;
 use function Book_Database\get_book_taxonomies;

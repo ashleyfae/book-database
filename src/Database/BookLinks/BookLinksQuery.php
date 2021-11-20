@@ -10,7 +10,7 @@
 namespace Book_Database\Database\BookLinks;
 
 use Book_Database\BerlinDB;
-use Book_Database\Book_Link;
+use Book_Database\Models\BookLink;
 
 /**
  * Class BookLinksQuery
@@ -61,7 +61,7 @@ class BookLinksQuery extends BerlinDB\Database\Query
      *
      * @var string
      */
-    protected $item_shape = Book_Link::class;
+    protected $item_shape = BookLink::class;
 
     /**
      * Group to cache queries and queried items to

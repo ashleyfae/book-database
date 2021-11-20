@@ -10,13 +10,15 @@
 namespace Book_Database;
 
 use Book_Database\Database\BookTerms\BookTermsQuery;
+use Book_Database\Exceptions\Exception;
+use Book_Database\Models\BookTerm;
 
 /**
  * Get a single book term by its ID
  *
  * @param int $term_id
  *
- * @return Book_Term|false
+ * @return BookTerm|false
  */
 function get_book_term( $term_id ) {
 
@@ -32,7 +34,7 @@ function get_book_term( $term_id ) {
  * @param string $column_name
  * @param mixed  $column_value
  *
- * @return Book_Term|false
+ * @return BookTerm|false
  */
 function get_book_term_by( $column_name, $column_value ) {
 
@@ -48,7 +50,7 @@ function get_book_term_by( $column_name, $column_value ) {
  * @param string $term_name Term name.
  * @param string $taxonomy  Taxonomy slug.
  *
- * @return Book_Term|false
+ * @return BookTerm|false
  */
 function get_book_term_by_name_and_taxonomy( $term_name, $taxonomy, $args = array() ) {
 
@@ -101,7 +103,7 @@ function get_book_term_by_name_and_taxonomy( $term_name, $taxonomy, $args = arra
  * @type bool         $update_cache        Whether to prime the cache for found items. Default false.
  * }
  *
- * @return Book_Term[] Array of Book_Term objects.
+ * @return BookTerm[] Array of Book_Term objects.
  */
 function get_book_terms( $args = array() ) {
 

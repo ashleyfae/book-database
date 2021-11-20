@@ -9,8 +9,8 @@
 
 namespace Book_Database\Tests;
 
-use Book_Database\Book;
-use Book_Database\Exception;
+use Book_Database\Models\Book;
+use Book_Database\Exceptions\Exception;
 use function Book_Database\add_book;
 use function Book_Database\add_book_series;
 use function Book_Database\get_book;
@@ -77,21 +77,21 @@ class Test_Book_Functions extends UnitTestCase {
 	 * @covers ::get_book
 	 */
 	public function test_get_book() {
-		$this->assertInstanceOf( 'Book_Database\Book', get_book( self::$book_id ) );
+		$this->assertInstanceOf( 'Book_Database\Models\Book', get_book( self::$book_id ) );
 	}
 
 	/**
 	 * @covers ::get_book_by
 	 */
 	public function test_get_book_by_title() {
-		$this->assertInstanceOf( 'Book_Database\Book', get_book_by( 'title', 'The First Book' ) );
+		$this->assertInstanceOf( 'Book_Database\Models\Book', get_book_by( 'title', 'The First Book' ) );
 	}
 
 	/**
 	 * @covers ::get_book_by
 	 */
 	public function test_get_book_by_index_title() {
-		$this->assertInstanceOf( 'Book_Database\Book', get_book_by( 'index_title', 'First Book, The' ) );
+		$this->assertInstanceOf( 'Book_Database\Models\Book', get_book_by( 'index_title', 'First Book, The' ) );
 	}
 
 	/**
@@ -100,7 +100,7 @@ class Test_Book_Functions extends UnitTestCase {
 	public function test_get_books_array_of_book_objects() {
 		$books = get_books();
 
-		$this->assertInstanceOf( 'Book_Database\Book', $books[0] );
+		$this->assertInstanceOf( 'Book_Database\Models\Book', $books[0] );
 	}
 
 	/**

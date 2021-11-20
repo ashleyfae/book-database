@@ -11,7 +11,7 @@
 namespace Book_Database\Database\BookTaxonomies;
 
 use Book_Database\BerlinDB;
-use Book_Database\Book_Taxonomy;
+use Book_Database\Models\BookTaxonomy;
 
 /**
  * Class Book_Taxonomies_Query
@@ -62,7 +62,7 @@ class BookTaxonomiesQuery extends BerlinDB\Database\Query
      *
      * @var string
      */
-    protected $item_shape = Book_Taxonomy::class;
+    protected $item_shape = BookTaxonomy::class;
 
     /**
      * Group to cache queries and queried items to

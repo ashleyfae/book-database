@@ -10,7 +10,7 @@
 namespace Book_Database\Analytics\Datasets;
 
 use Book_Database\Analytics\Dataset;
-use Book_Database\Rating;
+use Book_Database\ValueObjects\Rating;
 use function Book_Database\book_database;
 
 /**

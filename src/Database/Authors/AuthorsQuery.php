@@ -9,7 +9,7 @@
 
 namespace Book_Database\Database\Authors;
 
-use Book_Database\Author;
+use Book_Database\Models\Author;
 use Book_Database\BerlinDB;
 
 /**

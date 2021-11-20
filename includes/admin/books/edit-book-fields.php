@@ -9,9 +9,9 @@
 
 namespace Book_Database\Admin\Fields;
 
-use Book_Database\Book;
-use Book_Database\Rating;
-use Book_Database\Series;
+use Book_Database\Models\Book;
+use Book_Database\ValueObjects\Rating;
+use Book_Database\Models\Series;
 use function Book_Database\book_database;
 use function Book_Database\count_books;
 use function Book_Database\generate_book_index_title;

@@ -9,7 +9,7 @@
 
 namespace Book_Database\REST_API\v1;
 
-use Book_Database\Exception;
+use Book_Database\Exceptions\Exception;
 use Book_Database\REST_API\Controller;
 use function Book_Database\add_book_series;
 use function Book_Database\delete_book_series;
@@ -81,7 +81,7 @@ class Series extends Controller {
 					'validate_callback' => function ( $param, $request, $key ) {
 						$series = get_book_series_by( 'id', $param );
 
-						return $series instanceof \Book_Database\Series;
+						return $series instanceof \Book_Database\Models\Series;
 					},
 					'sanitize_callback' => function ( $param, $request, $key ) {
 						return absint( $param );
@@ -124,7 +124,7 @@ class Series extends Controller {
 					'validate_callback' => function ( $param, $request, $key ) {
 						$series = get_book_series_by( 'id', $param );
 
-						return $series instanceof \Book_Database\Series;
+						return $series instanceof \Book_Database\Models\Series;
 					},
 					'sanitize_callback' => function ( $param, $request, $key ) {
 						return absint( $param );

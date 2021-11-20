@@ -15,7 +15,7 @@ use Book_Database\Database\Authors\AuthorsQuery;
 use Book_Database\Database\Books\BooksQuery;
 use Book_Database\Database\Editions\EditionsQuery;
 use Book_Database\Database\ReadingLogs\ReadingLogsQuery;
-use Book_Database\Review;
+use Book_Database\Models\Review;
 use Book_Database\Database\Series\SeriesQuery;
 use Book_Database\Where_Clause;
 use function Book_Database\book_database;

@@ -10,13 +10,16 @@
 namespace Book_Database;
 
 use Book_Database\Database\BookTerm\BookTermRelationshipQuery;
+use Book_Database\Exceptions\Exception;
+use Book_Database\Models\BookTerm;
+use Book_Database\Models\BookTermRelationship;
 
 /**
  * Get a single book-term-relationship by its ID
  *
  * @param int $relationship_id
  *
- * @return Book_Term_Relationship|false
+ * @return BookTermRelationship|false
  */
 function get_book_term_relationship( $relationship_id ) {
 
@@ -33,7 +36,7 @@ function get_book_term_relationship( $relationship_id ) {
  * @param int   $term_id ID of the term.
  * @param array $args    Query arguments to override the defaults.
  *
- * @return Book_Term_Relationship|false|mixed
+ * @return BookTermRelationship|false|mixed
  */
 function get_book_term_relationship_by_book_and_term( $book_id, $term_id, $args = array() ) {
 
@@ -81,7 +84,7 @@ function get_book_term_relationship_by_book_and_term( $book_id, $term_id, $args 
  * @type bool         $update_cache        Whether to prime the cache for found items. Default false.
  * }
  *
- * @return Book_Term_Relationship[] Array of Book_Term_Relationship objects.
+ * @return BookTermRelationship[] Array of Book_Term_Relationship objects.
  */
 function get_book_term_relationships( $args = array() ) {
 
@@ -177,7 +180,7 @@ function delete_book_term_relationship( $relationship_id ) {
 
 	$relationship = get_book_term_relationship( $relationship_id );
 
-	if ( ! $relationship instanceof Book_Term_Relationship ) {
+	if ( ! $relationship instanceof BookTermRelationship ) {
 		return true;
 	}
 
@@ -214,7 +217,7 @@ function delete_book_term_relationship( $relationship_id ) {
  * @type string  $fields   Column names to return.
  * }
  *
- * @return Book_Term[]|array
+ * @return BookTerm[]|array
  */
 function get_attached_book_terms( $book_id, $taxonomy, $args = array() ) {
 
@@ -269,7 +272,7 @@ function get_attached_book_terms( $book_id, $taxonomy, $args = array() ) {
 
 		if ( is_array( $objects ) ) {
 			foreach ( $objects as $object ) {
-				$terms[] = new Book_Term( $object );
+				$terms[] = new BookTerm( $object );
 			}
 		}
 	} elseif ( in_array( $args['fields'], array( 'id', 'ids', 'name', 'names' ) ) ) {

@@ -10,7 +10,7 @@
 namespace Book_Database\Database\BookAuthor;
 
 use Book_Database\BerlinDB;
-use Book_Database\Book_Author_Relationship;
+use Book_Database\Models\BookAuthorRelationship;
 
 /**
  * Class Book_Author_Relationships_Query
@@ -61,7 +61,7 @@ class BookAuthorQuery extends BerlinDB\Database\Query
      *
      * @var string
      */
-    protected $item_shape = Book_Author_Relationship::class;
+    protected $item_shape = BookAuthorRelationship::class;
 
     /**
      * Group to cache queries and queried items to

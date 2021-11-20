@@ -10,7 +10,7 @@
 namespace Book_Database\Analytics\Datasets;
 
 use Book_Database\Analytics\Dataset;
-use Book_Database\Book;
+use Book_Database\Models\Book;
 use function Book_Database\book_database;
 use function Book_Database\get_book;
 use function Book_Database\get_books_admin_page_url;

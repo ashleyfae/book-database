@@ -10,6 +10,8 @@
 namespace Book_Database;
 
 use Book_Database\Database\Reviews\ReviewsQuery;
+use Book_Database\Exceptions\Exception;
+use Book_Database\Models\Review;
 
 /**
  * Get a single review by its ID

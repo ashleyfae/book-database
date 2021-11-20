@@ -10,7 +10,7 @@
 namespace Book_Database\Database\Series;
 
 use Book_Database\BerlinDB;
-use Book_Database\Series;
+use Book_Database\Models\Series;
 
 /**
  * Class SeriesQuery

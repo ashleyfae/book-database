@@ -9,8 +9,16 @@
 
 namespace Book_Database;
 
+use Book_Database\Models\Book;
+use Book_Database\Models\BookLink;
+use Book_Database\Models\BookTaxonomy;
+use Book_Database\Models\Edition;
+use Book_Database\Models\Series;
+use Book_Database\ValueObjects\Rating;
+
 /**
  * Class Book_Layout
+ *
  * @package Book_Database
  */
 class Book_Layout {
@@ -144,7 +152,7 @@ class Book_Layout {
 		} else {
 			// Route all taxonomies not covered to `get_field_taxonomy`.
 			$taxonomy = get_book_taxonomy_by( 'slug', $field );
-			if ( $taxonomy instanceof Book_Taxonomy ) {
+			if ( $taxonomy instanceof BookTaxonomy ) {
 				$value = call_user_func( array( $this, 'get_field_taxonomy' ), $taxonomy );
 			}
 		}
@@ -297,7 +305,7 @@ class Book_Layout {
 		 * Filters the buy link separator.
 		 *
 		 * @param string      $link_separator Separator string between links.
-		 * @param Book_Link[] $links          Array of Book_Link objects.
+		 * @param BookLink[] $links          Array of Book_Link objects.
 		 * @param Book        $book           Book object.
 		 * @param Book_Layout $this           Book layout object.
 		 *
@@ -355,7 +363,7 @@ class Book_Layout {
 	 *
 	 * This covers the `source` taxonomy and all custom taxonomies.
 	 *
-	 * @param Book_Taxonomy $taxonomy
+	 * @param BookTaxonomy $taxonomy
 	 *
 	 * @return string
 	 */

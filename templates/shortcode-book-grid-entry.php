@@ -9,6 +9,10 @@
 
 namespace Book_Database;
 
+use Book_Database\Models\Book;
+use Book_Database\Models\Review;
+use Book_Database\ValueObjects\Rating;
+
 /**
  * @var array        $atts      Shortcode attributes.
  * @var Book         $book      Book object.

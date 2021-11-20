@@ -9,7 +9,7 @@
 
 namespace Book_Database\REST_API\v1;
 
-use Book_Database\Exception;
+use Book_Database\Exceptions\Exception;
 use Book_Database\REST_API\Controller;
 use function Book_Database\add_book_term;
 use function Book_Database\add_edition;
@@ -140,7 +140,7 @@ class Edition extends Controller {
 						}
 
 						if ( is_numeric( $param ) ) {
-							return get_book_term( $param ) instanceof \Book_Database\Book_Term;
+							return get_book_term( $param ) instanceof \Book_Database\Models\BookTerm;
 						}
 
 						return true;
@@ -168,7 +168,7 @@ class Edition extends Controller {
 								$source = get_book_term( $source_id );
 							}
 
-							if ( ! isset( $source ) || ! $source instanceof \Book_Database\Book_Term ) {
+							if ( ! isset( $source ) || ! $source instanceof \Book_Database\Models\BookTerm ) {
 								throw new \Exception();
 							}
 
@@ -239,7 +239,7 @@ class Edition extends Controller {
 						}
 
 						if ( is_numeric( $param ) ) {
-							return get_book_term( $param ) instanceof \Book_Database\Book_Term;
+							return get_book_term( $param ) instanceof \Book_Database\Models\BookTerm;
 						}
 
 						return true;
@@ -267,7 +267,7 @@ class Edition extends Controller {
 								$source = get_book_term( $source_id );
 							}
 
-							if ( ! isset( $source ) || ! $source instanceof \Book_Database\Book_Term ) {
+							if ( ! isset( $source ) || ! $source instanceof \Book_Database\Models\BookTerm ) {
 								throw new \Exception();
 							}
 

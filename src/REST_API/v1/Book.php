@@ -10,7 +10,7 @@
 namespace Book_Database\REST_API\v1;
 
 use Book_Database\Database\Books\BooksQuery;
-use Book_Database\Exception;
+use Book_Database\Exceptions\Exception;
 use Book_Database\REST_API\Controller;
 use function Book_Database\add_book;
 use function Book_Database\book_grid_shortcode;

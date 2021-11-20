@@ -10,6 +10,8 @@
 namespace Book_Database;
 
 // Load WP_List_Table if not loaded
+use Book_Database\Models\Model;
+
 if ( ! class_exists( '\WP_List_Table' ) ) {
 	require_once ABSPATH . 'wp-admin/includes/class-wp-list-table.php';
 }
@@ -258,7 +260,7 @@ abstract class List_Table extends \WP_List_Table {
 	/**
 	 * Render the checkbox column.
 	 *
-	 * @param Base_Object $object
+	 * @param Model $object
 	 *
 	 * @return string
 	 */

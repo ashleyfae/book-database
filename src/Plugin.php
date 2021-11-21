@@ -31,6 +31,7 @@ use Book_Database\Helpers\HTML;
 use Book_Database\ServiceProviders\ApiServiceProvider;
 use Book_Database\ServiceProviders\LegacyServiceProvider;
 use Book_Database\ServiceProviders\ServiceProvider;
+use Book_Database\ServiceProviders\ShortcodeServiceProvider;
 
 final class Plugin
 {
@@ -53,6 +54,7 @@ final class Plugin
     private $serviceProviders = [
         LegacyServiceProvider::class,
         ApiServiceProvider::class,
+        ShortcodeServiceProvider::class,
     ];
 
     /**

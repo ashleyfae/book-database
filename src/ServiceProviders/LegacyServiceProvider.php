@@ -92,6 +92,8 @@ class LegacyServiceProvider implements ServiceProvider
 
     private function includeLegacyFiles(): void
     {
+        require_once BDB_DIR.'includes/deprecated/deprecated-functions.php';
+
         // Database engine
         require_once BDB_DIR.'includes/database/engine/base.php';
         require_once BDB_DIR.'includes/database/engine/table.php';
@@ -166,7 +168,6 @@ class LegacyServiceProvider implements ServiceProvider
         require_once BDB_DIR.'includes/capabilities.php';
         require_once BDB_DIR.'includes/misc-functions.php';
         require_once BDB_DIR.'includes/rewrites.php';
-        require_once BDB_DIR.'includes/shortcodes.php';
         require_once BDB_DIR.'includes/template-functions.php';
     }
 

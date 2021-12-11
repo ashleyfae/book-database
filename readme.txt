@@ -21,6 +21,12 @@ Maintain a database of books and reviews.
 
 == Changelog ==
 
+= 1.2.1 - 11 December, 2021 =
+
+* New: Added taxonomy support to the `[book-grid]` shortcode.
+* Fix: Book publication dates not saving correctly with certain date formats.
+* Fix: Fatal error on dashboard widget if you have a reading log associated with a deleted book.
+
 = 1.2 - 1 May, 2021 =
 
 * New: Added a Gutenberg block for displaying book information.

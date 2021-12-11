@@ -9,6 +9,7 @@
 
 namespace Book_Database\Admin\Dashboard;
 
+use Book_Database\Book;
 use function Book_Database\book_database;
 use function Book_Database\get_available_ratings;
 use function Book_Database\get_book;
@@ -61,6 +62,9 @@ function render_currently_reading() {
 		<?php
 		foreach ( $logs as $log ) {
 			$book = get_book( absint( $log->book_id ) );
+			if ( ! $book instanceof Book ) {
+				continue;
+			}
 
 			$edit_book_url = get_books_admin_page_url( array( 'view' => 'edit', 'book_id' => $book->get_id() ) );
 			?>

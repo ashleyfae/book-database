@@ -72,6 +72,29 @@ function format_date( $date, $format = '' ) {
 }
 
 /**
+ * Returns a date format that can be parsed by `strtotime()`.
+ * This uses the site's chosen date format if it's supported, otherwise
+ * falls back to an acceptable one.
+ *
+ * @since 1.2.1
+ *
+ * @return string
+ */
+function getParsableDateFormat(): string
+{
+    $allowedFormats = [
+        'Y-m-d',
+        'F j, Y',
+        'j F Y',
+    ];
+    $selectedFormat = get_option('date_format');
+
+    return in_array($selectedFormat, $allowedFormats, true)
+        ? $selectedFormat
+        : reset($allowedFormats);
+}
+
+/**
  * Generate a unique book term slug
  *
  * Checks to see if the given slug already exists. If so, numbers are appended

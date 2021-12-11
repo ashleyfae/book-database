@@ -1,0 +1,13 @@
+{
+  "name": "ashleyfae/book-database",
+  "type": "wordpress-plugin",
+  "license": "GPL-2.0-or-later",
+  "description": "Maintain a database of books and reviews.",
+  "require": {
+    "php": "^7.0|^8.0"
+  },
+  "require-dev": {
+    "phpunit/phpunit": "9.5.10",
+    "yoast/phpunit-polyfills": "1.x-dev"
+  }
+}

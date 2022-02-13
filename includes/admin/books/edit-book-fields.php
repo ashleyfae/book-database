@@ -237,7 +237,7 @@ function book_pub_date_field($book)
         $pub_date = sanitize_text_field(wp_unslash($_GET['pub_date']));
     }
 
-    $pub_date = date(getParsableDateFormat(), strtotime($pub_date));
+    $pub_date = $pub_date ? date(getParsableDateFormat(), strtotime($pub_date)) : '';
 
     ob_start();
     ?>

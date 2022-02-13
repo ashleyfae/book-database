@@ -1,7 +1,7 @@
 {
   "name": "book-database",
   "title": "Book Database",
-  "version": "1.2.1",
+  "version": "1.2.2",
   "description": "Maintain a database of books and reviews.",
   "author": "Ashley Gibson",
   "license": "GPL-2.0-or-later",

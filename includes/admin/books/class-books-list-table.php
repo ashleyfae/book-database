@@ -262,7 +262,6 @@ class Books_List_Table extends List_Table {
 	protected function get_query_args( $count = false ) {
 
 		$args = array(
-			'id__not_in' => array(),
 			'number'     => $this->per_page,
 			'offset'     => $this->get_offset(),
 			'orderby'    => sanitize_text_field( $this->get_request_var( 'orderby', 'book.id' ) ),
@@ -404,7 +403,11 @@ class Books_List_Table extends List_Table {
 					) );
 
 					if ( $owned_book_ids ) {
-						$args['id__not_in'] = $args['id__not_in'] + $owned_book_ids;
+                        $args['book_query'][] = array(
+                            'field'    => 'id',
+                            'value'    => array_map('absint', $owned_book_ids),
+                            'operator' => 'NOT IN'
+                        );
 					}
 					break;
 

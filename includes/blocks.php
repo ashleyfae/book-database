@@ -28,7 +28,7 @@ function register_block_category( $categories, $post ) {
 	return $categories;
 }
 
-add_filter( 'block_categories', __NAMESPACE__ . '\register_block_category', 10, 2 );
+add_filter( 'block_categories_all', __NAMESPACE__ . '\register_block_category', 10, 2 );
 
 /**
  * Register Gutenberg blocks

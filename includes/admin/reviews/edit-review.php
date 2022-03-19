@@ -9,7 +9,9 @@
 
 namespace Book_Database;
 
-$review = ! empty( $_GET['review_id'] ) ? get_review( absint( $_GET['review_id'] ) ) : false;
+use Book_Database\Models\Review;
+
+$review = ! empty($_GET['review_id'] ) ? get_review( absint($_GET['review_id'] ) ) : false;
 
 if ( ! empty( $_GET['view'] ) && 'edit' === $_GET['view'] && empty( $review ) ) {
 	wp_die( __( 'Invalid review ID.', 'book-database' ) );

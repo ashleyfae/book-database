@@ -9,7 +9,9 @@
 
 namespace Book_Database;
 
-$author = ! empty( $_GET['author_id'] ) ? get_book_author( absint( $_GET['author_id'] ) ) : false;
+use Book_Database\Models\Author;
+
+$author = ! empty($_GET['author_id'] ) ? get_book_author( absint($_GET['author_id'] ) ) : false;
 
 if ( ! empty( $_GET['view'] ) && 'edit' === $_GET['view'] && empty( $author ) ) {
 	wp_die( __( 'Invalid author ID.', 'book-database' ) );

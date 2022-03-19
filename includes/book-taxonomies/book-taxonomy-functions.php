@@ -9,16 +9,20 @@
 
 namespace Book_Database;
 
+use Book_Database\Database\BookTaxonomies\BookTaxonomiesQuery;
+use Book_Database\Exceptions\Exception;
+use Book_Database\Models\BookTaxonomy;
+
 /**
  * Get a single taxonomy by its ID
  *
  * @param int $taxonomy_id
  *
- * @return Book_Taxonomy|false
+ * @return BookTaxonomy|false
  */
 function get_book_taxonomy( $taxonomy_id ) {
 
-	$query = new Book_Taxonomies_Query();
+	$query = new BookTaxonomiesQuery();
 
 	return $query->get_item( $taxonomy_id );
 
@@ -30,11 +34,11 @@ function get_book_taxonomy( $taxonomy_id ) {
  * @param string $column_name
  * @param mixed  $column_value
  *
- * @return Book_Taxonomy|false
+ * @return BookTaxonomy|false
  */
 function get_book_taxonomy_by( $column_name, $column_value ) {
 
-	$query = new Book_Taxonomies_Query();
+	$query = new BookTaxonomiesQuery();
 
 	return $query->get_item_by( $column_name, $column_value );
 
@@ -72,7 +76,7 @@ function get_book_taxonomy_by( $column_name, $column_value ) {
  * @type bool         $update_cache        Whether to prime the cache for found items. Default false.
  * }
  *
- * @return Book_Taxonomy[]|array Array of Book_Taxonomy objects.
+ * @return BookTaxonomy[]|array Array of Book_Taxonomy objects.
  */
 function get_book_taxonomies( $args = array() ) {
 
@@ -80,7 +84,7 @@ function get_book_taxonomies( $args = array() ) {
 		'number' => 20
 	) );
 
-	$query = new Book_Taxonomies_Query();
+	$query = new BookTaxonomiesQuery();
 
 	return $query->query( $args );
 
@@ -101,7 +105,7 @@ function count_book_taxonomies( $args = array() ) {
 		'count' => true
 	) );
 
-	$query = new Book_Taxonomies_Query( $args );
+	$query = new BookTaxonomiesQuery( $args );
 
 	return absint( $query->found_items );
 
@@ -139,7 +143,7 @@ function add_book_taxonomy( $args ) {
 	$args['slug']    = sanitize_key( $args['slug'] );
 	$args['display'] = sanitize_text_field( wp_strip_all_tags( $args['display'] ) );
 
-	$query       = new Book_Taxonomies_Query();
+	$query       = new BookTaxonomiesQuery();
 	$taxonomy_id = $query->add_item( $args );
 
 	if ( empty( $taxonomy_id ) ) {
@@ -166,7 +170,7 @@ function update_book_taxonomy( $taxonomy_id, $args = array() ) {
 		throw new Exception( 'invalid_parameter', __( 'Taxonomy slugs cannot be changed.', 'book-database' ), 400 );
 	}
 
-	$query   = new Book_Taxonomies_Query();
+	$query   = new BookTaxonomiesQuery();
 	$updated = $query->update_item( $taxonomy_id, $args );
 
 	if ( ! $updated ) {
@@ -205,7 +209,7 @@ function delete_book_taxonomy( $taxonomy_id ) {
 		throw new Exception( 'protected_taxonomy', sprintf( __( 'The %s taxonomy cannot be deleted.', 'book-database' ), $taxonomy->get_slug() ), 400 );
 	}
 
-	$query   = new Book_Taxonomies_Query();
+	$query   = new BookTaxonomiesQuery();
 	$deleted = $query->delete_item( $taxonomy_id );
 
 	if ( ! $deleted ) {

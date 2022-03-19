@@ -9,6 +9,8 @@
 
 namespace Book_Database;
 
+use Book_Database\Exceptions\Exception;
+
 /**
  * When a post is published or scheduled, sync associated reviews with the post's publication date.
  *

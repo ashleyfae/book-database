@@ -2,7 +2,7 @@
 Author URI: https://www.nosegraze.com
 Plugin URI: https://shop.nosegraze.com/product/book-database/
 Requires at least: 4.4
-Tested up to: 5.7.1
+Tested up to: 5.8.3
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -20,6 +20,17 @@ Maintain a database of books and reviews.
 ( more TK )
 
 == Changelog ==
+
+= 1.2.2 - 13 February, 2022 =
+
+* Fix: Admin "Unowned Books" filter not working.
+* Fix: When adding a new book, the publication date was pre-populated with "January 1, 1970"
+
+= 1.2.1 - 11 December, 2021 =
+
+* New: Added taxonomy support to the `[book-grid]` shortcode.
+* Fix: Book publication dates not saving correctly with certain date formats.
+* Fix: Fatal error on dashboard widget if you have a reading log associated with a deleted book.
 
 = 1.2 - 1 May, 2021 =
 

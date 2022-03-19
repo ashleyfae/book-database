@@ -9,6 +9,9 @@
 
 namespace Book_Database;
 
+use Book_Database\Exceptions\Exception;
+use Book_Database\Models\Series;
+
 /**
  * Add a new book
  */

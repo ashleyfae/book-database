@@ -9,16 +9,20 @@
 
 namespace Book_Database;
 
+use Book_Database\Database\BookLinks\BookLinksQuery;
+use Book_Database\Exceptions\Exception;
+use Book_Database\Models\BookLink;
+
 /**
  * Get a single link by its ID
  *
  * @param int $link_id
  *
- * @return Book_Link|false
+ * @return BookLink|false
  */
 function get_book_link( $link_id ) {
 
-	$query = new Book_Links_Query();
+	$query = new BookLinksQuery();
 
 	return $query->get_item( $link_id );
 
@@ -30,11 +34,11 @@ function get_book_link( $link_id ) {
  * @param string $column_name
  * @param mixed  $column_value
  *
- * @return Book_Link|false
+ * @return BookLink|false
  */
 function get_book_link_by( $column_name, $column_value ) {
 
-	$query = new Book_Links_Query();
+	$query = new BookLinksQuery();
 
 	return $query->get_item_by( $column_name, $column_value );
 
@@ -68,7 +72,7 @@ function get_book_link_by( $column_name, $column_value ) {
  * @type bool         $update_cache        Whether to prime the cache for found items. Default false.
  * }
  *
- * @return Book_Link[] Array of Book_Link objects.
+ * @return BookLink[] Array of Book_Link objects.
  */
 function get_book_links( $args = array() ) {
 
@@ -76,7 +80,7 @@ function get_book_links( $args = array() ) {
 		'number' => 20
 	) );
 
-	$query = new Book_Links_Query();
+	$query = new BookLinksQuery();
 
 	return $query->query( $args );
 
@@ -97,7 +101,7 @@ function count_book_links( $args = array() ) {
 		'count' => true
 	) );
 
-	$query = new Book_Links_Query( $args );
+	$query = new BookLinksQuery( $args );
 
 	return absint( $query->found_items );
 
@@ -134,7 +138,7 @@ function add_book_link( $args = array() ) {
 		throw new Exception( 'missing_required_parameter', __( 'A url is required.', 'book-database' ), 400 );
 	}
 
-	$query   = new Book_Links_Query();
+	$query   = new BookLinksQuery();
 	$link_id = $query->add_item( $args );
 
 	if ( empty( $link_id ) ) {
@@ -156,7 +160,7 @@ function add_book_link( $args = array() ) {
  */
 function update_book_link( $link_id, $args = array() ) {
 
-	$query   = new Book_Links_Query();
+	$query   = new BookLinksQuery();
 	$updated = $query->update_item( $link_id, $args );
 
 	if ( ! $updated ) {
@@ -177,7 +181,7 @@ function update_book_link( $link_id, $args = array() ) {
  */
 function delete_book_link( $link_id ) {
 
-	$query   = new Book_Links_Query();
+	$query   = new BookLinksQuery();
 	$deleted = $query->delete_item( $link_id );
 
 	if ( ! $deleted ) {

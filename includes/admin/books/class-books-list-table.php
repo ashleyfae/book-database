@@ -9,11 +9,17 @@
 
 namespace Book_Database;
 
+use Book_Database\Admin\Utils\ListTable;
+use Book_Database\Database\Books\BooksQuery;
+use Book_Database\Models\Book;
+use Book_Database\ValueObjects\Rating;
+
 /**
  * Class Books_List_Table
+ *
  * @package Book_Database
  */
-class Books_List_Table extends List_Table {
+class Books_List_Table extends ListTable {
 
 	/**
 	 * Mode
@@ -262,7 +268,6 @@ class Books_List_Table extends List_Table {
 	protected function get_query_args( $count = false ) {
 
 		$args = array(
-			'id__not_in' => array(),
 			'number'     => $this->per_page,
 			'offset'     => $this->get_offset(),
 			'orderby'    => sanitize_text_field( $this->get_request_var( 'orderby', 'book.id' ) ),
@@ -404,7 +409,11 @@ class Books_List_Table extends List_Table {
 					) );
 
 					if ( $owned_book_ids ) {
-						$args['id__not_in'] = $args['id__not_in'] + $owned_book_ids;
+                        $args['book_query'][] = array(
+                            'field'    => 'id',
+                            'value'    => array_map('absint', $owned_book_ids),
+                            'operator' => 'NOT IN'
+                        );
 					}
 					break;
 
@@ -456,7 +465,7 @@ class Books_List_Table extends List_Table {
 	 */
 	public function get_object_data( $count = false ) {
 
-		$query = new Books_Query();
+		$query = new BooksQuery();
 
 		return $query->get_books( $this->get_query_args( $count ) );
 

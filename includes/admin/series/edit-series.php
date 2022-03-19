@@ -9,7 +9,9 @@
 
 namespace Book_Database;
 
-$series = ! empty( $_GET['series_id'] ) ? get_book_series_by( 'id', absint( $_GET['series_id'] ) ) : false;
+use Book_Database\Models\Series;
+
+$series = ! empty($_GET['series_id'] ) ? get_book_series_by( 'id', absint($_GET['series_id'] ) ) : false;
 
 if ( ! empty( $_GET['view'] ) && 'edit' === $_GET['view'] && empty( $series ) ) {
 	wp_die( __( 'Invalid series ID.', 'book-database' ) );

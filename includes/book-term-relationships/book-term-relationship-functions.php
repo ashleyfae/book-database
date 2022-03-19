@@ -9,16 +9,21 @@
 
 namespace Book_Database;
 
+use Book_Database\Database\BookTerm\BookTermRelationshipQuery;
+use Book_Database\Exceptions\Exception;
+use Book_Database\Models\BookTerm;
+use Book_Database\Models\BookTermRelationship;
+
 /**
  * Get a single book-term-relationship by its ID
  *
  * @param int $relationship_id
  *
- * @return Book_Term_Relationship|false
+ * @return BookTermRelationship|false
  */
 function get_book_term_relationship( $relationship_id ) {
 
-	$query = new Book_Term_Relationships_Query();
+	$query = new BookTermRelationshipQuery();
 
 	return $query->get_item( $relationship_id );
 
@@ -31,7 +36,7 @@ function get_book_term_relationship( $relationship_id ) {
  * @param int   $term_id ID of the term.
  * @param array $args    Query arguments to override the defaults.
  *
- * @return Book_Term_Relationship|false|mixed
+ * @return BookTermRelationship|false|mixed
  */
 function get_book_term_relationship_by_book_and_term( $book_id, $term_id, $args = array() ) {
 
@@ -79,7 +84,7 @@ function get_book_term_relationship_by_book_and_term( $book_id, $term_id, $args 
  * @type bool         $update_cache        Whether to prime the cache for found items. Default false.
  * }
  *
- * @return Book_Term_Relationship[] Array of Book_Term_Relationship objects.
+ * @return BookTermRelationship[] Array of Book_Term_Relationship objects.
  */
 function get_book_term_relationships( $args = array() ) {
 
@@ -87,7 +92,7 @@ function get_book_term_relationships( $args = array() ) {
 		'number' => 20
 	) );
 
-	$query = new Book_Term_Relationships_Query();
+	$query = new BookTermRelationshipQuery();
 
 	return $query->query( $args );
 
@@ -108,7 +113,7 @@ function count_book_term_relationships( $args = array() ) {
 		'count' => true
 	) );
 
-	$query = new Book_Term_Relationships_Query( $args );
+	$query = new BookTermRelationshipQuery( $args );
 
 	return absint( $query->found_items );
 
@@ -141,7 +146,7 @@ function add_book_term_relationship( $args ) {
 		throw new Exception( 'missing_required_parameter', __( 'A book ID is required.', 'book-database' ), 400 );
 	}
 
-	$query           = new Book_Term_Relationships_Query();
+	$query           = new BookTermRelationshipQuery();
 	$relationship_id = $query->add_item( $args );
 
 	if ( empty( $relationship_id ) ) {
@@ -175,11 +180,11 @@ function delete_book_term_relationship( $relationship_id ) {
 
 	$relationship = get_book_term_relationship( $relationship_id );
 
-	if ( ! $relationship instanceof Book_Term_Relationship ) {
+	if ( ! $relationship instanceof BookTermRelationship ) {
 		return true;
 	}
 
-	$query   = new Book_Term_Relationships_Query();
+	$query   = new BookTermRelationshipQuery();
 	$deleted = $query->delete_item( $relationship_id );
 
 	if ( ! $deleted ) {
@@ -212,7 +217,7 @@ function delete_book_term_relationship( $relationship_id ) {
  * @type string  $fields   Column names to return.
  * }
  *
- * @return Book_Term[]|array
+ * @return BookTerm[]|array
  */
 function get_attached_book_terms( $book_id, $taxonomy, $args = array() ) {
 
@@ -267,7 +272,7 @@ function get_attached_book_terms( $book_id, $taxonomy, $args = array() ) {
 
 		if ( is_array( $objects ) ) {
 			foreach ( $objects as $object ) {
-				$terms[] = new Book_Term( $object );
+				$terms[] = new BookTerm( $object );
 			}
 		}
 	} elseif ( in_array( $args['fields'], array( 'id', 'ids', 'name', 'names' ) ) ) {

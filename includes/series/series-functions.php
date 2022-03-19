@@ -3,7 +3,7 @@
  * Series Functions
  *
  * @package   book-database
- * @copyright Copyright (c) 2019, Ashley Gibson
+ * @copyright Copyright (c) 2021, Ashley Gibson
  * @license   GPL2+
  */
 
@@ -15,20 +15,24 @@ namespace Book_Database;
  * for the plural version. To get a single series by ID, use `get_book_series_by( 'id', $id )`
  */
 
+use Book_Database\Exceptions\Exception;
+use Book_Database\Models\Series;
+
 /**
  * Get a single series by a column name/value combo
  *
- * @param string $column_name
- * @param mixed  $column_value
+ * @param  string  $column_name
+ * @param  mixed  $column_value
  *
  * @return Series|false
  */
-function get_book_series_by( $column_name, $column_value ) {
-
-	$query = new Series_Query();
-
-	return $query->get_item_by( $column_name, $column_value );
-
+function get_book_series_by(string $column_name, $column_value)
+{
+    try {
+        return Series::findBy($column_name, $column_value);
+    } catch (\Exception $e) {
+        return false;
+    }
 }
 
 /**
@@ -62,114 +66,64 @@ function get_book_series_by( $column_name, $column_value ) {
  *
  * @return Series[] Array of Series objects.
  */
-function get_book_series( $args = array() ) {
-
-	$args = wp_parse_args( $args, array(
-		'number' => 20
-	) );
-
-	$query = new Series_Query();
-
-	return $query->query( $args );
-
+function get_book_series(array $args = []): array
+{
+    try {
+        return Series::query($args);
+    } catch (\Exception $e) {
+        return [];
+    }
 }
 
 /**
  * Count the series
  *
- * @param array $args
+ * @param  array  $args
  *
  * @see get_book_series() for accepted arguments.
  *
  * @return int
  */
-function count_book_series( $args = array() ) {
-
-	$args = wp_parse_args( $args, array(
-		'count' => true
-	) );
-
-	$query = new Series_Query( $args );
-
-	return absint( $query->found_items );
-
+function count_book_series(array $args = []): int
+{
+    try {
+        return Series::count($args);
+    } catch (\Exception $e) {
+        return 0;
+    }
 }
 
 /**
  * Add a new series
  *
- * @param array $args         {
+ * @param  array  $args  {
  *
- * @type string $name         Name of the series.
- * @type string $slug         Series slug. Omit to auto generate.
- * @type string $description  Description of the series.
- * @type int    $number_books Number of books planned for the series.
+ * @type string $name Name of the series.
+ * @type string $slug Series slug. Omit to auto generate.
+ * @type string $description Description of the series.
+ * @type int $number_books Number of books planned for the series.
  * }
  *
  * @return int ID of the newly created taxonomy.
- * @throws Exception
+ * @throws Exception|\Exception
  */
-function add_book_series( $args ) {
-
-	$args = wp_parse_args( $args, array(
-		'name'         => '',
-		'slug'         => '',
-		'description'  => '',
-		'number_books' => 1
-	) );
-
-	if ( empty( $args['name'] ) ) {
-		throw new Exception( 'missing_required_parameter', __( 'A taxonomy name is required.', 'book-database' ), 400 );
-	}
-
-	// Generate a slug.
-	$args['slug'] = ! empty( $args['slug'] ) ? unique_book_slug( $args['slug'], 'series' ) : unique_book_slug( sanitize_title( $args['name'] ), 'series' );
-
-	// Sanitize.
-	$args['slug'] = sanitize_key( $args['slug'] );
-
-	$query     = new Series_Query();
-	$series_id = $query->add_item( $args );
-
-	if ( empty( $series_id ) ) {
-		throw new Exception( 'database_error', __( 'Failed to insert new series into the database.', 'book-database' ), 500 );
-	}
-
-	return absint( $series_id );
-
+function add_book_series(array $args): int
+{
+    return Series::create($args);
 }
 
 /**
  * Update an existing series
  *
- * @param int   $series_id ID of the series to update.
- * @param array $args      Arguments to change.
+ * @param  int  $series_id  ID of the series to update.
+ * @param  array  $args  Arguments to change.
  *
  * @return bool
  * @throws Exception
  */
-function update_book_series( $series_id, $args = array() ) {
-
-	$series = get_book_series_by( 'id', $series_id );
-
-	if ( empty( $series ) ) {
-		throw new Exception( 'invalid_id', __( 'Invalid series ID.', 'book-database' ), 400 );
-	}
-
-	// If the slug is changing, let's re-generate it.
-	if ( isset( $args['slug'] ) && $args['slug'] != $series->get_slug() ) {
-		$args['slug'] = unique_book_slug( $args['slug'], 'series' );
-	}
-
-	$query   = new Series_Query();
-	$updated = $query->update_item( $series_id, $args );
-
-	if ( ! $updated ) {
-		throw new Exception( 'database_error', __( 'Failed to update the series.', 'book-database' ), 500 );
-	}
-
-	return true;
-
+function update_book_series(int $series_id, array $args = []): bool
+{
+    return Series::update($series_id, $args);
 }
 
 /**
@@ -177,59 +131,32 @@ function update_book_series( $series_id, $args = array() ) {
  *
  * This also updates the records of each book in this series to wipe their series_id and series_position.
  *
- * @param int $series_id ID of the book to delete.
+ * @param  int  $series_id  ID of the book to delete.
  *
  * @return bool
  * @throws Exception
  */
-function delete_book_series( $series_id ) {
+function delete_book_series(int $series_id): bool
+{
+    Series::delete($series_id);
 
-	$query   = new Series_Query();
-	$deleted = $query->delete_item( $series_id );
-
-	if ( ! $deleted ) {
-		throw new Exception( 'database_error', __( 'Failed to delete the series.', 'book-database' ), 500 );
-	}
-
-	// Get all the books in this series.
-	$books = get_books( array(
-		'series_id' => absint( $series_id ),
-		'number'    => 9999,
-		'fields'    => 'id'
-	) );
-
-	if ( $books ) {
-		/**
-		 * @var int[] $books
-		 */
-		// Remove series_id and series_position from each book.
-		foreach ( $books as $book_id ) {
-			update_book( $book_id, array(
-				'series_id'       => 0,
-				'series_position' => null
-			) );
-		}
-	}
-
-	return true;
-
+    return true;
 }
 
 /**
  * Get the series admin page URL.
  *
- * @param array $args Query args to append to the URL.
+ * @param  array  $args  Query args to append to the URL.
  *
  * @return string
  */
-function get_series_admin_page_url( $args = array() ) {
+function get_series_admin_page_url(array $args = []): string
+{
+    $sanitized_args = array();
 
-	$sanitized_args = array();
+    foreach ($args as $key => $value) {
+        $sanitized_args[sanitize_key($key)] = urlencode($value);
+    }
 
-	foreach ( $args as $key => $value ) {
-		$sanitized_args[ sanitize_key( $key ) ] = urlencode( $value );
-	}
-
-	return add_query_arg( $sanitized_args, admin_url( 'admin.php?page=bdb-series' ) );
-
+    return add_query_arg($sanitized_args, admin_url('admin.php?page=bdb-series'));
 }

@@ -9,9 +9,9 @@
 
 namespace Book_Database\Admin\Fields;
 
-use Book_Database\Book;
-use Book_Database\Rating;
-use Book_Database\Series;
+use Book_Database\Models\Book;
+use Book_Database\ValueObjects\Rating;
+use Book_Database\Models\Series;
 use function Book_Database\book_database;
 use function Book_Database\count_books;
 use function Book_Database\generate_book_index_title;
@@ -22,6 +22,7 @@ use function Book_Database\get_books_admin_page_url;
 use function Book_Database\get_enabled_book_fields;
 use function Book_Database\get_retailers;
 use function Book_Database\get_series_admin_page_url;
+use function Book_Database\getParsableDateFormat;
 
 /**
  * Load all enabled fields into the Add/Edit book display.
@@ -226,28 +227,28 @@ function book_series_field( $book ) {
 /**
  * Field: book publication date
  *
- * @param Book|false $book
+ * @param  Book|false  $book
  */
-function book_pub_date_field( $book ) {
+function book_pub_date_field($book)
+{
+    $pub_date = ! empty($book) ? $book->get_pub_date(false) : '';
 
-	$pub_date = ! empty( $book ) ? $book->get_pub_date( true ) : '';
+    if (empty($pub_date) && ! empty($_GET['pub_date'])) {
+        $pub_date = sanitize_text_field(wp_unslash($_GET['pub_date']));
+    }
 
-	if ( empty( $pub_date ) && ! empty( $_GET['pub_date'] ) ) {
-		$format   = ! empty( $format ) ? $format : get_option( 'date_format' );
-		$pub_date = date( $format, strtotime( $_GET['pub_date'] ) );
-	}
+    $pub_date = $pub_date ? date(getParsableDateFormat(), strtotime($pub_date)) : '';
 
-	ob_start();
-	?>
-	<input type="text" id="bdb-book-pub-date" class="regular-text" name="pub_date" value="<?php echo esc_attr( $pub_date ); ?>">
-	<?php
+    ob_start();
+    ?>
+    <input type="text" id="bdb-book-pub-date" class="regular-text" name="pub_date" value="<?php echo esc_attr($pub_date); ?>">
+    <?php
 
-	book_database()->get_html()->meta_row( array(
-		'label' => __( 'Publication Date', 'book-database' ),
-		'id'    => 'bdb-book-pub-date',
-		'field' => ob_get_clean()
-	) );
-
+    book_database()->get_html()->meta_row(array(
+        'label' => __('Publication Date', 'book-database'),
+        'id'    => 'bdb-book-pub-date',
+        'field' => ob_get_clean()
+    ));
 }
 
 /**

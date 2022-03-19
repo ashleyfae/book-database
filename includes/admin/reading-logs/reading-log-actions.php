@@ -9,6 +9,8 @@
 
 namespace Book_Database;
 
+use Book_Database\Models\Book;
+
 /**
  * Add a table of reading logs to the Edit Book page
  *

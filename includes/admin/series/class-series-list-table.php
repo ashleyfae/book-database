@@ -9,11 +9,16 @@
 
 namespace Book_Database;
 
+use Book_Database\Admin\Utils\ListTable;
+use Book_Database\Models\Series;
+use Book_Database\ValueObjects\Rating;
+
 /**
  * Class Series_List_Table
+ *
  * @package Book_Database
  */
-class Series_List_Table extends List_Table {
+class Series_List_Table extends ListTable {
 
 	/**
 	 * Series_List_Table constructor.

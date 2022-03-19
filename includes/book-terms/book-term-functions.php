@@ -9,16 +9,20 @@
 
 namespace Book_Database;
 
+use Book_Database\Database\BookTerms\BookTermsQuery;
+use Book_Database\Exceptions\Exception;
+use Book_Database\Models\BookTerm;
+
 /**
  * Get a single book term by its ID
  *
  * @param int $term_id
  *
- * @return Book_Term|false
+ * @return BookTerm|false
  */
 function get_book_term( $term_id ) {
 
-	$query = new Book_Terms_Query();
+	$query = new BookTermsQuery();
 
 	return $query->get_item( $term_id );
 
@@ -30,11 +34,11 @@ function get_book_term( $term_id ) {
  * @param string $column_name
  * @param mixed  $column_value
  *
- * @return Book_Term|false
+ * @return BookTerm|false
  */
 function get_book_term_by( $column_name, $column_value ) {
 
-	$query = new Book_Terms_Query();
+	$query = new BookTermsQuery();
 
 	return $query->get_item_by( $column_name, $column_value );
 
@@ -46,7 +50,7 @@ function get_book_term_by( $column_name, $column_value ) {
  * @param string $term_name Term name.
  * @param string $taxonomy  Taxonomy slug.
  *
- * @return Book_Term|false
+ * @return BookTerm|false
  */
 function get_book_term_by_name_and_taxonomy( $term_name, $taxonomy, $args = array() ) {
 
@@ -99,7 +103,7 @@ function get_book_term_by_name_and_taxonomy( $term_name, $taxonomy, $args = arra
  * @type bool         $update_cache        Whether to prime the cache for found items. Default false.
  * }
  *
- * @return Book_Term[] Array of Book_Term objects.
+ * @return BookTerm[] Array of Book_Term objects.
  */
 function get_book_terms( $args = array() ) {
 
@@ -107,7 +111,7 @@ function get_book_terms( $args = array() ) {
 		'number' => 20
 	) );
 
-	$query = new Book_Terms_Query();
+	$query = new BookTermsQuery();
 
 	return $query->query( $args );
 
@@ -128,7 +132,7 @@ function count_book_terms( $args = array() ) {
 		'count' => true
 	) );
 
-	$query = new Book_Terms_Query( $args );
+	$query = new BookTermsQuery( $args );
 
 	return absint( $query->found_items );
 
@@ -175,7 +179,7 @@ function add_book_term( $args ) {
 	// Generate a slug.
 	$args['slug'] = ! empty( $args['slug'] ) ? unique_book_slug( $args['slug'], $args['taxonomy'] ) : unique_book_slug( sanitize_title( $args['name'], $args['taxonomy'] ) );
 
-	$query   = new Book_Terms_Query();
+	$query   = new BookTermsQuery();
 	$term_id = $query->add_item( $args );
 
 	if ( empty( $term_id ) ) {
@@ -210,7 +214,7 @@ function update_book_term( $term_id, $args = array() ) {
 		$args['slug'] = unique_book_slug( $args['slug'], $term->get_taxonomy() );
 	}
 
-	$query   = new Book_Terms_Query();
+	$query   = new BookTermsQuery();
 	$updated = $query->update_item( $term_id, $args );
 
 	if ( ! $updated ) {
@@ -233,7 +237,7 @@ function update_book_term( $term_id, $args = array() ) {
  */
 function delete_book_term( $term_id ) {
 
-	$query   = new Book_Terms_Query();
+	$query   = new BookTermsQuery();
 	$deleted = $query->delete_item( $term_id );
 
 	if ( ! $deleted ) {

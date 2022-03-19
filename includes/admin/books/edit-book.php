@@ -9,7 +9,9 @@
 
 namespace Book_Database;
 
-$book = ! empty( $_GET['book_id'] ) ? get_book( absint( $_GET['book_id'] ) ) : false;
+use Book_Database\Models\Book;
+
+$book = ! empty($_GET['book_id'] ) ? get_book( absint($_GET['book_id'] ) ) : false;
 
 if ( ! empty( $_GET['view'] ) && 'edit' === $_GET['view'] && empty( $book ) ) {
 	wp_die( __( 'Invalid book ID.', 'book-database' ) );

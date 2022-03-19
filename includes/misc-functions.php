@@ -3,52 +3,58 @@
  * Misc. Functions
  *
  * @package   book-database
- * @copyright Copyright (c) 2019, Ashley Gibson
+ * @copyright Copyright (c) 2021, Ashley Gibson
  * @license   GPL2+
  */
 
 namespace Book_Database;
+
+use Book_Database\Models\Author;
+use Book_Database\Models\BookTerm;
+use Book_Database\Models\Series;
+use Book_Database\ValueObjects\Rating;
 
 /**
  * Get an array of all settings
  *
  * @return array
  */
-function bdb_get_settings() {
-	return get_option( 'bdb_settings', array() );
+function bdb_get_settings(): array
+{
+    return (array) get_option('bdb_settings', array());
 }
 
 /**
  * Get an option value
  *
- * @param string $key
- * @param bool   $default
+ * @param  string  $key
+ * @param  mixed  $default
  *
  * @return mixed
  */
-function bdb_get_option( $key, $default = false ) {
+function bdb_get_option($key, $default = false)
+{
+    $settings = bdb_get_settings();
 
-	$settings = bdb_get_settings();
-
-	return isset( $settings[ $key ] ) ? $settings[ $key ] : $default;
-
+    return $settings[$key] ?? $default;
 }
 
 /**
  * Update an option
  *
- * @param string $key
- * @param mixed  $value
+ * @param  string  $key
+ * @param  mixed  $value
  *
  * @return bool
  */
-function bdb_update_option( $key, $value ) {
+function bdb_update_option($key, $value)
+{
 
-	$settings = bdb_get_settings();
+    $settings = bdb_get_settings();
 
-	$settings[ $key ] = $value;
+    $settings[$key] = $value;
 
-	return update_option( 'bdb_settings', $settings );
+    return update_option('bdb_settings', $settings);
 
 }
 
@@ -57,18 +63,40 @@ function bdb_update_option( $key, $value ) {
  *
  * This converts a GMT date to local site time and formats it.
  *
- * @param string $date   Date string to format.
- * @param string $format Date format. Default is the site's `date_format`.
+ * @param  string  $date  Date string to format.
+ * @param  string  $format  Date format. Default is the site's `date_format`.
  *
  * @return string
  */
-function format_date( $date, $format = '' ) {
+function format_date(string $date, string $format = ''): string
+{
+    $format     = ! empty($format) ? $format : get_option('date_format');
+    $local_date = get_date_from_gmt($date, 'Y-m-d H:i:s');
 
-	$format     = ! empty( $format ) ? $format : get_option( 'date_format' );
-	$local_date = get_date_from_gmt( $date, 'Y-m-d H:i:s' );
+    return date($format, strtotime($local_date));
+}
 
-	return date( $format, strtotime( $local_date ) );
+/**
+ * Returns a date format that can be parsed by `strtotime()`.
+ * This uses the site's chosen date format if it's supported, otherwise
+ * falls back to an acceptable one.
+ *
+ * @since 1.2.1
+ *
+ * @return string
+ */
+function getParsableDateFormat(): string
+{
+    $allowedFormats = [
+        'Y-m-d',
+        'F j, Y',
+        'j F Y',
+    ];
+    $selectedFormat = get_option('date_format');
 
+    return in_array($selectedFormat, $allowedFormats, true)
+        ? $selectedFormat
+        : reset($allowedFormats);
 }
 
 /**
@@ -79,58 +107,57 @@ function format_date( $date, $format = '' ) {
  *
  * @see wp_unique_post_slug()
  *
- * @param string $slug     Desired slug.
- * @param string $taxonomy Accepts any taxonomy slug, `author`, `series`, or `book_taxonomy`.
+ * @param  string  $slug  Desired slug.
+ * @param  string  $taxonomy  Accepts any taxonomy slug, `author`, `series`, or `book_taxonomy`.
  *
  * @return string A unique slug.
  */
-function unique_book_slug( $slug, $taxonomy = 'author' ) {
+function unique_book_slug(string $slug, string $taxonomy = 'author'): string
+{
+    // Check if this slug already exists.
+    if ('series' === $taxonomy) {
+        $terms = get_book_series_by('slug', $slug);
+    } elseif ('book_taxonomy' === $taxonomy) {
+        $terms = get_book_taxonomy_by('slug', $slug);
+    } elseif ('author' == $taxonomy) {
+        $terms = get_book_author_by('slug', $slug);
+    } else {
+        $terms = count_book_terms(array(
+            'taxonomy' => $taxonomy,
+            'slug'     => $slug
+        ));
+    }
 
-	// Check if this slug already exists.
-	if ( 'series' === $taxonomy ) {
-		$terms = get_book_series_by( 'slug', $slug );
-	} elseif ( 'book_taxonomy' === $taxonomy ) {
-		$terms = get_book_taxonomy_by( 'slug', $slug );
-	} elseif ( 'author' == $taxonomy ) {
-		$terms = get_book_author_by( 'slug', $slug );
-	} else {
-		$terms = count_book_terms( array(
-			'taxonomy' => $taxonomy,
-			'slug'     => $slug
-		) );
-	}
+    $new_slug = $slug;
 
-	$new_slug = $slug;
+    if ($terms) {
+        $suffix = 2;
 
-	if ( $terms ) {
-		$suffix = 2;
+        do {
 
-		do {
+            $alt_slug = _truncate_post_slug($slug, 200 - (strlen($suffix) + 1)).'-'.$suffix;
 
-			$alt_slug = _truncate_post_slug( $slug, 200 - ( strlen( $suffix ) + 1 ) ) . '-' . $suffix;
+            if ('series' === $taxonomy) {
+                $terms = get_book_series_by('slug', $alt_slug);
+            } elseif ('book_taxonomy' === $taxonomy) {
+                $terms = get_book_taxonomy_by('slug', $alt_slug);
+            } elseif ('author' === $taxonomy) {
+                $terms = get_book_author_by('slug', $alt_slug);
+            } else {
+                $terms = count_book_terms(array(
+                    'taxonomy' => $taxonomy,
+                    'slug'     => $alt_slug
+                ));
+            }
 
-			if ( 'series' === $taxonomy ) {
-				$terms = get_book_series_by( 'slug', $alt_slug );
-			} elseif ( 'book_taxonomy' === $taxonomy ) {
-				$terms = get_book_taxonomy_by( 'slug', $alt_slug );
-			} elseif ( 'author' === $taxonomy ) {
-				$terms = get_book_author_by( 'slug', $alt_slug );
-			} else {
-				$terms = count_book_terms( array(
-					'taxonomy' => $taxonomy,
-					'slug'     => $alt_slug
-				) );
-			}
+            $suffix++;
 
-			$suffix ++;
+        } while ($terms);
 
-		} while ( $terms );
+        $new_slug = $alt_slug;
+    }
 
-		$new_slug = $alt_slug;
-	}
-
-	return apply_filters( 'book-database/unique-slug', $new_slug, $slug, $taxonomy );
-
+    return apply_filters('book-database/unique-slug', $new_slug, $slug, $taxonomy);
 }
 
 /**
@@ -141,54 +168,54 @@ function unique_book_slug( $slug, $taxonomy = 'author' ) {
  *
  * @return bool
  */
-function link_book_terms() {
-	return apply_filters( 'book-database/link-terms', true );
+function link_book_terms(): bool
+{
+    return (bool) apply_filters('book-database/link-terms', true);
 }
 
 /**
  * Get the term archive link
  *
- * @param Author|Book_Term|Series|Rating $term
+ * @param  Author|BookTerm|Series|Rating  $term
  *
- * @return bool
+ * @return string|false
  */
-function get_book_term_link( $term ) {
+function get_book_term_link($term)
+{
+    if (! is_object($term)) {
+        return false;
+    }
 
-	if ( ! is_object( $term ) ) {
-		return false;
-	}
+    $slug     = method_exists($term, 'get_slug') ? $term->get_slug() : '';
+    $taxonomy = '';
 
-	$slug     = method_exists( $term, 'get_slug' ) ? $term->get_slug() : '';
-	$taxonomy = '';
+    if ($term instanceof Author) {
+        $taxonomy = 'author';
+    } elseif ($term instanceof BookTerm) {
+        $taxonomy = $term->get_taxonomy();
+    } elseif ($term instanceof Series) {
+        $taxonomy = 'series';
+    } elseif ($term instanceof Rating) {
+        $taxonomy = 'rating';
+        $slug     = $term->get_rating();
+    }
 
-	if ( $term instanceof Author ) {
-		$taxonomy = 'author';
-	} elseif ( $term instanceof Book_Term ) {
-		$taxonomy = $term->get_taxonomy();
-	} elseif ( $term instanceof Series ) {
-		$taxonomy = 'series';
-	} elseif ( $term instanceof Rating ) {
-		$taxonomy = 'rating';
-		$slug     = $term->get_rating();
-	}
+    if (empty($taxonomy) || empty($slug)) {
+        return false;
+    }
 
-	if ( empty( $taxonomy ) || empty( $slug ) ) {
-		return false;
-	}
+    $base_url  = untrailingslashit(get_reviews_page_url());
+    $final_url = sprintf('%1$s/%2$s/%3$s/', $base_url, urlencode($taxonomy), urlencode($slug));
 
-	$base_url  = untrailingslashit( get_reviews_page_url() );
-	$final_url = sprintf( '%1$s/%2$s/%3$s/', $base_url, urlencode( $taxonomy ), urlencode( $slug ) );
-
-	/**
-	 * Filters the term archive URL.
-	 *
-	 * @param string                         $final_url Final archive URL.
-	 * @param string                         $slug      Term slug.
-	 * @param string                         $taxonomy  Term taxonomy / type.
-	 * @param Author|Book_Term|Series|Rating $term      Term object.
-	 */
-	return apply_filters( 'book-database/term-archive-link', $final_url, $slug, $taxonomy, $term );
-
+    /**
+     * Filters the term archive URL.
+     *
+     * @param  string  $final_url  Final archive URL.
+     * @param  string  $slug  Term slug.
+     * @param  string  $taxonomy  Term taxonomy / type.
+     * @param  Author|BookTerm|Series|Rating  $term  Term object.
+     */
+    return apply_filters('book-database/term-archive-link', $final_url, $slug, $taxonomy, $term);
 }
 
 /**
@@ -196,10 +223,11 @@ function get_book_term_link( $term ) {
  *
  * @return \DateTimeZone
  */
-function get_site_timezone() {
-	if ( function_exists( 'wp_timezone' ) ) {
-		return wp_timezone();
-	} else {
-		return new \DateTimeZone( get_option( 'timezone_string' ) );
-	}
+function get_site_timezone(): \DateTimeZone
+{
+    if (function_exists('wp_timezone')) {
+        return wp_timezone();
+    } else {
+        return new \DateTimeZone(get_option('timezone_string'));
+    }
 }

@@ -43,7 +43,7 @@ $sources = get_book_terms([
                 </tr>
 
                 <template x-for="edition in editions" :key="edition.id">
-                    <tr>
+                    <tr :class="'bdb-editions-list-' + edition.id">
                         <td
                             class="bdb-edition-isbn column-primary"
                             data-colname="<?php esc_attr_e('ISBN', 'book-database'); ?>"
@@ -178,6 +178,7 @@ $sources = get_book_terms([
                                 <button
                                     type="button"
                                     class="button bdb-edition-toggle-editable bdb-edit-row-with-datepicker"
+                                    x-on:click="toggleEditFields(edition.id)"
                                 ><?php esc_html_e('Edit', 'book-database'); ?></button>
 
                                 <button

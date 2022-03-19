@@ -25,6 +25,30 @@ document.addEventListener('alpine:init', () => {
                 .catch(error => {
                     editions.error = error;
                 });
+        },
+
+        toggleEditFields(editionId) {
+            const button = this.$el;
+            const tableRow = document.querySelector('.bdb-editions-list-' + editionId);
+
+            if (! tableRow) {
+                return;
+            }
+
+            const displayValues = tableRow.querySelectorAll('.bdb-table-display-value');
+            const editValues = tableRow.querySelectorAll('.bdb-table-edit-value');
+
+            if (displayValues) {
+                displayValues.forEach(el => {
+                    el.style.display = 'none';
+                });
+            }
+
+            if (editValues) {
+                editValues.forEach(el => {
+                    el.style.display = 'block';
+                });
+            }
         }
     }));
 });

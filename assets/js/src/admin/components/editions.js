@@ -37,6 +37,8 @@ document.addEventListener('alpine:init', () => {
             }
 
             toggleDisplayAndEditFields(tableRow, true);
+
+            // @todo show "Save" button instead somehow.
         }
     }));
 });

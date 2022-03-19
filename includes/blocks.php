@@ -12,6 +12,8 @@ namespace Book_Database;
 /**
  * Adds a new block category for Book Database.
  *
+ * Note: This filter requires WP 5.8+
+ *
  * @param array    $categories
  * @param \WP_Post $post
  *

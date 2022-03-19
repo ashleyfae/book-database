@@ -1,6 +1,7 @@
 /* global bdbVars, wp */
 
 import {apiRequest} from "../../utils";
+import toggleDisplayAndEditFields from "../utils/edit-display-toggle";
 
 document.addEventListener('alpine:init', () => {
     Alpine.data('bdbEditions', (bookId) => ({
@@ -35,20 +36,7 @@ document.addEventListener('alpine:init', () => {
                 return;
             }
 
-            const displayValues = tableRow.querySelectorAll('.bdb-table-display-value');
-            const editValues = tableRow.querySelectorAll('.bdb-table-edit-value');
-
-            if (displayValues) {
-                displayValues.forEach(el => {
-                    el.style.display = 'none';
-                });
-            }
-
-            if (editValues) {
-                editValues.forEach(el => {
-                    el.style.display = 'block';
-                });
-            }
+            toggleDisplayAndEditFields(tableRow, true);
         }
     }));
 });

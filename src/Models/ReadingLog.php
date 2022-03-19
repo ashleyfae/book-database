@@ -90,9 +90,9 @@ class ReadingLog extends Model
      * @param  bool  $formatted  Whether or not to format the result for display.
      * @param  string  $format  Format to display in. Defaults to site format.
      *
-     * @return string
+     * @return string|null
      */
-    public function get_date_finished(bool $formatted = false, string $format = ''): string
+    public function get_date_finished(bool $formatted = false, string $format = ''): ?string
     {
         return (! empty($this->date_finished) && $formatted)
             ? format_date($this->date_finished, $format)

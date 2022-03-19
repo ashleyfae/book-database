@@ -9,6 +9,7 @@
 
 namespace Book_Database;
 
+use Book_Database\Admin\Utils\ListTable;
 use Book_Database\Database\Reviews\ReviewsQuery;
 use Book_Database\Exceptions\Exception;
 use Book_Database\Models\Book;
@@ -20,7 +21,7 @@ use Book_Database\ValueObjects\Rating;
  *
  * @package Book_Database
  */
-class Reviews_List_Table extends List_Table {
+class Reviews_List_Table extends ListTable {
 
 	/**
 	 * Reviews_List_Table constructor.

@@ -173,7 +173,6 @@ class LegacyServiceProvider implements ServiceProvider
 
     private function includeAdminFiles(): void
     {
-        require_once BDB_DIR.'includes/admin/abstract-class-list-table.php';
         require_once BDB_DIR.'includes/admin/admin-assets.php';
         require_once BDB_DIR.'includes/admin/admin-bar.php';
         require_once BDB_DIR.'includes/admin/admin-notices.php';
@@ -361,6 +360,9 @@ class LegacyServiceProvider implements ServiceProvider
         class_alias( \Book_Database\Analytics\Datasets\Reviews_Written::class, '\Book_Database\Analytics\Reviews_Written' );
         class_alias( \Book_Database\Analytics\Datasets\Shortest_Book_Read::class, '\Book_Database\Analytics\Shortest_Book_Read' );
         class_alias( \Book_Database\Analytics\Datasets\Terms_Breakdown::class, '\Book_Database\Analytics\Terms_Breakdown' );
+
+        // Admin
+        class_alias(\Book_Database\Admin\Utils\ListTable::class, '\Book_Database\List_Table');
     }
 
     private function bindClasses(): void

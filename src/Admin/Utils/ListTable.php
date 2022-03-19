@@ -3,24 +3,24 @@
  * Admin List Table Base Class
  *
  * @package   book-database
- * @copyright Copyright (c) 2019, Ashley Gibson
+ * @copyright Copyright (c) 2022, Ashley Gibson
  * @license   GPL2+
  */
 
-namespace Book_Database;
+namespace Book_Database\Admin\Utils;
 
-// Load WP_List_Table if not loaded
 use Book_Database\Models\Model;
 
+// Load WP_List_Table if not loaded
 if ( ! class_exists( '\WP_List_Table' ) ) {
 	require_once ABSPATH . 'wp-admin/includes/class-wp-list-table.php';
 }
 
 /**
- * Class List_Table
+ * Class ListTable
  * @package Book_Database
  */
-abstract class List_Table extends \WP_List_Table {
+abstract class ListTable extends \WP_List_Table {
 
 	/**
 	 * Number of items per page

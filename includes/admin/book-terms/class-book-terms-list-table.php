@@ -9,6 +9,7 @@
 
 namespace Book_Database;
 
+use Book_Database\Admin\Utils\ListTable;
 use Book_Database\Exceptions\Exception;
 use Book_Database\Models\BookTaxonomy;
 use Book_Database\Models\BookTerm;
@@ -18,7 +19,7 @@ use Book_Database\Models\BookTerm;
  *
  * @package Book_Database
  */
-class Book_Terms_List_Table extends List_Table {
+class Book_Terms_List_Table extends ListTable {
 
 	protected $default_taxonomy;
 

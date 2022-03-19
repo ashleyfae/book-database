@@ -28,7 +28,7 @@ import { BDB_Book_Taxonomies } from './modules/taxonomies.js';
 	BDB_Categories.init();
 	BDB_Datepicker.init();
 	BDB_Delete_Objects.init();
-	BDB_Editions.init();
+	//BDB_Editions.init();
 	BDB_License.init();
 	BDB_Media.init();
 	BDB_Reading_Logs.init();
@@ -37,3 +37,5 @@ import { BDB_Book_Taxonomies } from './modules/taxonomies.js';
 	BDB_Book_Taxonomies.init();
 
 } )( jQuery );
+
+import './components/editions';

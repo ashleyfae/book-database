@@ -31,6 +31,7 @@ function enqueue_admin_assets( $hook ) {
 	wp_enqueue_media();
 
 	wp_register_script( 'moment', BDB_URL . 'assets/js/build/moment.min.js', array(), '2.24.0', true );
+    wp_register_script('alpinejs', BDB_URL.'assets/js/build/alpine.min.js', [], '3.9.1', false);
 
 	// JS
 	$localized = array(
@@ -67,7 +68,7 @@ function enqueue_admin_assets( $hook ) {
 
 	} else {
 
-		$deps = array( 'jquery', 'jquery-ui-sortable', 'suggest', 'wp-util', 'moment' );
+		$deps = array( 'jquery', 'jquery-ui-sortable', 'suggest', 'wp-util', 'moment', 'alpinejs' );
 		wp_enqueue_script( 'book-database', BDB_URL . 'assets/js/build/admin.min.js', $deps, time(), true );
 		wp_localize_script( 'book-database', 'bdbVars', $localized );
 
@@ -128,3 +129,14 @@ function enqueue_admin_global_assets( $hook ) {
 }
 
 add_action( 'admin_enqueue_scripts', __NAMESPACE__ . '\enqueue_admin_global_assets' );
+
+/**
+ * Add `defer` to the AlpineJS script tag.
+ */
+add_filter('script_loader_tag', function ($url) {
+    if (false !== strpos($url, BDB_URL.'assets/js/build/alpine.min.js')) {
+        $url = str_replace(' src', ' defer src', $url);
+    }
+
+    return $url;
+});

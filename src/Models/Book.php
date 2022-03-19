@@ -218,9 +218,9 @@ class Book extends Model
      *                          to local time. We keep it in UTC always.
      * @param  string  $format  Format to display in. Defaults to site format.
      *
-     * @return string
+     * @return string|null
      */
-    public function get_pub_date(bool $formatted = false, string $format = ''): string
+    public function get_pub_date(bool $formatted = false, string $format = ''): ?string
     {
 
         if (empty($this->pub_date) || ! $formatted) {

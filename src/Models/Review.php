@@ -17,6 +17,8 @@ use function Book_Database\format_date;
 /**
  * Class Review
  *
+ * @method static ReviewsQuery getQueryInterface()
+ *
  * @package Book_Database
  * @since 1.3 Namespace changed.
  */
@@ -267,6 +269,21 @@ class Review extends Model
         }
 
         return ($this->get_date_published(true, 'U') <= current_time('timestamp'));
+    }
+
+    /**
+     * Queries for reviews.
+     *
+     * @since 1.3
+     *
+     * @param  array  $args
+     *
+     * @return Review[]|array
+     * @throws \Exception
+     */
+    public static function query(array $args = []): array
+    {
+        return static::getQueryInterface()->get_reviews($args);
     }
 
 }

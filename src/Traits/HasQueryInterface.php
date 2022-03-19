@@ -159,7 +159,7 @@ trait HasQueryInterface
      */
     public static function query(array $args = []): array
     {
-        return self::getQueryInterface()->query($args);
+        return static::getQueryInterface()->query($args);
     }
 
     /**
@@ -174,7 +174,7 @@ trait HasQueryInterface
      */
     public static function all(array $args = []): array
     {
-        return self::query(wp_parse_args($args, ['number' => 9999]));
+        return static::query(wp_parse_args($args, ['number' => 9999]));
     }
 
     /**

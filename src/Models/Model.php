@@ -24,11 +24,11 @@ abstract class Model
 {
     use HasQueryInterface;
 
-    protected $id = 0;
+    public $id = 0;
 
-    protected $date_created = '';
+    public $date_created = '';
 
-    protected $date_modified = '';
+    public $date_modified = '';
 
     /**
      * Object constructor

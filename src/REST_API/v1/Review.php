@@ -178,7 +178,7 @@ class Review extends Controller {
 			// Format ratings.
 			if ( $request->get_param( 'rating_format' ) ) {
 				foreach ( $reviews as $key => $review ) {
-					if ( is_null( $review->rating ) ) {
+					if ( is_null( $review->rating ?? null ) ) {
 						continue;
 					}
 

@@ -66,7 +66,7 @@ function get_review_by(string $column_name, $column_value)
  * @type bool   $count                      Whether or not to only return a count. Default false.
  * }
  *
- * @return object[] Array of database objects.
+ * @return Review[] Array of database objects.
  */
 function get_reviews(array $args = []): array
 {

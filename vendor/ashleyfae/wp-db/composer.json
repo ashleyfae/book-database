@@ -1,0 +1,14 @@
+{
+    "name": "ashleyfae/wp-db",
+    "description": "Wrapper for wpdb.",
+    "type": "library",
+    "autoload": {
+        "psr-4": {
+            "Ashleyfae\\WPDB\\": "src/"
+        }
+    },
+    "minimum-stability": "dev",
+    "require": {
+        "php": ">=7.0"
+    }
+}

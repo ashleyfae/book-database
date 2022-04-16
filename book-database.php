@@ -100,6 +100,7 @@ final class Book_Database {
 		// Bootstrap
 		self::$instance->setup_files();
 		self::$instance->setup_application();
+        self::$instance->contextwp();
 
 		add_action( 'admin_init', array( self::$instance, 'install' ), 11 );
 
@@ -137,6 +138,8 @@ final class Book_Database {
 	 * @return void
 	 */
 	private function setup_files() {
+        require_once BDB_DIR . 'vendor/autoload.php';
+
 		$this->include_files();
 
 		// Admin
@@ -466,6 +469,15 @@ final class Book_Database {
 
 	}
 
+    private function contextwp() {
+        add_action('contextwp_sdk_loaded', function (\ContextWP\SDK $sdk) {
+            $sdk->register(
+                (new \ContextWP\ValueObjects\Product('af272e18-bea7-42fd-b531-f898fbd55b25', '75f43cf9-febb-44f2-8b02-e73a36590d6c'))
+                    ->setVersion(BDB_VERSION)
+            );
+        });
+    }
+
 	/**
 	 * Get a table object by its key
 	 *
@@ -601,7 +613,7 @@ final class Book_Database {
 function insufficient_php_version() {
 	?>
 	<div class="notice notice-error">
-		<p><?php printf( __( 'Book Database requires PHP version 7.0 or greater. You have version %s. Please contact your web host to upgrade your version of PHP.', 'book-database' ), PHP_VERSION ); ?></p>
+		<p><?php printf( __( 'Book Database requires PHP version 7.1 or greater. You have version %s. Please contact your web host to upgrade your version of PHP.', 'book-database' ), PHP_VERSION ); ?></p>
 	</div>
 	<?php
 }
@@ -612,7 +624,7 @@ function insufficient_php_version() {
  * @return Book_Database|void
  */
 function book_database() {
-	if ( version_compare( PHP_VERSION, '7.0', '>=' ) ) {
+	if ( version_compare( PHP_VERSION, '7.1', '>=' ) ) {
 		return Book_Database::instance();
 	} else {
 		add_action( 'admin_notices', __NAMESPACE__ . '\insufficient_php_version' );

@@ -1,0 +1,90 @@
+{
+    "packages": [
+        {
+            "name": "ashleyfae/contextwp-sdk",
+            "version": "dev-main",
+            "version_normalized": "dev-main",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/ashleyfae/contextwp-sdk.git",
+                "reference": "71a40cbd0fbbaadbf5ec1d34562b054dd427ab72"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/ashleyfae/contextwp-sdk/zipball/71a40cbd0fbbaadbf5ec1d34562b054dd427ab72",
+                "reference": "71a40cbd0fbbaadbf5ec1d34562b054dd427ab72",
+                "shasum": ""
+            },
+            "require": {
+                "ashleyfae/wp-db": "dev-main",
+                "php": ">=7.1"
+            },
+            "require-dev": {
+                "10up/wp_mock": "0.4.2",
+                "mockery/mockery": "^1.5",
+                "phpunit/phpunit": "^9.5.20"
+            },
+            "time": "2022-04-16T15:40:36+00:00",
+            "default-branch": true,
+            "type": "library",
+            "installation-source": "dist",
+            "autoload": {
+                "psr-4": {
+                    "ContextWP\\": "src/"
+                },
+                "files": [
+                    "src/init.php"
+                ]
+            },
+            "autoload-dev": {
+                "psr-4": {
+                    "ContextWP\\Tests\\": "tests/"
+                }
+            },
+            "license": [
+                "MIT"
+            ],
+            "support": {
+                "source": "https://github.com/ashleyfae/contextwp-sdk/tree/main",
+                "issues": "https://github.com/ashleyfae/contextwp-sdk/issues"
+            },
+            "install-path": "../ashleyfae/contextwp-sdk"
+        },
+        {
+            "name": "ashleyfae/wp-db",
+            "version": "dev-main",
+            "version_normalized": "dev-main",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/ashleyfae/wp-db.git",
+                "reference": "346622ffa5efd62313bd74e5dc8d02ee6841556c"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/ashleyfae/wp-db/zipball/346622ffa5efd62313bd74e5dc8d02ee6841556c",
+                "reference": "346622ffa5efd62313bd74e5dc8d02ee6841556c",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=7.0"
+            },
+            "time": "2022-04-10T11:38:38+00:00",
+            "default-branch": true,
+            "type": "library",
+            "installation-source": "dist",
+            "autoload": {
+                "psr-4": {
+                    "Ashleyfae\\WPDB\\": "src/"
+                }
+            },
+            "description": "Wrapper for wpdb.",
+            "support": {
+                "source": "https://github.com/ashleyfae/wp-db/tree/main",
+                "issues": "https://github.com/ashleyfae/wp-db/issues"
+            },
+            "install-path": "../ashleyfae/wp-db"
+        }
+    ],
+    "dev": false,
+    "dev-package-names": []
+}

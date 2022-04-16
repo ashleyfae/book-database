@@ -4,10 +4,22 @@
   "license": "GPL-2.0-or-later",
   "description": "Maintain a database of books and reviews.",
   "require": {
-    "php": "^7.0|^8.0"
+    "php": "^7.1|^8.0",
+    "ashleyfae/contextwp-sdk": "dev-main"
   },
   "require-dev": {
     "phpunit/phpunit": "9.5.10",
     "yoast/phpunit-polyfills": "1.x-dev"
-  }
+  },
+  "minimum-stability": "dev",
+  "repositories": [
+    {
+      "type": "vcs",
+      "url": "https://github.com/ashleyfae/contextwp-sdk"
+    },
+    {
+      "type": "vcs",
+      "url": "https://github.com/ashleyfae/wp-db"
+    }
+  ]
 }

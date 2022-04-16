@@ -1,0 +1,34 @@
+{
+    "name": "ashleyfae/contextwp-sdk",
+    "type": "library",
+    "license": "MIT",
+    "autoload": {
+        "psr-4": {
+            "ContextWP\\": "src/"
+        },
+        "files": [
+            "src/init.php"
+        ]
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "ContextWP\\Tests\\": "tests/"
+        }
+    },
+    "minimum-stability": "dev",
+    "require": {
+        "php": ">=7.1",
+        "ashleyfae/wp-db": "dev-main"
+    },
+    "require-dev": {
+        "10up/wp_mock": "0.4.2",
+        "phpunit/phpunit": "^9.5.20",
+        "mockery/mockery": "^1.5"
+    },
+    "repositories": [
+        {
+            "type": "vcs",
+            "url": "https://github.com/ashleyfae/wp-db"
+        }
+    ]
+}

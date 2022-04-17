@@ -5,7 +5,7 @@
         'type' => 'wordpress-plugin',
         'install_path' => __DIR__ . '/../../',
         'aliases' => array(),
-        'reference' => '48170d5c18401244fbc0ab1284edfa9fac1497f8',
+        'reference' => '8cd52502f7b2630fb432c2474f742bee1e92ef05',
         'name' => 'ashleyfae/book-database',
         'dev' => false,
     ),
@@ -16,7 +16,7 @@
             'type' => 'wordpress-plugin',
             'install_path' => __DIR__ . '/../../',
             'aliases' => array(),
-            'reference' => '48170d5c18401244fbc0ab1284edfa9fac1497f8',
+            'reference' => '8cd52502f7b2630fb432c2474f742bee1e92ef05',
             'dev_requirement' => false,
         ),
         'ashleyfae/contextwp-sdk' => array(
@@ -27,7 +27,7 @@
             'aliases' => array(
                 0 => '9999999-dev',
             ),
-            'reference' => '71a40cbd0fbbaadbf5ec1d34562b054dd427ab72',
+            'reference' => '98613f1a7485f8c07b7ff2906fdfc1c508f7b7af',
             'dev_requirement' => false,
         ),
         'ashleyfae/wp-db' => array(

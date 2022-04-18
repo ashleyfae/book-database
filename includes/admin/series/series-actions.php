@@ -9,6 +9,8 @@
 
 namespace Book_Database;
 
+use Book_Database\Exceptions\Exception;
+
 /**
  * Add a new series
  */

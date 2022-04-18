@@ -9,8 +9,11 @@
 
 namespace Book_Database;
 
+use Book_Database\Models\Book;
+
 /**
  * Class Monthly_Books_List_Table
+ *
  * @package Book_Database
  */
 class Monthly_Books_List_Table extends Books_List_Table {

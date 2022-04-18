@@ -9,6 +9,10 @@
 
 namespace Book_Database;
 
+use Book_Database\Database\Editions\EditionsQuery;
+use Book_Database\Exceptions\Exception;
+use Book_Database\Models\Edition;
+
 /**
  * Get a single edition by its ID
  *
@@ -18,7 +22,7 @@ namespace Book_Database;
  */
 function get_edition( $edition_id ) {
 
-	$query = new Editions_Query();
+	$query = new EditionsQuery();
 
 	return $query->get_item( $edition_id );
 
@@ -34,7 +38,7 @@ function get_edition( $edition_id ) {
  */
 function get_edition_by( $column_name, $column_value ) {
 
-	$query = new Editions_Query();
+	$query = new EditionsQuery();
 
 	return $query->get_item_by( $column_name, $column_value );
 
@@ -82,7 +86,7 @@ function get_editions( $args = array() ) {
 		'number' => 20
 	) );
 
-	$query = new Editions_Query();
+	$query = new EditionsQuery();
 
 	return $query->query( $args );
 
@@ -103,7 +107,7 @@ function count_editions( $args = array() ) {
 		'count' => true
 	) );
 
-	$query = new Editions_Query( $args );
+	$query = new EditionsQuery( $args );
 
 	return absint( $query->found_items );
 
@@ -140,7 +144,7 @@ function add_edition( $args = array() ) {
 		throw new Exception( 'missing_required_parameter', __( 'A book ID is required.', 'book-database' ), 400 );
 	}
 
-	$query      = new Editions_Query();
+	$query      = new EditionsQuery();
 	$edition_id = $query->add_item( $args );
 
 	if ( empty( $edition_id ) ) {
@@ -162,7 +166,7 @@ function add_edition( $args = array() ) {
  */
 function update_edition( $edition_id, $args = array() ) {
 
-	$query   = new Editions_Query();
+	$query   = new EditionsQuery();
 	$updated = $query->update_item( $edition_id, $args );
 
 	if ( ! $updated ) {
@@ -183,7 +187,7 @@ function update_edition( $edition_id, $args = array() ) {
  */
 function delete_edition( $edition_id ) {
 
-	$query   = new Editions_Query();
+	$query   = new EditionsQuery();
 	$deleted = $query->delete_item( $edition_id );
 
 	if ( ! $deleted ) {

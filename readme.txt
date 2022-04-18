@@ -2,7 +2,7 @@
 Author URI: https://www.nosegraze.com
 Plugin URI: https://shop.nosegraze.com/product/book-database/
 Requires at least: 4.4
-Tested up to: 5.8.3
+Tested up to: 5.9.3
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -20,6 +20,14 @@ Maintain a database of books and reviews.
 ( more TK )
 
 == Changelog ==
+
+= 1.3 - 18 April, 2022 =
+
+* Requirements: Minimum PHP version is now 7.1.
+* New Anonymous server data is now collected for analytics (PHP version, WP version, etc.).
+* Refactor: Update deprecated `block_categories` filter usage.
+* Dev: Set up Composer / autoloading.
+* Dev: Add Alpine.js.
 
 = 1.2.2 - 13 February, 2022 =
 

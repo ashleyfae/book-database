@@ -10,9 +10,9 @@
 namespace Book_Database\Admin\Reviews\Fields;
 
 use Book_Database\Book_Layout;
-use Book_Database\Rating;
-use Book_Database\Reading_Log;
-use Book_Database\Review;
+use Book_Database\ValueObjects\Rating;
+use Book_Database\Models\ReadingLog;
+use Book_Database\Models\Review;
 use function Book_Database\book_database;
 use function Book_Database\get_book;
 use function Book_Database\get_books_admin_page_url;

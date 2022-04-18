@@ -9,11 +9,17 @@
 
 namespace Book_Database;
 
+use Book_Database\Admin\Utils\ListTable;
+use Book_Database\Exceptions\Exception;
+use Book_Database\Models\BookTaxonomy;
+use Book_Database\Models\BookTerm;
+
 /**
  * Class Book_Terms_List_Table
+ *
  * @package Book_Database
  */
-class Book_Terms_List_Table extends List_Table {
+class Book_Terms_List_Table extends ListTable {
 
 	protected $default_taxonomy;
 
@@ -128,7 +134,7 @@ class Book_Terms_List_Table extends List_Table {
 	/**
 	 * Render the "Name" column.
 	 *
-	 * @param Book_Term $item
+	 * @param BookTerm $item
 	 *
 	 * @return string
 	 */
@@ -156,7 +162,7 @@ class Book_Terms_List_Table extends List_Table {
 	/**
 	 * Renders most of the columns in the list table
 	 *
-	 * @param Book_Term $item
+	 * @param BookTerm $item
 	 * @param string    $column_name
 	 *
 	 * @return string Column value.
@@ -340,7 +346,7 @@ class Book_Terms_List_Table extends List_Table {
 			foreach ( $counts as $status => $count ) {
 				$taxonomy = get_book_taxonomy_by( 'slug', $status );
 
-				if ( ! $taxonomy instanceof Book_Taxonomy ) {
+				if ( ! $taxonomy instanceof BookTaxonomy ) {
 					continue;
 				}
 

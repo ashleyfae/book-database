@@ -9,16 +9,20 @@
 
 namespace Book_Database;
 
+use Book_Database\Database\ReadingLogs\ReadingLogsQuery;
+use Book_Database\Exceptions\Exception;
+use Book_Database\Models\ReadingLog;
+
 /**
  * Get a single reading log entry by its ID
  *
  * @param int $log_id
  *
- * @return Reading_Log|false
+ * @return ReadingLog|false
  */
 function get_reading_log( $log_id ) {
 
-	$query = new Reading_Logs_Query();
+	$query = new ReadingLogsQuery();
 
 	return $query->get_item( $log_id );
 
@@ -30,11 +34,11 @@ function get_reading_log( $log_id ) {
  * @param string $column_name
  * @param mixed  $column_value
  *
- * @return Reading_Log|false
+ * @return ReadingLog|false
  */
 function get_reading_log_by( $column_name, $column_value ) {
 
-	$query = new Reading_Logs_Query();
+	$query = new ReadingLogsQuery();
 
 	return $query->get_item_by( $column_name, $column_value );
 
@@ -76,7 +80,7 @@ function get_reading_log_by( $column_name, $column_value ) {
  * @type bool         $update_cache        Whether to prime the cache for found items. Default false.
  * }
  *
- * @return Reading_Log[] Array of Reading_Log objects.
+ * @return ReadingLog[] Array of Reading_Log objects.
  */
 function get_reading_logs( $args = array() ) {
 
@@ -84,7 +88,7 @@ function get_reading_logs( $args = array() ) {
 		'number' => 20
 	) );
 
-	$query = new Reading_Logs_Query();
+	$query = new ReadingLogsQuery();
 
 	return $query->query( $args );
 
@@ -105,7 +109,7 @@ function count_reading_logs( $args = array() ) {
 		'count' => true
 	) );
 
-	$query = new Reading_Logs_Query( $args );
+	$query = new ReadingLogsQuery( $args );
 
 	return absint( $query->found_items );
 
@@ -148,7 +152,7 @@ function add_reading_log( $args = array() ) {
 		throw new Exception( 'missing_required_parameter', __( 'A user ID is required.', 'book-database' ), 400 );
 	}
 
-	$query  = new Reading_Logs_Query();
+	$query  = new ReadingLogsQuery();
 	$log_id = $query->add_item( $args );
 
 	if ( empty( $log_id ) ) {
@@ -170,7 +174,7 @@ function add_reading_log( $args = array() ) {
  */
 function update_reading_log( $log_id, $args = array() ) {
 
-	$query   = new Reading_Logs_Query();
+	$query   = new ReadingLogsQuery();
 	$updated = $query->update_item( $log_id, $args );
 
 	if ( ! $updated ) {
@@ -191,7 +195,7 @@ function update_reading_log( $log_id, $args = array() ) {
  */
 function delete_reading_log( $log_id ) {
 
-	$query   = new Reading_Logs_Query();
+	$query   = new ReadingLogsQuery();
 	$deleted = $query->delete_item( $log_id );
 
 	if ( ! $deleted ) {

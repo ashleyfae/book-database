@@ -9,8 +9,8 @@
 
 namespace Book_Database\Tests\Factory;
 
-use Book_Database\Book;
-use Book_Database\Exception;
+use Book_Database\Models\Book;
+use Book_Database\Exceptions\Exception;
 use function Book_Database\add_book;
 use function Book_Database\get_book;
 use function Book_Database\update_book;

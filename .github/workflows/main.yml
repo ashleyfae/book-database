@@ -1,0 +1,63 @@
+# @link https://leoloso.com/posts/github-action-to-release-wp-plugin/
+# Creates a zip file containing the installable plugin.
+# Steps:
+# - Checkout the source code.
+# - Run "composer install" to download all dependencies.
+# - Use `git archive` to create a zip file.
+# - Manually add the `vendor/` directory to that zip file. (Little gross.)
+# - Upload the .zip file as an artifact to the action.
+# - Upload the .zip file to the release, for download.
+
+name: Generate Installable Plugin, and Upload as Release Asset
+
+# Controls wh en the workflow will run.
+on:
+  # Triggers when a new release is published.
+  release:
+    types: [published]
+    
+# A workflow run is made up of one or more jobs that can run sequentially or in parallel.
+jobs:
+  build:
+    name: Upload Release Asset
+    runs-on: ubuntu-latest
+    
+    # Steps represent a sequence of tasks that will be executed as part of the job.
+    steps:
+      # Checks out the source code.
+      - name: Checkout code
+        uses: actions/checkout@v2
+        
+      # Runs "composer install" and creates the build directory.
+      - name: Build project
+        run: |
+          composer install --no-dev --optimize-autoloader
+          mkdir build
+          mkdir ${{ github.event.repository.name }}
+          mv vendor/ ${{ github.event.repository.name }}/
+          
+      # Create the zip file. Note that this won't include vendor/, we have to add that next.
+      - name: Create artifact
+        run: |
+          git archive --prefix ${{ github.event.repository.name }}/ -o build/${{ github.event.repository.name }}-${{ github.event.release.name }}.zip HEAD
+          
+      # Manually add the vendor/ directory into the zip file.
+      - name: Add vendor files
+        uses: montudor/action-zip@v0.1.0
+        with:
+          args: zip -ur build/${{ github.event.repository.name }}-${{ github.event.release.name }}.zip ${{ github.event.repository.name }}/
+          
+      # Uploads the zip file to the action.
+      - name: Upload artifact
+        uses: actions/upload-artifact@v2
+        with:
+            name: ${{ github.event.repository.name }}-${{ github.event.release.name }}
+            path: build/${{ github.event.repository.name }}-${{ github.event.release.name }}.zip
+            
+      # Attaches the zip file to the release.
+      - name: Upload to release
+        uses: JasonEtco/upload-to-release@master
+        with:
+          args: build/${{ github.event.repository.name }}-${{ github.event.release.name }}.zip application/zip
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

@@ -9,11 +9,17 @@
 
 namespace Book_Database;
 
+use Book_Database\Admin\Utils\ListTable;
+use Book_Database\Database\Books\BooksQuery;
+use Book_Database\Models\Book;
+use Book_Database\ValueObjects\Rating;
+
 /**
  * Class Books_List_Table
+ *
  * @package Book_Database
  */
-class Books_List_Table extends List_Table {
+class Books_List_Table extends ListTable {
 
 	/**
 	 * Mode
@@ -459,7 +465,7 @@ class Books_List_Table extends List_Table {
 	 */
 	public function get_object_data( $count = false ) {
 
-		$query = new Books_Query();
+		$query = new BooksQuery();
 
 		return $query->get_books( $this->get_query_args( $count ) );
 

@@ -9,11 +9,16 @@
 
 namespace Book_Database;
 
+use Book_Database\Models\Book;
+use Book_Database\Models\ReadingLog;
+use Book_Database\Models\Review;
+use Book_Database\ValueObjects\Rating;
+
 /**
  * @var array       $atts        Shortcode attributes.
  * @var Book        $book        Book object.
  * @var Review      $review      Review object.
- * @var Reading_Log $reading_log Reading log object.
+ * @var ReadingLog $reading_log Reading log object.
  * @var object      $review_data Full object from the database.
  */
 

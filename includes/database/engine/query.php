@@ -1922,7 +1922,7 @@ class Query extends Base {
 	 * @since 1.0.0
 	 *
 	 * @param array $data
-	 * @return bool
+	 * @return int|false
 	 */
 	public function add_item( $data = array() ) {
 

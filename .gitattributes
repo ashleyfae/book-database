@@ -1,0 +1,18 @@
+* text=auto
+.github/ export-ignore
+.gitignore export-ignore
+.gitattributes export-ignore
+
+.phpstorom.meta.php export-ignore
+
+tests/ export-ignore
+phpunit.xml export-ignore
+
+composer.json export-ignore
+composer.lock export-ignore
+
+mix-manifest.json export-ignore
+package.json export-ignore
+package-lock.json export-ignore
+webpack.mix.js export-ignore
+webpack.config.js export-ignore

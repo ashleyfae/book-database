@@ -1,6 +1,6 @@
 /* global $, bdbVars, wp */
 
-import { apiRequest, spinButton, unspinButton } from 'utils';
+import { apiRequest, spinButton, unspinButton } from '../../utils';
 
 /**
  * Book Links
@@ -22,18 +22,18 @@ var BDB_Book_Links = {
 	 */
 	init: function() {
 
-		this.bookID = $( '#bdb-book-id' ).val();
-		this.linkWrap = $( '#bdb-book-links' );
-		this.errorWrap = $( '#bdb-book-links-errors' );
+		this.bookID = jQuery( '#bdb-book-id' ).val();
+		this.linkWrap = jQuery( '#bdb-book-links' );
+		this.errorWrap = jQuery( '#bdb-book-links-errors' );
 
 		if ( ! this.linkWrap.length ) {
 			return;
 		}
 
-		$( '#bdb-new-purchase-link' ).on( 'keydown', 'input', this.clickOnEnter );
-		$( '#bdb-new-purchase-link' ).on( 'click', 'button', this.addLink );
-		$( document ).on( 'click', '.bdb-update-book-link', this.updateLink );
-		$( document ).on( 'click', '.bdb-remove-book-link', this.deleteLink );
+		jQuery( '#bdb-new-purchase-link' ).on( 'keydown', 'input', this.clickOnEnter );
+		jQuery( '#bdb-new-purchase-link' ).on( 'click', 'button', this.addLink );
+		jQuery( document ).on( 'click', '.bdb-update-book-link', this.updateLink );
+		jQuery( document ).on( 'click', '.bdb-remove-book-link', this.deleteLink );
 
 		this.getLinks();
 
@@ -60,7 +60,7 @@ var BDB_Book_Links = {
 			if ( 0 === apiResponse.length || 'undefined' === typeof apiResponse.length ) {
 				// Do nothing.
 			} else {
-				$.each( apiResponse, function( key, link ) {
+				jQuery.each( apiResponse, function( key, link ) {
 					BDB_Book_Links.linkWrap.append( BDB_Book_Links.linkTemplateEdit( link ) );
 				} );
 			}
@@ -81,7 +81,7 @@ var BDB_Book_Links = {
 		if ( 13 === e.keyCode ) {
 			e.preventDefault();
 
-			$( '#bdb-new-purchase-link' ).find( 'button' ).trigger( 'click' );
+			jQuery( '#bdb-new-purchase-link' ).find( 'button' ).trigger( 'click' );
 		}
 
 	},
@@ -95,7 +95,7 @@ var BDB_Book_Links = {
 
 		e.preventDefault();
 
-		let button = $( this );
+		let button = jQuery( this );
 
 		spinButton( button );
 		BDB_Book_Links.errorWrap.empty().hide();
@@ -106,8 +106,8 @@ var BDB_Book_Links = {
 
 			let args = {
 				book_id: BDB_Book_Links.bookID,
-				retailer_id: $( '#bdb-new-book-link-retailer' ).val(),
-				url: $( '#bdb-new-book-link-url' ).val()
+				retailer_id: jQuery( '#bdb-new-book-link-retailer' ).val(),
+				url: jQuery( '#bdb-new-book-link-url' ).val()
 			};
 
 			apiRequest( 'v1/book-link/add', args, 'POST' ).then( function ( apiResponse ) {
@@ -115,7 +115,7 @@ var BDB_Book_Links = {
 				BDB_Book_Links.linkWrap.append( BDB_Book_Links.linkTemplateEdit( apiResponse ) );
 
 				// Wipe field values.
-				$( '#bdb-new-purchase-link' ).find( 'input' ).val( '' );
+				jQuery( '#bdb-new-purchase-link' ).find( 'input' ).val( '' );
 
 				unspinButton( button );
 			} ).catch( function ( errorMessage ) {
@@ -128,15 +128,15 @@ var BDB_Book_Links = {
 			// Adding a new book.
 
 			let data = {
-				id: $( '.bdb-book-link' ).length,
-				retailer_id: $( '#bdb-new-book-link-retailer' ).val(),
-				url: $( '#bdb-new-book-link-url' ).val()
+				id: jQuery( '.bdb-book-link' ).length,
+				retailer_id: jQuery( '#bdb-new-book-link-retailer' ).val(),
+				url: jQuery( '#bdb-new-book-link-url' ).val()
 			};
 
 			BDB_Book_Links.linkWrap.append( BDB_Book_Links.linkTemplateAdd( data ) );
 
 			// Wipe field values.
-			$( '#bdb-new-purchase-link' ).find( 'input' ).val( '' );
+			jQuery( '#bdb-new-purchase-link' ).find( 'input' ).val( '' );
 
 			unspinButton( button );
 
@@ -153,7 +153,7 @@ var BDB_Book_Links = {
 
 		e.preventDefault();
 
-		let button = $( this );
+		let button = jQuery( this );
 
 		spinButton( button );
 		BDB_Book_Links.errorWrap.empty().hide();
@@ -187,7 +187,7 @@ var BDB_Book_Links = {
 			return false;
 		}
 
-		let button = $( this );
+		let button = jQuery( this );
 
 		spinButton( button );
 		BDB_Book_Links.errorWrap.empty().hide();

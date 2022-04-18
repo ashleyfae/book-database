@@ -10,8 +10,8 @@ var BDB_Categories = {
 	 */
 	init: function() {
 
-		$( '.bdb-new-checkbox-term' ).on( 'click', '.button', this.addCheckboxTerm );
-		$( '.bdb-new-checkbox-term-value' ).on( 'keypress', this.addCheckboxTerm );
+		jQuery( '.bdb-new-checkbox-term' ).on( 'click', '.button', this.addCheckboxTerm );
+		jQuery( '.bdb-new-checkbox-term-value' ).on( 'keypress', this.addCheckboxTerm );
 
 	},
 
@@ -27,7 +27,7 @@ var BDB_Categories = {
 			e.preventDefault();
 		}
 
-		let wrap = $( this ).closest( '.bdb-taxonomy-checkboxes' ),
+		let wrap = jQuery( this ).closest( '.bdb-taxonomy-checkboxes' ),
 			checkboxName = wrap.data( 'name' ),
 			checkboxTaxonomy = wrap.data( 'taxonomy' ),
 			checkboxWrap = wrap.find( '.bdb-checkbox-wrap' ),

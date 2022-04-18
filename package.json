@@ -20,34 +20,17 @@
   },
   "main": "webpack.config.js",
   "devDependencies": {
-    "@wordpress/block-editor": "^3.11.0",
-    "@wordpress/blocks": "^6.25.2",
-    "@wordpress/components": "^8.1.0",
-    "@wordpress/i18n": "^3.17.0",
-    "@wordpress/scripts": "^5.1.0",
-    "css-loader": "^3.6.0",
-    "ignore-emit-webpack-plugin": "^2.0.6",
-    "mini-css-extract-plugin": "^0.8.2",
-    "node-sass": "^4.14.1",
-    "postcss-loader": "^3.0.0",
-    "postcss-preset-env": "^6.7.0",
-    "sass-loader": "^8.0.2",
-    "webpack": "^4.46.0",
-    "webpack-cli": "^3.3.12"
+    "laravel-mix": "^6.0.43",
+    "sass": "^1.50.0",
+    "sass-loader": "^12.6.0",
+    "webpack-cli": "^4.9.2"
   },
   "scripts": {
-    "build": "wp-scripts build",
-    "dev": "wp-scripts start",
-    "check-engines": "wp-scripts check-engines",
-    "check-licenses": "wp-scripts check-licenses --production",
-    "i18n": "wp i18n make-pot . languages/book-database.pot --domain=book-database",
-    "build-css": "node-sass assets/sass -o assets/css --output-style=compressed",
-    "watch-css": "npm run build-css && npm run build-css -- -w"
+    "build": "npx mix --production",
+    "dev": "npx mix watch"
   },
   "dependencies": {
     "@amcharts/amcharts4": "^4.10.13",
-    "flatpickr": "^4.6.9",
-    "npm": "^6.14.11",
-    "sass": "^1.32.5"
+    "flatpickr": "^4.6.9"
   }
 }

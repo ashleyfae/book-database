@@ -12,23 +12,23 @@ var BDB_Tags = {
 	 */
 	init: function() {
 
-		this.tag = $( '.bdb-ajaxtag' );
+		this.tag = jQuery( '.bdb-ajaxtag' );
 
 		if ( ! this.tag.length ) {
 			return;
 		}
 
-		$( '.bdb-tags-wrap' ).each( function() {
-			BDB_Tags.quickClicks( $( this ) );
+		jQuery( '.bdb-tags-wrap' ).each( function() {
+			BDB_Tags.quickClicks( jQuery( this ) );
 		} );
 
-		$( '.button', BDB_Tags.tag ).on( 'click', function() {
-			BDB_Tags.flushTags( $( this ).closest( '.bdb-tags-wrap' ) );
+		jQuery( '.button', BDB_Tags.tag ).on( 'click', function() {
+			BDB_Tags.flushTags( jQuery( this ).closest( '.bdb-tags-wrap' ) );
 		} );
 
 		BDB_Tags.tag.each( function() {
-			let newTag = $( '.bdb-new-tag', $( this ) );
-			let taxonomy = $( this ).closest( '.bdb-tags-wrap' ).data( 'taxonomy' );
+			let newTag = jQuery( '.bdb-new-tag', jQuery( this ) );
+			let taxonomy = jQuery( this ).closest( '.bdb-tags-wrap' ).data( 'taxonomy' );
 			let apiURL = bdbVars.api_base + 'book-database/v1/book-term/suggest/?taxonomy=' + taxonomy + '&format=text&_wpnonce=' + bdbVars.api_nonce;
 
 			if ( 'author' === taxonomy ) {
@@ -37,7 +37,7 @@ var BDB_Tags = {
 
 			newTag.on( 'keyup', function( e ) {
 				if ( 13 === e.which ) {
-					BDB_Tags.flushTags( $( this ).closest( '.bdb-tags-wrap' ) );
+					BDB_Tags.flushTags( jQuery( this ).closest( '.bdb-tags-wrap' ) );
 
 					return false;
 				}
@@ -50,11 +50,11 @@ var BDB_Tags = {
 			} ).suggest( apiURL );
 		} );
 
-		$( '#bdb-book-series-name' ).suggest( bdbVars.api_base + 'book-database/v1/series/suggest/?format=text&_wpnonce=' + bdbVars.api_nonce );
+		jQuery( '#bdb-book-series-name' ).suggest( bdbVars.api_base + 'book-database/v1/series/suggest/?format=text&_wpnonce=' + bdbVars.api_nonce );
 
 		// Save tags on save/publish
-		$( '.bdb-admin-page > form' ).on( 'submit', function( e ) {
-			$( '.bdb-tags-wrap' ).each( function() {
+		jQuery( '.bdb-admin-page > form' ).on( 'submit', function( e ) {
+			jQuery( '.bdb-tags-wrap' ).each( function() {
 				BDB_Tags.flushTags( this, false, 1 );
 			} );
 		} );
@@ -79,15 +79,15 @@ var BDB_Tags = {
 
 		let id = el.id;
 		let num = id.split( '-check-num-' )[ 1 ];
-		let tagBox = $( el ).closest( '.bdb-tags-wrap' );
+		let tagBox = jQuery( el ).closest( '.bdb-tags-wrap' );
 		let theTags = tagBox.find( 'textarea' );
 		let currentTags = theTags.val().split( ',' );
 		let newTags = [];
 
 		delete currentTags[ num ];
 
-		$.each( currentTags, function ( key, val ) {
-			val = $.trim( val );
+		jQuery.each( currentTags, function ( key, val ) {
+			val = jQuery.trim( val );
 
 			if ( val ) {
 				newTags.push( val );
@@ -109,9 +109,9 @@ var BDB_Tags = {
 	 */
 	quickClicks: function ( el ) {
 
-		let theTags = $( 'textarea', el );
-		let tagChecklist = $( '.bdb-tags-checklist', el );
-		let id = $( el ).attr( 'id' );
+		let theTags = jQuery( 'textarea', el );
+		let tagChecklist = jQuery( '.bdb-tags-checklist', el );
+		let id = jQuery( el ).attr( 'id' );
 		let currentTags;
 		let disabled;
 
@@ -123,21 +123,21 @@ var BDB_Tags = {
 		currentTags = theTags.val().split( ',' );
 		tagChecklist.empty();
 
-		$.each( currentTags, function( key, val ) {
+		jQuery.each( currentTags, function( key, val ) {
 			let span, xbutton;
 
-			val = $.trim( val );
+			val = jQuery.trim( val );
 
 			if ( ! val ) {
 				return;
 			}
 
 			// Create a new span and ensure the text is properly escaped.
-			span = $( '<span />' ).text( val );
+			span = jQuery( '<span />' ).text( val );
 
 			// If tags editing isn't disabled, create the X button.
 			if ( ! disabled ) {
-				xbutton = $( '<a id="' + id + '-check-num-' + key + '" class="ntdelbutton">X</a>' );
+				xbutton = jQuery( '<a id="' + id + '-check-num-' + key + '" class="ntdelbutton">X</a>' );
 				xbutton.on( 'click', function( e ) {
 					BDB_Tags.parseTags( this );
 				} );
@@ -162,8 +162,8 @@ var BDB_Tags = {
 		a = a || false;
 
 		let text;
-		let tags = $( 'textarea', el );
-		let newTag = $( '.bdb-new-tag', el );
+		let tags = jQuery( 'textarea', el );
+		let newTag = jQuery( '.bdb-new-tag', el );
 		let tagsVal, newTags;
 
 		text = a ? ( a ).text() : newTag.val();
@@ -200,10 +200,10 @@ var BDB_Tags = {
 
 		let out = [];
 
-		$.each( array, function( key, val ) {
-			val = $.trim( val );
+		jQuery.each( array, function( key, val ) {
+			val = jQuery.trim( val );
 
-			if ( val && -1 === $.inArray( val, out ) ) {
+			if ( val && -1 === jQuery.inArray( val, out ) ) {
 				out.push( val );
 			}
 		} );

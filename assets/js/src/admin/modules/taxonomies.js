@@ -1,6 +1,6 @@
 /* global $, bdbVars, wp */
 
-import { apiRequest, spinButton, unspinButton } from 'utils';
+import { apiRequest, spinButton, unspinButton } from '../../utils';
 
 /**
  * Book Taxonomies
@@ -20,18 +20,18 @@ var BDB_Book_Taxonomies = {
 	 */
 	init: function() {
 
-		this.tableBody = $( '#bdb-book-taxonomies tbody' );
-		this.errorWrap = $( '#bdb-book-taxonomies-errors' );
+		this.tableBody = jQuery( '#bdb-book-taxonomies tbody' );
+		this.errorWrap = jQuery( '#bdb-book-taxonomies-errors' );
 
 		if ( ! this.tableBody.length ) {
 			return;
 		}
 
-		$( '#bdb-new-book-taxonomy-name' ).on( 'keyup', this.generateSlug );
-		$( '#bdb-new-book-taxonomy-fields' ).on( 'keydown', 'input', this.clickOnEnter );
-		$( '#bdb-new-book-taxonomy-fields' ).on( 'click', '.button-primary', this.addTaxonomy );
-		$( document ).on( 'click', '.bdb-update-book-taxonomy', this.updateTaxonomy );
-		$( document ).on( 'click', '.bdb-remove-book-taxonomy', this.deleteTaxonomy );
+		jQuery( '#bdb-new-book-taxonomy-name' ).on( 'keyup', this.generateSlug );
+		jQuery( '#bdb-new-book-taxonomy-fields' ).on( 'keydown', 'input', this.clickOnEnter );
+		jQuery( '#bdb-new-book-taxonomy-fields' ).on( 'click', '.button-primary', this.addTaxonomy );
+		jQuery( document ).on( 'click', '.bdb-update-book-taxonomy', this.updateTaxonomy );
+		jQuery( document ).on( 'click', '.bdb-remove-book-taxonomy', this.deleteTaxonomy );
 
 		this.getTaxonomies();
 
@@ -49,8 +49,8 @@ var BDB_Book_Taxonomies = {
 			if ( 0 === response.length || 'undefined' === typeof response.length ) {
 				BDB_Book_Taxonomies.tableBody.append( BDB_Book_Taxonomies.rowEmptyTemplate );
 			} else {
-				$( '#bdb-book-taxonomies-empty' ).remove();
-				$.each( response, function( key, taxonomy ) {
+				jQuery( '#bdb-book-taxonomies-empty' ).remove();
+				jQuery.each( response, function( key, taxonomy ) {
 					BDB_Book_Taxonomies.tableBody.append( BDB_Book_Taxonomies.rowTemplate( taxonomy ) );
 				} );
 			}
@@ -68,10 +68,10 @@ var BDB_Book_Taxonomies = {
 	 */
 	generateSlug: function ( e ) {
 
-		let name = $( '#bdb-new-book-taxonomy-name' ).val();
+		let name = jQuery( '#bdb-new-book-taxonomy-name' ).val();
 		let slug = name.toLowerCase().replace( /[^a-z0-9_\-]/g, '' );
 
-		$( '#bdb-new-book-taxonomy-slug' ).val( slug );
+		jQuery( '#bdb-new-book-taxonomy-slug' ).val( slug );
 
 	},
 
@@ -85,7 +85,7 @@ var BDB_Book_Taxonomies = {
 		if ( 13 === e.keyCode ) {
 			e.preventDefault();
 
-			$( '#bdb-new-book-taxonomy-fields' ).find( 'button' ).trigger( 'click' );
+			jQuery( '#bdb-new-book-taxonomy-fields' ).find( 'button' ).trigger( 'click' );
 		}
 
 	},
@@ -99,26 +99,26 @@ var BDB_Book_Taxonomies = {
 
 		e.preventDefault();
 
-		let button = $( this );
+		let button = jQuery( this );
 
 		spinButton( button );
 		BDB_Book_Taxonomies.errorWrap.empty().hide();
 
 		let args = {
-			name: $( '#bdb-new-book-taxonomy-name' ).val(),
-			slug: $( '#bdb-new-book-taxonomy-slug' ).val(),
-			format: $( '#bdb-new-book-taxonomy-format' ).val()
+			name: jQuery( '#bdb-new-book-taxonomy-name' ).val(),
+			slug: jQuery( '#bdb-new-book-taxonomy-slug' ).val(),
+			format: jQuery( '#bdb-new-book-taxonomy-format' ).val()
 		};
 
 		BDB_Book_Taxonomies.checkRequiredFields( args ).then( function( requirementsResponse ) {
 			return apiRequest( 'v1/taxonomy/add', args, 'POST' );
 		} ).then( function( apiResponse ) {
-			$( '#bdb-book-taxonomies-empty' ).remove();
+			jQuery( '#bdb-book-taxonomies-empty' ).remove();
 
 			BDB_Book_Taxonomies.tableBody.append( BDB_Book_Taxonomies.rowTemplate( apiResponse ) );
 
 			// Wipe field values.
-			$( '#bdb-new-book-taxonomy-fields' ).find( 'input' ).val( '' );
+			jQuery( '#bdb-new-book-taxonomy-fields' ).find( 'input' ).val( '' );
 
 			unspinButton( button );
 		} ).catch( function( errorMessage ) {
@@ -137,7 +137,7 @@ var BDB_Book_Taxonomies = {
 
 		e.preventDefault();
 
-		let button = $( this );
+		let button = jQuery( this );
 
 		spinButton( button );
 		BDB_Book_Taxonomies.errorWrap.empty().hide();
@@ -175,7 +175,7 @@ var BDB_Book_Taxonomies = {
 			return false;
 		}
 
-		let button = $( this );
+		let button = jQuery( this );
 
 		spinButton( button );
 		BDB_Book_Taxonomies.errorWrap.empty().hide();

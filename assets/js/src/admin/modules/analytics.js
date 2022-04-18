@@ -1,6 +1,6 @@
 /* global $, bdbVars, wp */
 
-import { apiRequest, spinButton, unspinButton } from 'utils';
+import { apiRequest, spinButton, unspinButton } from '../../utils';
 import * as am4core from "@amcharts/amcharts4/core";
 import * as am4charts from "@amcharts/amcharts4/charts";
 
@@ -21,8 +21,8 @@ var BDB_Analytics = {
 
 		this.getBlockValues();
 
-		$( '#bdb-analytics-date-range-select' ).on( 'change', this.maybeToggleCustomFields );
-		$( '#bdb-analytics-date-range' ).on( 'submit', this.setDateRange );
+		jQuery( '#bdb-analytics-date-range-select' ).on( 'change', this.maybeToggleCustomFields );
+		jQuery( '#bdb-analytics-date-range' ).on( 'submit', this.setDateRange );
 	},
 
 	/**
@@ -32,9 +32,9 @@ var BDB_Analytics = {
 	 */
 	maybeToggleCustomFields: function ( e ) {
 
-		const range = $( this ).val(),
-			start = $( '#bdb-analytics-start-date' ),
-			end = $( '#bdb-analytics-end-date' );
+		const range = jQuery( this ).val(),
+			start = jQuery( '#bdb-analytics-start-date' ),
+			end = jQuery( '#bdb-analytics-end-date' );
 
 		if ( 'custom' === range ) {
 			start.show();
@@ -56,23 +56,23 @@ var BDB_Analytics = {
 		e.preventDefault();
 
 		let args = {
-			option: $( '#bdb-analytics-date-range-select' ).val()
+			option: jQuery( '#bdb-analytics-date-range-select' ).val()
 		};
 
 		if ( 'custom' === args.option ) {
-			args.start = $( '#bdb-analytics-start-date' ).val();
-			args.end = $( '#bdb-analytics-end-date' ).val();
+			args.start = jQuery( '#bdb-analytics-start-date' ).val();
+			args.end = jQuery( '#bdb-analytics-end-date' ).val();
 		}
 
-		const button = $( '#bdb-analytics-set-date-range' );
+		const button = jQuery( '#bdb-analytics-set-date-range' );
 
 		spinButton( button );
 
 		apiRequest( 'v1/analytics/range', args, 'POST' ).then( function( apiResponse ) {
-			$( '.bdb-analytics-start-date' ).text( apiResponse.start );
-			$( '.bdb-analytics-end-date' ).text( apiResponse.end );
-			$( '.bdb-analytics-start-date-formatted' ).text( apiResponse.start_formatted );
-			$( '.bdb-analytics-end-date-formatted' ).text( apiResponse.end_formatted );
+			jQuery( '.bdb-analytics-start-date' ).text( apiResponse.start );
+			jQuery( '.bdb-analytics-end-date' ).text( apiResponse.end );
+			jQuery( '.bdb-analytics-start-date-formatted' ).text( apiResponse.start_formatted );
+			jQuery( '.bdb-analytics-end-date-formatted' ).text( apiResponse.end_formatted );
 
 			return BDB_Analytics.getBlockValues();
 		} ).catch( function( error ) {
@@ -88,9 +88,9 @@ var BDB_Analytics = {
 	 */
 	getBlockValues: function() {
 
-		$( '.bdb-analytics-block' ).each( function( blockIndex, block ) {
+		jQuery( '.bdb-analytics-block' ).each( function( blockIndex, block ) {
 
-			const blockWrap = $( this );
+			const blockWrap = jQuery( this );
 			const dataset = blockWrap.data( 'dataset' );
 
 			// Spinners
@@ -108,7 +108,7 @@ var BDB_Analytics = {
 				return;
 			}
 
-			$.each( blockWrap.data(), function( argKey, argValue ) {
+			jQuery.each( blockWrap.data(), function( argKey, argValue ) {
 				if ( 0 === argKey.indexOf( 'arg_' ) ) {
 					args[ argKey.replace( 'arg_', '' ) ] = argValue;
 				}
@@ -186,7 +186,7 @@ var BDB_Analytics = {
 				if ( 0 === apiResponse.data.length ) {
 					blockWrap.find( '.bdb-dataset-value' ).empty().append( '&ndash;' );
 				} else {
-					$.each( apiResponse.data, function( datasetID, dataValue ) {
+					jQuery.each( apiResponse.data, function( datasetID, dataValue ) {
 						blockWrap.find( '#bdb-dataset-' + datasetID + ' .bdb-dataset-value' ).empty().append( dataValue );
 					} );
 				}

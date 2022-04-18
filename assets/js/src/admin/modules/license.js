@@ -1,6 +1,6 @@
 /* global $, bdbVars, wp, ajaxurl */
 
-import { ajaxRequest, spinButton, unspinButton } from 'utils';
+import { ajaxRequest, spinButton, unspinButton } from '../../utils';
 
 /**
  * License Key
@@ -14,11 +14,11 @@ var BDB_License = {
 	 */
 	init: function() {
 
-		this.responseWrap = $( '#bdb-license-key-response' );
+		this.responseWrap = jQuery( '#bdb-license-key-response' );
 
-		$( '#bdb-activate-license-key' ).on( 'click', this.activate );
-		$( '#bdb-deactivate-license-key' ).on( 'click', this.deactivate );
-		$( '#bdb-refresh-license-key' ).on( 'click', this.refresh );
+		jQuery( '#bdb-activate-license-key' ).on( 'click', this.activate );
+		jQuery( '#bdb-deactivate-license-key' ).on( 'click', this.deactivate );
+		jQuery( '#bdb-refresh-license-key' ).on( 'click', this.refresh );
 
 	},
 
@@ -31,21 +31,21 @@ var BDB_License = {
 
 		e.preventDefault();
 
-		let button = $( this );
+		let button = jQuery( this );
 
 		spinButton( button );
 		BDB_License.responseWrap.empty().removeClass( 'bdb-notice bdb-notice-error' );
 
 		let args = {
 			action: 'bdb_activate_license_key',
-			license_key: $( '#bdb-license-key' ).val(),
+			license_key: jQuery( '#bdb-license-key' ).val(),
 			nonce: button.data( 'nonce' )
 		};
 
 		ajaxRequest( args ).then( function( apiResponse ) {
 
 			BDB_License.responseWrap.empty().addClass( 'bdb-notice bdb-notice-success' ).append( apiResponse );
-			$( '#bdb-activate-license-key' ).remove();
+			jQuery( '#bdb-activate-license-key' ).remove();
 
 		} ).catch( function( errorMessage ) {
 			BDB_License.responseWrap.empty().addClass( 'bdb-notice bdb-notice-error' ).append( errorMessage );
@@ -63,21 +63,21 @@ var BDB_License = {
 
 		e.preventDefault();
 
-		let button = $( this );
+		let button = jQuery( this );
 
 		spinButton( button );
 		BDB_License.responseWrap.empty().removeClass( 'bdb-notice bdb-notice-error' );
 
 		let args = {
 			action: 'bdb_deactivate_license_key',
-			license_key: $( '#bdb-license-key' ).val(),
+			license_key: jQuery( '#bdb-license-key' ).val(),
 			nonce: button.data( 'nonce' )
 		};
 
 		ajaxRequest( args ).then( function( apiResponse ) {
 
 			BDB_License.responseWrap.empty().addClass( 'bdb-notice bdb-notice-success' ).append( apiResponse );
-			$( '#bdb-deactivate-license-key' ).remove();
+			jQuery( '#bdb-deactivate-license-key' ).remove();
 
 		} ).catch( function( errorMessage ) {
 			BDB_License.responseWrap.empty().addClass( 'bdb-notice bdb-notice-error' ).append( errorMessage );
@@ -95,7 +95,7 @@ var BDB_License = {
 
 		e.preventDefault();
 
-		let button = $( this ),
+		let button = jQuery( this ),
 			wrap = button.parent().find( '.description' );
 
 		spinButton( button );
@@ -103,7 +103,7 @@ var BDB_License = {
 
 		let args = {
 			action: 'bdb_refresh_license_key',
-			license_key: $( '#bdb-license-key' ).val(),
+			license_key: jQuery( '#bdb-license-key' ).val(),
 			nonce: button.data( 'nonce' )
 		};
 

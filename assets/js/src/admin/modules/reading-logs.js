@@ -1,6 +1,6 @@
 /* global $, bdbVars, wp */
 
-import { apiRequest, spinButton, unspinButton } from 'utils';
+import { apiRequest, spinButton, unspinButton } from '../../utils';
 import { dateLocalToUTC, dateUTCtoLocal } from "./dates";
 import { fillEditionsDropdown } from "./editions";
 
@@ -32,29 +32,29 @@ var BDB_Reading_Logs = {
 	 */
 	init: function() {
 
-		this.bookID    = $( '#bdb-book-id' ).val();
-		this.userID    = $( '#bdb-book-reading-logs-list' ).data( 'user-id' );
-		this.tableBody = $( '#bdb-book-reading-logs-list .wp-list-table tbody' );
-		this.errorWrap = $( '#bdb-reading-logs-errors' );
-		this.userFilter = $( '#bdb-book-reading-logs-user-filter' );
+		this.bookID    = jQuery( '#bdb-book-id' ).val();
+		this.userID    = jQuery( '#bdb-book-reading-logs-list' ).data( 'user-id' );
+		this.tableBody = jQuery( '#bdb-book-reading-logs-list .wp-list-table tbody' );
+		this.errorWrap = jQuery( '#bdb-reading-logs-errors' );
+		this.userFilter = jQuery( '#bdb-book-reading-logs-user-filter' );
 
 		if ( ! this.tableBody.length || 'undefined' === typeof this.bookID || ! this.bookID ) {
 			return;
 		}
 
-		this.maxPages = $( '#bdb-book-pages' ).val();
-		$( '#bdb-add-reading-log' ).on( 'click', this.toggleNewLogFields );
-		$( '#bdb-submit-new-reading-log' ).on( 'click', this.addLog );
-		$( document ).on( 'click', '.bdb-reading-log-toggle-editable', this.toggleEditableFields );
-		$( document ).on( 'click', '.bdb-reading-log-percentage-complete .bdb-input-suffix', this.toggleCompleteUnit );
-		$( document ).on( 'click', '.bdb-update-reading-log', this.updateLog );
-		$( document ).on( 'click', '.bdb-remove-reading-log', this.removeLog );
+		this.maxPages = jQuery( '#bdb-book-pages' ).val();
+		jQuery( '#bdb-add-reading-log' ).on( 'click', this.toggleNewLogFields );
+		jQuery( '#bdb-submit-new-reading-log' ).on( 'click', this.addLog );
+		jQuery( document ).on( 'click', '.bdb-reading-log-toggle-editable', this.toggleEditableFields );
+		jQuery( document ).on( 'click', '.bdb-reading-log-percentage-complete .bdb-input-suffix', this.toggleCompleteUnit );
+		jQuery( document ).on( 'click', '.bdb-update-reading-log', this.updateLog );
+		jQuery( document ).on( 'click', '.bdb-remove-reading-log', this.removeLog );
 
 		this.userFilter.on( 'change', this.getLogs );
 		this.userFilter.trigger( 'change' );
 
 		// Update editions array.
-		$( document ).on( 'bdb_edition_added', this.updateEditions );
+		jQuery( document ).on( 'bdb_edition_added', this.updateEditions );
 
 	},
 
@@ -98,7 +98,7 @@ var BDB_Reading_Logs = {
 			number: 50
 		};
 
-		if ( $( '#bdb-book-reading-logs-user-filter' ).prop( 'checked' ) ) {
+		if ( jQuery( '#bdb-book-reading-logs-user-filter' ).prop( 'checked' ) ) {
 			args.user_id = BDB_Reading_Logs.userID;
 		}
 
@@ -107,12 +107,12 @@ var BDB_Reading_Logs = {
 
 			// Populate editions in "New Log".
 			if ( BDB_Reading_Logs.editions.length ) {
-				const selectEditionWrap = $( '#bdb-new-log-edition-id-wrap' );
-				const selectEditionDropdown = $( '#bdb-new-log-edition-id' );
+				const selectEditionWrap = jQuery( '#bdb-new-log-edition-id-wrap' );
+				const selectEditionDropdown = jQuery( '#bdb-new-log-edition-id' );
 
 				selectEditionDropdown.empty().append( '<option value="">' + bdbVars.none + '</option>' );
 
-				$.each( BDB_Reading_Logs.editions, function( key, edition ) {
+				jQuery.each( BDB_Reading_Logs.editions, function( key, edition ) {
 					selectEditionDropdown.append( '<option value="' + edition.id + '">' + edition.isbn + ' - ' + edition.format_name + '</option>' );
 				} );
 
@@ -127,19 +127,19 @@ var BDB_Reading_Logs = {
 			if ( 0 === response.length || 'undefined' === typeof response.length ) {
 				BDB_Reading_Logs.tableBody.append( BDB_Reading_Logs.rowEmptyTemplate );
 			} else {
-				$( '#bdb-book-reading-logs-empty' ).remove();
-				$.each( response, function( key, readingLog ) {
+				jQuery( '#bdb-book-reading-logs-empty' ).remove();
+				jQuery.each( response, function( key, readingLog ) {
 					readingLog = BDB_Reading_Logs.shapeObject( readingLog );
 
 					BDB_Reading_Logs.tableBody.append( BDB_Reading_Logs.rowTemplate( readingLog ) );
 				} );
 
 				BDB_Reading_Logs.tableBody.find( '.bdb-book-edition-list' ).each( function() {
-					fillEditionsDropdown( $( this ), BDB_Reading_Logs.editions );
+					fillEditionsDropdown( jQuery( this ), BDB_Reading_Logs.editions );
 				} );
 			}
 
-			$( document ).trigger( 'bdb_reading_logs_loaded' );
+			jQuery( document ).trigger( 'bdb_reading_logs_loaded' );
 
 		} ).catch( function( error ) {
 			BDB_Reading_Logs.errorWrap.empty().append( error ).show();
@@ -158,7 +158,7 @@ var BDB_Reading_Logs = {
 			e.preventDefault();
 		}
 
-		$( '#bdb-new-reading-log-fields' ).slideToggle();
+		jQuery( '#bdb-new-reading-log-fields' ).slideToggle();
 
 	},
 
@@ -170,51 +170,51 @@ var BDB_Reading_Logs = {
 	addLog: function ( e ) {
 
 		e.preventDefault();
-		let button = $( this );
+		let button = jQuery( this );
 
 		spinButton( button );
 		BDB_Reading_Logs.errorWrap.empty().hide();
 
-		let percentage = $( '#bdb-new-log-percent-complete' ).val();
+		let percentage = jQuery( '#bdb-new-log-percent-complete' ).val();
 		if ( '' !== percentage && percentage > 0 ) {
 			percentage = percentage / 100;
 		} else {
 			percentage = 0;
 		}
 
-		const selectedEditionID = $( '#bdb-new-log-edition-id' ).val();
+		const selectedEditionID = jQuery( '#bdb-new-log-edition-id' ).val();
 
 		let args = {
 			book_id: BDB_Reading_Logs.bookID,
 			edition_id: selectedEditionID.length > 0 ? selectedEditionID : null,
 			user_id: BDB_Reading_Logs.userID,
-			date_started: dateLocalToUTC( $( '#bdb-new-log-start-date' ).val() ),
-			date_finished: dateLocalToUTC( $( '#bdb-new-log-end-date' ).val() ),
+			date_started: dateLocalToUTC( jQuery( '#bdb-new-log-start-date' ).val() ),
+			date_finished: dateLocalToUTC( jQuery( '#bdb-new-log-end-date' ).val() ),
 			percentage_complete: percentage,
-			rating: $( '#bdb-new-log-rating' ).val()
+			rating: jQuery( '#bdb-new-log-rating' ).val()
 		};
 
 		apiRequest( 'v1/reading-log/add', args, 'POST' ).then( function( apiResponse ) {
 			apiResponse = BDB_Reading_Logs.shapeObject( apiResponse );
 
-			$( '#bdb-book-reading-logs-empty' ).remove();
+			jQuery( '#bdb-book-reading-logs-empty' ).remove();
 
 			BDB_Reading_Logs.tableBody.append( BDB_Reading_Logs.rowTemplate( apiResponse ) );
 
-			const editionDropdown = $( '#bdb-reading-log-edition-id-' + apiResponse.id );
+			const editionDropdown = jQuery( '#bdb-reading-log-edition-id-' + apiResponse.id );
 			if ( editionDropdown.length ) {
 				fillEditionsDropdown( editionDropdown, BDB_Reading_Logs.editions );
 			}
 
 			// Wipe new field values.
-			let newFieldsWrap = $( '#bdb-new-reading-log-fields' );
+			let newFieldsWrap = jQuery( '#bdb-new-reading-log-fields' );
 			newFieldsWrap.find( 'input[type="text"]' ).val( '' );
 			newFieldsWrap.find( 'input[type="checkbox"]' ).prop( 'checked', false );
 
 			BDB_Reading_Logs.toggleNewLogFields();
 
 			// Trigger event
-			$( document ).trigger( 'bdb_reading_log_added', apiResponse );
+			jQuery( document ).trigger( 'bdb_reading_log_added', apiResponse );
 
 		} ).catch( function( errorMessage ) {
 			BDB_Reading_Logs.errorWrap.append( errorMessage ).show();
@@ -233,7 +233,7 @@ var BDB_Reading_Logs = {
 
 		e.preventDefault();
 
-		let button = $( this );
+		let button = jQuery( this );
 		let wrap = button.closest( 'tr' );
 
 		wrap.find( '.bdb-table-display-value' ).hide();
@@ -252,16 +252,16 @@ var BDB_Reading_Logs = {
 
 		e.preventDefault();
 
-		let wrap = $( this ).closest( '.bdb-reading-log-percentage-complete' );
+		let wrap = jQuery( this ).closest( '.bdb-reading-log-percentage-complete' );
 		let type = 'percentage';
 
-		if ( $( this ).hasClass( 'bdb-input-suffix-page' ) ) {
+		if ( jQuery( this ).hasClass( 'bdb-input-suffix-page' ) ) {
 			type = 'page';
 		}
 
 		// Change which one is selected.
 		wrap.find( '.bdb-input-suffix' ).removeClass( 'bdb-input-suffix-selected' );
-		$( this ).addClass( 'bdb-input-suffix-selected' );
+		jQuery( this ).addClass( 'bdb-input-suffix-selected' );
 
 		// Show/hide relevant inputs.
 		if ( 'page' === type ) {
@@ -283,7 +283,7 @@ var BDB_Reading_Logs = {
 
 		e.preventDefault();
 
-		let button = $( this );
+		let button = jQuery( this );
 
 		spinButton( button );
 		BDB_Reading_Logs.errorWrap.empty().hide();
@@ -328,12 +328,12 @@ var BDB_Reading_Logs = {
 			apiResponse = BDB_Reading_Logs.shapeObject( apiResponse );
 			wrap.replaceWith( BDB_Reading_Logs.rowTemplate( apiResponse ) );
 
-			const editionDropdown = $( '#bdb-reading-log-edition-id-' + apiResponse.id );
+			const editionDropdown = jQuery( '#bdb-reading-log-edition-id-' + apiResponse.id );
 			if ( editionDropdown.length ) {
 				fillEditionsDropdown( editionDropdown, BDB_Reading_Logs.editions );
 			}
 
-			$( document ).trigger( 'bdb_reading_log_updated', apiResponse );
+			jQuery( document ).trigger( 'bdb_reading_log_updated', apiResponse );
 		} ).catch( function( errorMessage ) {
 			BDB_Reading_Logs.errorWrap.append( errorMessage ).show();
 		} ).finally( function() {
@@ -356,7 +356,7 @@ var BDB_Reading_Logs = {
 			return false;
 		}
 
-		let button = $( this );
+		let button = jQuery( this );
 
 		spinButton( button );
 		BDB_Reading_Logs.errorWrap.empty().hide();

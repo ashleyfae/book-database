@@ -9,7 +9,7 @@ var BDB_Delete_Objects = {
 	 * Initialize
 	 */
 	init: function() {
-		$( '.bdb-delete-item' ).on( 'click', this.confirm );
+		jQuery( '.bdb-delete-item' ).on( 'click', this.confirm );
 	},
 
 	/**
@@ -19,7 +19,7 @@ var BDB_Delete_Objects = {
 	 * @returns {boolean}
 	 */
 	confirm: function( e ) {
-		let type = $( this ).data( 'object' );
+		let type = jQuery( this ).data( 'object' );
 		let message = bdbVars['confirm_delete_' + type];
 
 		if ( ! confirm( message ) ) {

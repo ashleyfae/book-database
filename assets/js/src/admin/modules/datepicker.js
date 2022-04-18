@@ -12,11 +12,11 @@ var BDB_Datepicker = {
 	 */
 	init: function() {
 
-		if ( $( '.bdb-datepicker' ).length > 0 ) {
+		if ( jQuery( '.bdb-datepicker' ).length > 0 ) {
 			this.initDatepickers();
 		}
 
-		$( document ).on( 'click', '.bdb-edit-row-with-datepicker', this.maybeAddDatepicker );
+		jQuery( document ).on( 'click', '.bdb-edit-row-with-datepicker', this.maybeAddDatepicker );
 
 	},
 

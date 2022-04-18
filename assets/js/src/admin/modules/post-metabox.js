@@ -1,6 +1,6 @@
 /* global $, bdbVars, wp */
 
-import { apiRequest, spinButton, unspinButton } from 'utils';
+import { apiRequest, spinButton, unspinButton } from '../../utils';
 import { dateLocalToUTC, dateUTCtoLocal } from "./dates";
 
 /**
@@ -31,22 +31,22 @@ var BDB_Post_Metabox = {
 			return;
 		}
 
-		this.table = $( '#bdb-post-reviews-table' );
+		this.table = jQuery( '#bdb-post-reviews-table' );
 		this.postID = this.table.data( 'post-id' );
 		this.userID = this.table.data( 'user-id' );
 		this.tableBody = this.table.find( 'tbody' );
-		this.errorWrap = $( '#bdb-post-reviews-errors' );
-		this.searchResultsWrap = $( '#bdb-book-search-results' );
+		this.errorWrap = jQuery( '#bdb-post-reviews-errors' );
+		this.searchResultsWrap = jQuery( '#bdb-book-search-results' );
 
 		this.getReviews();
 
-		$( '#bdb-associated-review-post' ).on( 'click', this.toggleSearch );
-		$( '#bdb-search-book-title-author' ).on( 'keypress', this.searchBooks );
-		$( '#bdb-search-book-fields' ).on( 'click', 'button', this.searchBooks );
+		jQuery( '#bdb-associated-review-post' ).on( 'click', this.toggleSearch );
+		jQuery( '#bdb-search-book-title-author' ).on( 'keypress', this.searchBooks );
+		jQuery( '#bdb-search-book-fields' ).on( 'click', 'button', this.searchBooks );
 		this.searchResultsWrap.on( 'click', 'a', this.selectBook );
-		$( '#bdb-add-review' ).on( 'click', this.addReview );
-		$( document ).on( 'click', '.bdb-disassociate-review-from-post', this.disassociateReview );
-		$( document ).on( 'click', '.bdb-delete-review', this.deleteReview );
+		jQuery( '#bdb-add-review' ).on( 'click', this.addReview );
+		jQuery( document ).on( 'click', '.bdb-disassociate-review-from-post', this.disassociateReview );
+		jQuery( document ).on( 'click', '.bdb-delete-review', this.deleteReview );
 
 	},
 
@@ -70,7 +70,7 @@ var BDB_Post_Metabox = {
 			if ( 0 === response.length || 'undefined' === typeof response.length ) {
 				BDB_Post_Metabox.tableBody.append( wp.template( 'bdb-table-post-reviews-row-empty' ) );
 			} else {
-				$.each( response, function( key, review ) {
+				jQuery.each( response, function( key, review ) {
 					BDB_Post_Metabox.tableBody.append( wp.template( 'bdb-table-post-reviews-row' )( review ) );
 				} );
 			}
@@ -88,7 +88,7 @@ var BDB_Post_Metabox = {
 	 */
 	toggleSearch: function ( e ) {
 		e.preventDefault();
-		$( '#bdb-search-book-fields' ).slideToggle();
+		jQuery( '#bdb-search-book-fields' ).slideToggle();
 	},
 
 	/**
@@ -108,9 +108,9 @@ var BDB_Post_Metabox = {
 			e.preventDefault();
 		}
 
-		let button = $( '#bdb-search-book-fields' ).find( 'button' ),
-			search = $( '#bdb-search-book-title-author' ).val(),
-			searchType = $( '#bdb-search-book-type' ).val(),
+		let button = jQuery( '#bdb-search-book-fields' ).find( 'button' ),
+			search = jQuery( '#bdb-search-book-title-author' ).val(),
+			searchType = jQuery( '#bdb-search-book-type' ).val(),
 			args = {};
 
 		spinButton( button );
@@ -138,7 +138,7 @@ var BDB_Post_Metabox = {
 				BDB_Post_Metabox.searchResultsWrap.append( '<p>' + bdbVars.no_books + '</p>' );
 			} else {
 				let booksHTML = '';
-				$.each( apiResponse, function( key, book ) {
+				jQuery.each( apiResponse, function( key, book ) {
 					booksHTML = booksHTML + '<li><a href="#" data-id="' + book.id + '">' + book.title + ' ' + bdbVars.by + ' ' + book.author_name + '</a></li>';
 				} );
 				BDB_Post_Metabox.searchResultsWrap.append( '<ul>' + booksHTML + '</ul>' );
@@ -162,23 +162,23 @@ var BDB_Post_Metabox = {
 		e.preventDefault();
 
 		// Set the book ID.
-		BDB_Post_Metabox.bookID = $( this ).data( 'id' );
+		BDB_Post_Metabox.bookID = jQuery( this ).data( 'id' );
 
 		// Wipe the search results.
 		BDB_Post_Metabox.searchResultsWrap.empty().append( '<p>' + bdbVars.please_wait + '</p>' );
 
 		let args = {
-			book_id: $( this ).data( 'id' )
+			book_id: jQuery( this ).data( 'id' )
 		};
 
 		// Get reading logs.
 		apiRequest( 'v1/reading-log', args, 'GET' ).then( function( apiResponse ) {
 
-			let logOptions = $( '#bdb-review-reading-log' );
+			let logOptions = jQuery( '#bdb-review-reading-log' );
 
 			if ( apiResponse.length > 0 ) {
 				logOptions.empty();
-				$.each( apiResponse, function( key, log ) {
+				jQuery.each( apiResponse, function( key, log ) {
 					logOptions.append( '<option value="' + log.id + '">' + BDB_Post_Metabox.shapeLog( log ) + '</option>' );
 				} )
 			}
@@ -187,7 +187,7 @@ var BDB_Post_Metabox = {
 			BDB_Post_Metabox.searchResultsWrap.empty();
 
 			// Show the log selection.
-			$( '#bdb-add-review-fields' ).show();
+			jQuery( '#bdb-add-review-fields' ).show();
 
 		} ).catch( function( errorMessage ) {
 			BDB_Post_Metabox.errorWrap.append( errorMessage ).show();
@@ -227,13 +227,13 @@ var BDB_Post_Metabox = {
 
 		e.preventDefault();
 
-		let button = $( this );
+		let button = jQuery( this );
 
 		spinButton( button );
 
 		let args = {
 			book_id: BDB_Post_Metabox.bookID,
-			reading_log_id: $( '#bdb-review-reading-log' ).val(),
+			reading_log_id: jQuery( '#bdb-review-reading-log' ).val(),
 			user_id: BDB_Post_Metabox.userID,
 			post_id: BDB_Post_Metabox.postID
 		};
@@ -253,13 +253,13 @@ var BDB_Post_Metabox = {
 		} ).then( function( apiResponse ) {
 
 			// Add the review(s) to the table.
-			$.each( apiResponse, function( key, review ) {
-				$( '#bdb-no-post-reviews' ).remove();
+			jQuery.each( apiResponse, function( key, review ) {
+				jQuery( '#bdb-no-post-reviews' ).remove();
 				BDB_Post_Metabox.tableBody.append( wp.template( 'bdb-table-post-reviews-row' )( review ) );
 			} );
 
 			// Hide the log selection.
-			$( '#bdb-add-review-fields' ).hide();
+			jQuery( '#bdb-add-review-fields' ).hide();
 
 		} ).catch( function( errorMessage ) {
 			BDB_Post_Metabox.errorWrap.append( errorMessage ).show();
@@ -283,7 +283,7 @@ var BDB_Post_Metabox = {
 			return false;
 		}
 
-		let button = $( this );
+		let button = jQuery( this );
 
 		spinButton( button );
 
@@ -319,7 +319,7 @@ var BDB_Post_Metabox = {
 			return false;
 		}
 
-		let button = $( this );
+		let button = jQuery( this );
 
 		spinButton( button );
 

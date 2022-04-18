@@ -1,6 +1,6 @@
 /* global $, bdbVars, wp */
 
-import { apiRequest, spinButton, unspinButton } from 'utils';
+import { apiRequest, spinButton, unspinButton } from '../../utils';
 
 /**
  * Retailers
@@ -20,17 +20,17 @@ var BDB_Retailers = {
 	 */
 	init: function() {
 
-		this.tableBody = $( '#bdb-retailers tbody' );
-		this.errorWrap = $( '#bdb-retailers-errors' );
+		this.tableBody = jQuery( '#bdb-retailers tbody' );
+		this.errorWrap = jQuery( '#bdb-retailers-errors' );
 
 		if ( ! this.tableBody.length ) {
 			return;
 		}
 
-		$( '#bdb-new-retailer-fields' ).on( 'keydown', 'input', this.clickOnEnter );
-		$( '#bdb-new-retailer-fields' ).on( 'click', 'button', this.addRetailer );
-		$( document ).on( 'click', '.bdb-update-retailer', this.updateRetailer );
-		$( document ).on( 'click', '.bdb-remove-retailer', this.deleteRetailer );
+		jQuery( '#bdb-new-retailer-fields' ).on( 'keydown', 'input', this.clickOnEnter );
+		jQuery( '#bdb-new-retailer-fields' ).on( 'click', 'button', this.addRetailer );
+		jQuery( document ).on( 'click', '.bdb-update-retailer', this.updateRetailer );
+		jQuery( document ).on( 'click', '.bdb-remove-retailer', this.deleteRetailer );
 
 		this.getRetailers();
 
@@ -48,8 +48,8 @@ var BDB_Retailers = {
 			if ( 0 === response.length || 'undefined' === typeof response.length ) {
 				BDB_Retailers.tableBody.append( BDB_Retailers.rowEmptyTemplate );
 			} else {
-				$( '#bdb-retailers-empty' ).remove();
-				$.each( response, function( key, taxonomy ) {
+				jQuery( '#bdb-retailers-empty' ).remove();
+				jQuery.each( response, function( key, taxonomy ) {
 					BDB_Retailers.tableBody.append( BDB_Retailers.rowTemplate( taxonomy ) );
 				} );
 			}
@@ -70,7 +70,7 @@ var BDB_Retailers = {
 		if ( 13 === e.keyCode ) {
 			e.preventDefault();
 
-			$( '#bdb-new-retailer-fields' ).find( 'button' ).trigger( 'click' );
+			jQuery( '#bdb-new-retailer-fields' ).find( 'button' ).trigger( 'click' );
 		}
 
 	},
@@ -84,25 +84,25 @@ var BDB_Retailers = {
 
 		e.preventDefault();
 
-		let button = $( this );
+		let button = jQuery( this );
 
 		spinButton( button );
 		BDB_Retailers.errorWrap.empty().hide();
 
 		let args = {
-			name: $( '#bdb-new-retailer-name' ).val(),
-			template: $( '#bdb-new-retailer-template' ).val()
+			name: jQuery( '#bdb-new-retailer-name' ).val(),
+			template: jQuery( '#bdb-new-retailer-template' ).val()
 		};
 
 		BDB_Retailers.checkRequiredFields( args ).then( function( requirementsResponse ) {
 			return apiRequest( 'v1/retailer/add', args, 'POST' );
 		} ).then( function( apiResponse ) {
-			$( '#bdb-retailers-empty' ).remove();
+			jQuery( '#bdb-retailers-empty' ).remove();
 
 			BDB_Retailers.tableBody.append( BDB_Retailers.rowTemplate( apiResponse ) );
 
 			// Wipe field values.
-			$( '#bdb-newretailer-fields' ).find( 'input' ).val( '' );
+			jQuery( '#bdb-newretailer-fields' ).find( 'input' ).val( '' );
 
 			unspinButton( button );
 		} ).catch( function( errorMessage ) {
@@ -121,7 +121,7 @@ var BDB_Retailers = {
 
 		e.preventDefault();
 
-		let button = $( this );
+		let button = jQuery( this );
 
 		spinButton( button );
 		BDB_Retailers.errorWrap.empty().hide();
@@ -154,7 +154,7 @@ var BDB_Retailers = {
 
 		e.preventDefault();
 
-		let button = $( this ),
+		let button = jQuery( this ),
 			unconfirmed = false;
 
 		spinButton( button );

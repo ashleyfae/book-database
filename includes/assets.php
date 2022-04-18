@@ -27,7 +27,7 @@ function load_assets() {
 
 	$css_dir = BDB_URL . 'assets/css/';
 
-	wp_enqueue_style( 'book-database', $css_dir . 'front-end.min.css', array(), BDB_VERSION );
+	wp_enqueue_style( 'book-database', $css_dir . 'front-end.css', array(), BDB_VERSION );
 
 }
 

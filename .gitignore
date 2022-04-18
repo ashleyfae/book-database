@@ -15,3 +15,7 @@ assets/js/build/vendors~xlsx.min.js
 assets/js/build/vendors~xlsx.min.js.map
 assets/js/build/xlsx.min.js
 assets/js/build/xlsx.min.js.map
+
+assets/js/build/canvg.js
+assets/js/build/pdfmake.js
+assets/js/build/xlsx.js

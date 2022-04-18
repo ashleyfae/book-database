@@ -64,7 +64,7 @@ function register_blocks() {
 		'ratings' => $ratings
 	) );
 
-	wp_register_style( 'bdb-blocks', BDB_URL . 'assets/css/admin-style-blocks.min.css', array(), time() );
+	wp_register_style( 'bdb-blocks', BDB_URL . 'assets/css/admin-blocks.css', array(), time() );
 
 	// Book Grid
 	register_block_type( 'book-database/book-grid', array(

@@ -1,6 +1,6 @@
 /* global $, bdbVars, wp */
 
-import { apiRequest, spinButton, unspinButton } from 'utils';
+import { apiRequest, spinButton, unspinButton } from '../../utils';
 import { dateLocalToUTC, dateUTCtoLocal } from "./dates";
 
 /**
@@ -23,19 +23,19 @@ var BDB_Editions = {
 	 */
 	init: function() {
 
-		this.bookID    = $( '#bdb-book-id' ).val();
-		this.tableBody = $( '#bdb-book-editions-list .wp-list-table tbody' );
-		this.errorWrap = $( '#bdb-editions-errors' );
+		this.bookID    = jQuery( '#bdb-book-id' ).val();
+		this.tableBody = jQuery( '#bdb-book-editions-list .wp-list-table tbody' );
+		this.errorWrap = jQuery( '#bdb-editions-errors' );
 
 		if ( ! this.tableBody.length || 'undefined' === typeof this.bookID || ! this.bookID ) {
 			return;
 		}
 
-		$( '#bdb-add-edition' ).on( 'click', this.toggleNewEditionFields );
-		$( '#bdb-submit-new-edition' ).on( 'click', this.addEdition );
-		$( document ).on( 'click', '.bdb-edition-toggle-editable', this.toggleEditableFields );
-		$( document ).on( 'click', '.bdb-update-edition', this.updateEdition );
-		$( document ).on( 'click', '.bdb-remove-edition', this.removeEdition );
+		jQuery( '#bdb-add-edition' ).on( 'click', this.toggleNewEditionFields );
+		jQuery( '#bdb-submit-new-edition' ).on( 'click', this.addEdition );
+		jQuery( document ).on( 'click', '.bdb-edition-toggle-editable', this.toggleEditableFields );
+		jQuery( document ).on( 'click', '.bdb-update-edition', this.updateEdition );
+		jQuery( document ).on( 'click', '.bdb-remove-edition', this.removeEdition );
 
 		this.getEditions();
 
@@ -53,8 +53,8 @@ var BDB_Editions = {
 			if ( 0 === response.length || 'undefined' === typeof response.length ) {
 				BDB_Editions.tableBody.append( BDB_Editions.rowEmptyTemplate );
 			} else {
-				$( '#bdb-book-editions-empty' ).remove();
-				$.each( response, function( key, edition ) {
+				jQuery( '#bdb-book-editions-empty' ).remove();
+				jQuery.each( response, function( key, edition ) {
 					edition.date_acquired_formatted = dateUTCtoLocal( edition.date_acquired, 'display' );
 					edition.date_acquired           = dateUTCtoLocal( edition.date_acquired );
 
@@ -62,7 +62,7 @@ var BDB_Editions = {
 				} );
 			}
 
-			$( document ).trigger( 'bdb_editions_loaded' );
+			jQuery( document ).trigger( 'bdb_editions_loaded' );
 
 		} ).catch( function( error ) {
 			BDB_Editions.errorWrap.empty().append( error ).show();
@@ -81,7 +81,7 @@ var BDB_Editions = {
 			e.preventDefault();
 		}
 
-		$( '#bdb-new-edition-fields' ).slideToggle();
+		jQuery( '#bdb-new-edition-fields' ).slideToggle();
 
 	},
 
@@ -93,18 +93,18 @@ var BDB_Editions = {
 	addEdition: function ( e ) {
 
 		e.preventDefault();
-		let button = $( this );
+		let button = jQuery( this );
 
 		spinButton( button );
 		BDB_Editions.errorWrap.empty().hide();
 
 		let args = {
 			book_id: BDB_Editions.bookID,
-			isbn: $( '#bdb-new-edition-isbn' ).val(),
-			format: $( '#bdb-new-edition-format' ).val(),
-			date_acquired: dateLocalToUTC( $( '#bdb-new-edition-date-acquired' ).val() ),
-			source_id: $( '#bdb-checkboxes-source-edition' ).find( 'input:checked' ).val(),
-			signed: $( '#bdb-new-edition-signed' ).prop( 'checked' ) ? 1 : 0
+			isbn: jQuery( '#bdb-new-edition-isbn' ).val(),
+			format: jQuery( '#bdb-new-edition-format' ).val(),
+			date_acquired: dateLocalToUTC( jQuery( '#bdb-new-edition-date-acquired' ).val() ),
+			source_id: jQuery( '#bdb-checkboxes-source-edition' ).find( 'input:checked' ).val(),
+			signed: jQuery( '#bdb-new-edition-signed' ).prop( 'checked' ) ? 1 : 0
 		};
 
 		apiRequest( 'v1/edition/add', args, 'POST' ).then( function( apiResponse ) {
@@ -112,11 +112,11 @@ var BDB_Editions = {
 			apiResponse.date_acquired_formatted = dateUTCtoLocal( apiResponse.date_acquired, 'display' );
 			apiResponse.date_acquired           = dateUTCtoLocal( apiResponse.date_acquired );
 
-			$( '#bdb-book-editions-empty' ).remove();
+			jQuery( '#bdb-book-editions-empty' ).remove();
 			BDB_Editions.tableBody.append( BDB_Editions.rowTemplate( apiResponse ) );
 
 			// Wipe new field values.
-			let newFieldsWrap = $( '#bdb-new-edition-fields' );
+			let newFieldsWrap = jQuery( '#bdb-new-edition-fields' );
 			newFieldsWrap.find( 'input[type="text"]' ).val( '' );
 			newFieldsWrap.find( 'input[type="checkbox"]' ).prop( 'checked', false );
 
@@ -126,7 +126,7 @@ var BDB_Editions = {
 			addEditionToDropdown( apiResponse );
 
 			// Trigger event.
-			$( document ).trigger( 'bdb_edition_added', apiResponse );
+			jQuery( document ).trigger( 'bdb_edition_added', apiResponse );
 
 		} ).catch( function( errorMessage ) {
 			BDB_Editions.errorWrap.append( errorMessage ).show();
@@ -145,7 +145,7 @@ var BDB_Editions = {
 
 		e.preventDefault();
 
-		let button = $( this );
+		let button = jQuery( this );
 		let wrap = button.closest( 'tr' );
 
 		wrap.find( '.bdb-table-display-value' ).hide();
@@ -164,7 +164,7 @@ var BDB_Editions = {
 
 		e.preventDefault();
 
-		let button = $( this );
+		let button = jQuery( this );
 
 		spinButton( button );
 		BDB_Editions.errorWrap.empty().hide();
@@ -189,7 +189,7 @@ var BDB_Editions = {
 			// Update edition in dropdowns.
 			addEditionToDropdown( apiResponse );
 
-			$( document ).trigger( 'bdb_edition_updated', apiResponse );
+			jQuery( document ).trigger( 'bdb_edition_updated', apiResponse );
 
 		} ).catch( function( errorMessage ) {
 			BDB_Editions.errorWrap.append( errorMessage ).show();
@@ -213,7 +213,7 @@ var BDB_Editions = {
 			return false;
 		}
 
-		let button = $( this );
+		let button = jQuery( this );
 
 		spinButton( button );
 		BDB_Editions.errorWrap.empty().hide();
@@ -249,7 +249,7 @@ export function fillEditionsDropdown( dropdown, editionsArray ) {
 
 	dropdown.empty().append( '<option value="">' + bdbVars.none + '</option>' );
 
-	$.each( editionsArray, function( key, edition ) {
+	jQuery.each( editionsArray, function( key, edition ) {
 		let selected = edition.id == selectedEdition ? ' selected="selected"' : '';
 
 		dropdown.append( '<option value="' + edition.id + '"' + selected + '>' + edition.isbn + ' - ' + edition.format_name + '</option>' );
@@ -263,8 +263,8 @@ export function fillEditionsDropdown( dropdown, editionsArray ) {
  * @param {object} edition
  */
 export function addEditionToDropdown( edition ) {
-	$( '.bdb-book-edition-list' ).each( function() {
-		const dropdown = $( this );
+	jQuery( '.bdb-book-edition-list' ).each( function() {
+		const dropdown = jQuery( this );
 		const existingEdition = dropdown.find( 'option[value="' + edition.id + '"]' );
 
 		if ( existingEdition.length ) {
@@ -281,8 +281,8 @@ export function addEditionToDropdown( edition ) {
  * @param {number} editionID
  */
 export function removeEditionFromDropdown( editionID ) {
-	$( '.bdb-book-edition-list' ).each( function() {
-		const dropdown = $( this );
+	jQuery( '.bdb-book-edition-list' ).each( function() {
+		const dropdown = jQuery( this );
 
 		dropdown.find( 'option[value="' + editionID + '"]' ).remove();
 	} );

@@ -1,6 +1,6 @@
 /* global $, bdbVars, wp */
 
-import { apiRequest, spinButton, unspinButton } from 'utils';
+import { apiRequest, spinButton, unspinButton } from '../../utils';
 
 var BDB_Book_Index_Title = {
 
@@ -15,9 +15,9 @@ var BDB_Book_Index_Title = {
 	 */
 	init: function() {
 
-		this.bookTitleField = $( '#bdb-book-title' );
-		this.indexTitleSelect = $( '#bdb-book-index-title' );
-		this.indexTitleCustomField = $( '#bdb-book-index-title-custom' );
+		this.bookTitleField = jQuery( '#bdb-book-title' );
+		this.indexTitleSelect = jQuery( '#bdb-book-index-title' );
+		this.indexTitleCustomField = jQuery( '#bdb-book-index-title-custom' );
 
 		this.indexTitleSelect.on( 'change', this.toggleCustomIndexTitle ).trigger( 'change' );
 		this.bookTitleField.on( 'keyup', this.writeOriginalTitle );
@@ -30,7 +30,7 @@ var BDB_Book_Index_Title = {
 	 */
 	toggleCustomIndexTitle: function () {
 
-		let selectedIndexTitle = $( this ).val();
+		let selectedIndexTitle = jQuery( this ).val();
 
 		if ( 'custom' === selectedIndexTitle ) {
 			BDB_Book_Index_Title.indexTitleCustomField.slideDown().css( 'display', 'block' );
@@ -44,7 +44,7 @@ var BDB_Book_Index_Title = {
 	 * Copies the contents of the original "Book Title" field to the "original" index title option.
 	 */
 	writeOriginalTitle: function () {
-		BDB_Book_Index_Title.indexTitleSelect.find( 'option[value="original"]' ).text( $( this ).val() );
+		BDB_Book_Index_Title.indexTitleSelect.find( 'option[value="original"]' ).text( jQuery( this ).val() );
 	},
 
 	/**
@@ -54,7 +54,7 @@ var BDB_Book_Index_Title = {
 	populateIndexTitles: function () {
 
 		let args = {
-			title: $( this ).val()
+			title: jQuery( this ).val()
 		};
 
 		apiRequest( 'v1/book/index-title', args, 'GET' ).then( function( response ) {

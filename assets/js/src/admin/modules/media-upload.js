@@ -11,8 +11,8 @@ var BDB_Media = {
 	 * Initialize
 	 */
 	init: function() {
-		$( '.bdb-upload-image' ).on( 'click', this.createFrame );
-		$( '.bdb-remove-image' ).on( 'click', this.removeImage );
+		jQuery( '.bdb-upload-image' ).on( 'click', this.createFrame );
+		jQuery( '.bdb-remove-image' ).on( 'click', this.removeImage );
 	},
 
 	/**
@@ -23,10 +23,10 @@ var BDB_Media = {
 	createFrame: function( e ) {
 		e.preventDefault();
 
-		let button = $( this ),
-			imageField = $( this ).parent().data( 'image' ),
-			imageIDField = $( this ).parent().data( 'image-id' ),
-			imageSize = $( this ).parent().data( 'image-size' );
+		let button = jQuery( this ),
+			imageField = jQuery( this ).parent().data( 'image' ),
+			imageIDField = jQuery( this ).parent().data( 'image-id' ),
+			imageSize = jQuery( this ).parent().data( 'image-size' );
 
 		if ( ! imageSize || 'undefined' === typeof imageSize ) {
 			imageSize = 'medium';
@@ -55,19 +55,19 @@ var BDB_Media = {
 				attachment = attachment.toJSON();
 
 				if ( attachment.id ) {
-					$( imageIDField ).val( attachment.id );
+					jQuery( imageIDField ).val( attachment.id );
 
 					let attachmentImage = attachment.sizes && attachment.sizes[imageSize] ? attachment.sizes[imageSize].url : attachment.url;
 
 					// Remove all image attributes.
-					if ( 'undefined' !== typeof $( imageField ).attributes ) {
-						while ( $( imageField ).attributes.length > 0 ) {
+					if ( 'undefined' !== typeof jQuery( imageField ).attributes ) {
+						while ( jQuery( imageField ).attributes.length > 0 ) {
 							elem.removeAttribute( elem.attributes[0].name );
 						}
 					}
 
 					// Update image src and alt text, then show image.
-					$( imageField ).attr( 'src', attachmentImage ).attr( 'alt', attachment.alt ).show();
+					jQuery( imageField ).attr( 'src', attachmentImage ).attr( 'alt', attachment.alt ).show();
 
 					// Show remove button.
 					button.parent().find( '.bdb-remove-image' ).show();
@@ -88,21 +88,21 @@ var BDB_Media = {
 
 		e.preventDefault();
 
-		let button = $( this ),
+		let button = jQuery( this ),
 			imageField = button.parent().data( 'image' ),
 			imageIDField = button.parent().data( 'image-id' );
 
 		// Remove image attributes and hide.
-		if ( 'undefined' !== typeof $( imageField ).attributes ) {
-			while ( $( imageField ).attributes.length > 0 ) {
+		if ( 'undefined' !== typeof jQuery( imageField ).attributes ) {
+			while ( jQuery( imageField ).attributes.length > 0 ) {
 				elem.removeAttribute( elem.attributes[0].name );
 			}
 		}
 
-		$( imageField ).hide();
+		jQuery( imageField ).hide();
 
 		// Delete image ID value.
-		$( imageIDField ).val( '' );
+		jQuery( imageIDField ).val( '' );
 
 		// Now hide the remove button.
 		button.hide();

@@ -24,7 +24,7 @@ export function apiRequest( endpoint, data = {}, method = 'POST' ) {
 	//console.log( 'API endpoint', endpoint );
 
 	return new Promise( function ( resolve, reject ) {
-		$.ajax( options ).success( function ( response ) {
+		jQuery.ajax( options ).success( function ( response ) {
 			//console.log( 'Success response', response );
 			resolve( response );
 		} ).error( function ( qpXHR, textStatus, errorThrown ) {
@@ -61,7 +61,7 @@ export function ajaxRequest( args ) {
 	};
 
 	return new Promise( function ( resolve, reject ) {
-		$.ajax( options ).success( function ( response ) {
+		jQuery.ajax( options ).success( function ( response ) {
 			if ( ! response.success ) {
 				//console.log( 'Error response', response );
 				reject( response.data );

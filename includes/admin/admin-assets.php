@@ -25,7 +25,7 @@ function enqueue_admin_assets( $hook ) {
 	global $bdb_admin_pages;
 
 	// CSS
-	wp_enqueue_style( 'book-database', BDB_URL . 'assets/css/admin-style.min.css', array(), time() );
+	wp_enqueue_style( 'book-database', BDB_URL . 'assets/css/admin.css', array(), time() );
 	wp_enqueue_style( 'flatpickr', 'https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css', array(), '4.0' );
 
 	wp_enqueue_media();
@@ -63,13 +63,13 @@ function enqueue_admin_assets( $hook ) {
 
 		$deps = array( 'jquery', 'wp-util' );
 
-		wp_enqueue_script( 'book-database-analytics', BDB_URL . 'assets/js/build/book-graphs.min.js', $deps, time(), true );
+		wp_enqueue_script( 'book-database-analytics', BDB_URL . 'assets/js/build/book-graphs.js', $deps, time(), true );
 		wp_localize_script( 'book-database-analytics', 'bdbVars', $localized );
 
 	} else {
 
 		$deps = array( 'jquery', 'jquery-ui-sortable', 'suggest', 'wp-util', 'moment', 'alpinejs' );
-		wp_enqueue_script( 'book-database', BDB_URL . 'assets/js/build/admin.min.js', $deps, time(), true );
+		wp_enqueue_script( 'book-database', BDB_URL . 'assets/js/build/admin.js', $deps, time(), true );
 		wp_localize_script( 'book-database', 'bdbVars', $localized );
 
 	}
@@ -99,13 +99,13 @@ function enqueue_admin_global_assets( $hook ) {
 	}
 
 	// CSS
-	wp_enqueue_style( 'book-database-global', BDB_URL . 'assets/css/admin-style-global.min.css', array(), BDB_VERSION );
+	wp_enqueue_style( 'book-database-global', BDB_URL . 'assets/css/admin-global.css', array(), BDB_VERSION );
 
 	// JS
 	wp_register_script( 'moment', BDB_URL . 'assets/js/build/moment.min.js', array(), '2.24.0', true );
 
 	$deps = array( 'jquery', 'wp-util', 'moment' );
-	wp_enqueue_script( 'book-database-global', BDB_URL . 'assets/js/build/admin-global.min.js', $deps, BDB_VERSION, true );
+	wp_enqueue_script( 'book-database-global', BDB_URL . 'assets/js/build/admin-global.js', $deps, BDB_VERSION, true );
 
 	$localized = array(
 		'api_base'                          => esc_url_raw( rest_url() ),

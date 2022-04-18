@@ -1,6 +1,6 @@
 /* global $, bdbVars, wp */
 
-import { apiRequest, spinButton, unspinButton, getStars } from 'utils';
+import { apiRequest, spinButton, unspinButton, getStars } from '../../utils';
 
 /**
  * Admin Dashboard Widgets
@@ -12,13 +12,13 @@ var BDB_Dashboard_Widgets = {
 	 */
 	init: function() {
 
-		$( '.bdb-currently-reading-widget-update-progress' ).on( 'click', this.updatePercentage );
-		$( '.bdb-currently-reading-progress-unit-choices' ).on( 'click', 'a', this.setUnit );
-		$( '.bdb-currently-reading-widget-save-progress' ).on( 'click', this.saveProgress );
-		$( '.bdb-currently-reading-set-progress-wrap' ).on( 'keydown', 'input', this.saveProgressOnEnter );
-		$( '.bdb-currently-reading-widget-finish-book' ).on( 'click', this.finishBook );
-		$( '.bdb-currently-reading-widget-dnf-book' ).on( 'click', this.dnfBook );
-		$( '.bdb-currently-reading-widget-set-rating' ).on( 'click', this.setRating );
+		jQuery( '.bdb-currently-reading-widget-update-progress' ).on( 'click', this.updatePercentage );
+		jQuery( '.bdb-currently-reading-progress-unit-choices' ).on( 'click', 'a', this.setUnit );
+		jQuery( '.bdb-currently-reading-widget-save-progress' ).on( 'click', this.saveProgress );
+		jQuery( '.bdb-currently-reading-set-progress-wrap' ).on( 'keydown', 'input', this.saveProgressOnEnter );
+		jQuery( '.bdb-currently-reading-widget-finish-book' ).on( 'click', this.finishBook );
+		jQuery( '.bdb-currently-reading-widget-dnf-book' ).on( 'click', this.dnfBook );
+		jQuery( '.bdb-currently-reading-widget-set-rating' ).on( 'click', this.setRating );
 
 	},
 
@@ -31,7 +31,7 @@ var BDB_Dashboard_Widgets = {
 
 		e.preventDefault();
 
-		let wrap = $( this ).closest( 'li' );
+		let wrap = jQuery( this ).closest( 'li' );
 
 		wrap.find( '.bdb-currently-reading-set-progress-wrap' ).slideToggle();
 
@@ -46,11 +46,11 @@ var BDB_Dashboard_Widgets = {
 
 		e.preventDefault();
 
-		let wrap = $( this ).closest( '.bdb-currently-reading-set-progress-wrap' ),
-			unit = $( this ).data( 'unit' );
+		let wrap = jQuery( this ).closest( '.bdb-currently-reading-set-progress-wrap' ),
+			unit = jQuery( this ).data( 'unit' );
 
 		wrap.find( '.bdb-currently-reading-progress-unit-choices a' ).removeClass( 'bdb-currently-reading-progress-unit-selected' );
-		$( this ).addClass( 'bdb-currently-reading-progress-unit-selected' );
+		jQuery( this ).addClass( 'bdb-currently-reading-progress-unit-selected' );
 
 		if ( 'page' === unit ) {
 			wrap.find( '.bdb-currently-reading-unit-percentage-wrap' ).hide();
@@ -71,7 +71,7 @@ var BDB_Dashboard_Widgets = {
 
 		e.preventDefault();
 
-		let button = $( this ),
+		let button = jQuery( this ),
 			wrap = button.closest( 'li' ),
 			logID = wrap.data( 'log-id' ),
 			unit = wrap.find( '.bdb-currently-reading-progress-unit-selected' ).data( 'unit' ),
@@ -128,7 +128,7 @@ var BDB_Dashboard_Widgets = {
 		if ( 13 === e.keyCode ) {
 			e.preventDefault();
 
-			$( this ).closest( 'li' ).find( '.bdb-currently-reading-widget-save-progress' ).trigger( 'click' );
+			jQuery( this ).closest( 'li' ).find( '.bdb-currently-reading-widget-save-progress' ).trigger( 'click' );
 		}
 
 	},
@@ -148,7 +148,7 @@ var BDB_Dashboard_Widgets = {
 			return false;
 		}
 
-		let button = $( this );
+		let button = jQuery( this );
 
 		spinButton( button );
 
@@ -184,7 +184,7 @@ var BDB_Dashboard_Widgets = {
 			return false;
 		}
 
-		let button = $( this );
+		let button = jQuery( this );
 
 		spinButton( button );
 
@@ -214,7 +214,7 @@ var BDB_Dashboard_Widgets = {
 
 		e.preventDefault();
 
-		let button = $( this );
+		let button = jQuery( this );
 
 		spinButton( button );
 

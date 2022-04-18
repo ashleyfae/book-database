@@ -12,12 +12,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/ashleyfae/contextwp-sdk.git",
-                "reference": "d9b7aeb4c969ee22dfeb0ef47915d3b7eee55182"
+                "reference": "2c28fadd4f72b6d6dfab51533f704af686b6d678"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/ashleyfae/contextwp-sdk/zipball/d9b7aeb4c969ee22dfeb0ef47915d3b7eee55182",
-                "reference": "d9b7aeb4c969ee22dfeb0ef47915d3b7eee55182",
+                "url": "https://api.github.com/repos/ashleyfae/contextwp-sdk/zipball/2c28fadd4f72b6d6dfab51533f704af686b6d678",
+                "reference": "2c28fadd4f72b6d6dfab51533f704af686b6d678",
                 "shasum": ""
             },
             "require": {
@@ -47,7 +47,7 @@
                 "issues": "https://github.com/ashleyfae/contextwp-sdk/issues",
                 "source": "https://github.com/ashleyfae/contextwp-sdk/tree/main"
             },
-            "time": "2022-04-18T10:10:49+00:00"
+            "time": "2022-04-18T11:53:39+00:00"
         },
         {
             "name": "ashleyfae/wp-db",

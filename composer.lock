@@ -4,8 +4,84 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "7fbaffb327dcba594fed03a0f2b1f502",
-    "packages": [],
+    "content-hash": "fa5c9b1f33bf99dbf40c0325107a10ae",
+    "packages": [
+        {
+            "name": "ashleyfae/contextwp-sdk",
+            "version": "dev-main",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/ashleyfae/contextwp-sdk.git",
+                "reference": "03dd54639159c5372c544dfac48d8ff327e161ea"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/ashleyfae/contextwp-sdk/zipball/03dd54639159c5372c544dfac48d8ff327e161ea",
+                "reference": "03dd54639159c5372c544dfac48d8ff327e161ea",
+                "shasum": ""
+            },
+            "require": {
+                "ashleyfae/wp-db": "dev-main",
+                "php": ">=7.1"
+            },
+            "require-dev": {
+                "10up/wp_mock": "0.4.2",
+                "mockery/mockery": "^1.5",
+                "phpunit/phpunit": "^9.5.20"
+            },
+            "default-branch": true,
+            "type": "library",
+            "autoload": {
+                "files": [
+                    "src/init.php"
+                ],
+                "psr-4": {
+                    "ContextWP\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "support": {
+                "issues": "https://github.com/ashleyfae/contextwp-sdk/issues",
+                "source": "https://github.com/ashleyfae/contextwp-sdk/tree/main"
+            },
+            "time": "2022-04-18T08:47:57+00:00"
+        },
+        {
+            "name": "ashleyfae/wp-db",
+            "version": "dev-main",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/ashleyfae/wp-db.git",
+                "reference": "346622ffa5efd62313bd74e5dc8d02ee6841556c"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/ashleyfae/wp-db/zipball/346622ffa5efd62313bd74e5dc8d02ee6841556c",
+                "reference": "346622ffa5efd62313bd74e5dc8d02ee6841556c",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=7.0"
+            },
+            "default-branch": true,
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "Ashleyfae\\WPDB\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "description": "Wrapper for wpdb.",
+            "support": {
+                "issues": "https://github.com/ashleyfae/wp-db/issues",
+                "source": "https://github.com/ashleyfae/wp-db/tree/main"
+            },
+            "time": "2022-04-10T11:38:38+00:00"
+        }
+    ],
     "packages-dev": [
         {
             "name": "doctrine/instantiator",
@@ -2164,8 +2240,9 @@
         }
     ],
     "aliases": [],
-    "minimum-stability": "stable",
+    "minimum-stability": "dev",
     "stability-flags": {
+        "ashleyfae/contextwp-sdk": 20,
         "yoast/phpunit-polyfills": 20
     },
     "prefer-stable": false,

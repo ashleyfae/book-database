@@ -10,6 +10,9 @@
 
 namespace Book_Database\ServiceProviders;
 
+use Book_Database\Widgets\Reading_Log;
+use Book_Database\Widgets\Reviews;
+
 class AppServiceProvider implements ServiceProvider
 {
 
@@ -26,5 +29,13 @@ class AppServiceProvider implements ServiceProvider
                     ->setVersion(BDB_VERSION)
             );
         });
+
+        /**
+         * Registers widgets.
+         */
+        add_action( 'widgets_init', function () {
+            register_widget(Reading_Log::class);
+            register_widget(Reviews::class);
+        } );
     }
 }

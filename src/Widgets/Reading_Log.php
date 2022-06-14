@@ -319,10 +319,3 @@ class Reading_Log extends \WP_Widget {
 	}
 
 }
-
-/**
- * Registers the widget
- */
-add_action( 'widgets_init', function () {
-	register_widget( '\\Book_Database\\Widgets\\Reading_log' );
-} );

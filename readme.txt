@@ -21,6 +21,10 @@ Maintain a database of books and reviews.
 
 == Changelog ==
 
+= 1.3.1 - 14 June, 2022 =
+
+* Fix: Widgets not being loaded.
+
 = 1.3 - 18 April, 2022 =
 
 * Requirements: Minimum PHP version is now 7.1.

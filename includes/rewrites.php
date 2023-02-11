@@ -45,7 +45,10 @@ function get_reviews_page_slug() {
 
 	if ( $page_id ) {
 		$page = get_post( absint( $page_id ) );
-		$slug = $page->post_name;
+		
+		if ( $page ) {
+			$slug = $page->post_name;
+		}
 	}
 
 	/**

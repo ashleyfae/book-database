@@ -204,7 +204,7 @@ class BookReviewsShortcode implements Shortcode
 
                                 $terms = get_book_terms(array(
                                     'taxonomy' => $taxonomy->get_slug(),
-                                    'number'   => 300,
+                                    'number'   => 1000,
                                     'orderby'  => 'name',
                                     'order'    => 'ASC'
                                 ));

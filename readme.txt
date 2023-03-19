@@ -2,7 +2,7 @@
 Author URI: https://www.nosegraze.com
 Plugin URI: https://shop.nosegraze.com/product/book-database/
 Requires at least: 4.4
-Tested up to: 5.9.3
+Tested up to: 6.1.1
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -20,6 +20,11 @@ Maintain a database of books and reviews.
 ( more TK )
 
 == Changelog ==
+
+= 1.3.2 - 19 March, 2023 =
+
+* Improvement: Increase maximum number of terms displayed on Reviews page to 1,000.
+* Fix: Potential error if a selected page doesn't exist.
 
 = 1.3.1 - 14 June, 2022 =
 

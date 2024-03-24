@@ -21,16 +21,16 @@
   "main": "webpack.config.js",
   "devDependencies": {
     "laravel-mix": "^6.0.43",
-    "sass": "^1.50.0",
-    "sass-loader": "^12.6.0",
-    "webpack-cli": "^4.9.2"
+    "sass": "^1.71.1",
+    "sass-loader": "^14.1.1",
+    "webpack-cli": "^5.1.4"
   },
   "scripts": {
     "build": "npx mix --production",
     "dev": "npx mix watch"
   },
   "dependencies": {
-    "@amcharts/amcharts4": "^4.10.28",
-    "flatpickr": "^4.6.9"
+    "@amcharts/amcharts4": "^4.10.38",
+    "flatpickr": "^4.6.13"
   }
 }

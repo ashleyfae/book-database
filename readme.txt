@@ -21,6 +21,11 @@ Maintain a database of books and reviews.
 
 == Changelog ==
 
+= 1.4.0 - 8 February 2025 =
+
+* Requirements: Minimum PHP version is now 8.0.
+* Fix: PHP deprecation warnings
+
 = 1.3.2 - 19 March, 2023 =
 
 * Improvement: Increase maximum number of terms displayed on Reviews page to 1,000.

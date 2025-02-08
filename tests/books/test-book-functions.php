@@ -37,7 +37,7 @@ class Test_Book_Functions extends UnitTestCase {
 	/**
 	 * Create a new book at the start of tests
 	 */
-	public function setUp() {
+	public function setUp() : void {
 		parent::setUp();
 
 		try {

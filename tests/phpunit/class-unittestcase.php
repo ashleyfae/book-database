@@ -23,10 +23,10 @@ class UnitTestCase extends \WP_UnitTestCase {
 	/**
 	 * Delete Book Database table data after each class.
 	 */
-	public static function tearDownAfterClass() {
+	public static function tearDownAfterClass(): void {
 		self::deleteBookDatabaseData();
 
-		return parent::tearDownAfterClass();
+		parent::tearDownAfterClass();
 	}
 
 	/**

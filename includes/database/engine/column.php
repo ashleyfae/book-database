@@ -536,6 +536,9 @@ class Column extends Base {
 
 		// Loop through and try to execute callbacks
 		foreach ( $args as $key => $value ) {
+            if (is_null($value)) {
+                continue;
+            }
 
 			// Callback is callable
 			if ( isset( $callbacks[ $key ] ) && is_callable( $callbacks[ $key ] ) ) {

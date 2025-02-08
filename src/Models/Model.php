@@ -58,6 +58,10 @@ abstract class Model
         }
 
         foreach ($args as $key => $value) {
+            if (! property_exists($this, $key)) {
+                continue;
+            }
+
             if ('0000-00-00 00:00:00' === $value) {
                 $value = null;
             }

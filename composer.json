@@ -9,7 +9,7 @@
     }
   },
   "require": {
-    "php": "^7.1|^8.0",
+    "php": "^8.0",
     "ashleyfae/contextwp-sdk": "dev-main"
   },
   "require-dev": {

@@ -90,7 +90,7 @@ function book_database($abstract = null)
     return $instance;
 }
 
-if (version_compare(PHP_VERSION, '7.1', '>=')) {
+if (version_compare(PHP_VERSION, '8.0', '>=')) {
     require_once BDB_DIR.'vendor/autoload.php';
     book_database();
 } else {

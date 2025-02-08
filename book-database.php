@@ -3,7 +3,7 @@
  * Plugin Name: Book Database
  * Plugin URI: https://shop.nosegraze.com/product/book-database/
  * Description: Maintain a database of books and reviews.
- * Version: 1.3.2
+ * Version: 1.4.0
  * Author: Ashley Gibson
  * Author URI: http://www.nosegraze.com
  * License: GPL2 License
@@ -25,14 +25,14 @@
  * along with Book Database. If not, see <http://www.gnu.org/licenses/>.
  *
  * @package   book-database
- * @copyright Copyright (c) 2023, Ashley Gibson
+ * @copyright Copyright (c) 2025, Ashley Gibson
  * @license   GPL2+
  */
 
 namespace Book_Database;
 
 if (! defined('BDB_VERSION')) {
-    define('BDB_VERSION', '1.3.2');
+    define('BDB_VERSION', '1.4.0');
 }
 if (! defined('BDB_DIR')) {
     define('BDB_DIR', plugin_dir_path(__FILE__));
@@ -46,10 +46,10 @@ if (! defined('BDB_FILE')) {
 if (! defined('NOSE_GRAZE_STORE_URL')) {
     define('NOSE_GRAZE_STORE_URL', 'https://shop.nosegraze.com');
 }
+if (! defined('BDB_MIN_PHP_VERSION')) {
+    define('BDB_MIN_PHP_VERSION', '8.0');
+}
 
-/**
- * Require PHP 7.1+
- */
 /**
  * Insufficient PHP version notice.
  *
@@ -63,9 +63,10 @@ function insufficient_php_version()
             <?php
             printf(
                 __(
-                    'Book Database requires PHP version 7.1 or greater. You have version %s. Please contact your web host to upgrade your version of PHP.',
+                    'Book Database requires PHP version %s or greater. You have version %s. Please contact your web host to upgrade your version of PHP.',
                     'book-database'
                 ),
+                BDB_MIN_PHP_VERSION,
                 PHP_VERSION
             );
             ?>
@@ -90,7 +91,7 @@ function book_database($abstract = null)
     return $instance;
 }
 
-if (version_compare(PHP_VERSION, '8.0', '>=')) {
+if (version_compare(PHP_VERSION, BDB_MIN_PHP_VERSION, '>=')) {
     require_once BDB_DIR.'vendor/autoload.php';
     book_database();
 } else {

@@ -26,7 +26,7 @@ jobs:
     steps:
       # Checks out the source code.
       - name: Checkout code
-        uses: actions/checkout@v2
+        uses: actions/checkout@v4
         
       # Runs "composer install" and creates the build directory.
       - name: Build project
@@ -43,13 +43,13 @@ jobs:
           
       # Manually add the vendor/ directory into the zip file.
       - name: Add vendor files
-        uses: montudor/action-zip@v0.1.0
+        uses: montudor/action-zip@v1
         with:
           args: zip -ur build/${{ github.event.repository.name }}-${{ github.event.release.name }}.zip ${{ github.event.repository.name }}/
           
       # Uploads the zip file to the action.
       - name: Upload artifact
-        uses: actions/upload-artifact@v2
+        uses: actions/upload-artifact@v4
         with:
             name: ${{ github.event.repository.name }}-${{ github.event.release.name }}
             path: build/${{ github.event.repository.name }}-${{ github.event.release.name }}.zip

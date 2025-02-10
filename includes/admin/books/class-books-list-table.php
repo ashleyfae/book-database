@@ -59,17 +59,15 @@ class Books_List_Table extends ListTable {
 	 * @return array
 	 */
 	public function get_columns() {
-		$columns = array(
-			'cb'       => '<input type="checkbox">',
-			'cover'    => esc_html__( 'Cover', 'book-database' ),
-			'title'    => esc_html__( 'Title', 'book-database' ),
-			'author'   => esc_html__( 'Author', 'book-database' ),
-			'series'   => esc_html__( 'Series', 'book-database' ),
-			'pub_date' => esc_html__( 'Publication Date', 'book-database' ),
-			'rating'   => esc_html__( 'Rating', 'book-database' )
-		);
-
-		return $columns;
+        return array(
+            'cb'       => '<input type="checkbox">',
+            'cover'    => esc_html__( 'Cover', 'book-database' ),
+            'title'    => esc_html__( 'Title', 'book-database' ),
+            'author'   => esc_html__( 'Author', 'book-database' ),
+            'series'   => esc_html__( 'Series', 'book-database' ),
+            'pub_date' => esc_html__( 'Publication Date', 'book-database' ),
+            'rating'   => esc_html__( 'Rating', 'book-database' )
+        );
 	}
 
 	/**
@@ -498,7 +496,7 @@ class Books_List_Table extends ListTable {
 		$series = isset( $_REQUEST['series_name'] ) ? wp_unslash( $_REQUEST['series_name'] ) : '';
 		$isbn   = isset( $_REQUEST['isbn'] ) ? wp_unslash( $_REQUEST['isbn'] ) : '';
 		?>
-		<div class="search-form">
+		<div class="search-form view-switch">
 			<label class="screen-reader-text" for="<?php echo esc_attr( $input_id ); ?>-title"><?php esc_html_e( 'Search by book title', 'book-database' ); ?></label>
 			<input type="search" id="<?php echo esc_attr( $input_id ); ?>-title" name="book_title" value="<?php echo esc_attr( $title ); ?>" placeholder="<?php esc_attr_e( 'Book title', 'book-database' ); ?>">
 
@@ -510,6 +508,8 @@ class Books_List_Table extends ListTable {
 
 			<label class="screen-reader-text" for="<?php echo esc_attr( $input_id ); ?>-isbn"><?php esc_html_e( 'Search by ISBN', 'book-database' ); ?></label>
 			<input type="search" id="<?php echo esc_attr( $input_id ); ?>-isbn" name="isbn" value="<?php echo esc_attr( $isbn ); ?>" placeholder="<?php esc_attr_e( 'ISBN', 'book-database' ); ?>">
+
+            <button type="submit" class="button">Search</button>
 		</div>
 		<?php
 

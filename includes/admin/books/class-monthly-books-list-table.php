@@ -367,7 +367,6 @@ class Monthly_Books_List_Table extends Books_List_Table {
 
 		// Assemble classes
 		$classes = array(
-			$this->the_day,
 			$day_key,
 			$is_today,
 			$position,

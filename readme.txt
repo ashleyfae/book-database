@@ -21,6 +21,11 @@ Maintain a database of books and reviews.
 
 == Changelog ==
 
+= 1.4.1 - 10 February 2025 =
+
+* Fix: Searching not working in admin book library
+* Fix: Address deprecation warnings in admin calendar view
+
 = 1.4.0 - 8 February 2025 =
 
 * Requirements: Minimum PHP version is now 8.0.

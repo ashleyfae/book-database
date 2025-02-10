@@ -3,7 +3,7 @@
  * Plugin Name: Book Database
  * Plugin URI: https://shop.nosegraze.com/product/book-database/
  * Description: Maintain a database of books and reviews.
- * Version: 1.4.0
+ * Version: 1.4.1
  * Author: Ashley Gibson
  * Author URI: http://www.nosegraze.com
  * License: GPL2 License
@@ -32,7 +32,7 @@
 namespace Book_Database;
 
 if (! defined('BDB_VERSION')) {
-    define('BDB_VERSION', '1.4.0');
+    define('BDB_VERSION', '1.4.1');
 }
 if (! defined('BDB_DIR')) {
     define('BDB_DIR', plugin_dir_path(__FILE__));

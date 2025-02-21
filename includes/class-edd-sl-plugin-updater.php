@@ -105,7 +105,7 @@ class EDD_SL_Plugin_Updater {
 		global $pagenow;
 
 		if ( ! is_object( $_transient_data ) ) {
-			$_transient_data = new stdClass;
+			$_transient_data = new \stdClass;
 		}
 
 		if ( 'plugins.php' == $pagenow && is_multisite() ) {
@@ -173,7 +173,7 @@ class EDD_SL_Plugin_Updater {
 
 		$update_cache = get_site_transient( 'update_plugins' );
 
-		$update_cache = is_object( $update_cache ) ? $update_cache : new stdClass();
+		$update_cache = is_object( $update_cache ) ? $update_cache : new \stdClass();
 
 		if ( empty( $update_cache->response ) || empty( $update_cache->response[ $this->name ] ) ) {
 
@@ -357,7 +357,7 @@ class EDD_SL_Plugin_Updater {
 	 *
 	 * @since 3.6.5
 	 *
-	 * @param stdClass $data
+	 * @param \stdClass $data
 	 *
 	 * @return array
 	 */

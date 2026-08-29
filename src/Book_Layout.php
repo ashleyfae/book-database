@@ -201,7 +201,7 @@ class Book_Layout {
 	 * @return string
 	 */
 	public function get_field_title() {
-		return $this->book->get_title();
+		return esc_html( $this->book->get_title() );
 	}
 
 	/**
@@ -244,7 +244,7 @@ class Book_Layout {
 			return '';
 		}
 
-		$series_name = sprintf( '%s #%s', $series->get_name(), $this->book->get_series_position() );
+		$series_name = esc_html( sprintf( '%s #%s', $series->get_name(), $this->book->get_series_position() ) );
 
 		return link_book_terms() ? '<a href="' . esc_url( get_book_term_link( $series ) ) . '">' . $series_name . '</a>' : $series_name;
 
@@ -280,7 +280,7 @@ class Book_Layout {
 	 * @return string
 	 */
 	public function get_field_goodreads_url() {
-		return $this->book->get_goodreads_url();
+		return esc_url( $this->book->get_goodreads_url() );
 	}
 
 	/**
@@ -378,7 +378,7 @@ class Book_Layout {
 		$term_names = array();
 
 		foreach ( $terms as $term ) {
-			$term_names[] = link_book_terms() ? '<a href="' . esc_url( get_book_term_link( $term ) ) . '">' . $term->get_name() . '</a>' : $term->get_name();
+			$term_names[] = link_book_terms() ? '<a href="' . esc_url( get_book_term_link( $term ) ) . '">' . esc_html( $term->get_name() ) . '</a>' : esc_html( $term->get_name() );
 		}
 
 		return implode( ', ', $term_names );

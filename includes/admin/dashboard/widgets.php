@@ -76,7 +76,7 @@ function render_currently_reading() {
 				}
 				?>
 				<p class="bdb-currently-reading-book-title">
-					<a href="<?php echo esc_url( $edit_book_url ); ?>"><?php printf( '%s by %s', $book->get_title(), $book->get_author_names( true ) ); ?></a>
+					<a href="<?php echo esc_url( $edit_book_url ); ?>"><?php printf( '%s by %s', esc_html( $book->get_title() ), esc_html( $book->get_author_names( true ) ) ); ?></a>
 				</p>
 				<div class="bdb-currently-reading-data">
 					<div class="bdb-currently-reading-progress">

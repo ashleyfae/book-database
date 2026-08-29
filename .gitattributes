@@ -16,3 +16,5 @@ package.json export-ignore
 package-lock.json export-ignore
 webpack.mix.js export-ignore
 webpack.config.js export-ignore
+
+build-zip.sh export-ignore

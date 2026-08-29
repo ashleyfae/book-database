@@ -21,6 +21,8 @@ Maintain a database of books and reviews.
 
 == Changelog ==
 
+= 1.4.2-beta1 =
+
 = 1.4.1 - 10 February 2025 =
 
 * Fix: Searching not working in admin book library

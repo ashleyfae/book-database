@@ -237,6 +237,11 @@ class Book_Terms_List_Table extends ListTable {
 	 */
 	public function process_bulk_actions() {
 
+		// Bail if the current user is not allowed to edit books.
+		if ( ! user_can_edit_books() ) {
+			return;
+		}
+
 		// Bail if a nonce was not supplied.
 		if ( ! isset( $_REQUEST['_wpnonce'] ) ) {
 			return;

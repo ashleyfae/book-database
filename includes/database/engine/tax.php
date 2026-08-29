@@ -421,7 +421,7 @@ class Tax extends Base {
 				return self::$no_results;
 			}
 
-			$terms = implode( ',', $terms );
+			$terms = implode( ',', array_map( 'absint', $terms ) );
 
 			/*
 			 * Before creating another table join, see if this clause has a
@@ -451,7 +451,7 @@ class Tax extends Base {
 				return $sql;
 			}
 
-			$terms = implode( ',', $terms );
+			$terms = implode( ',', array_map( 'absint', $terms ) );
 
 			$where = "$this->primary_table.$this->primary_id_column NOT IN (
 				SELECT book_id
@@ -467,7 +467,7 @@ class Tax extends Base {
 
 			$num_terms = count( $terms );
 
-			$terms = implode( ',', $terms );
+			$terms = implode( ',', array_map( 'absint', $terms ) );
 
 			$where = "(
 				SELECT COUNT(1)
@@ -587,6 +587,10 @@ class Tax extends Base {
 		}
 
 		if ( $query['field'] == $resulting_field ) {
+			if ( 'id' === $resulting_field ) {
+				$query['terms'] = array_map( 'absint', (array) $query['terms'] );
+			}
+
 			return;
 		}
 

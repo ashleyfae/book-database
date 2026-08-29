@@ -2,7 +2,7 @@
 Author URI: https://www.nosegraze.com
 Plugin URI: https://shop.nosegraze.com/product/book-database/
 Requires at least: 4.4
-Tested up to: 6.1.1
+Tested up to: 7.1
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -21,7 +21,10 @@ Maintain a database of books and reviews.
 
 == Changelog ==
 
-= 1.4.2-beta1 =
+= 1.4.2 =
+
+* Misc: Various security improvements
+* Misc: Improve escaping on book title and author fields
 
 = 1.4.1 - 10 February 2025 =
 

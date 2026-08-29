@@ -139,7 +139,7 @@ class Reading_Log extends \WP_Widget {
 						echo '<a href="' . esc_url( $book->get_goodreads_url() ) . '" target="_blank">';
 					}
 					?>
-					<span class="bdb-reading-log-book-title"><?php printf( __( '%s by %s', 'book-database' ), $book->get_title(), $book->get_author_names( true ) ); ?></span>
+					<span class="bdb-reading-log-book-title"><?php printf( __( '%s by %s', 'book-database' ), esc_html( $book->get_title() ), esc_html( $book->get_author_names( true ) ) ); ?></span>
 					<?php
 					if ( ! empty( $args['link_goodreads'] ) && $book->get_goodreads_url() ) {
 						echo '</a>';

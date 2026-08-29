@@ -149,7 +149,7 @@ class Reviews extends \WP_Widget {
 						echo '<a href="' . esc_url( $review->get_permalink() ) . '">';
 					}
 					?>
-					<span class="bdb-reviews-widget-book-title"><?php printf( esc_html__( '%s by %s', 'book-database' ), $book->get_title(), $review_data->author_name ); ?></span>
+					<span class="bdb-reviews-widget-book-title"><?php printf( esc_html__( '%s by %s', 'book-database' ), esc_html( $book->get_title() ), esc_html( $review_data->author_name ) ); ?></span>
 					<?php
 					if ( $review->is_published() && $review->get_permalink() ) {
 						echo '</a>';

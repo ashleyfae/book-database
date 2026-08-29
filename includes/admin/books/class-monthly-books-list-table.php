@@ -274,7 +274,7 @@ class Monthly_Books_List_Table extends Books_List_Table {
 			) );
 
 			// Handle empty titles.
-			$book_title = $book->get_title() ? $book->get_title() : __( '(No title)', 'book-database' );
+			$book_title = $book->get_title() ? esc_html( $book->get_title() ) : __( '(No title)', 'book-database' );
 			?>
 			<a href="<?php echo esc_url( $edit_book_url ); ?>" class="bdb-calendar-book-link">
 				<?php

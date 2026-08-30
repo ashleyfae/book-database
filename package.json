@@ -18,16 +18,17 @@
   "bugs": {
     "url": "https://github.com/ashleyfae/book-database/issues"
   },
-  "main": "webpack.config.js",
   "devDependencies": {
-    "laravel-mix": "^6.0.43",
-    "sass": "^1.71.1",
-    "sass-loader": "^14.1.1",
-    "webpack-cli": "^5.1.4"
+    "esbuild": "^0.28.2",
+    "sass": "^1.71.1"
   },
   "scripts": {
-    "build": "npx mix --production",
-    "dev": "npx mix watch"
+    "build:css": "sass assets/sass/admin.scss:assets/css/admin.css assets/sass/admin-blocks.scss:assets/css/admin-blocks.css assets/sass/admin-global.scss:assets/css/admin-global.css assets/sass/front-end.scss:assets/css/front-end.css --style=compressed --no-source-map --no-charset",
+    "build:js": "esbuild assets/js/src/admin/book-graphs.js assets/js/src/admin/admin.js assets/js/src/admin/admin-global.js --bundle --minify --legal-comments=none --outdir=assets/js/build",
+    "build": "npm run build:css && npm run build:js",
+    "watch:css": "npm run build:css -- --watch",
+    "watch:js": "npm run build:js -- --watch",
+    "dev": "npm run watch:css & npm run watch:js & wait"
   },
   "dependencies": {
     "@amcharts/amcharts4": "^4.10.38",

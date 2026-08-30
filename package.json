@@ -25,10 +25,12 @@
   "scripts": {
     "build:css": "sass assets/sass/admin.scss:assets/css/admin.css assets/sass/admin-blocks.scss:assets/css/admin-blocks.css assets/sass/admin-global.scss:assets/css/admin-global.css assets/sass/front-end.scss:assets/css/front-end.css --style=compressed --no-source-map --no-charset",
     "build:js": "esbuild assets/js/src/admin/book-graphs.js assets/js/src/admin/admin.js assets/js/src/admin/admin-global.js --bundle --minify --legal-comments=none --outdir=assets/js/build",
-    "build": "npm run build:css && npm run build:js",
+    "build:js:module": "esbuild assets/js/src/admin/amcharts-loader.js --bundle --minify --legal-comments=none --format=esm --splitting --outdir=assets/js/build",
+    "build": "npm run build:css && npm run build:js && npm run build:js:module",
     "watch:css": "npm run build:css -- --watch",
     "watch:js": "npm run build:js -- --watch",
-    "dev": "npm run watch:css & npm run watch:js & wait"
+    "watch:js:module": "npm run build:js:module -- --watch",
+    "dev": "npm run watch:css & npm run watch:js & npm run watch:js:module & wait"
   },
   "dependencies": {
     "@amcharts/amcharts4": "^4.10.38",

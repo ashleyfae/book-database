@@ -3,13 +3,14 @@
  * Plugin Name: Book Database
  * Plugin URI: https://shop.nosegraze.com/product/book-database/
  * Description: Maintain a database of books and reviews.
- * Version: 1.4.2
+ * Version: 1.5.0-beta1
  * Author: Ashley Gibson
  * Author URI: http://www.nosegraze.com
  * License: GPL2 License
  * URI: http://www.gnu.org/licenses/gpl-2.0.txt
  * Text Domain: book-database
  * Domain Path: /languages
+ * Requires at least: 6.5
  * Requires PHP: 8.0
  *
  * Book Database is free software: you can redistribute it and/or modify
@@ -26,14 +27,14 @@
  * along with Book Database. If not, see <http://www.gnu.org/licenses/>.
  *
  * @package   book-database
- * @copyright Copyright (c) 2025, Ashley Gibson
+ * @copyright Copyright (c) 2026, Ashley Gibson
  * @license   GPL2+
  */
 
 namespace Book_Database;
 
 if (! defined('BDB_VERSION')) {
-    define('BDB_VERSION', '1.4.2');
+    define('BDB_VERSION', '1.5.0-beta1');
 }
 if (! defined('BDB_DIR')) {
     define('BDB_DIR', plugin_dir_path(__FILE__));

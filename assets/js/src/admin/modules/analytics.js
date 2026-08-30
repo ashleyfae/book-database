@@ -1,8 +1,6 @@
 /* global $, bdbVars, wp */
 
-import { apiRequest, spinButton, unspinButton } from '../../utils';
-import * as am4core from "@amcharts/amcharts4/core";
-import * as am4charts from "@amcharts/amcharts4/charts";
+import { apiRequest, spinButton, unspinButton, waitForAmCharts } from '../../utils';
 
 /**
  * Analytics
@@ -157,7 +155,11 @@ var BDB_Analytics = {
 
 				const type = apiResponse.data.type;
 
-				am4core.createFromConfig( apiResponse.data.chart, id, type );
+				waitForAmCharts().then( function ( am4core ) {
+					am4core.createFromConfig( apiResponse.data.chart, id, type );
+				} ).catch( function ( error ) {
+					console.log( 'amCharts error', error );
+				} );
 				break;
 
 			case 'template' :

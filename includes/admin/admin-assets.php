@@ -61,10 +61,32 @@ function enqueue_admin_assets( $hook ) {
 
 	if ( $hook === $bdb_admin_pages['analytics'] ) {
 
-		$deps = array( 'jquery', 'wp-util' );
+        $deps = ['jquery', 'wp-util'];
 
-		wp_enqueue_script( 'book-database-analytics', BDB_URL . 'assets/js/build/book-graphs.js', $deps, time(), true );
-		wp_localize_script( 'book-database-analytics', 'bdbVars', $localized );
+        // Deferred so it runs alongside the amcharts script module below, in document order.
+        wp_enqueue_script(
+            'book-database-analytics',
+            BDB_URL.'assets/js/build/book-graphs.js',
+            $deps,
+            time(),
+            [
+                'in_footer' => true,
+                'strategy'  => 'defer',
+            ]
+        );
+        wp_localize_script('book-database-analytics', 'bdbVars', $localized);
+
+        // amcharts4 is loaded as its own script module so its dynamic imports
+        // (used for PDF/XLSX/PNG chart export) stay as separate, lazily-fetched
+        // chunks instead of being inlined into book-graphs.js.
+        if (function_exists('wp_enqueue_script_module')) {
+            wp_enqueue_script_module(
+                'book-database-amcharts',
+                BDB_URL.'assets/js/build/amcharts-loader.js',
+                [],
+                time()
+            );
+        }
 
 	} else {
 

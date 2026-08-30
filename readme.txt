@@ -1,7 +1,7 @@
 === Book Database ===
 Author URI: https://www.nosegraze.com
 Plugin URI: https://shop.nosegraze.com/product/book-database/
-Requires at least: 4.4
+Requires at least: 6.5
 Tested up to: 7.1
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
@@ -20,6 +20,11 @@ Maintain a database of books and reviews.
 ( more TK )
 
 == Changelog ==
+
+= 1.5.0-beta1 =
+
+* Misc: Now requires WP 6.5+
+* Misc: Refactored how the admin analytics / graphs get loaded
 
 = 1.4.2 =
 
